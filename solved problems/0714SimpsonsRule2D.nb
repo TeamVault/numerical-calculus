@@ -1,0 +1,3015 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    109437,       2835]*)
+(*NotebookOutlinePosition[    110263,       2862]*)
+(*  CellTagsIndexPosition[    110219,       2858]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for 2D Integration using the Trapezoidal and \
+Simpson Rules",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe trapezoidal rule and Simpson's rule for ordinary integrals can \
+be extended to multiple integrals"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Trapezoidal 2D Rule)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Consider ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z = f \((x, y)\)\)]],
+  " over the rectangle ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold"], " ", "=", 
+        " ", \({\((x, y)\) : \ a \[LessEqual] x \[LessEqual] b, \ 
+          c \[LessEqual] y \[LessEqual] d}\)}]]],
+  StyleBox[".  Given that the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  StyleBox[" is subdivided into ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m\)]],
+  " ",
+  StyleBox[" subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(x\_\(i - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(x\_i\)}], "]"}], "}"}], \(i = 
+          1\), \(2  m\)]]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/m\)]],
+  StyleBox["  by using the equally spaced sample points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_i\  = \ x\_0\  + \ i\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(i = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  StyleBox[".   Also, assume that the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"c", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox["d",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}]}], "]"}]]],
+  StyleBox[" is subdivided into ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\)]],
+  " ",
+  StyleBox[" subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(y\_\(j - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              SubscriptBox[
+                StyleBox["y",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "j"]}], "]"}], "}"}], \(j = 
+          1\), \(2  n\)]]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = \(b\  - \ a\)\/n\)]],
+  StyleBox["  by using the equally spaced sample points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y\_j\  = \ y\_0\  + \ j\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(j = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  StyleBox[".   \nThe ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite Trapezoidal rule",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  is  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          UnderscriptBox[\(\[Integral]\[Integral]\), 
+            StyleBox["R",
+              FontWeight->"Bold"]], " ", 
+          "f", \((x, y)\), \(\[DifferentialD]A\)}], " ", "=", " ", 
+        RowBox[{\(\[Integral]\+a\%b\ \(\[Integral]\+c\%d\ 
+              f \((x, y)\) \[DifferentialD]y \[DifferentialD]x\)\), " ", 
+          "\[TildeTilde]", " ", 
+          RowBox[{"T2D", 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]}]}]]],
+  StyleBox["\nwhere\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"T2D", 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", \(\(1\/4\) 
+          h\ k \((\ 
+            f \((a, c)\)\  + \ f \((b, c)\)\  + \ \ f \((a, d)\)\  + \ 
+              f \((b, d)\)\[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \  + \ 2\ \ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f \((x\_i, c)\)\)\  + \ 
+              2\ \ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f \((x\_i, d)\)\)\  + \ 
+              2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f \((a, y\_j)\)\)\  + \ 
+              2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f \((b, 
+                      y\_j)\)\)\[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \  + \ 
+              4\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%\(m - \
+1\)f \((x\_i, y\_j)\))\)\)\ \ )\)\)}]]],
+  "  ",
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman"],
+  "It can be shown that the error term is of the form  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_T2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^2)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^2)\)}]}]}]]],
+  ", that is \n\n",
+  StyleBox["\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\+a\%b\ \(\[Integral]\+c\%d\ 
+            f \((x, y)\) \[DifferentialD]y \[DifferentialD]x\)\), " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{"T2D", 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", 
+          "+", "  ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^2)\)}], " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^2)\)}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Trapezoidal rule had the pattern of weights  ",
+  Cell[BoxData[
+      \(1, 2, 2, 2,  ... , 2, 2, 1\)]],
+  "  and the Trapezoidal 2D rule extends this pattern to a grid in the \
+rectangle ",
+  StyleBox["R",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n\n\t",
+  Cell[GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40003/0000KA000`40O003
+h00Ok7oo003/Ool00>aoo`00@7oo1P004Goo1@004Woo1@004Woo1@00:7oo
+1@004Woo1@004Woo1P001Woo0012Ool2000COol2000EOol2000EOol2000[
+Ool2000EOol2000GOol20008Ool0049oo`8001Aoo`8001Eoo`8001Eoo`80
+02]oo`8001Eoo`8001Ioo`8000Qoo`00@Woo0P005Goo0P005Goo0P005Goo
+0P0047oo00D007ooOomoo`0000=oo`03001oogoo011oo`8001Eoo`8001Eo
+o`8000Qoo`00@Woo0P005Woo0P005Goo0P005Goo0P00:goo0P005Goo0P00
+57oo0P0027oo0012Ool2000COol200000goo0000000BOol200000goo0000
+000BOol200000goo0000000XOol200000goo0000000BOol200000goo0000
+000DOol20008Ool0041oo`@001=oo`800003Ool00000019oo`800003Ool0
+0000019oo`800003Ool0000002Qoo`800003Ool00000019oo`800003Ool0
+0000019oo`@000Qoo`00@Woo0P0057oo0`0057oo0`0057oo0`00:Woo0`00
+57oo0`005Goo0P0027oo003/Ool00>aoo`00k7oo003/Ool00>aoo`00k7oo
+003/Ool00>aoo`00@7oo1@004goo10004goo10004goo1000:Goo10004goo
+10004Woo1@001goo0010Ool2000GOol2000EOol2000EOol2000[Ool2000E
+Ool2000COol2000:Ool0045oo`8001=oo`H0015oo`H0015oo`H002Moo`H0
+015oo`H001=oo`8000Uoo`00@Woo0P004Woo00<007ooOol00P004Woo00<0
+07ooOol00P004Woo00<007ooOol00P0047oo00D007ooOomoo`0000=oo`03
+001oogoo00eoo`03001oogoo0080019oo`03001oogoo008001Eoo`8000Qo
+o`00@goo0P004Woo00@007oo000001=oo`04001oo`00000COol01000Ool0
+0000:Goo00@007oo000001=oo`04001oo`00000FOol20007Ool0041oo`80
+0003Ool00000019oo`04001oo`00000COol01000Ool000004goo00@007oo
+000002Uoo`04001oo`00000COol01000Ool000004goo0P0000=oo`000000
+1goo0010Ool200000goo0000000COol3000DOol3000DOol3000ZOol3000D
+Ool3000COol200000goo00000007Ool0045oo`<001Eoo`8001Eoo`8001Eo
+o`8002]oo`8001Eoo`8001Aoo`<000Qoo`00k7oo003/Ool00>aoo`00k7oo
+003/Ool00>aoo`00k7oo003/Ool0041oo`D001=oo`@001=oo`@001=oo`@0
+02Uoo`@001=oo`@0019oo`D000Moo`00@7oo0P005goo0P005Goo0P005Goo
+0P00:goo0P005Goo0P004goo0P002Woo0011Ool2000COol6000AOol6000A
+Ool6000WOol6000AOol6000COol20009Ool0049oo`80019oo`03001oogoo
+0080019oo`03001oogoo0080019oo`03001oogoo0080011oo`05001oogoo
+Ool00003Ool00`00Oomoo`0=Ool00`00Oomoo`02000BOol00`00Oomoo`02
+000EOol20008Ool004=oo`80019oo`04001oo`00000COol01000Ool00000
+4goo00@007oo000002Uoo`04001oo`00000COol01000Ool000005Woo0P00
+1goo0010Ool200000goo0000000BOol01000Ool000004goo00@007oo0000
+01=oo`04001oo`00000YOol01000Ool000004goo00@007oo000001=oo`80
+0003Ool0000000Moo`00@7oo0P0000=oo`0000004goo0`0057oo0`0057oo
+0`00:Woo0`0057oo0`004goo0P0000=oo`0000001goo0011Ool3000EOol2
+000EOol2000EOol2000[Ool2000EOol2000DOol30008Ool00>aoo`00k7oo
+003/Ool00>aoo`00k7oo003/Ool00>aoo`00k7oo0012Ool00`00Oomoo`0D
+Ool00`00Oomoo`0DOol00`00Oomoo`0DOol00`00Oomoo`0ZOol00`00Oomo
+o`0DOol00`00Oomoo`0DOol00`00Oomoo`07Ool009moo`03001oogoo04Yo
+o`00k7oo002MOol00`00Oomoo`1<Ool0049oo`03001oogoo01Aoo`03001o
+ogoo01Aoo`03001oogoo01Aoo`03001oogoo02Yoo`03001oogoo01Aoo`03
+001oogoo01Aoo`03001oogoo00Moo`00Vgoo00<007ooOol0CWoo003/Ool0
+0>aoo`00@Woo00<007ooOol057oo00<007ooOol057oo00<007ooOol057oo
+00<007ooOol0:Woo00<007ooOol057oo00<007ooOol057oo00<007ooOol0
+1goo003/Ool00>aoo`00k7oo003/Ool00>aoo`00k7oo003/Ool00>aoo`00
+@7oo1@004goo10004goo10004goo1000:Goo10004goo10004Woo1@001goo
+0010Ool2000GOol2000EOol2000EOol2000[Ool2000EOol2000COol2000:
+Ool0045oo`8001=oo`H0015oo`H0015oo`H002Moo`H0015oo`H001=oo`80
+00Uoo`00@Woo0P004Woo00<007ooOol00P004Woo00<007ooOol00P004Woo
+00<007ooOol00P0047oo00D007ooOomoo`0000=oo`03001oogoo00eoo`03
+001oogoo0080019oo`03001oogoo008001Eoo`8000Qoo`00@goo0P004Woo
+00@007oo000001=oo`04001oo`00000COol01000Ool00000:Goo00@007oo
+000001=oo`04001oo`00000FOol20007Ool0041oo`800003Ool00000019o
+o`04001oo`00000COol01000Ool000004goo00@007oo000002Uoo`04001o
+o`00000COol01000Ool000004goo0P0000=oo`0000001goo0010Ool20000
+0goo0000000COol3000DOol3000DOol3000ZOol3000DOol3000COol20000
+0goo00000007Ool0045oo`<001Eoo`8001Eoo`8001Eoo`8002]oo`8001Eo
+o`8001Aoo`<000Qoo`00k7oo003/Ool00>aoo`00k7oo003/Ool00>aoo`00
+k7oo003/Ool0041oo`D001=oo`@001=oo`@001=oo`@002Uoo`@001=oo`@0
+019oo`D000Moo`00@7oo0P005goo0P005Goo0P005Goo0P00:goo0P005Goo
+0P004goo0P002Woo0011Ool2000COol6000AOol6000AOol6000WOol6000A
+Ool6000COol20009Ool0049oo`80019oo`03001oogoo0080019oo`03001o
+ogoo0080019oo`03001oogoo0080011oo`05001oogooOol00003Ool00`00
+Oomoo`0=Ool00`00Oomoo`02000BOol00`00Oomoo`02000EOol20008Ool0
+04=oo`80019oo`04001oo`00000COol01000Ool000004goo00@007oo0000
+02Uoo`04001oo`00000COol01000Ool000005Woo0P001goo0010Ool20000
+0goo0000000BOol01000Ool000004goo00@007oo000001=oo`04001oo`00
+000YOol01000Ool000004goo00@007oo000001=oo`800003Ool0000000Mo
+o`00@7oo0P0000=oo`0000004goo0`0057oo0`0057oo0`00:Woo0`0057oo
+0`004goo0P0000=oo`0000001goo0011Ool3000EOol2000EOol2000EOol2
+000[Ool2000EOol2000DOol30008Ool00>aoo`00k7oo003/Ool00>aoo`00
+k7oo003/Ool00>aoo`00k7oo0010Ool6000AOol5000BOol5000BOol5000X
+Ool5000BOol5000BOol60006Ool0049oo`8001=oo`8001Eoo`8001Eoo`80
+02]oo`8001Eoo`8001Moo`8000Qoo`00@Woo0P0057oo0P005Goo0P005Goo
+0P00:goo0P005Goo0P005Woo0P0027oo0012Ool2000EOol2000EOol2000E
+Ool2000@Ool01@00Oomoogoo00000goo00<007ooOol047oo0P005Goo0P00
+5Goo0P0027oo0012Ool2000FOol2000EOol2000EOol2000[Ool2000EOol2
+000DOol20008Ool0049oo`8001=oo`800003Ool00000019oo`800003Ool0
+0000019oo`800003Ool0000002Qoo`800003Ool00000019oo`800003Ool0
+000001Aoo`8000Qoo`00@7oo10004goo0P0000=oo`0000004Woo0P0000=o
+o`0000004Woo0P0000=oo`000000:7oo0P0000=oo`0000004Woo0P0000=o
+o`0000004Woo100027oo0012Ool2000DOol3000DOol3000DOol3000ZOol3
+000DOol3000EOol20008Ool00>aoo`00\
+\>"], "Input",
+    Evaluatable->False,
+    ImageSize->{236, 109},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}}],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/SimpsonsRule2DProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/SimpsonsRule2DProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Simpson's 2D Rule) ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Consider ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z = f \((x, y)\)\)]],
+  " over the rectangle ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold"], " ", "=", 
+        " ", \({\((x, y)\) : \ a \[LessEqual] x \[LessEqual] b, \ 
+          c \[LessEqual] y \[LessEqual] d}\)}]]],
+  StyleBox[".  Given that the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  StyleBox[" is subdivided into ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(2  m\)]],
+  " ",
+  StyleBox[" subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(x\_\(i - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(x\_i\)}], "]"}], "}"}], \(i = 
+          1\), \(2  m\)]]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/\(2  m\)\)]],
+  StyleBox["  by using the equally spaced sample points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_i\  = \ x\_0\  + \ i\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(i = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(2  m\)}]]],
+  StyleBox[".   Also, assume that the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"c", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox["d",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}]}], "]"}]]],
+  StyleBox[" is subdivided into ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(2  n\)]],
+  " ",
+  StyleBox[" subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(y\_\(j - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              SubscriptBox[
+                StyleBox["y",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "j"]}], "]"}], "}"}], \(j = 
+          1\), \(2  n\)]]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = \(b\  - \ a\)\/\(2  n\)\)]],
+  StyleBox["  by using the equally spaced sample points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y\_j\  = \ y\_0\  + \ j\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(j = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(2  n\)}]]],
+  StyleBox[".   \nThe ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite Simpson's rule",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  is  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          UnderscriptBox[\(\[Integral]\[Integral]\), 
+            StyleBox["R",
+              FontWeight->"Bold"]], " ", 
+          "f", \((x, y)\), \(\[DifferentialD]A\)}], " ", "=", " ", 
+        RowBox[{\(\[Integral]\+a\%b\ \(\[Integral]\+c\%d\ 
+              f \((x, y)\) \[DifferentialD]y \[DifferentialD]x\)\), " ", 
+          "\[TildeTilde]", " ", 
+          RowBox[{"S2D", 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]}]}]]],
+  StyleBox["\nwhere\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"S2D", 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", \(1\/9\ h\ k\ \((\ 
+            f \((a, c)\)\  + \ f \((a, d)\)\  + \ f \((b, c)\)\  + \ 
+              f \((b, d)\)\[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \  + \ 4\ \(\[Sum]\+\(j = 1\)\%n f \((a, y\_\(2\ j - 1\))\)\)\  + \ 
+              2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f \((a, y\_\(2\ j\))\)\)\  + \ 
+              4\ \(\[Sum]\+\(j = 1\)\%n f \((b, y\_\(2\ j - 1\))\)\)\  + \ 
+              2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f \((b, 
+                      y\_\(2\ j\))\)\)\[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \  + \ 
+              4\ \(\[Sum]\+\(i = 1\)\%m f \((x\_\(2\ i - 1\), c)\)\)\  + \ 
+              2\ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f \((x\_\(2\ i\), c)\)\)\  + \ 
+              4\ \(\[Sum]\+\(i = 1\)\%m f \((x\_\(2\ i - 1\), d)\)\)\  + \ 
+              2\ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f \((x\_\(2\ i\), 
+                      d)\)\)\[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \  + \ 16\ \(\[Sum]\+\(j = 1\)\%n\((\[Sum]\+\(i = 1\)\%m 
+                        f \((x\_\(2\ i - 1\), y\_\(2\ j - 1\))\))\)\)\  + \ 
+              8\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%m 
+                        f \((x\_\(2\ i - 1\), 
+                          y\_\(2\ j\))\))\)\)\[IndentingNewLine]\ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \  + \ 
+              8\ \(\[Sum]\+\(j = 1\)\%n\((\[Sum]\+\(i = 1\)\%\(m - 1\)f \
+\((x\_\(2\ i\), 
+                          y\_\(2\ j - 1\))\))\)\)\ \  + \ \ 4\ \(\[Sum]\+\(j \
+= 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%\(m - 1\)f \((x\_\(2\ i\), 
+                          y\_\(2\ j\))\))\)\)\ )\)\)}]]],
+  "  \n\t\nIt can be shown that the error term is of the form  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_S2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^4)\)}]}]}]]],
+  ", that is \n\n",
+  StyleBox["\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\+a\%b\ \(\[Integral]\+c\%d\ 
+            f \((x, y)\) \[DifferentialD]y \[DifferentialD]x\)\), " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{"S2D", 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", 
+          "+", "  ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}], " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^4)\)}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Simpson's rule had the pattern of weights  ",
+  Cell[BoxData[
+      \(1, 4, 2, 4, 2, 4, 2,  ... , 2, 4, 1\)]],
+  "  and Simpson's 2D rule extends this pattern to a grid in the rectangle ",
+  StyleBox["R",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n\n\t",
+  Cell[GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40005:0000SA000`40O003
+h00OogooBgoo003oOom;Ool00?mood]oo`00@goo1P005Woo10004Woo1@00
+57oo10004Woo1@0057oo10004Woo1@00;Woo1@0057oo10004Woo1P003goo
+0015Ool2000IOol2000COol2000HOol2000COol2000HOol2000COol2000a
+Ool2000HOol2000EOol2000AOol004Eoo`8001Ioo`H001=oo`8001Aoo`H0
+01=oo`8001Aoo`H001=oo`80035oo`8001Aoo`H001Aoo`80015oo`00AGoo
+0P005Woo00<007ooOol00P005Goo0P004goo00<007ooOol00P005Goo0P00
+4goo00<007ooOol00P005Goo0P004goo00D007ooOomoo`0000=oo`03001o
+ogoo01=oo`8001=oo`03001oogoo008001Eoo`80015oo`00AGoo0P005goo
+00@007oo000001Ioo`8001=oo`04001oo`00000FOol2000COol01000Ool0
+00005Woo0P00<Goo0P004goo00@007oo000001Eoo`80015oo`00AGoo0P00
+5goo00@007oo000001=oo`800003Ool0000001=oo`04001oo`00000COol2
+00000goo0000000COol01000Ool000004goo0P0000=oo`000000;Woo0P00
+00=oo`0000004goo00@007oo000001Eoo`80015oo`00@goo100067oo0`00
+4goo0P0000=oo`00000057oo0`004goo0P0000=oo`00000057oo0`004goo
+0P0000=oo`000000;Woo0P0000=oo`00000057oo0`004goo10004Goo0015
+Ool2000IOol2000DOol3000FOol2000DOol3000FOol2000DOol3000`Ool3
+000FOol2000EOol2000AOol00?mood]oo`00ogooBgoo003oOom;Ool00?mo
+od]oo`00ogooBgoo003oOom;Ool00?mood]oo`00ogooBgoo0014Ool4000B
+Ool60002Ool3000AOol3000@Ool60002Ool3000AOol3000@Ool60002Ool3
+000AOol3000`Ool3000@Ool60002Ool3000AOol4000@Ool004Eoo`8001Eo
+o`8000=oo`800003Ool0000000moo`800003Ool00000015oo`8000=oo`80
+0003Ool0000000moo`800003Ool00000015oo`8000=oo`800003Ool00000
+00moo`800003Ool0000002ioo`800003Ool00000015oo`8000=oo`800003
+Ool00000015oo`80015oo`00@Woo1P0057oo0P000goo0P0000=oo`000000
+3goo0P0000=oo`0000004Goo0P000goo0P0000=oo`0000003goo0P0000=o
+o`0000004Goo0P000goo0P0000=oo`0000003goo0P0000=oo`000000;Woo
+0P0000=oo`0000004Goo0P000goo0P0000=oo`0000003Woo1P0047oo0012
+Ool00`00Oomoo`02000EOol20003Ool200000goo0000000?Ool200000goo
+0000000AOol20003Ool200000goo0000000?Ool200000goo0000000AOol2
+0003Ool200000goo0000000?Ool200000goo0000000BOol01@00Oomoogoo
+00000goo00<007ooOol04Goo0P0000=oo`0000004Goo0P000goo0P0000=o
+o`0000003Woo00<007ooOol00P004Goo0013Ool01000Ool000005Goo0P00
+0goo10004Goo0`004Woo0P000goo10004Goo0`004Woo0P000goo10004Goo
+0`00<7oo0`004Woo0P000goo100047oo00@007oo0000015oo`00@goo00@0
+07oo000001Eoo`8000=oo`80019oo`800003Ool00000015oo`8000=oo`80
+019oo`800003Ool00000015oo`8000=oo`80019oo`800003Ool0000002io
+o`800003Ool00000015oo`8000=oo`80019oo`04001oo`00000AOol004Ao
+o`<001=oo`@000Aoo`80015oo`800003Ool0000000moo`@000Aoo`80015o
+o`800003Ool0000000moo`@000Aoo`80015oo`800003Ool0000002ioo`80
+0003Ool0000000moo`@000Aoo`80019oo`<0015oo`00AGoo0P005Goo0P00
+1Goo0`0047oo0`004Woo0P001Goo0`0047oo0`004Woo0P001Goo0`0047oo
+0`00<7oo0`004Woo0P001Goo0`004Goo0P004Goo003oOom;Ool00?mood]o
+o`00ogooBgoo003oOom;Ool00?mood]oo`00ogooBgoo003oOom;Ool00?mo
+od]oo`00@goo1@005goo0`0057oo100057oo0`0057oo100057oo0`0057oo
+1000;goo100057oo0`004goo1@0047oo0013Ool2000IOol200000goo0000
+000DOol2000DOol200000goo0000000DOol2000DOol200000goo0000000D
+Ool2000aOol2000DOol200000goo0000000BOol2000COol004Aoo`8001Qo
+o`800003Ool00000015oo`H001=oo`800003Ool00000015oo`H001=oo`80
+0003Ool00000015oo`H002eoo`H001=oo`800003Ool0000001=oo`80019o
+o`00AGoo0P005goo0P0000=oo`0000004Goo00<007ooOol00P0057oo0P00
+00=oo`0000004Goo00<007ooOol00P0057oo0P0000=oo`0000004Goo00<0
+07ooOol00P004goo00D007ooOomoo`0000=oo`03001oogoo011oo`03001o
+ogoo008001Aoo`800003Ool0000001Aoo`80015oo`00AWoo0P005goo0`00
+4goo00@007oo000001Eoo`<001=oo`04001oo`00000EOol3000COol01000
+Ool00000;goo00@007oo000001Eoo`<001Ioo`80011oo`00@goo0P0000=o
+o`0000005Woo0P0000=oo`0000004Woo00@007oo000001Aoo`800003Ool0
+0000019oo`04001oo`00000DOol200000goo0000000BOol01000Ool00000
+;goo00@007oo000001Aoo`800003Ool00000019oo`800003Ool00000011o
+o`00@goo0P0000=oo`0000005Woo0P0000=oo`0000004goo0`0057oo0P00
+00=oo`0000004goo0`0057oo0P0000=oo`0000004goo0`00<7oo0`0057oo
+0P0000=oo`0000004Woo0P0000=oo`00000047oo0014Ool3000HOol3000E
+Ool2000EOol3000EOol2000EOol3000EOol2000aOol2000EOol3000DOol3
+000AOol00?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00ogooBgoo
+003oOom;Ool00?mood]oo`00ogooBgoo0015Ool00`00Oomoo`0HOol00`00
+Oomoo`0DOol00`00Oomoo`0EOol00`00Oomoo`0DOol00`00Oomoo`0EOol0
+0`00Oomoo`0DOol00`00Oomoo`0`Ool00`00Oomoo`0EOol00`00Oomoo`0D
+Ool00`00Oomoo`0@Ool00?1oo`03001oogoo05Moo`00ogooBgoo003^Ool0
+0`00Oomoo`1IOol004Eoo`03001oogoo01Qoo`03001oogoo01Aoo`03001o
+ogoo01Eoo`03001oogoo01Aoo`03001oogoo01Eoo`03001oogoo01Aoo`03
+001oogoo031oo`03001oogoo01Eoo`03001oogoo01Aoo`03001oogoo011o
+o`00k7oo00<007ooOol0Fgoo003oOom;Ool00?mood]oo`00AGoo00<007oo
+Ool067oo00<007ooOol057oo00<007ooOol05Goo00<007ooOol057oo00<0
+07ooOol05Goo00<007ooOol057oo00<007ooOol0<7oo00<007ooOol05Goo
+00<007ooOol057oo00<007ooOol047oo003oOom;Ool00?mood]oo`00ogoo
+Bgoo003oOom;Ool00?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00
+@goo1@005goo0`0057oo100057oo0`0057oo100057oo0`0057oo1000;goo
+100057oo0`004goo1@0047oo0013Ool2000IOol200000goo0000000DOol2
+000DOol200000goo0000000DOol2000DOol200000goo0000000DOol2000a
+Ool2000DOol200000goo0000000BOol2000COol004Aoo`8001Qoo`800003
+Ool00000015oo`H001=oo`800003Ool00000015oo`H001=oo`800003Ool0
+0000015oo`H002eoo`H001=oo`800003Ool0000001=oo`80019oo`00AGoo
+0P005goo0P0000=oo`0000004Goo00<007ooOol00P0057oo0P0000=oo`00
+00004Goo00<007ooOol00P0057oo0P0000=oo`0000004Goo00<007ooOol0
+0P004goo00D007ooOomoo`0000=oo`03001oogoo011oo`03001oogoo0080
+01Aoo`800003Ool0000001Aoo`80015oo`00AWoo0P005goo0`004goo00@0
+07oo000001Eoo`<001=oo`04001oo`00000EOol3000COol01000Ool00000
+;goo00@007oo000001Eoo`<001Ioo`80011oo`00@goo0P0000=oo`000000
+5Woo0P0000=oo`0000004Woo00@007oo000001Aoo`800003Ool00000019o
+o`04001oo`00000DOol200000goo0000000BOol01000Ool00000;goo00@0
+07oo000001Aoo`800003Ool00000019oo`800003Ool00000011oo`00@goo
+0P0000=oo`0000005Woo0P0000=oo`0000004goo0`0057oo0P0000=oo`00
+00004goo0`0057oo0P0000=oo`0000004goo0`00<7oo0`0057oo0P0000=o
+o`0000004Woo0P0000=oo`00000047oo0014Ool3000HOol3000EOol2000E
+Ool3000EOol2000EOol3000EOol2000aOol2000EOol3000DOol3000AOol0
+0?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00ogooBgoo003oOom;
+Ool00?mood]oo`00ogooBgoo0014Ool4000BOol60002Ool3000AOol3000@
+Ool60002Ool3000AOol3000@Ool60002Ool3000AOol3000`Ool3000@Ool6
+0002Ool3000AOol4000@Ool004Eoo`8001Eoo`8000=oo`800003Ool00000
+00moo`800003Ool00000015oo`8000=oo`800003Ool0000000moo`800003
+Ool00000015oo`8000=oo`800003Ool0000000moo`800003Ool0000002io
+o`800003Ool00000015oo`8000=oo`800003Ool00000015oo`80015oo`00
+@Woo1P0057oo0P000goo0P0000=oo`0000003goo0P0000=oo`0000004Goo
+0P000goo0P0000=oo`0000003goo0P0000=oo`0000004Goo0P000goo0P00
+00=oo`0000003goo0P0000=oo`000000;Woo0P0000=oo`0000004Goo0P00
+0goo0P0000=oo`0000003Woo1P0047oo0012Ool00`00Oomoo`02000EOol2
+0003Ool200000goo0000000?Ool200000goo0000000AOol20003Ool20000
+0goo0000000?Ool200000goo0000000AOol20003Ool200000goo0000000?
+Ool200000goo0000000BOol01@00Oomoogoo00000goo00<007ooOol04Goo
+0P0000=oo`0000004Goo0P000goo0P0000=oo`0000003Woo00<007ooOol0
+0P004Goo0013Ool01000Ool000005Goo0P000goo10004Goo0`004Woo0P00
+0goo10004Goo0`004Woo0P000goo10004Goo0`00<7oo0`004Woo0P000goo
+100047oo00@007oo0000015oo`00@goo00@007oo000001Eoo`8000=oo`80
+019oo`800003Ool00000015oo`8000=oo`80019oo`800003Ool00000015o
+o`8000=oo`80019oo`800003Ool0000002ioo`800003Ool00000015oo`80
+00=oo`80019oo`04001oo`00000AOol004Aoo`<001=oo`@000Aoo`80015o
+o`800003Ool0000000moo`@000Aoo`80015oo`800003Ool0000000moo`@0
+00Aoo`80015oo`800003Ool0000002ioo`800003Ool0000000moo`@000Ao
+o`80019oo`<0015oo`00AGoo0P005Goo0P001Goo0`0047oo0`004Woo0P00
+1Goo0`0047oo0`004Woo0P001Goo0`0047oo0`00<7oo0`004Woo0P001Goo
+0`004Goo0P004Goo003oOom;Ool00?mood]oo`00ogooBgoo003oOom;Ool0
+0?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00@goo1@005goo0`00
+57oo100057oo0`0057oo100057oo0`0057oo1000;goo100057oo0`004goo
+1@0047oo0013Ool2000IOol200000goo0000000DOol2000DOol200000goo
+0000000DOol2000DOol200000goo0000000DOol2000aOol2000DOol20000
+0goo0000000BOol2000COol004Aoo`8001Qoo`800003Ool00000015oo`H0
+01=oo`800003Ool00000015oo`H001=oo`800003Ool00000015oo`H002eo
+o`H001=oo`800003Ool0000001=oo`80019oo`00AGoo0P005goo0P0000=o
+o`0000004Goo00<007ooOol00P0057oo0P0000=oo`0000004Goo00<007oo
+Ool00P0057oo0P0000=oo`0000004Goo00<007ooOol00P004goo00D007oo
+Oomoo`0000=oo`03001oogoo011oo`03001oogoo008001Aoo`800003Ool0
+000001Aoo`80015oo`00AWoo0P005goo0`004goo00@007oo000001Eoo`<0
+01=oo`04001oo`00000EOol3000COol01000Ool00000;goo00@007oo0000
+01Eoo`<001Ioo`80011oo`00@goo0P0000=oo`0000005Woo0P0000=oo`00
+00004Woo00@007oo000001Aoo`800003Ool00000019oo`04001oo`00000D
+Ool200000goo0000000BOol01000Ool00000;goo00@007oo000001Aoo`80
+0003Ool00000019oo`800003Ool00000011oo`00@goo0P0000=oo`000000
+5Woo0P0000=oo`0000004goo0`0057oo0P0000=oo`0000004goo0`0057oo
+0P0000=oo`0000004goo0`00<7oo0`0057oo0P0000=oo`0000004Woo0P00
+00=oo`00000047oo0014Ool3000HOol3000EOol2000EOol3000EOol2000E
+Ool3000EOol2000aOol2000EOol3000DOol3000AOol00?mood]oo`00ogoo
+Bgoo003oOom;Ool00?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00
+ogooBgoo0014Ool4000BOol60002Ool3000AOol3000@Ool60002Ool3000A
+Ool3000@Ool60002Ool3000AOol3000`Ool3000@Ool60002Ool3000AOol4
+000@Ool004Eoo`8001Eoo`8000=oo`800003Ool0000000moo`800003Ool0
+0000015oo`8000=oo`800003Ool0000000moo`800003Ool00000015oo`80
+00=oo`800003Ool0000000moo`800003Ool0000002ioo`800003Ool00000
+015oo`8000=oo`800003Ool00000015oo`80015oo`00@Woo1P0057oo0P00
+0goo0P0000=oo`0000003goo0P0000=oo`0000004Goo0P000goo0P0000=o
+o`0000003goo0P0000=oo`0000004Goo0P000goo0P0000=oo`0000003goo
+0P0000=oo`000000;Woo0P0000=oo`0000004Goo0P000goo0P0000=oo`00
+00003Woo1P0047oo0012Ool00`00Oomoo`02000EOol20003Ool200000goo
+0000000?Ool200000goo0000000AOol20003Ool200000goo0000000?Ool2
+00000goo0000000AOol20003Ool200000goo0000000?Ool200000goo0000
+000BOol01@00Oomoogoo00000goo00<007ooOol04Goo0P0000=oo`000000
+4Goo0P000goo0P0000=oo`0000003Woo00<007ooOol00P004Goo0013Ool0
+1000Ool000005Goo0P000goo10004Goo0`004Woo0P000goo10004Goo0`00
+4Woo0P000goo10004Goo0`00<7oo0`004Woo0P000goo100047oo00@007oo
+0000015oo`00@goo00@007oo000001Eoo`8000=oo`80019oo`800003Ool0
+0000015oo`8000=oo`80019oo`800003Ool00000015oo`8000=oo`80019o
+o`800003Ool0000002ioo`800003Ool00000015oo`8000=oo`80019oo`04
+001oo`00000AOol004Aoo`<001=oo`@000Aoo`80015oo`800003Ool00000
+00moo`@000Aoo`80015oo`800003Ool0000000moo`@000Aoo`80015oo`80
+0003Ool0000002ioo`800003Ool0000000moo`@000Aoo`80019oo`<0015o
+o`00AGoo0P005Goo0P001Goo0`0047oo0`004Woo0P001Goo0`0047oo0`00
+4Woo0P001Goo0`0047oo0`00<7oo0`004Woo0P001Goo0`004Goo0P004Goo
+003oOom;Ool00?mood]oo`00ogooBgoo003oOom;Ool00?mood]oo`00ogoo
+Bgoo003oOom;Ool00?mood]oo`00@goo1P005Woo10004Woo1@0057oo1000
+4Woo1@0057oo10004Woo1@00;Woo1@0057oo10004Woo1P003goo0015Ool2
+000IOol2000COol2000HOol2000COol2000HOol2000COol2000aOol2000H
+Ool2000EOol2000AOol004Eoo`8001Ioo`H001=oo`8001Aoo`H001=oo`80
+01Aoo`H001=oo`80035oo`8001Aoo`H001Aoo`80015oo`00AGoo0P005Woo
+00<007ooOol00P005Goo0P004goo00<007ooOol00P005Goo0P004goo00<0
+07ooOol00P005Goo0P004goo00D007ooOomoo`0000=oo`03001oogoo01=o
+o`8001=oo`03001oogoo008001Eoo`80015oo`00AGoo0P005goo00@007oo
+000001Ioo`8001=oo`04001oo`00000FOol2000COol01000Ool000005Woo
+0P00<Goo0P004goo00@007oo000001Eoo`80015oo`00AGoo0P005goo00@0
+07oo000001=oo`800003Ool0000001=oo`04001oo`00000COol200000goo
+0000000COol01000Ool000004goo0P0000=oo`000000;Woo0P0000=oo`00
+00004goo00@007oo000001Eoo`80015oo`00@goo100067oo0`004goo0P00
+00=oo`00000057oo0`004goo0P0000=oo`00000057oo0`004goo0P0000=o
+o`000000;Woo0P0000=oo`00000057oo0`004goo10004Goo0015Ool2000I
+Ool2000DOol3000FOol2000DOol3000FOol2000DOol3000`Ool3000FOol2
+000EOol2000AOol00?mood]oo`00\
+\>"], "Input",
+    Evaluatable->False,
+    ImageSize->{330, 141},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    FontWeight->"Plain"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/SimpsonsRule2DProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/SimpsonsRule2DProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/SimpsonsRule2DProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["2D Trapezoidal and Simpson Rules",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SimpsonsRule2DProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Trapezoidal 2D Rule). ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Object oriented programming.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Trapezoidal2D[a0_, b0_, c0_, d0_, m0_, 
+          n0_] := \[IndentingNewLine]Module[{a = N[a0], b = N[b0], c = N[c0], 
+            d = N[d0], h, k, i, j, m = m0, n = n0, X, 
+            Y}, \[IndentingNewLine]h\  = \ \(b - a\)\/m; \ \
+\[IndentingNewLine]k\  = \ \(b - a\)\/n; \ \[IndentingNewLine]X\_i_\  = \ 
+            a\  + \ i\ h; \ \[IndentingNewLine]Y\_j_\  = \ 
+            a\  + \ j\ k; \ \[IndentingNewLine]Return[\ \ \(1\/4\) 
+              h\ k \((f[a, c] + f[b, c] + \ f[a, d] + f[b, d] + 
+                  2\ \ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f[X\_i, c]\) + 
+                  2\ \ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f[X\_i, d]\) + 
+                  2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f[a, Y\_j]\) + 
+                  2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f[b, Y\_j]\) + 
+                  4\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%\(m \
+- 1\)f[X\_i, Y\_j])\)\)\ )\)];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Simpson 2D Rule). ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Object oriented programming.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Simpson2D[a0_, b0_, c0_, d0_, m0_, 
+          n0_] := \[IndentingNewLine]Module[{a = N[a0], b = N[b0], c = N[c0], 
+            d = N[d0], h, k, i, j, m = m0, n = n0, X, 
+            Y}, \[IndentingNewLine]h\  = \ \(b - a\)\/\(2  m\); \ \
+\[IndentingNewLine]k\  = \ \(b - a\)\/\(2  n\); \ \[IndentingNewLine]X\_i_\  \
+= \ a\  + \ i\ h; \ \[IndentingNewLine]Y\_j_\  = \ 
+            a\  + \ j\ k; \ \[IndentingNewLine]Return[\ 
+            1\/9\ h\ k\ \((f[a, c] + f[a, d] + f[b, c] + f[b, d] + 
+                  4\ \(\[Sum]\+\(j = 1\)\%n f[a, Y\_\(2\ j - 1\)]\) + 
+                  2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f[a, Y\_\(2\ j\)]\) + 
+                  4\ \(\[Sum]\+\(j = 1\)\%n f[b, Y\_\(2\ j - 1\)]\) + 
+                  2\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)f[b, Y\_\(2\ j\)]\) + 
+                  4\ \(\[Sum]\+\(i = 1\)\%m f[X\_\(2\ i - 1\), c]\) + 
+                  4\ \(\[Sum]\+\(i = 1\)\%m f[X\_\(2\ i - 1\), d]\) + 
+                  2\ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f[X\_\(2\ i\), c]\) + 
+                  2\ \(\[Sum]\+\(i = 1\)\%\(m - 1\)f[X\_\(2\ i\), d]\) + 
+                  16\ \(\[Sum]\+\(j = 1\)\%n\((\[Sum]\+\(i = 1\)\%m f[
+                            X\_\(2\ i - 1\), Y\_\(2\ j - 1\)])\)\) + 
+                  8\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%m f[
+                            X\_\(2\ i - 1\), Y\_\(2\ j\)])\)\) + 
+                  8\ \(\[Sum]\+\(j = 1\)\%n\((\[Sum]\+\(i = 1\)\%\(m - 1\)f[
+                            X\_\(2\ i\), Y\_\(2\ j - 1\)])\)\) + 
+                  4\ \(\[Sum]\+\(j = 1\)\%\(n - 1\)\((\[Sum]\+\(i = 1\)\%\(m \
+- 1\)f[X\_\(2\ i\), Y\_\(2\ j\)])\)\))\)];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the composite Simpson's rule for multiple integrals to numerically \
+approximate the iterated integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  ".  \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " This is the volume of the solid bounded by the surface  ",
+  Cell[BoxData[
+      \(z\  = \ 8  \[ExponentialE]\^\(\(-\ x\^2\) - \ y\^4\)\)]],
+  ",  that lies above the square  ",
+  Cell[BoxData[
+      RowBox[{"R", "=", 
+        RowBox[{"{", 
+          RowBox[{\(\((x, y)\) : \ 0 \[LessEqual] x \[LessEqual] 1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", 
+            RowBox[{
+              RowBox[{
+                StyleBox["and",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "  ", "0"}], "\[LessEqual]", "y", 
+              "\[LessEqual]", "1"}]}], "}"}]}]]],
+  "  in the xy-plane."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+For illustration, we use the grid with  m = 10 and  n = 10. 
+Enter the integrand.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = 
+        8  \[ExponentialE]\^\(\(-\ x\^2\) - \ y\^4\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {21, 21}, 
+          ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+                Green}, {{1, \(-1\), 1}, 
+                Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[x, y]];\)\)}], "Input"],
+
+Cell["\<\
+The region of integration in the xy-plane can be seen in the \
+following graphical plot.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(g\_1[x_] = 0;\)\), "\n", 
+    \(\(g\_2[x_] = 1;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(graph1 = 
+        FilledPlot[{g\_1[x], g\_2[x]}, {x, \ 0, \ 1}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph2 = 
+        Show[Graphics[
+            Table[Line[{{x, g\_1[x]}, {x, g\_2[x]}}], {x, 0.0, 1.0, 0.2}]\ ], 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[graph1, graph2, AspectRatio \[Rule] 1, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region of integration in the xy-plane\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(Print[a, "\< \[LessEqual] x \[LessEqual] \>", b, "\<  and  \>", 
+      g\_1[x], "\< \[LessEqual] y \[LessEqual] \>", g\_2[x]]\)}], "Input"],
+
+Cell[TextData[{
+  "Execute our subroutine ",
+  StyleBox["Trapezoidal2D",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(a = 0; \ b = 1; \ c = 0; \ d = 1;\ \), "\[IndentingNewLine]", 
+    \(\(n1 = 10;\)\), "\[IndentingNewLine]", 
+    \(\(m1 = 10;\)\), "\[IndentingNewLine]", 
+    \(\(val1\  = 
+        Trapezoidal2D[a, b, c, d, n1, m1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using a  m = \>", 
+        m1, "\< by n = \>", 
+        n1, \ "\<  grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", val1];\)\)}], "Input"],
+
+Cell[TextData[{
+  "If you need more decimal places, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can get them."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {6, 6}, 
+        ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+              Green}, {{1, \(-1\), 1}, Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using the m = \>", 
+        m1, "\< by n = \>", n1, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val1, 12]];\)\)}], "Input"],
+
+Cell["Next, we find the approximation by using a finer mesh grid. ", "Text"],
+
+Cell[TextData[{
+  "Execute our subroutine ",
+  StyleBox["Trapezoidal2D",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(a = 0; \ b = 1; \ c = 0; \ d = 1;\ \), "\[IndentingNewLine]", 
+    \(\(n2 = 20;\)\), "\[IndentingNewLine]", 
+    \(\(m2 = 20;\)\), "\[IndentingNewLine]", 
+    \(\(val2\  = \ 
+        Trapezoidal2D[a, b, c, d, n2, m2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using a  m = \>", 
+        m2, "\< by n = \>", 
+        n2, \ "\<  grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", val2];\)\)}], "Input"],
+
+Cell[TextData[{
+  "If you need more decimal places, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can get them."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {11, 11}, 
+        ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+              Green}, {{1, \(-1\), 1}, Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using and m = \>", 
+        m2, "\< by n = \>", n2, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val2, 12]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the analytic solution to the iterated integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Integrate  ",
+  Cell[BoxData[
+      \(8  \[ExponentialE]\^\(\(-\ x\^2\) - \ y\^4\)\)]],
+  "  with respect to the variable ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\[Integral]8\!\(\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\
+\[DifferentialD]y = \>\"", \[Integral]8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y];\)\)], "Input"],
+
+Cell[TextData[{
+  "Compute the definite integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1 
+          8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                y\^4\)\) \[DifferentialD]y\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)8\!\(\[ExponentialE]\^\(\(-x\^2\) \
+- y\^4\)\)\[DifferentialD]y = \>\"", \[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)8\!\(\[ExponentialE]\^\(\(-x\^2\) \
+- y\^4\)\)\[DifferentialD]y = \>\"", 
+        FullSimplify[\[Integral]\_0\%1 
+              8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                    y\^4\)\) \[DifferentialD]y]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Integrate  ",
+  Cell[BoxData[
+      \(\[ExponentialE]\^\(-x\^2\)\ \((8\ Gamma[5\/4] - 
+            2\ Gamma[1\/4, 1])\)\)]],
+  "  with respect to the variable ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\[Integral]\!\(\[ExponentialE]\^\(-x\^2\)\) (8 \
+Gamma[\!\(5\/4\)]-2 Gamma[\!\(1\/4\),1])\[DifferentialD]x = \>\"", \
+\[Integral]\[ExponentialE]\^\(-x\^2\)\ \((8\ Gamma[5\/4] - 
+                2\ Gamma[1\/4, 1])\) \[DifferentialD]x];\)\)], "Input"],
+
+Cell[TextData[{
+  "Compute the definite integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1 \[ExponentialE]\^\(-x\^2\)\ \((8\ Gamma[5\/4] - 
+              2\ Gamma[1\/4, 1])\) \[DifferentialD]x\)]],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[ExponentialE]\^\(-x\^2\)\) \
+(8 Gamma[\!\(5\/4\)]-2 Gamma[\!\(1\/4\),1])\[DifferentialD]x = \>\"", \
+\[Integral]\_0\%1 \[ExponentialE]\^\(-x\^2\)\ \((8\ Gamma[5\/4] - 
+                2\ Gamma[1\/4, 
+                    1])\) \[DifferentialD]x];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[ExponentialE]\^\(-x\^2\)\) \
+(8 Gamma[\!\(5\/4\)]-2 Gamma[\!\(1\/4\),1])\[DifferentialD]x = \>\"", 
+        FullSimplify[\[Integral]\_0\%1 \[ExponentialE]\^\(-x\^2\)\ \((8\ \
+Gamma[5\/4] - 2\ Gamma[1\/4, 1])\) \[DifferentialD]x]];\)\)}], "Input"],
+
+Cell["We have found the value of the iterated integral ", "Text"],
+
+Cell[BoxData[{
+    \(\(trueval\  = \ \[Integral]\_0\%1\(\[Integral]\_0\%1 
+              8 \( \[ExponentialE]\^\(\(-x\^2\) - 
+                    y\^4\)\) \[DifferentialD]y \[DifferentialD]x\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\)8\!\(\
+\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\[DifferentialD]x = \
+\>\"", trueval];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\)8\!\(\
+\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\[DifferentialD]x = \
+\>\"", FullSimplify[trueval]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\)8\!\(\
+\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\[DifferentialD]x = \
+\>\"", N[trueval]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  How good are the Trapezoidal rule approximations to  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  "  that were calculated in Example 1?"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", \*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\
+\)8\!\(\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", 
+        NumberForm[N[trueval], 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using and m = \>", 
+        m1, "\< by n = \>", n1, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using and m = \>", 
+        m2, "\< by n = \>", n2, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val2, 12]];\)\)}], "Input"],
+
+Cell["We can compare the error in these approximations.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - TR[\>", 
+        m1, "\<,\>", n1, "\<] = \>", 
+        NumberForm[trueval - val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - TR[\>", 
+        m2, "\<,\>", n2, "\<] = \>", 
+        NumberForm[trueval - val2, 12]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The error for the Trapezoidal 2D rule has the form    ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_T2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^2)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^2)\)}]}]}]]],
+  "  where ",
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["k",
+    FontFamily->"Courier New"],
+  " are the step sizes for the variables ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ", respectively. \nFor the above examples, we have the following results. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val1, 12]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val2, 12]\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Since both the step sizes were reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the remainder term  ",
+  Cell[BoxData[
+      RowBox[{\(E\_T2D\), 
+        RowBox[{"(", 
+          RowBox[{"f", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]]],
+  " should be reduced by approximately ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^2\  = \ 0.25\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<)/\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", 
+          ",", \(\((trueval - val2)\)/\((trueval - val1)\)\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<)/\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) \[TildeTilde] \>\"", ",", \(\((1.0\/2.0)\)\^2\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell["\<\
+Therefore, the 2D Trapezoidal rule is behaving as predicted. \
+\>", \
+"Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the composite Simpson's rule for multiple integrals to numerically \
+approximate the iterated integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  ".  \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " This is the volume of the solid bounded by the surface  ",
+  Cell[BoxData[
+      \(z\  = \ 8  \[ExponentialE]\^\(\(-\ x\^2\) - \ y\^4\)\)]],
+  ",  that lies above the square  ",
+  Cell[BoxData[
+      RowBox[{"R", "=", 
+        RowBox[{"{", 
+          RowBox[{\(\((x, y)\) : \ 0 \[LessEqual] x \[LessEqual] 1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", 
+            RowBox[{
+              RowBox[{
+                StyleBox["and",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "  ", "0"}], "\[LessEqual]", "y", 
+              "\[LessEqual]", "1"}]}], "}"}]}]]],
+  "  in the xy-plane."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+For illustration, we use the grid with  m = 5 and  n = 5. 
+Enter the integrand.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = 
+        8  \[ExponentialE]\^\(\(-\ x\^2\) - \ y\^4\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {21, 21}, 
+          ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+                Green}, {{1, \(-1\), 1}, 
+                Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[x, y]];\)\)}], "Input"],
+
+Cell["\<\
+The region of integration in the xy-plane can be seen in the \
+following graphical plot.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(g\_1[x_] = 0;\)\), "\n", 
+    \(\(g\_2[x_] = 1;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(graph1 = 
+        FilledPlot[{g\_1[x], g\_2[x]}, {x, \ 0, \ 1}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph2 = 
+        Show[Graphics[
+            Table[Line[{{x, g\_1[x]}, {x, g\_2[x]}}], {x, 0.0, 1.0, 0.2}]\ ], 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[graph1, graph2, AspectRatio \[Rule] 1, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region of integration in the xy-plane\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(Print[a, "\< \[LessEqual] x \[LessEqual] \>", b, "\<  and  \>", 
+      g\_1[x], "\< \[LessEqual] y \[LessEqual] \>", g\_2[x]]\)}], "Input"],
+
+Cell[TextData[{
+  "Execute our subroutine ",
+  StyleBox["Simpson2D",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(a = 0; \ b = 1; \ c = 0; \ d = 1;\ \), "\[IndentingNewLine]", 
+    \(\(n3 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(m3 = 5;\)\), "\[IndentingNewLine]", 
+    \(\(val3\  = \ 
+        Simpson2D[a, b, c, d, n3, m3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using a  m = \>", 
+        m3, "\< by n = \>", 
+        n3, \ "\<  grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", val3];\)\)}], "Input"],
+
+Cell[TextData[{
+  "If you need more decimal places, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can get them."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {6, 6}, 
+        ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+              Green}, {{1, \(-1\), 1}, Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using the m = \>", 
+        m3, "\< by n = \>", n3, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val3, 12]];\)\)}], "Input"],
+
+Cell["Next, we find the approximation by using a finer mesh grid. ", "Text"],
+
+Cell[TextData[{
+  "Execute our subroutine ",
+  StyleBox["Simpson2D",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(a = 0; \ b = 1; \ c = 0; \ d = 1;\ \), "\[IndentingNewLine]", 
+    \(\(n4 = 10;\)\), "\[IndentingNewLine]", 
+    \(\(m4 = 10;\)\), "\[IndentingNewLine]", 
+    \(\(val4\  = \ 
+        Simpson2D[a, b, c, d, n4, m4];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using a  m = \>", 
+        m4, "\< by n = \>", 
+        n4, \ "\<  grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", val4];\)\)}], "Input"],
+
+Cell[TextData[{
+  "If you need more decimal places, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can get them."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot3D[f[x, y], {x, 0, 1}, {y, 0, 1}, PlotPoints \[Rule] {11, 11}, 
+        ViewPoint \[Rule] {3, 1, 1}, AxesLabel \[Rule] {x, y, z}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        LightSources \[Rule] {{{0, 0, 1}, Red}, {{2, 2, 0.5}, 
+              Green}, {{1, \(-1\), 1}, Blue}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using and m = \>", 
+        m4, "\< by n = \>", n4, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val4, 12]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  How good are the Simpson's rule approximations to  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  "  that were calculated in Example 4?"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", \*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\
+\)8\!\(\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", 
+        NumberForm[N[trueval], 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using and m = \>", 
+        m1, "\< by n = \>", n1, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using and m = \>", 
+        m2, "\< by n = \>", n2, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val2, 12]];\)\)}], "Input"],
+
+Cell["We can compare the error in these approximations.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - SR[\>", 
+        m1, "\<,\>", n1, "\<] = \>", 
+        NumberForm[trueval - val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - SR[\>", 
+        m2, "\<,\>", n2, "\<] = \>", 
+        NumberForm[trueval - val2, 12]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The error for Simpson's 2D rule has the form    ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_S2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^4)\)}]}]}]]],
+  "  where ",
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["k",
+    FontFamily->"Courier New"],
+  " are the step sizes for the variables ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ", respectively. \nFor the above examples, we have the following results. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val1, 12]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val2, 12]\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Since both the step sizes were reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the remainder term  ",
+  Cell[BoxData[
+      RowBox[{\(E\_S2D\), 
+        RowBox[{"(", 
+          RowBox[{"f", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]]],
+  " should be reduced by approximately ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^4\  = \ 0.0625`\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<)/\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) = \>\"", 
+          ",", \(\((trueval - val2)\)/\((trueval - val1)\)\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<)/\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) \[TildeTilde] \>\"", ",", \(\((1.0\/2.0)\)\^4\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell["Therefore, the 2D Simpson's rule is behaving as predicted. ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compare the 2D Trapezoidal and 2D Simpson rule approximations to   ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\(\[Integral]\_0\%1 
+            8 \( \[ExponentialE]\^\(\(-\ x\^2\) - \ 
+                  y\^4\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  "  that were calculated in Examples 1 and 4?"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", \*"\"\<\!\(\[Integral]\_0\%1\)\!\(\[Integral]\_0\%1\
+\)8\!\(\[ExponentialE]\^\(\(-x\^2\) - y\^4\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", 
+        NumberForm[N[trueval], 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using and m = \>", 
+        m1, "\< by n = \>", n1, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Trapezoidal rule approximation using and m = \>", 
+        m2, "\< by n = \>", n2, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val2, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using and m = \>", 
+        m3, "\< by n = \>", n3, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using and m = \>", 
+        m4, "\< by n = \>", n4, \ "\< grid.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", 
+        f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< \
+\[TildeTilde] \>", NumberForm[val4, 12]];\)\)}], "Input"],
+
+Cell["We can compare the error in these approximations.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - TR[\>", 
+        m1, "\<,\>", n1, "\<] = \>", 
+        NumberForm[trueval - val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - TR[\>", 
+        m2, "\<,\>", n2, "\<] = \>", 
+        NumberForm[trueval - val2, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - SR[\>", 
+        m3, "\<,\>", n3, "\<] = \>", 
+        NumberForm[trueval - val3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<( \>", "\<\[Integral]\>"\+c\%d, \
+"\<( \>", f[x, y], "\<)\[DifferentialD]y )\[DifferentialD]x\>", "\< - SR[\>", 
+        m4, "\<,\>", n4, "\<] = \>", 
+        NumberForm[trueval - val4, 12]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The error for the Trapezoidal 2D rule has the form    ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_T2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^2)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^2)\)}]}]}]]],
+  "  where ",
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["k",
+    FontFamily->"Courier New"],
+  " are the step sizes for the variables ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ", respectively. \nThe error for Simpson's 2D rule has the form    ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_S2D\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}], " ", "=", 
+        " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}], "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((k\^4)\)}]}]}]]],
+  "  where ",
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["k",
+    FontFamily->"Courier New"],
+  " are the step sizes for the variables ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ", respectively. \nFor the above examples, we have the following results. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val1, 12]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val2, 12]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val3, 12]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", ",", \(NumberForm[trueval - val4, 12]\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Since both the step sizes were reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the remainder term  ",
+  Cell[BoxData[
+      RowBox[{\(E\_T2D\), 
+        RowBox[{"(", 
+          RowBox[{"f", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]]],
+  " should be reduced by approximately ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^2\  = \ 0.25\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Since both the step sizes were reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the remainder term  ",
+  Cell[BoxData[
+      RowBox[{\(E\_S2D\), 
+        RowBox[{"(", 
+          RowBox[{"f", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "h", ",", "k"}], ")"}]}]]],
+  " should be reduced by approximately ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^4\  = \ 0.0625`\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<)/\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) = \>\"", 
+          ",", \(\((trueval - val2)\)/\((trueval - val1)\)\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/20\), ",", \(1\/20\), ",", 
+          "\"\<)/\!\(E\_T2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<) \[TildeTilde] \>\"", ",", \(\((1.0\/2.0)\)\^2\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<)/\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) = \>\"", 
+          ",", \(\((trueval - val4)\)/\((trueval - val3)\)\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/10\), ",", \(1\/10\), ",", 
+          "\"\<)/\!\(E\_S2D\)(f\>\"", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(1\/5\), ",", " ", \(1\/5\), ",", 
+          "\"\<) \[TildeTilde] \>\"", ",", \(\((1.0\/2.0)\)\^4\)}], "]"}], 
+      ";"}]}], "Input"],
+
+Cell["\<\
+Therefore, both the 2D Trapezoidal and 2D Simpson's rules is \
+behaving as predicted. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["More Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSuppose we wish to numerically approximate the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\((\[Integral]\_\(c[x]\)\%\(d[x]\)f[x, 
+                  y] \[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ",  where  the limits of integration on the inside integral are functions \
+of ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  ".  This can be accomplished as follows. \n\nFirst, apply Simpson's rule \
+using  m  subintervals of  ",
+  Cell[BoxData[
+      \(c[x]\  \[LessEqual] \ y\  \[LessEqual] \ d[x]\)]],
+  "  to  ",
+  StyleBox["f[x,y]",
+    FontFamily->"Courier New"],
+  "  and define the result as the function  ",
+  StyleBox["F[x]",
+    FontFamily->"Courier New"],
+  ". \n\nSecond, apply Simpson's rule using  n  subintervals of  ",
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ x\  \[LessEqual] \ b\)]],
+  "  to  ",
+  StyleBox["F[x]",
+    FontFamily->"Courier New"],
+  ". \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " To make  ",
+  StyleBox["F[x]",
+    FontFamily->"Courier New"],
+  "  \"look like a function of  ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  "\"  we shall fix the number of vertical subdivisions \"m\"  in a global \
+variable.  Use the following two ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutines."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(F[x_]\  := 
+        Module[{j}, \n\ \ k\  = \ \(d[x] - c[x]\)\/\(2  m\); \n\ \ sum1\  = \ \
+\[Sum]\+\(j = 1\)\%\(m - 1\)f[x, 
+                c[x] + k*2*j]; \n\ \ sum2\  = \ \[Sum]\+\(j = 1\)\%m f[x, 
+                c[x] + k*\((2*j - 1)\)]; \n\ \ Return[\ \(k\/3\) \((f[x, 
+                    c[x]] + f[x, d[x]] + 2*sum1 + 4*sum2)\)]];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Simp2D[a_, b_, n_]\  := 
+        Module[{i}, \n\ \ h\  = \ \(b - a\)\/\(2  n\); \n\ \ s1\  = \
+\[Sum]\+\(i = 1\)\%\(n - 1\)\ 
+              F[a + h*2*i]; \n\ \ s2\  = \ \[Sum]\+\(i = 1\)\%n F[
+                a + h*\((2  i - 1)\)]; \n\ \ sum\  = \ 
+            h\/3*\((F[a]\  + \ F[b]\  + \ 2*s1\  + \ 4*s2)\); \n\ \ Return[
+            sum]\ ];\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the composite Simpson's rule for multiple integrals to numerically \
+approximate the iterated integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\(\[Integral]\_\(x\^2\)\%\(\@\(8\ x\)\)\(\
+\[ExponentialE]\^\(\(-x\)\ \@y\)\) \[DifferentialD]y \[DifferentialD]x\)\)]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+We use  n = 20 and  m = 5 in our computations.
+The integrand is:\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, 
+          y_]\  = \[ExponentialE]\^\(\(-\ x\) \@y\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[x, y]];\)\)}], "Input"],
+
+Cell["The curves bounding the region are:", "Text"],
+
+Cell["\<\
+The region of integration in the xy-plane can be seen in the \
+following graphical plot.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, d];\)\), "\[IndentingNewLine]", 
+    \(\(c[x_] = x\^2;\)\), "\n", 
+    \(\(d[x_] = \@\(8  x\);\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(graph1 = 
+        FilledPlot[{c[x], d[x]}, {x, \ 0, \ 2}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph2 = 
+        Show[Graphics[
+            Table[Line[{{x, c[x]}, {x, d[x]}}], {x, 0.0, 2.0, 0.125}]\ ], 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[graph1, graph2, AspectRatio \[Rule] 1, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region of integration in the xy-plane\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(Print[a, "\< \[LessEqual] x \[LessEqual] \>", b, "\<  and  \>", 
+      c[x], "\< \[LessEqual] y \[LessEqual] \>", d[x]]\)}], "Input"],
+
+Cell[TextData[{
+  "Before we carry out the quadrature, we must fix \"m\" the number of \
+vertical subdivisions to be used along each of the vertical segments ",
+  Cell[BoxData[
+      \(x = \(x\_\(\(\(i\)\(,\)\)\(\ \)\)\) c[x\_i] \[LessEqual] 
+          y \[LessEqual] d[x\_i]\)]],
+  " between the curves y = c[x] and y = d[x].  \n\nThe variable \"m\" is \
+global and is used in the numerical quadrature subroutine to define the \
+function  ",
+  Cell[BoxData[
+      \(F[
+          x] = \[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\(\[ExponentialE]\^\(\(-x\
+\)\ \@y\)\) \[DifferentialD]y\)]],
+  ".  \n\nNow, fix  m  and perform numerical multiple integration."
+}], "Text"],
+
+Cell[BoxData[{
+    \(m = 5; \ m1 = m; \ n1 = 20;\), "\n", 
+    \(\(val1 = Simp2D[0.0, \ 2.0, n1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using m = \>", 
+        m1, "\< and n = \>", n1];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\) \!\(\
+\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y \[TildeTilde] \>\"", 
+        val1];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(m = 10; m2 = m; \ n2 = 40;\), "\n", 
+    \(\(val2 = Simp2D[0.0, \ 2.0, n2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using m = \>", 
+        m1, "\< and n = \>", n1];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\) \!\(\
+\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y \[TildeTilde] \>\"", 
+        val2];\)\)}], "Input"],
+
+Cell[TextData[{
+  "How good was numerical quadrature ?  \nUsually the special functions \
+involved in the analytic solution of  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\(\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\ \(\
+\[ExponentialE]\^\(\(\ \)\(\(-x\)\ \@y\)\)\) \[DifferentialD]y \
+\[DifferentialD]x\)\)]],
+  "  are not usually covered in the standard calculus sequence.  \nFor your \
+information,. the solution using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is found as follows:"
+}], "Text"],
+
+Cell[TextData[{
+  "Integrate  ",
+  Cell[BoxData[
+      \(\[ExponentialE]\^\(\(\ \)\(\(-x\)\ \@y\)\)\)]],
+  "  with respect to the variable ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\[Integral]\!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\
+\[DifferentialD]y = \>\"", \[Integral]\(\[ExponentialE]\^\(\(\ \)\(\(-x\)\ \
+\@y\)\)\) \[DifferentialD]y];\)\)], "Input"],
+
+Cell[TextData[{
+  "Compute the definite integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)f[x, y] \[DifferentialD]y\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\) \!\(\
+\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y = \>\"", \
+\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\ \(\[ExponentialE]\^\(\(\ \)\(\(-x\)\ \
+\@y\)\)\) \[DifferentialD]y];\)\)], "Input"],
+
+Cell[TextData[{
+  "Integrate  ",
+  Cell[BoxData[
+      \(\(-\(\(2\ \[ExponentialE]\^\(\(-2\^\(3/4\)\)\ x\^\(5/4\)\)\ \((1 + 
+                    2\^\(3/4\)\ x\^\(5/4\))\)\)\/x\^2\)\) + \(2\ \
+\[ExponentialE]\^\(\(-x\)\ \@x\^2\)\ \((1 + x\ \@x\^2)\)\)\/x\^2\)]],
+  "  with respect to the variable ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(PowerExpand[\[Integral]\_\(x\^2\)\%\(\@\(8  x\)\)\ \
+\(\[ExponentialE]\^\(\(\ \)\(\(-x\) \@y\)\)\) \[DifferentialD]y]\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%2\((\(-\(\(2\ \[ExponentialE]\^\(\(-2\^\(3/4\)\)\ \
+x\^\(5/4\)\)\ \((1 + 
+                        2\^\(3/4\)\ x\^\(5/4\))\)\)\/x\^2\)\) + \(2\ \
+\[ExponentialE]\^\(-x\^2\)\ \((1 + x\^2)\)\)\/x\^2)\) \[DifferentialD]x\)], \
+"Input"],
+
+Cell[TextData[{
+  "Compute the definite integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((\(-\(\(2\ \[ExponentialE]\^\(\(-2\^\(3/4\)\)\ x\^\
+\(5/4\)\)\ \((1 + 
+                          2\^\(3/4\)\ x\^\(5/4\))\)\)\/x\^2\)\) + \(2\ \
+\[ExponentialE]\^\(-x\^2\)\ \((1 + x\^2)\)\)\/x\^2)\) \[DifferentialD]x\)]],
+  " "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(\>\"", \(-\(\(2\ \[ExponentialE]\
+\^\(\(-2\^\(3/4\)\)\ x\^\(5/4\)\)\ \((1 + 
+                      2\^\(3/4\)\ x\^\(5/4\))\)\)\/x\^2\)\) + \(2\ \
+\[ExponentialE]\^\(-x\^2\)\ \((1 + x\^2)\)\)\/x\^2, "\<)\[DifferentialD]x = \
+\>", \[Integral]\_0\%2\((\(-\(\(2\ \[ExponentialE]\^\(\(-2\^\(3/4\)\)\ \
+x\^\(5/4\)\)\ \((1 + 
+                            2\^\(3/4\)\ x\^\(5/4\))\)\)\/x\^2\)\) + \(2\ \
+\[ExponentialE]\^\(-x\^2\)\ \((1 + x\^2)\)\)\/x\^2)\) \
+\[DifferentialD]x];\)\)], "Input"],
+
+Cell["We have found the value of the iterated integral ", "Text"],
+
+Cell[BoxData[{
+    \(\(trueval\  = \ \[Integral]\_0\%2\(\[Integral]\_\(x\^2\)\%\(\@\(8  \
+x\)\)\ \(\[ExponentialE]\^\(\(-x\) \@y\)\) \[DifferentialD]y \
+\[DifferentialD]x\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(\[Integral]\_\(x\^2\)\%\(\@\(\
+8  x\)\)\) \!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", trueval];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(\[Integral]\_\(x\^2\)\%\(\@\(\
+8  x\)\)\) \!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", N[trueval]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<The `true value` or analytic solution.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(\[Integral]\_\(x\^2\)\%\(\@\(\
+8  x\)\)\) \!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y\
+\[DifferentialD]x = \>\"", 
+        NumberForm[N[trueval], 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using m = \>", 
+        m1, "\< and n = \>", n1];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(\[Integral]\_\(x\^2\)\%\(\@\(\
+8  x\)\)\) \!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y\
+\[DifferentialD]x \[TildeTilde] \>\"", 
+        NumberForm[val1, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Simpson's rule approximation using m = \>", 
+        m2, "\< and n = \>", n2];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(\[Integral]\_\(x\^2\)\%\(\@\(\
+8  x\)\)\) \!\(\[ExponentialE]\^\(\(-x\) \@y\)\)\[DifferentialD]y\
+\[DifferentialD]x \[TildeTilde] \>\"", NumberForm[val2, 12]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Simpson's Rule for 2D",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/numerical/s2.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Simpson's Rule for 2D",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/s2.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TrapezoidalRuleBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TrapezoidalRuleBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Simpson's Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/SimpsonsRuleBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Simpson's Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SimpsonsRuleBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  "Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {54, 54}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->False,
+"PrintMultipleHorizontalPages"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 209, 5, 35, "Text"],
+Cell[1988, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3467, 112, 224, 6, 68, "Text"],
+Cell[3694, 120, 11073, 320, 348, "Text"],
+Cell[14770, 442, 5793, 106, 167, "Text"],
+Cell[20566, 550, 665, 23, 33, "Text"],
+Cell[21234, 575, 11955, 330, 371, "Text"],
+Cell[33192, 907, 11779, 203, 199, "Text"],
+Cell[44974, 1112, 665, 23, 33, "Text"],
+Cell[45642, 1137, 631, 19, 33, "Text"],
+Cell[46276, 1158, 262, 7, 33, "Text"],
+Cell[46541, 1167, 962, 15, 239, "Input"],
+Cell[47506, 1184, 258, 7, 33, "Text"],
+Cell[47767, 1193, 1701, 25, 360, "Input"],
+Cell[49471, 1220, 1608, 42, 61, "Text"],
+
+Cell[CellGroupData[{
+Cell[51104, 1266, 101, 2, 33, "Text"],
+Cell[51208, 1270, 105, 3, 52, "Text"],
+Cell[51316, 1275, 681, 13, 113, "Input"],
+Cell[52000, 1290, 112, 3, 33, "Text"],
+Cell[52115, 1295, 854, 17, 170, "Input"],
+Cell[52972, 1314, 122, 5, 33, "Text"],
+Cell[53097, 1321, 619, 12, 150, "Input"],
+Cell[53719, 1335, 137, 5, 33, "Text"],
+Cell[53859, 1342, 827, 13, 130, "Input"],
+Cell[54689, 1357, 76, 0, 33, "Text"],
+Cell[54768, 1359, 122, 5, 33, "Text"],
+Cell[54893, 1366, 621, 12, 150, "Input"],
+Cell[55517, 1380, 137, 5, 33, "Text"],
+Cell[55657, 1387, 829, 13, 130, "Input"]
+}, Closed]],
+Cell[56501, 1403, 365, 10, 39, "Text"],
+
+Cell[CellGroupData[{
+Cell[56891, 1417, 101, 2, 33, "Text"],
+Cell[56995, 1421, 211, 8, 33, "Text"],
+Cell[57209, 1431, 232, 3, 41, "Input"],
+Cell[57444, 1436, 213, 7, 42, "Text"],
+Cell[57660, 1445, 558, 9, 76, "Input"],
+Cell[58221, 1456, 248, 9, 36, "Text"],
+Cell[58472, 1467, 284, 4, 42, "Input"],
+Cell[58759, 1473, 219, 6, 42, "Text"],
+Cell[58981, 1481, 636, 9, 76, "Input"],
+Cell[59620, 1492, 65, 0, 33, "Text"],
+Cell[59688, 1494, 914, 15, 164, "Input"]
+}, Closed]],
+Cell[60617, 1512, 398, 10, 39, "Text"],
+
+Cell[CellGroupData[{
+Cell[61040, 1526, 101, 2, 33, "Text"],
+Cell[61144, 1530, 1075, 18, 185, "Input"],
+Cell[62222, 1550, 65, 0, 33, "Text"],
+Cell[62290, 1552, 527, 8, 90, "Input"],
+Cell[62820, 1562, 1199, 38, 52, "Text"],
+Cell[64022, 1602, 1029, 26, 76, "Input"],
+Cell[65054, 1630, 750, 24, 36, "Text"],
+Cell[65807, 1656, 1758, 45, 77, "Input"],
+Cell[67568, 1703, 87, 3, 33, "Text"]
+}, Closed]],
+Cell[67670, 1709, 1608, 42, 58, "Text"],
+
+Cell[CellGroupData[{
+Cell[69303, 1755, 101, 2, 33, "Text"],
+Cell[69407, 1759, 103, 3, 52, "Text"],
+Cell[69513, 1764, 681, 13, 113, "Input"],
+Cell[70197, 1779, 112, 3, 33, "Text"],
+Cell[70312, 1784, 854, 17, 170, "Input"],
+Cell[71169, 1803, 118, 5, 33, "Text"],
+Cell[71290, 1810, 613, 12, 150, "Input"],
+Cell[71906, 1824, 137, 5, 33, "Text"],
+Cell[72046, 1831, 825, 13, 130, "Input"],
+Cell[72874, 1846, 76, 0, 33, "Text"],
+Cell[72953, 1848, 118, 5, 33, "Text"],
+Cell[73074, 1855, 615, 12, 150, "Input"],
+Cell[73692, 1869, 137, 5, 33, "Text"],
+Cell[73832, 1876, 827, 13, 130, "Input"]
+}, Closed]],
+Cell[74674, 1892, 396, 10, 39, "Text"],
+
+Cell[CellGroupData[{
+Cell[75095, 1906, 101, 2, 33, "Text"],
+Cell[75199, 1910, 1071, 18, 185, "Input"],
+Cell[76273, 1930, 65, 0, 33, "Text"],
+Cell[76341, 1932, 527, 8, 90, "Input"],
+Cell[76871, 1942, 1193, 38, 52, "Text"],
+Cell[78067, 1982, 1315, 34, 76, "Input"],
+Cell[79385, 2018, 753, 24, 36, "Text"],
+Cell[80141, 2044, 2330, 61, 77, "Input"],
+Cell[82474, 2107, 75, 0, 33, "Text"]
+}, Closed]],
+Cell[82564, 2110, 419, 10, 39, "Text"],
+
+Cell[CellGroupData[{
+Cell[83008, 2124, 101, 2, 33, "Text"],
+Cell[83112, 2128, 1815, 30, 307, "Input"],
+Cell[84930, 2160, 65, 0, 33, "Text"],
+Cell[84998, 2162, 1053, 16, 174, "Input"],
+Cell[86054, 2180, 2305, 74, 71, "Text"],
+Cell[88362, 2256, 2343, 60, 144, "Input"],
+Cell[90708, 2318, 750, 24, 36, "Text"],
+Cell[91461, 2344, 753, 24, 36, "Text"],
+Cell[92217, 2370, 4087, 106, 146, "Input"],
+Cell[96307, 2478, 110, 3, 33, "Text"]
+}, Closed]],
+Cell[96432, 2484, 1434, 43, 204, "Text"],
+Cell[97869, 2529, 374, 6, 192, "Input"],
+Cell[98246, 2537, 409, 8, 209, "Input"],
+Cell[98658, 2547, 396, 10, 48, "Text"],
+
+Cell[CellGroupData[{
+Cell[99079, 2561, 101, 2, 33, "Text"],
+Cell[99183, 2565, 88, 3, 52, "Text"],
+Cell[99274, 2570, 170, 4, 54, "Input"],
+Cell[99447, 2576, 51, 0, 33, "Text"],
+Cell[99501, 2578, 112, 3, 33, "Text"],
+Cell[99616, 2583, 894, 18, 192, "Input"],
+Cell[100513, 2603, 663, 14, 124, "Text"],
+Cell[101179, 2619, 426, 7, 107, "Input"],
+Cell[101608, 2628, 425, 7, 107, "Input"],
+Cell[102036, 2637, 510, 12, 86, "Text"],
+Cell[102549, 2651, 209, 8, 37, "Text"],
+Cell[102761, 2661, 206, 3, 41, "Input"],
+Cell[102970, 2666, 163, 5, 41, "Text"],
+Cell[103136, 2673, 269, 4, 46, "Input"],
+Cell[103408, 2679, 366, 10, 51, "Text"],
+Cell[103777, 2691, 150, 2, 46, "Input"],
+Cell[103930, 2695, 267, 5, 53, "Input"],
+Cell[104200, 2702, 334, 8, 45, "Text"],
+Cell[104537, 2712, 543, 9, 53, "Input"],
+Cell[105083, 2723, 65, 0, 33, "Text"],
+Cell[105151, 2725, 708, 11, 144, "Input"],
+Cell[105862, 2738, 1066, 17, 185, "Input"]
+}, Closed]],
+Cell[106943, 2758, 789, 23, 30, "Text"],
+Cell[107735, 2783, 158, 3, 35, "Text"],
+Cell[107896, 2788, 621, 17, 33, "Text"],
+Cell[108520, 2807, 617, 18, 33, "Text"],
+Cell[109140, 2827, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

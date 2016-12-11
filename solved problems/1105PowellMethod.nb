@@ -1,0 +1,5072 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    184899,       4855]*)
+(*NotebookOutlinePosition[    185654,       4881]*)
+(*  CellTagsIndexPosition[    185610,       4877]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Powell Search Method for a Minimum",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background - The Taxi Cab Method",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tLet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  StyleBox["  be an initial guess at the location of the minimum of the \
+function  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"z", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              StyleBox[\(X\&\[RightVector]\),
+                FontWeight->"Bold"], ")"}]}], " ", "=", " ", 
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{\(x\_1\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "\[CenterEllipsis]", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]}]}]]],
+  ".  ",
+  StyleBox[" Assume that the partial derivatives of the function are ",
+    FontFamily->"Times-Roman"],
+  StyleBox["not",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" available.  An intuitively appealing approach to approximating a \
+minimum of the function  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  is to generate the next approximation  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox["  by proceeding successively to a minimum of  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  along each of the  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  standard base vectors.  This process can be called the taxi-cab \
+method and generates the sequence of points  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(X\&\[RightVector]\_0\),
+            FontWeight->"Bold"], "=", 
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_n = X\&\[RightVector]\_1\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Along each standard base vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(E\&\[RightVector]\_k\),
+          FontWeight->"Bold"], " ", 
+        StyleBox["=",
+          FontWeight->"Bold"], " ", 
+        RowBox[{"(", 
+          RowBox[{"0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(1\_k\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}]}]]],
+  "  ",
+  StyleBox["the function  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  is a function of one variable, and the minimization of  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  might be accomplished by the application of either the golden \
+ratio or Fibonacci searches if  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  is unimodal in this search direction. The iteration is then \
+repeated to generate a sequence of points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(X\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 0\), "\[Infinity]"]]],
+  StyleBox[".  Unfortunately, the method is, in general, inefficient due to \
+the geometry of multivariable functions.  But the construction ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[" is involved in the first step of Powell's method, and it is \
+worthwhile to see how it works. ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Taxi Cab Method for Finding a Minimum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "To numerically approximate a local minimum of",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  ",  where  ",
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  "  is a continuous function of  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  real variables and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]]],
+  "  by starting with one point  ",
+  Cell[BoxData[
+      StyleBox[\(P\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  "  and using the \"taxi-cab\" search along the directions of the standard \
+base vectors ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(E\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 1\), "n"]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/PowellMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowellMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Taxi Cab Method for Finding a Minimum).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " To numerically approximate a local minimum of",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  ",  start with ",
+  Cell[BoxData[
+      StyleBox[\(P\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  " and using the \"taxi-cab\" search.  \n",
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  To streamline the algorithm we use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontFamily->"Courier New"],
+  " to perform the line searches along the base vectors ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(E\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 1\), "n"]]],
+  ".  In practice alternate methods could be employed.  "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(TaxiCab[X0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({k, n = Length[X0]}\), ",", " ", "\[IndentingNewLine]", 
+              
+              
+              RowBox[{\(P\&\[RightVector]\_0\  = \ \(X\&\[RightVector]\_0\  = \
+\ X0\)\), ";", "\[IndentingNewLine]", 
+                RowBox[{
+                  StyleBox[\(E\&\[RightVector]\_m_\),
+                    FontWeight->"Bold"], 
+                  StyleBox[":=",
+                    FontWeight->"Bold"], \(Table[
+                    KroneckerDelta[m, p], {p, n}]\)}], ";", " ", 
+                "\[IndentingNewLine]", \(i = 0\), ";", 
+                "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[P\&\[RightVector]\_0, {13, 12}], "\<] = \>", 
+                  PaddedForm[f[P\&\[RightVector]\_0], {13, 12}]\ ]\), ";", 
+                "   ", "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  RowBox[{\(i < max\), ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(k = 1\), ",", \(k \[LessEqual] n\), 
+                          ",", \(k++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            RowBox[{"Module", "[", 
+                              RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                                RowBox[{
+                                  RowBox[{"solset", "=", 
+                                    RowBox[{"FindMinimum", "[", 
+                                      RowBox[{
+                                        RowBox[{"f", "[", 
+                                        
+                                        RowBox[{\(P\&\[RightVector]\_\(k - 
+                                        1\)\), " ", "+", 
+                                        RowBox[{"\[Gamma]", " ", 
+                                        StyleBox[\(E\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}], "]"}], 
+                                        ",", \({\[Gamma], 0.0}\)}], "]"}]}], 
+                                  ";", " ", 
+                                  "\[IndentingNewLine]", \(\[Gamma]\_k\  = \ 
+                                    solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\)\), ";", " ", "\[IndentingNewLine]", 
+                                  
+                                  RowBox[{\(P\&\[RightVector]\_k\), "  ", "=",
+                                     " ", 
+                                    
+                                    RowBox[{\(P\&\[RightVector]\_\(k - 1\)\), 
+                                      " ", "+", 
+                                      RowBox[{\(\[Gamma]\_k\), " ", 
+                                        StyleBox[\(E\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}]}], ";", " ", 
+                                  "\[IndentingNewLine]", \(Print["\<f[\>", 
+                                    PaddedForm[
+                                      P\&\[RightVector]\_k, {13, 
+                                        12}], "\<] = \>", 
+                                    PaddedForm[
+                                      f[P\&\[RightVector]\_k], {13, 12}]\ ]\),
+                                   ";"}]}], "   ", "]"}], ";"}]}], "  ", 
+                        "]"}], ";", " ", "\[IndentingNewLine]", \(i = i + 1\),
+                       ";", " ", 
+                      "\[IndentingNewLine]", \(P\&\[RightVector]\_0\  = \ \(X\
+\&\[RightVector]\_i\  = \ P\&\[RightVector]\_n\)\), ";"}]}], "  ", "]"}], ";",
+                 " ", "\[IndentingNewLine]", \(Return[X\&\[RightVector]\_i]\),
+                 ";"}]}], " ", "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the taxi-cab method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Clear[f, x, y];\)\), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        PlotPoints \[Rule] 35, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Then perform the iterations using the subroutine ",
+    FontFamily->"Times-Roman"],
+  StyleBox["TaxiCab",
+    FontFamily->"Courier New"],
+  StyleBox[".",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {2.55, 1.75};\)\ \), "\n", 
+    \(\(X0 = TaxiCab[P0, 10];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[StyleBox["Observe that in each iteration of the taxi-cab method \
+only one variable in the point is changing.  Convergence proceeds a polygonal \
+path where the segments are parallel to the coordinate axes.  If the geometry \
+of level curves is sufficiently complicated it might not be feasible to \
+zig-zag to the minimum in this manner. ",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 1.8}, {y, 1.2}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the taxi-cab method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y, z)\)\  = \ 
+        3 - 4\ x + 2\ x\^2 - 4\ y + 2\ x\ y + 2\ y\^2 + 4\ z - 2\ x\ z - 
+          2\ y\ z + 2\ z\^2\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function ",
+  Cell[BoxData[
+      \(w\  = \(f \((x, y, z)\) = 
+          3 - 4\ x + 2\ x\^2 - 4\ y + 2\ x\ y + 2\ y\^2 + 4\ z - 2\ x\ z - 
+            2\ y\ z + 2\ z\^2\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_}] = 
+        3 - 4\ x + 2\ x\^2 - 4\ y + 2\ x\ y + 2\ y\^2 + 4\ z - 2\ x\ z - 
+          2\ y\ z + 2\ z\^2;\)\ \ \), "\n", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y, z}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Then perform the iterations using the subroutine ",
+    FontFamily->"Times-Roman"],
+  StyleBox["TaxiCab",
+    FontFamily->"Courier New"],
+  StyleBox[".",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {1.0, 0.5, 0.0};\)\ \), "\n", 
+    \(\(X0 = TaxiCab[P0, 5];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y,z] = \>", 
+        f[{x, y, z}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observe that in each iteration of the taxi-cab method only one \
+variable in the point is changing.  \nConvergence proceeds a polygonal path \
+where the segments are parallel to the coordinate axes.  \nThe ",
+    FontFamily->"Times-Roman"],
+  StyleBox["3D plot",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" of the points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(X\&\[RightVector]\_0\),
+            FontWeight->"Bold"], "=", 
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_3\),
+            FontWeight->"Bold"], 
+          StyleBox["=",
+            FontWeight->"Bold"], 
+          RowBox[{
+            StyleBox[\(X\&\[RightVector]\_1\),
+              FontWeight->"Bold"], "=", 
+            StyleBox[\(P\&\[RightVector]\_0\),
+              FontWeight->"Bold"]}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_3 = X\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontWeight->"Bold"], 
+        StyleBox["...",
+          FontWeight->"Bold"]}]]],
+  "  ",
+  StyleBox["involved in the iteration is given below.  \n\t",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  "\t",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .96961 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics3D
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+6.59412e-016 1.03125 -0.00722396 1.03125 [
+[.06465 .90221 -9.09117 0 ]
+[.06465 .90221 8.90883 9 ]
+[.16324 .94245 -9.07117 0 ]
+[.16324 .94245 8.92883 9 ]
+[.25563 .98017 -3.01749 0 ]
+[.25563 .98017 2.98251 9 ]
+[.1358 .99593 -5.04257 0 ]
+[.1358 .99593 4.95743 12.5625 ]
+[.77654 -0.01148 -9.05385 -9 ]
+[.77654 -0.01148 8.94615 0 ]
+[.47228 .01088 -11.9881 -9 ]
+[.47228 .01088 12.0119 0 ]
+[.17436 .03276 -8.92964 -9 ]
+[.17436 .03276 9.07036 0 ]
+[.39739 -0.04806 -4.98643 -12.5625 ]
+[.39739 -0.04806 5.01357 0 ]
+[-0.00552 .23041 -24 -4.1969 ]
+[-0.00552 .23041 0 4.8031 ]
+[-0.00906 .53504 -24 -4.24553 ]
+[-0.00906 .53504 0 4.75447 ]
+[-0.01265 .84394 -6 -4.29486 ]
+[-0.01265 .84394 0 4.70514 ]
+[-0.0725 .46122 -10 -5.90875 ]
+[-0.0725 .46122 0 6.65375 ]
+[ 0 0 0 0 ]
+[ 1 .96961 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+0 .86287 m
+.26141 .96961 L
+s
+.06478 .88932 m
+.06484 .88287 L
+s
+[(0.6)] .06465 .90221 .01013 -1 Mshowa
+.16334 .92956 m
+.16339 .92312 L
+s
+[(0.8)] .16324 .94245 .00791 -1 Mshowa
+.2557 .96728 m
+.25574 .96083 L
+s
+[(1)] .25563 .98017 .00583 -1 Mshowa
+.125 Mabswid
+.09003 .89963 m
+.09007 .89576 L
+s
+.11487 .90977 m
+.11491 .90591 L
+s
+.13931 .91975 m
+.13934 .91588 L
+s
+.18699 .93922 m
+.18702 .93535 L
+s
+.21026 .94872 m
+.21029 .94486 L
+s
+.23316 .95807 m
+.23318 .95421 L
+s
+.03909 .87883 m
+.03913 .87496 L
+s
+.01297 .86816 m
+.01301 .8643 L
+s
+gsave
+.1358 .99593 -66.0426 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.25 Mabswid
+.79585 0 m
+.00933 .05777 L
+s
+.77662 .00141 m
+.77665 .00786 L
+s
+[(0.5)] .77654 -0.01148 .00598 1 Mshowa
+.47227 .02377 m
+.47226 .03021 L
+s
+[(0.55)] .47228 .01088 -0.00099 1 Mshowa
+.17426 .04565 m
+.17421 .0521 L
+s
+[(0.6)] .17436 .03276 -0.00782 1 Mshowa
+.125 Mabswid
+.71523 .00592 m
+.71525 .00979 L
+s
+.6541 .01041 m
+.65412 .01428 L
+s
+.59324 .01488 m
+.59324 .01875 L
+s
+.53263 .01933 m
+.53263 .0232 L
+s
+.41217 .02818 m
+.41216 .03205 L
+s
+.35232 .03258 m
+.3523 .03644 L
+s
+.29271 .03695 m
+.29269 .04082 L
+s
+.23336 .04131 m
+.23334 .04518 L
+s
+.1154 .04998 m
+.11536 .05384 L
+s
+.05678 .05428 m
+.05674 .05815 L
+s
+gsave
+.39739 -0.04806 -65.9864 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.25 Mabswid
+.00933 .05777 m
+0 .86287 L
+s
+.00734 .22954 m
+.01377 .22911 L
+s
+[(-0.4)] -0.00552 .23041 1 -0.06736 Mshowa
+.00381 .53432 m
+.01024 .53395 L
+s
+[(-0.2)] -0.00906 .53504 1 -0.05655 Mshowa
+.00023 .84335 m
+.00666 .84306 L
+s
+[(0)] -0.01265 .84394 1 -0.04559 Mshowa
+.125 Mabswid
+.00646 .30534 m
+.01032 .30509 L
+s
+.00558 .3814 m
+.00944 .38116 L
+s
+.0047 .45773 m
+.00856 .4575 L
+s
+.00292 .61117 m
+.00678 .61096 L
+s
+.00202 .6883 m
+.00589 .6881 L
+s
+.00113 .76569 m
+.00499 .7655 L
+s
+.00822 .15401 m
+.01207 .15374 L
+s
+.00909 .07873 m
+.01295 .07845 L
+s
+gsave
+-0.0725 .46122 -71 -9.90875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(z) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.25 Mabswid
+.79585 0 m
+.80116 .8269 L
+s
+.80116 .8269 m
+0 .86287 L
+s
+0 .86287 m
+.00933 .05777 L
+s
+.00933 .05777 m
+.79585 0 L
+s
+.99176 .18109 m
+.26563 .22955 L
+s
+.26563 .22955 m
+.26141 .96961 L
+s
+.26141 .96961 m
+1 .93953 L
+s
+1 .93953 m
+.99176 .18109 L
+s
+.79585 0 m
+.80116 .8269 L
+s
+.80116 .8269 m
+1 .93953 L
+s
+1 .93953 m
+.99176 .18109 L
+s
+.99176 .18109 m
+.79585 0 L
+s
+.00933 .05777 m
+.26563 .22955 L
+s
+.26563 .22955 m
+.26141 .96961 L
+s
+.26141 .96961 m
+0 .86287 L
+s
+0 .86287 m
+.00933 .05777 L
+s
+0 0 m
+1 0 L
+1 .96961 L
+0 .96961 L
+closepath
+clip
+newpath
+1 0 0 r
+.02 w
+.97741 .91942 Mdot
+1 0 1 r
+.004 w
+.97741 .91942 m
+.88831 .86865 L
+s
+1 0 0 r
+.02 w
+.16098 .43985 Mdot
+1 0 1 r
+.004 w
+.16098 .43985 m
+.05297 .37777 L
+s
+.15727 .90032 m
+.16098 .43985 L
+s
+1 0 0 r
+.02 w
+.15727 .90032 Mdot
+1 0 1 r
+.004 w
+.88831 .86865 m
+.15727 .90032 L
+s
+1 0 0 r
+.02 w
+.88831 .86865 Mdot
+.05297 .37777 Mdot
+1 0 1 r
+.004 w
+.05297 .37777 m
+.32884 .36067 L
+s
+1 0 0 r
+.02 w
+.3297 .1592 Mdot
+1 0 1 r
+.004 w
+.3297 .1592 m
+.30945 .1448 L
+s
+.32884 .36067 m
+.3297 .1592 L
+s
+1 0 0 r
+.02 w
+.32884 .36067 Mdot
+.30945 .1448 Mdot
+1 0 1 r
+.004 w
+.30945 .1448 m
+.57948 .126 L
+s
+1 0 0 r
+.02 w
+.5796 .05886 Mdot
+1 0 1 r
+.004 w
+.5796 .05886 m
+.71483 .04913 L
+s
+.57938 .05868 m
+.5796 .05886 L
+s
+1 0 0 r
+.02 w
+.57938 .05868 Mdot
+1 0 1 r
+.004 w
+.57948 .126 m
+.57938 .05868 L
+s
+1 0 0 r
+.02 w
+.57948 .126 Mdot
+.71708 .03449 Mdot
+1 0 1 r
+.004 w
+.71708 .03449 m
+.76768 .03082 L
+s
+.71475 .03244 m
+.71708 .03449 L
+s
+1 0 0 r
+.02 w
+.71475 .03244 Mdot
+1 0 1 r
+.004 w
+.71483 .04913 m
+.71475 .03244 L
+s
+1 0 0 r
+.02 w
+.71483 .04913 Mdot
+.76767 .02883 Mdot
+1 0 1 r
+.004 w
+.76768 .03082 m
+.76767 .02883 L
+s
+1 0 0 r
+.02 w
+.76768 .03082 Mdot
+0 g
+.25 Mabswid
+.79585 0 m
+.80116 .8269 L
+s
+.80116 .8269 m
+0 .86287 L
+s
+0 .86287 m
+.00933 .05777 L
+s
+.00933 .05777 m
+.79585 0 L
+s
+.79585 0 m
+.80116 .8269 L
+s
+.80116 .8269 m
+1 .93953 L
+s
+1 .93953 m
+.99176 .18109 L
+s
+.99176 .18109 m
+.79585 0 L
+s
+.00933 .05777 m
+0 .86287 L
+s
+.00734 .22954 m
+.01377 .22911 L
+s
+[(-0.4)] -0.00552 .23041 1 -0.06736 Mshowa
+.00381 .53432 m
+.01024 .53395 L
+s
+[(-0.2)] -0.00906 .53504 1 -0.05655 Mshowa
+.00023 .84335 m
+.00666 .84306 L
+s
+[(0)] -0.01265 .84394 1 -0.04559 Mshowa
+.125 Mabswid
+.00646 .30534 m
+.01032 .30509 L
+s
+.00558 .3814 m
+.00944 .38116 L
+s
+.0047 .45773 m
+.00856 .4575 L
+s
+.00292 .61117 m
+.00678 .61096 L
+s
+.00202 .6883 m
+.00589 .6881 L
+s
+.00113 .76569 m
+.00499 .7655 L
+s
+.00822 .15401 m
+.01207 .15374 L
+s
+.00909 .07873 m
+.01295 .07845 L
+s
+gsave
+-0.0725 .46122 -71 -9.90875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(z) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 279.188},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P00015b000`400?l00000o`00003oo`3ooolQ
+0?ooo`00o`3ooolQ0?ooo`00o`3ooolQ0?ooo`00PP3oool2000009`0oooo00230?ooo`030000003o
+ool0oooo09X0oooo00240?ooo`030000003oool0oooo09T0oooo00230?ooo`030000003oool00000
+09X0oooo00220?ooo`040000003oool0oooo000009X0oooo00210?ooo`<0000000<0oooo00000000
+0000V@3oool00?l0oooo8@3oool00?l0oooo8@3oool00?l0oooo8@3oool00?l0oooo8@3oool00?l0
+oooo8@3oool00=T0oooo0P0000040?ooo`800000103oool2000003T0oooo003H0?ooo`040000003o
+ool0oooo000000P0oooo00@000000?ooo`3oool00000>03oool00=P0oooo00@000000?ooo`3oool0
+00002`3oool00`000000oooo0?ooo`0f0?ooo`00f03oool010000000oooo0?ooo`0000090?ooo`80
+0000>@3oool00=P0oooo00@000000?ooo`3oool000002@3oool00`000000oooo0?ooo`0h0?ooo`00
+S03oool2000000@0oooo0P0000040?ooo`800000103oool2000003T0oooo0P00000:0?ooo`<00000
+>03oool008/0oooo00@000000?ooo`3oool00000203oool010000000oooo0?ooo`0000020?ooo`04
+0000003oool0oooo000007l0oooo002;0?ooo`040000003oool0oooo000000/0oooo00<000000?oo
+o`3oool00`3oool00`000000oooo0?ooo`1m0?ooo`00R`3oool010000000oooo0?ooo`0000090?oo
+o`800000103oool200000800oooo002;0?ooo`040000003oool0oooo000000T0oooo00<000000?oo
+o`3oool00`3oool00`000000oooo0?ooo`1o0?ooo`00A`3oool2000000@0oooo0P0000030?ooo`<0
+0000=`3oool2000000X0oooo0`0000030?ooo`<00000O`3oool004H0oooo00@000000?ooo`3oool0
+0000203oool010000000oooo0?ooo`0000290?ooo`L00000>P3oool004H0oooo00@000000?ooo`3o
+ool00000203oool010000000oooo0?ooo`00001k0?ooo`h0000000<0oooo0000003oool00`3oool2
+000003T0oooo00160?ooo`040000003oool0oooo000000P0oooo0`00001]0?oooa0000004`3oool0
+0`000000oooo0000000h0?ooo`00AP3oool010000000oooo0?ooo`0000090?ooo`030000003oool0
+oooo05d0oooo00<000000?ooo`3oool03@00000R0?ooo`040000003oool0oooo000003L0oooo0017
+0?ooo`8000002P3oool3000004l0oooo00<000000?ooo`3oool03P00000_0?ooo`050000003oool0
+oooo0?ooo`000000=P3oool009H0oooo00@000000?ooo`3oool0oooo3P00000e0?ooo`80o`001P3o
+ool00`000000oooo0?ooo`020?ooo`800000=03oool008L0oooo00<000000?ooo`3oool00`3oool=
+000003H0oooo0P3o000:0?ooo`@0o`001@3oool00`000000oooo0?ooo`040?ooo`030000003oool0
+oooo0340oooo001i0?ooo`030000003oool0oooo00<0oooo3P0000090?ooo`030000003oool0oooo
+03H0oooo0P3o00000`3o0?l0o`000?ooo`040?ooo`@0o`3o103o00050?ooo`030000003oool0oooo
+00D0oooo00<000000?ooo`3oool0<03oool006/0oooo00<000000?ooo`3oool0103oool=00000500
+oooo0P3o00000`3o0?l0o`000?l0o`040?l0o`@0oooo103o00050?ooo`030000003oool0oooo00H0
+oooo00<000000?ooo`3oool0;`3oool006@0oooo3P00001N0?ooo`040?l0003o0?l0o`000?l000T0
+oooo0P3o00060?ooo`030000003oool0oooo00L0oooo00<000000?ooo`3oool0;P3oool005H0oooo
+3P00001/0?ooo`<0o`004P3oool00`000000oooo0?ooo`080?ooo`030000003oool0oooo02d0oooo
+00190?ooo`d00000MP3oool30?l0o`@0o`004P3oool00`000000oooo0?ooo`090?ooo`030000003o
+ool0oooo02`0oooo000k0?ooo`h000001@3oool00`000000oooo0?ooo`1`0?ooo`/0o`3o0`3oool4
+0?l00180oooo00<000000?ooo`3oool02P3oool00`000000oooo0?ooo`0[0?ooo`00;@3oool>0000
+00D0oooo00<000000?ooo`3oool0K03oool20?l000D0oooo2`3o0?l?0?ooo`80o`004`3oool00`00
+0000oooo0?ooo`0;0?ooo`030000003oool0oooo02X0oooo000V0?ooo`L00000103oool00`000000
+oooo0?ooo`1j0?ooo`80o`0000<0o`3o0?l0003o0?l00`3o0?l_0?ooo`030000003oool0oooo00`0
+oooo00<000000?ooo`3oool0:@3oool002H0oooo0`0000250?ooo`80o`0000<0o`3o0?l0003oool0
+<P3oool00`000000oooo0?ooo`0=0?ooo`030000003oool0oooo02P0oooo000V0?ooo`040000003o
+ool0oooo000008D0oooo00<0o`000?l0o`3oool0<`3oool00`000000oooo0?ooo`0>0?ooo`800000
+:03oool002H0oooo00@000000?ooo`3oool0oooo0P0000240?ooo`030?l0o`3oool0oooo0380oooo
+00<000000?ooo`3oool0403oool00`000000oooo0?ooo`0U0?ooo`009P3oool00`000000oooo0?oo
+o`030?ooo`030000003oool0oooo0840oooo00<0o`3o0?ooo`3oool0<P3oool00`000000oooo0?oo
+o`0A0?ooo`030000003oool0oooo02@0oooo000V0?ooo`8000001@3oool200000840oooo00<0o`3o
+0?ooo`3oool0<P3oool00`000000oooo0?ooo`0B0?ooo`030000003oool0oooo02<0oooo000V0?oo
+o`030000003oool0oooo00H0oooo00<000000?ooo`3oool0OP3oool00`3o0?l0oooo0?ooo`0b0?oo
+o`030000003oool0oooo01<0oooo00<000000?ooo`3oool08P3oool002H0oooo00<000000?ooo`3o
+ool01`3oool2000007h0oooo00<0o`3o0?ooo`3oool0<P3oool00`000000oooo0?ooo`0D0?ooo`03
+0000003oool0oooo0240oooo000V0?ooo`030000003oool0oooo00T0oooo00<000000?ooo`3oool0
+N`3oool00`3o0?l0oooo0?ooo`0b0?ooo`030000003oool0oooo01D0oooo00<000000?ooo`3oool0
+803oool002H0oooo00<000000?ooo`3oool02P3oool2000007/0oooo00<0o`3o0?ooo`3oool0<P3o
+ool00`000000oooo0?ooo`0F0?ooo`030000003oool0oooo01l0oooo000V0?ooo`030000003oool0
+oooo00`0oooo00<000000?ooo`3oool0N03oool00`3o0?l0oooo0?ooo`0b0?ooo`030000003oool0
+oooo01L0oooo00<000000?ooo`3oool07P3oool002H0oooo00<000000?ooo`3oool03@3oool20000
+07P0oooo00<0o`3o0?ooo`3oool0<P3oool00`000000oooo0?ooo`0H0?ooo`030000003oool0oooo
+01d0oooo000V0?ooo`030000003oool0oooo00l0oooo00<000000?ooo`3oool0M@3oool00`3o0?l0
+oooo0?ooo`0b0?ooo`030000003oool0oooo01T0oooo00<000000?ooo`3oool0703oool002H0oooo
+00<000000?ooo`3oool0403oool2000007D0oooo00<0o`3o0?ooo`3oool0<P3oool00`000000oooo
+0?ooo`0J0?ooo`800000703oool002H0oooo00<000000?ooo`3oool04P3oool00`000000oooo0?oo
+o`1b0?ooo`030?l0o`3oool0oooo0380oooo00<000000?ooo`3oool0703oool00`000000oooo0?oo
+o`0I0?ooo`009P3oool00`000000oooo0?ooo`0C0?ooo`800000L@3oool20?l003@0oooo00<00000
+0?ooo`3oool07@3oool00`000000oooo0?ooo`0H0?ooo`009P3oool00`000000oooo0?ooo`0E0?oo
+o`030000003oool0oooo06T0oooo103o0?l40?l003<0oooo00<000000?ooo`3oool07P3oool00`00
+0000oooo0?ooo`0G0?ooo`009P3oool00`000000oooo0?ooo`0F0?ooo`800000G03oool=0?l0o`@0
+oooo103o000c0?ooo`030000003oool0oooo01l0oooo00<000000?ooo`3oool05P3oool002H0oooo
+00<000000?ooo`3oool0603oool00`000000oooo0?ooo`1<0?ooo`d0o`3o4P3oool20?l003@0oooo
+00<000000?ooo`3oool0803oool00`000000oooo0?ooo`0E0?ooo`009P3oool00`000000oooo0?oo
+o`0I0?ooo`800000:P3oool20?l001<0oooo3@3o0?mE0?ooo`030000003oool0oooo0240oooo00<0
+00000?ooo`3oool0503oool002H0oooo00<000000?ooo`3oool06`3oool00`000000oooo0?ooo`0V
+0?ooo`@0o`001@3oool=0?l0of80oooo00<000000?ooo`3oool08P3oool00`000000oooo0?ooo`0C
+0?ooo`009P3oool00`000000oooo0?ooo`0L0?ooo`8000009P3oool20?l000L0o`3oK`3oool00`00
+0000oooo0?ooo`0S0?ooo`030000003oool0oooo0180oooo000V0?ooo`030000003oool0oooo01h0
+oooo0P00000U0?ooo`80o`000P3o0?mc0?ooo`030000003oool0oooo02@0oooo00<000000?ooo`3o
+ool04@3oool002H0oooo0P00000Q0?ooo`030000003oool0oooo02H0oooo0P3o0?l00`3o0000oooo
+0?ooo`1^0?ooo`030000003oool0oooo02D0oooo00<000000?ooo`3oool0403oool002H0oooo00<0
+00000?ooo`3oool08@3oool2000002H0oooo0P3o00000`3o0?l0o`000?ooo`1^0?ooo`030000003o
+ool0oooo02H0oooo0P00000@0?ooo`009P3oool00`000000oooo0?ooo`0S0?ooo`030000003oool0
+oooo02<0oooo0P3o00000`3o0?l0o`000?ooo`1^0?ooo`030000003oool0oooo02P0oooo00<00000
+0?ooo`3oool03@3oool002H0oooo00<000000?ooo`3oool0903oool2000002@0oooo00<0o`000?l0
+o`3oool0K`3oool00`000000oooo0?ooo`0Y0?ooo`030000003oool0oooo00`0oooo000V0?ooo`03
+0000003oool0oooo02H0oooo00<000000?ooo`3oool08P3oool00`3o0?l0oooo0?ooo`1^0?ooo`03
+0000003oool0oooo02X0oooo00<000000?ooo`3oool02`3oool002H0oooo00<000000?ooo`3oool0
+9`3oool200000280oooo00<0o`3o0?ooo`3oool0KP3oool00`000000oooo0?ooo`0[0?ooo`030000
+003oool0oooo00X0oooo000V0?ooo`030000003oool0oooo02T0oooo00<000000?ooo`3oool07`3o
+ool00`3o0?l0oooo0?ooo`1^0?ooo`030000003oool0oooo02D0oooo2000000;0?ooo`009P3oool0
+0`000000oooo0?ooo`0Z0?ooo`8000007`3oool00`3o0?l0oooo0?ooo`1^0?ooo`030000003oool0
+oooo01L0oooo3P0000070?ooo`030000003oool0oooo00T0oooo000V0?ooo`030000003oool0oooo
+02`0oooo00<000000?ooo`3oool0703oool00`3o0?l0oooo0?ooo`1^0?ooo`030000003oool0oooo
+00P0oooo3`00000E0?ooo`030000003oool0oooo00T0oooo000V0?ooo`030000003oool0oooo02d0
+oooo0P00000L0?ooo`030?l0o`3oool0oooo06X0oooo3`00000T0?ooo`030000003oool0oooo00T0
+oooo000V0?ooo`030000003oool0oooo02l0oooo00<000000?ooo`3oool06@3oool00`3o0?l0oooo
+0?ooo`1L0?ooo`h00000103oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo
+000V0?ooo`030000003oool0oooo0300oooo0P00000I0?ooo`030?l0o`3oool0oooo04d0oooo3`00
+000B0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002H0oooo00<00000
+0?ooo`3oool0<P3oool00`000000oooo0?ooo`0F0?ooo`030?l0o`3oool0oooo03h0oooo3`00000Q
+0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002H0oooo00<000000?oo
+o`3oool0<`3oool2000001H0oooo00<0o`3o0?ooo`3oool0<03oool>00000300oooo00<000000?oo
+o`3oool0;03oool00`000000oooo0?ooo`090?ooo`009P3oool00`000000oooo0?ooo`0e0?ooo`03
+0000003oool0oooo01<0oooo00<0o`3o0?ooo`3oool08@3oool?000003h0oooo00<000000?ooo`3o
+ool0;03oool00`000000oooo0?ooo`090?ooo`009P3oool00`000000oooo0?ooo`0f0?ooo`800000
+4`3oool00`3o0?l0oooo0?ooo`0B0?ooo`l00000C@3oool00`000000oooo0?ooo`0/0?ooo`030000
+003oool0oooo00T0oooo000V0?ooo`030000003oool0oooo03P0oooo00<000000?ooo`3oool0403o
+ool00`3o0?l0oooo0?ooo`040?ooo`h00000G03oool00`000000oooo0?ooo`0/0?ooo`030000003o
+ool0oooo00T0oooo000B0?ooo`800000103oool2000000D0oooo0`0000040?ooo`030000003oool0
+oooo03T0oooo0P0000080?ooo`P0000000<0o`3o0000000000001000001Z0?ooo`030000003oool0
+oooo02`0oooo00<000000?ooo`3oool02@3oool00140oooo00@000000?ooo`3oool000002`3oool0
+0`000000oooo0?ooo`020?ooo`<00000?03oool8000000P0oooo00<0o`3o0?ooo`3oool0KP3oool0
+0`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000A0?ooo`040000003oool0oooo
+000000P0oooo1@0000040?ooo`030000003oool0oooo03/0oooo00<000000?ooo`3oool03@3oool0
+0`3o0?l0oooo0?ooo`1^0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool0
+00/0oooo100000020?ooo`040000003oool0oooo000000P0oooo00@000000?ooo`3oool000001@3o
+ool00`000000oooo0?ooo`0k0?ooo`030000003oool0oooo00d0oooo00<0o`3o0?ooo`3oool0KP3o
+ool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000A0?ooo`040000003oool0
+oooo000000T0oooo00<000000?ooo`0000001@3oool00`000000oooo0?ooo`0k0?ooo`030000003o
+ool0oooo00d0oooo00<0o`3o0?ooo`3oool0KP3oool00`000000oooo0?ooo`0/0?ooo`030000003o
+ool0oooo00T0oooo000B0?ooo`8000002`3oool2000000D0oooo00<000000?ooo`3oool0>`3oool0
+0`000000oooo0?ooo`0=0?ooo`030?l0o`3oool0oooo06h0oooo00<000000?ooo`3oool0;03oool0
+0`000000oooo0?ooo`090?ooo`009P3oool00`000000oooo0?ooo`0k0?ooo`030000003oool0oooo
+00d0oooo00<0o`3o0?ooo`3oool0KP3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo
+00T0oooo000V0?ooo`030000003oool0oooo03/0oooo00<000000?ooo`3oool03@3oool00`3o0?l0
+oooo0?ooo`1^0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002H0oooo
+00<000000?ooo`3oool0>`3oool00`000000oooo0?ooo`0=0?ooo`030?l0o`3oool0oooo06h0oooo
+00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`090?ooo`009@3oool00`000000oooo0?oo
+o`0l0?ooo`030000003oool0oooo00`0oooo00<0o`3o0?ooo`3oool0K`3oool00`000000oooo0?oo
+o`0/0?ooo`030000003oool0oooo00T0oooo000U0?ooo`030000003oool0oooo03`0oooo00<00000
+0?ooo`3oool0303oool00`3o0?l0oooo0?ooo`1_0?ooo`030000003oool0oooo02`0oooo00<00000
+0?ooo`3oool02@3oool002D0oooo00<000000?ooo`3oool0?03oool00`000000oooo0?ooo`0<0?oo
+o`030?l0o`3oool0oooo06l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`090?oo
+o`009@3oool00`000000oooo0?ooo`0l0?ooo`030000003oool0oooo00`0oooo00<0o`3o0?ooo`3o
+ool0K`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000U0?ooo`030000
+003oool0oooo03`0oooo00<000000?ooo`3oool0303oool00`3o0?l0oooo0?ooo`1_0?ooo`030000
+003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002D0oooo00<000000?ooo`3oool0?03o
+ool00`000000oooo0?ooo`0<0?ooo`030?l0o`3oool0oooo06l0oooo00<000000?ooo`3oool0;03o
+ool00`000000oooo0?ooo`090?ooo`009@3oool00`000000oooo0?ooo`0l0?ooo`030000003oool0
+oooo00`0oooo00<0o`3o0?ooo`3oool0K`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0
+oooo00T0oooo000U0?ooo`030000003oool0oooo03`0oooo00<000000?ooo`3oool0303oool00`3o
+0?l0oooo0?ooo`1_0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002D0
+oooo00<000000?ooo`3oool0?03oool00`000000oooo0?ooo`0<0?ooo`030?l0o`3oool0oooo06l0
+oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`090?ooo`009@3oool00`000000oooo
+0?ooo`0l0?ooo`030000003oool0oooo00`0oooo00<0o`3o0?ooo`3oool0K`3oool00`000000oooo
+0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000U0?ooo`800000?@3oool00`000000oooo0?oo
+o`0<0?ooo`030?l0o`3oool0oooo06l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?oo
+o`090?ooo`009@3oool00`000000oooo0?ooo`0l0?ooo`030000003oool0oooo00`0oooo00<0o`3o
+0?ooo`3oool0K`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000U0?oo
+o`030000003oool0oooo03`0oooo00<000000?ooo`3oool0303oool00`3o0?l0oooo0?ooo`1_0?oo
+o`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002D0oooo00<000000?ooo`3o
+ool0?03oool00`000000oooo0?ooo`0<0?ooo`030?l0o`3oool0oooo06l0oooo00<000000?ooo`3o
+ool0;03oool00`000000oooo0?ooo`090?ooo`009@3oool00`000000oooo0?ooo`0l0?ooo`030000
+003oool0oooo00`0oooo00<0o`3o0?ooo`3oool0K`3oool00`000000oooo0?ooo`0/0?ooo`030000
+003oool0oooo00T0oooo000U0?ooo`030000003oool0oooo03`0oooo00<000000?ooo`3oool0303o
+ool00`3o0?l0oooo0?ooo`1_0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3o
+ool002D0oooo00<000000?ooo`3oool0?03oool00`000000oooo0?ooo`0<0?ooo`030?l0o`3oool0
+oooo06l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`090?ooo`009@3oool00`00
+0000oooo0?ooo`0l0?ooo`030000003oool0oooo00`0oooo00<0o`3o0?ooo`3oool0K`3oool00`00
+0000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000U0?ooo`030000003oool0oooo03`0
+oooo00<000000?ooo`3oool0303oool00`3o0?l0oooo0?ooo`1_0?ooo`030000003oool0oooo02`0
+oooo00<000000?ooo`3oool02@3oool002D0oooo00<000000?ooo`3oool0?03oool00`000000oooo
+0?ooo`0<0?ooo`030?l0o`3oool0oooo06l0oooo00<000000?ooo`3oool0;03oool00`000000oooo
+0?ooo`090?ooo`009@3oool00`000000oooo0?ooo`0l0?ooo`030000003oool0oooo00`0oooo00<0
+o`3o0?ooo`3oool0K`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo000U
+0?ooo`030000003oool0oooo03`0oooo00<000000?ooo`3oool0303oool00`3o0?l0oooo0?ooo`1_
+0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002D0oooo00<000000?oo
+o`3oool0?03oool00`000000oooo0?ooo`0<0?ooo`030?l0o`3oool0oooo06l0oooo00<000000?oo
+o`3oool0;03oool00`000000oooo0?ooo`090?ooo`009@3oool00`000000oooo0?ooo`0l0?ooo`03
+0000003oool0oooo00/0oooo0P3o001a0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3o
+ool02@3oool002D0oooo00<000000?ooo`3oool0?03oool00`000000oooo0?ooo`040?ooo`H0o`3o
+103o001`0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool002D0oooo00<0
+00000?ooo`3oool0<P3ooolA0?l0o`H0oooo103o001`0?ooo`030000003oool0oooo02`0oooo00<0
+00000?ooo`3oool02@3oool002D0oooo00<000000?ooo`3oool08P3oool@0?l0o`X0oooo00<00000
+0?ooo`3oool02`3oool20?l00740oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`09
+0?ooo`009@3oool00`000000oooo0?ooo`080?ooo`80o`001`3ooolA0?l0oaX0oooo00<000000?oo
+o`3oool0OP3oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00P0oooo000U0?ooo`03
+0000003oool0oooo00L0oooo00<0o`000?l0o`3o0?l01`3o0?l[0?ooo`030000003oool0oooo07h0
+oooo00<000000?ooo`3oool0;@3oool00`000000oooo0?ooo`080?ooo`009@3oool2000000P0oooo
+103o000a0?ooo`030000003oool0oooo07h0oooo00<000000?ooo`3oool0;@3oool00`000000oooo
+0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`080?ooo`80o`0000<0oooo0?l0o`3o0?l0;`3o
+ool00`000000oooo0?ooo`1n0?ooo`030000003oool0oooo02d0oooo00<000000?ooo`3oool0203o
+ool002D0oooo00<000000?ooo`3oool03@3oool20?l0obd0oooo00<000000?ooo`3oool0OP3oool0
+0`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003oool0oooo
+00l0oooo0P3o0?l[0?ooo`030000003oool0oooo07h0oooo00<000000?ooo`3oool0;@3oool00`00
+0000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0A0?ooo`030?l0o`3oool0oooo02P0
+oooo00<000000?ooo`3oool0OP3oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00P0
+oooo000U0?ooo`030000003oool0oooo0180oooo0P3o0?lX0?ooo`030000003oool0oooo07h0oooo
+00<000000?ooo`3oool0;@3oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?oo
+o`0D0?ooo`80o`3o9P3oool00`000000oooo0?ooo`1n0?ooo`030000003oool0oooo02d0oooo00<0
+00000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool05P3oool20?l0ob@0oooo00<00000
+0?ooo`3oool0OP3oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00P0oooo000U0?oo
+o`030000003oool0oooo01P0oooo0P3o0?lR0?ooo`030000003oool0oooo07h0oooo00<000000?oo
+o`3oool0;@3oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0J0?ooo`03
+0?l0o`3oool0oooo01l0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`03
+0000003oool0oooo00P0oooo000U0?ooo`030000003oool0oooo01/0oooo0P3o0?lO0?ooo`030000
+003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`009@3o
+ool00`000000oooo0?ooo`0M0?ooo`80o`3o7@3oool00`000000oooo0?ooo`1o0?ooo`030000003o
+ool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool07`3oool2
+0?l0oa/0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0
+oooo00P0oooo000U0?ooo`030000003oool0oooo0240oooo0P3o0?l00`3o0000oooo0?ooo`0F0?oo
+o`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?oo
+o`009@3oool00`000000oooo0?ooo`0Q0?ooo`80o`0000<0o`3o0?l0003oool05P3oool00`000000
+oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo
+00<000000?ooo`3oool08@3oool20?l000030?l0o`3o0000oooo01H0oooo00<000000?ooo`3oool0
+O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003o
+ool0oooo0280oooo00<0o`000?l0o`3oool05`3oool00`000000oooo0?ooo`1o0?ooo`030000003o
+ool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool0
+0`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool0
+0`000000oooo0?ooo`080?ooo`002`3oool4000001H0oooo0P00000T0?ooo`030?l0o`3oool0oooo
+01H0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo
+00P0oooo000<0?ooo`030000003oool0000001H0oooo00<000000?ooo`3oool08`3oool00`3o0?l0
+oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000
+oooo0?ooo`080?ooo`002`3oool00`000000oooo0000000G0?ooo`030000003oool0oooo02<0oooo
+00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo
+00<000000?ooo`3oool0203oool000/0oooo1000000F0?ooo`030000003oool0oooo02<0oooo00<0
+o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<0
+00000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F
+0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`08
+0?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?oo
+o`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`03
+0000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`03
+0000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool0
+8`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0
+;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3o
+ool0oooo01H0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003o
+ool0oooo00P0oooo000U0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool0
+0`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool0
+02D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo
+07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000
+oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0O`3oool00`000000
+oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003oool0oooo02<0oooo
+00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo
+00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?oo
+o`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?oo
+o`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<00000
+0?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?oo
+o`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?oo
+o`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3o
+ool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3o
+ool0;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0
+o`3oool0oooo01H0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000
+003oool0oooo00P0oooo000A0?ooo`800000103oool2000000<0oooo100000050?ooo`030000003o
+ool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003o
+ool0oooo02`0oooo00<000000?ooo`3oool0203oool00100oooo00@000000?ooo`3oool00000203o
+ool00`000000oooo0?ooo`060?ooo`800000903oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003o
+ool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00403oool0
+10000000oooo0?ooo`0000090?ooo`030000003oool0oooo00D0oooo00<000000?ooo`3oool08`3o
+ool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03o
+ool00`000000oooo0?ooo`080?ooo`002P3oool400000080oooo00@000000?ooo`3oool000002P3o
+ool00`000000oooo0?ooo`040?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3o
+ool00`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203o
+ool00100oooo00@000000?ooo`3oool00000203oool010000000oooo0?ooo`0000050?ooo`030000
+003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000
+003oool0oooo02`0oooo00<000000?ooo`3oool0203oool00140oooo0P00000:0?ooo`8000001P3o
+ool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0O`3o
+ool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003oool0
+oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003oool0
+oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o
+0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`00
+0000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0
+oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0
+oooo000U0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo
+0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<0
+00000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<0
+00000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S
+0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0O`3oool00`000000oooo0?ooo`0/
+0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?oo
+o`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003oool0oooo02`0oooo00<000000?oo
+o`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`03
+0000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00
+9@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0
+O`3oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003o
+ool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1o0?ooo`030000003o
+ool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool0
+0`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo07l0oooo00<000000?ooo`3oool0;03oool0
+0`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo
+01D0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo
+00P0oooo000U0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05@3oool00`000000
+oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo
+00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0E0?ooo`030000003oool0oooo0800oooo
+00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00903oool2000002D0oooo00<0
+o`3o0?ooo`3oool05@3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<0
+00000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0E
+0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`08
+0?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01D0oooo00<000000?oo
+o`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`03
+0000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05@3oool00`000000oooo0?ooo`200?ooo`03
+0000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool0
+8`3oool00`3o0?l0oooo0?ooo`0E0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0
+;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3o
+ool0oooo01D0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003o
+ool0oooo00P0oooo000U0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05@3oool0
+0`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool0
+02D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0E0?ooo`030000003oool0oooo
+0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`009@3oool00`000000
+oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01D0oooo00<000000?ooo`3oool0P03oool00`000000
+oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?ooo`030000003oool0oooo02<0oooo
+00<0o`3o0?ooo`3oool05@3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo
+00<000000?ooo`3oool0203oool002D0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?oo
+o`0E0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?oo
+o`080?ooo`009@3oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01D0oooo00<00000
+0?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000U0?oo
+o`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05@3oool00`000000oooo0?ooo`200?oo
+o`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002@0oooo00<000000?ooo`3o
+ool0903oool00`3o0?l0oooo0?ooo`0E0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3o
+ool0;03oool00`000000oooo0?ooo`080?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0
+o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000
+003oool0oooo00P0oooo000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3o
+ool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203o
+ool002@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0
+oooo0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00903oool00`00
+0000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`00
+0000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000T0?ooo`800000903oool00`3o0?l0
+oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`000000
+oooo0?ooo`080?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo
+00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo
+000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?oo
+o`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002@0oooo00<00000
+0?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<00000
+0?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00903oool00`000000oooo0?ooo`0S0?oo
+o`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?oo
+o`030000003oool0oooo00P0oooo000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3o
+ool05P3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3o
+ool0203oool002@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000
+003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00903o
+ool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03o
+ool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0oooo000T0?ooo`030000003oool0
+oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`200?ooo`030000003oool0
+oooo02`0oooo00<000000?ooo`3oool0203oool002@0oooo00<000000?ooo`3oool08`3oool00`3o
+0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`00
+0000oooo0?ooo`080?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0
+oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00P0
+oooo000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo
+0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?ooo`3oool0203oool002@0oooo00<0
+00000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<0
+00000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00903oool00`000000oooo0?ooo`0S
+0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0/
+0?ooo`030000003oool0oooo00P0oooo000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?oo
+o`3oool05P3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02`0oooo00<000000?oo
+o`3oool0203oool002@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`03
+0000003oool0oooo0800oooo00<000000?ooo`3oool0;03oool00`000000oooo0?ooo`080?ooo`00
+903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0
+P03oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00L0oooo000T0?ooo`030000003o
+ool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`200?ooo`030000003o
+ool0oooo02d0oooo00<000000?ooo`3oool01`3oool002@0oooo00<000000?ooo`3oool08`3oool0
+0`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;@3oool0
+0`000000oooo0?ooo`070?ooo`00903oool2000002@0oooo00<0o`3o0?ooo`3oool05P3oool00`00
+0000oooo0?ooo`200?ooo`030000003oool0oooo02d0oooo00<000000?ooo`3oool01`3oool002@0
+oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800
+oooo00<000000?ooo`3oool0;@3oool00`000000oooo0?ooo`070?ooo`00903oool00`000000oooo
+0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000oooo
+0?ooo`0]0?ooo`030000003oool0oooo00L0oooo000T0?ooo`030000003oool0oooo02<0oooo00<0
+o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02d0oooo00<0
+00000?ooo`3oool01`3oool002@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F
+0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;@3oool00`000000oooo0?ooo`07
+0?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?oo
+o`3oool0P03oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00L0oooo000T0?ooo`03
+0000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`200?ooo`03
+0000003oool0oooo02d0oooo00<000000?ooo`3oool01`3oool002@0oooo00<000000?ooo`3oool0
+8`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0
+;@3oool00`000000oooo0?ooo`070?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3o
+ool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000oooo0?ooo`0]0?ooo`030000003o
+ool0oooo00L0oooo000T0?ooo`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool0
+0`000000oooo0?ooo`200?ooo`030000003oool0oooo02d0oooo00<000000?ooo`3oool01`3oool0
+02@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo
+0800oooo00<000000?ooo`3oool0;@3oool00`000000oooo0?ooo`070?ooo`00903oool00`000000
+oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0P03oool00`000000
+oooo0?ooo`0]0?ooo`030000003oool0oooo00L0oooo000T0?ooo`030000003oool0oooo02<0oooo
+00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`200?ooo`030000003oool0oooo02d0oooo
+00<000000?ooo`3oool01`3oool002@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?oo
+o`0F0?ooo`030000003oool0oooo0800oooo00<000000?ooo`3oool0;@3oool00`000000oooo0?oo
+o`070?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<00000
+0?ooo`3oool0P03oool00`000000oooo0?ooo`0]0?ooo`030000003oool0oooo00L0oooo000T0?oo
+o`030000003oool0oooo02<0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`1f0?oo
+o`/00000;`3oool00`000000oooo0?ooo`070?ooo`00903oool00`000000oooo0?ooo`0S0?ooo`03
+0?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0H03ooolF000000/0oooo0P00000]0?ooo`03
+0000003oool0oooo00L0oooo000M0?ooo`8000001@3oool00`000000oooo0?ooo`0S0?ooo`030?l0
+o`3oool0oooo01H0oooo00<000000?ooo`3oool0B`3ooolE000002<0oooo0P00000[0?ooo`030000
+003oool0oooo00L0oooo000L0?ooo`040000003oool0oooo000000@0oooo00<000000?ooo`3oool0
+8`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo03D0oooo5P00000j0?ooo`800000
+:@3oool00`000000oooo0?ooo`070?ooo`00703oool010000000oooo0?ooo`0000040?ooo`800000
+903oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo0200oooo5@00001B0?ooo`030000
+003oool0oooo02H0oooo00<000000?ooo`3oool01`3oool001`0oooo00@000000?ooo`3oool00000
+103oool00`000000oooo0?ooo`0S0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0
+2P3ooolF000006P0oooo0P00000V0?ooo`030000003oool0oooo00L0oooo000L0?ooo`040000003o
+ool0oooo000000@0oooo00<000000?ooo`3oool08`3oool00`3o0?l0oooo0?ooo`0=0?oooaH00000
+P03oool2000002@0oooo00<000000?ooo`3oool01`3oool001d0oooo0P0000050?ooo`030000003o
+ool0oooo01h0oooo5@0000090?ooo`030000003oool0oooo08`0oooo0P00000R0?ooo`030000003o
+ool0oooo00L0oooo000T0?ooo`030000003oool0oooo00P0oooo5P0000050?ooo`030?l0o`3oool0
+oooo01H0oooo00<000000?ooo`3oool0SP3oool200000200oooo00<000000?ooo`3oool01`3oool0
+02@0oooo2`00000K0?ooo`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0T03oool01000
+0000oooo0?ooo`3oool20?l001X0oooo00<000000?ooo`3oool01`3oool002H0oooo0P00000R0?oo
+o`030?l0o`3oool0oooo01H0oooo00<000000?ooo`3oool0RP3oool70?l0o`800000103o000I0?oo
+o`030000003oool0oooo00L0oooo000X0?ooo`<000007`3oool00`3o0?l0oooo0?ooo`0F0?ooo`03
+0000003oool0oooo07@0oooo5P3o0?l90?ooo`8000000P3o00000`3o0?l0oooo0?ooo`0F0?ooo`03
+0000003oool0oooo00L0oooo000[0?ooo`<00000703oool00`3o0?l0oooo0?ooo`0F0?ooo`030000
+003oool0oooo05h0oooo5P3o0?lP0?ooo`040?l00000000000000?ooo`80o`3o5P3oool00`000000
+oooo0?ooo`070?ooo`00;@3oool2000001/0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo
+0?ooo`180?oooaH0o`3o>@3oool00`000000oooo0?ooo`020?l0oa@0oooo00<000000?ooo`3oool0
+1`3oool002l0oooo0`0000000`3oool000000?ooo`0E0?ooo`030?l0o`3oool0oooo01H0oooo00<0
+00000?ooo`3oool0<P3ooolF0?l0oe00oooo0P0000020?ooo`80o`3o4P3oool00`000000oooo0?oo
+o`070?ooo`00<P3oool2000001H0oooo00<0o`3o0?ooo`3oool05P3oool00`000000oooo0?ooo`0L
+0?oooaH0o`3oJ03oool200000080oooo0P3o0?l@0?ooo`030000003oool0oooo00L0oooo000d0?oo
+o`<000004`3oool00`3o0?l0oooo0?ooo`0F0?ooo`030000003oool0oooo00H0oooo5P3o0?n00?oo
+o`8000000P3oool00`3o0?l0oooo0?ooo`0=0?ooo`030000003oool0oooo00L0oooo000g0?ooo`<0
+00003`3oool20?l000/0oooo5P3o0?nH0?ooo`80000000<0oooo0?l0o`3o0?l03@3oool00`000000
+oooo0?ooo`070?ooo`00>@3oool3000000`0oooo0P3o000<0?l0o`d0oooo00<000000?ooo`3oool0
+X03oool00`000000oooo0?ooo`020?l0o`/0oooo00<000000?ooo`3oool01`3oool003`0oooo0P00
+00000`3oool000000?ooo`070?ooo`@0o`005`3oool00`000000oooo0?ooo`2Q0?ooo`8000000P3o
+ool20?l0o`T0oooo00<000000?ooo`3oool01`3oool003h0oooo0P0000090?ooo`80o`00603oool0
+0`000000oooo0?ooo`2S0?ooo`8000000P3oool20?l0o`L0oooo00<000000?ooo`3oool01`3oool0
+0400oooo0`00000P0?ooo`030000003oool0oooo0:D0oooo0P0000020?ooo`80o`3o00<0o`000?oo
+o`3oool00P3oool00`000000oooo0?ooo`070?ooo`00;03oool2000000@0oooo0P0000030?ooo`<0
+00002@3oool3000001d0oooo00<000000?ooo`3oool0Y`3oool01P000000oooo0?l0003o0000o`3o
+0?l000<0oooo00<000000?ooo`3oool01`3oool002/0oooo00@000000?ooo`3oool00000203oool0
+10000000oooo0?ooo`00000:0?ooo`<000000`3oool00`000000oooo0?ooo`0E0?ooo`030000003o
+ool0oooo0:P0oooo0P0000030?l000<0oooo00<000000?ooo`3oool01`3oool002/0oooo00@00000
+0?ooo`3oool00000203oool010000000oooo0?ooo`00000=0?ooo`80000000<0oooo0000003oool0
+5P3oool00`000000oooo0?ooo`2Z0?ooo`800000103oool00`000000oooo0?ooo`070?ooo`00:`3o
+ool010000000oooo0?ooo`0000080?ooo`<00000403oool2000001L0oooo00<000000?ooo`3oool0
+[03oool200000080oooo00<000000?ooo`3oool01`3oool002/0oooo00@000000?ooo`3oool00000
+2@3oool00`000000oooo0?ooo`0A0?ooo`<000000P3oool00`000000oooo0?ooo`0?0?ooo`030000
+003oool0oooo0:h0oooo0`0000090?ooo`00;03oool2000000X0oooo0`00000D0?ooo`<000004@3o
+ool00`000000oooo0?ooo`2U0?ooo``000002@3oool00540oooo0`00000?0?ooo`030000003oool0
+oooo08l0oooo5P00000E0?ooo`00E03oool2000000030?ooo`000000oooo00X0oooo00<000000?oo
+o`3oool0N@3ooolF000002/0oooo001F0?ooo`<000002P3oool00`000000oooo0?ooo`1R0?oooaL0
+0000@@3oool005T0oooo0P0000000`3oool000000?ooo`050?ooo`030000003oool0oooo04`0oooo
+5P00001H0?ooo`00A03oool2000000@0oooo0P0000040?ooo`8000002@3oool2000000D0oooo0P00
+000g0?oooaL00000KP3oool004<0oooo00@000000?ooo`3oool00000203oool010000000oooo0?oo
+o`00000:0?ooo`<000000P3oool200000240oooo5P0000250?ooo`00@`3oool010000000oooo0?oo
+o`0000080?ooo`040000003oool0oooo000000d0oooo1000000;0?oooaH00000V`3oool004<0oooo
+00@000000?ooo`3oool000002@3oool200000100oooo3@00002a0?ooo`00@`3oool010000000oooo
+0?ooo`0000080?ooo`040000003oool0oooo00000<d0oooo00140?ooo`8000002P3oool200000<h0
+oooo003o0?ooob40oooo003o0?ooob40oooo003o0?ooob40oooo001O0?ooo`D00000_03oool00640
+oooo00<000000?ooo`3oool0_03oool00640oooo00<000000?ooo`3oool0_03oool00640oooo00<0
+00000?ooo`3oool0_03oool00640oooo00<000000?ooo`3oool0_03oool00440oooo0P0000000`3o
+ool000000000000J0?ooo`800000_P3oool00480oooo00<000000?ooo`000000f`3oool004<0oooo
+00<000000?ooo`3oool0fP3oool00440oooo0P0000000`3oool000000000003J0?ooo`00o`3ooolQ
+0?ooo`00o`3ooolQ0?ooo`00o`3ooolQ0?ooo`00o`3ooolQ0?ooo`00\
+\>"],
+    ImageRangeCache->{{{0, 287}, {278.188, 0}} -> {0, 0, 0, 0}}]
+}], "Text",
+  Editable->False],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[
+          f[{x, y, z}], {x, 1.0}, {y, 0.5}, {z, 0.0}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y,z}] = \>", 
+        f[{x, y, z}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y, z}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Powell's Method",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThe essence of Powell\[CloseCurlyQuote]s method is to add \
+two steps to the process described in the preceding paragraph.  The vector  ",
+    
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  represents, in some sense, the ",
+    FontFamily->"Times-Roman"],
+  StyleBox["average direction",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" moved over the  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox[" intermediate steps  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  in an iteration.  Thus the point  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_1\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is determined to be the point at which the minimum of the \
+function  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  occurs along the vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  As before,  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  is a function of one variable along this vector and the \
+minimization could be accomplished with an application of the golden ratio or \
+Fibonacci searches.  Finally, since the vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  was such a ",
+    FontFamily->"Times-Roman"],
+  StyleBox["good",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" direction, it replaces one of the direction vectors for the next \
+iteration.  The iteration is then repeated using the new set of direction \
+vectors to generate a sequence of points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(X\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 0\), "\[Infinity]"]]],
+  StyleBox[".  In one step of the iteration instead of a zig-zag path the \
+iteration follows a \"dog-leg\" path.  The process is outlined below.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tLet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  StyleBox["  be an initial guess at the location of the minimum of the \
+function  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"z", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              StyleBox[\(X\&\[RightVector]\),
+                FontWeight->"Bold"], ")"}]}], " ", "=", 
+          " ", \(f \((x\_1, x\_2, \[CenterEllipsis], x\_n)\)\)}]}]]],
+  ".",
+  StyleBox[" \n\nLet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(E\&\[RightVector]\_k\),
+          FontWeight->"Bold"], " ", 
+        StyleBox["=",
+          FontWeight->"Bold"], " ", 
+        RowBox[{"(", 
+          RowBox[{"0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(1\_k\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}]}]]],
+  "   for ",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  StyleBox["  be the set of standard base vectors. \nInitialize the vectors  \
+",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_k = E\&\[RightVector]\_k\),
+        FontWeight->"Bold"]]],
+  "  for",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  StyleBox["  and use their transpose  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(U\&\[RightVector]\_k\%'\)\)],
+    FontWeight->"Bold"],
+  StyleBox["  to form the columns of the matrix  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["U",
+    FontFamily->"Courier New"],
+  StyleBox["  as follows:  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"U", " ", "=", " ", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox[\(U\&\[RightVector]\_1\%'\),
+              FontWeight->"Bold"], ",", 
+            StyleBox[\(U\&\[RightVector]\_2\%'\),
+              FontWeight->"Bold"], ",", "...", ",", 
+            StyleBox[\(U\&\[RightVector]\_n\%'\),
+              FontWeight->"Bold"]}], "]"}]}]]],
+  ".  ",
+  StyleBox["\n\nInitialize the counter  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(i = 0\)]],
+  StyleBox[".   \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tSet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"], "=", " ", 
+        StyleBox[\(X\&\[RightVector]\_i\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tFor",
+    FontFamily->"Times-Roman"],
+  " ",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ",",
+  StyleBox["   \n\tfind the value of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma]\  = \ \[Gamma]\_k\)]],
+  StyleBox["  that minimizes  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox[\(P\&\[RightVector]\_\(k - 1\)\),
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["+",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            RowBox[{"\[Gamma]", 
+              StyleBox[\(U\&\[RightVector]\_k\),
+                FontWeight->"Bold"]}]}], ")"}]}]]],
+  ",  ",
+  StyleBox["\n\tand set  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_k\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_\(k - 1\)\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["+",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{\(\[Gamma]\_k\), 
+            StyleBox[\(U\&\[RightVector]\_k\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".   \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tSet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_j\  = \ U\&\[RightVector]\_\(j + 1\)\),
+        FontWeight->"Bold"]]],
+  "  for",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(j\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  StyleBox["  and\n\tset  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(U\&\[RightVector]\_n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_n\),
+            FontWeight->"Bold"], "-", 
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"]}]}]]],
+  StyleBox[".  \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iv)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tIncrement the counter  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(i = i + 1\)]],
+  StyleBox[".   \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(v)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tFind the value of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma]\  = \ \[Gamma]\_min\)]],
+  StyleBox["  that minimizes  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox[\(P\&\[RightVector]\_0\),
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["+",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            RowBox[{"\[Gamma]", 
+              StyleBox[\(U\&\[RightVector]\_n\),
+                FontWeight->"Bold"]}]}], ")"}]}]]],
+  ",  \n\t",
+  StyleBox["and set  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\_i\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["+",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{\(\[Gamma]\_min\), 
+            StyleBox[\(U\&\[RightVector]\_n\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".   ",
+    FontFamily->"Times-Roman"],
+  StyleBox["\n\n",
+    FontFamily->"Times-Italic",
+    FontSlant->"Italic"],
+  StyleBox["(vi)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tRepeat steps ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" through ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(v)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" until convergence is achieved.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/PowellMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowellMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Powell's Method for Finding a Minimum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "To numerically approximate a local minimum of",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  ",  where  ",
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  "  is a continuous function of  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  real variables and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[CenterEllipsis]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]]],
+  "  by starting with one point  ",
+  Cell[BoxData[
+      StyleBox[\(P\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  "  and using the \"dog-leg\" search along the directions of the direction \
+vectors ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(U\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 1\), "n"]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/PowellMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowellMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Powell's Method for Finding a Minimum).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To numerically approximate a local minimum of",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  ",  start with ",
+  Cell[BoxData[
+      StyleBox[\(P\&\[RightVector]\_0\),
+        FontWeight->"Bold"]]],
+  " and using the \"taxi-cab\" search.  \n",
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  To streamline the algorithm we use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontFamily->"Courier New"],
+  " to perform the line searches along the direction vectors ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(U\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 1\), "n"]]],
+  ".  In practice alternate methods could be employed.  "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Powell[X0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({k, n = Length[X0]}\), ",", " ", "\[IndentingNewLine]", 
+              
+              
+              RowBox[{\(P\&\[RightVector]\_0\  = \ \(X\&\[RightVector]\_0\  = \
+\ X0\)\), ";", " ", "\[IndentingNewLine]", 
+                RowBox[{
+                  StyleBox[\(E\&\[RightVector]\_m_\),
+                    FontWeight->"Bold"], 
+                  StyleBox[":=",
+                    FontWeight->"Bold"], \(Table[
+                    KroneckerDelta[m, p], {p, n}]\)}], ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"For", "[", 
+                  
+                  RowBox[{\(i = 1\), ",", \(i \[LessEqual] n\), ",", \(i++\), 
+                    ",", " ", 
+                    
+                    StyleBox[\(u\&\[RightVector]\_i\  = 
+                        E\&\[RightVector]\_i\),
+                      FontWeight->"Bold"]}], 
+                  StyleBox[" ",
+                    FontWeight->"Bold"], "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(i = 0\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  RowBox[{\(i < max\), ",", "\[IndentingNewLine]", 
+                    
+                    RowBox[{\(Print["\<f[\>", 
+                        PaddedForm[
+                          P\&\[RightVector]\_0, {13, 12}], "\<] = \>", 
+                        PaddedForm[f[P\&\[RightVector]\_0], {13, 12}]\ ]\), 
+                      ";", " ", "\[IndentingNewLine]", 
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(k = 1\), ",", \(k \[LessEqual] n\), 
+                          ",", \(k++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            RowBox[{"Module", "[", 
+                              RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                                RowBox[{
+                                  RowBox[{"solset", "=", 
+                                    RowBox[{"FindMinimum", "[", 
+                                      RowBox[{
+                                        RowBox[{"f", "[", 
+                                        
+                                        RowBox[{\(P\&\[RightVector]\_\(k - 
+                                        1\)\), " ", "+", 
+                                        RowBox[{"\[Gamma]", " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}], "]"}], 
+                                        ",", \({\[Gamma], 0.0}\)}], "]"}]}], 
+                                  ";", " ", 
+                                  "\[IndentingNewLine]", \(\[Gamma]\_k\  = \ 
+                                    solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\)\), ";", " ", "\[IndentingNewLine]", 
+                                  
+                                  RowBox[{\(P\&\[RightVector]\_k\), "  ", "=",
+                                     " ", 
+                                    
+                                    RowBox[{\(P\&\[RightVector]\_\(k - 1\)\), 
+                                      " ", "+", 
+                                      RowBox[{\(\[Gamma]\_k\), " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}]}], ";", " ", 
+                                  "\[IndentingNewLine]", \(Print["\<f[\>", 
+                                    PaddedForm[
+                                      P\&\[RightVector]\_k, {13, 
+                                        12}], "\<] = \>", 
+                                    PaddedForm[
+                                      f[P\&\[RightVector]\_k], {13, 12}]\ ]\),
+                                   ";"}]}], "  ", "]"}], ";"}]}], "  ", "]"}],
+                       ";", " ", "\[IndentingNewLine]", 
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(j = 1\), ",", \(j \[LessEqual] n - 1\), 
+                          ",", \(j++\), ",", " ", 
+                          
+                          StyleBox[\(u\&\[RightVector]\_j\  = 
+                              u\&\[RightVector]\_\(j + 1\)\),
+                            FontWeight->"Bold"]}], 
+                        StyleBox[" ",
+                          FontWeight->"Bold"], "]"}], ";", " ", 
+                      "\[IndentingNewLine]", 
+                      
+                      StyleBox[\(u\&\[RightVector]\_n\  = \ 
+                          P\&\[RightVector]\_n - P\&\[RightVector]\_0\),
+                        FontWeight->"Bold"], 
+                      StyleBox[";",
+                        FontWeight->"Bold"], " ", 
+                      "\[IndentingNewLine]", \(i = i + 1\), ";", " ", 
+                      "\[IndentingNewLine]", 
+                      RowBox[{"solset", "=", 
+                        RowBox[{"FindMinimum", "[", 
+                          RowBox[{
+                            RowBox[{"f", "[", 
+                              RowBox[{\(P\&\[RightVector]\_0\), " ", "+", 
+                                RowBox[{"\[Gamma]", " ", 
+                                  StyleBox[\(u\&\[RightVector]\_n\),
+                                    FontWeight->"Bold"]}]}], "]"}], 
+                            ",", \({\[Gamma], 0.0}\)}], "]"}]}], ";", " ", 
+                      "\[IndentingNewLine]", \(\[Gamma]\_min\  = \ 
+                        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, 2\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                      "\[IndentingNewLine]", \(P\&\[RightVector]\_0\  = \ \(X\
+\&\[RightVector]\_i\  = \ 
+                          P\&\[RightVector]\_0\  + \ \[Gamma]\_min\ u\&\
+\[RightVector]\_n\)\), ";"}]}], " ", "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[P\&\[RightVector]\_0, {13, 12}], "\<] = \>", 
+                  PaddedForm[f[P\&\[RightVector]\_0], {13, 12}]\ ]\), ";", 
+                "  ", "\[IndentingNewLine]", \(Return[X\&\[RightVector]\_i]\),
+                 ";"}]}], " ", "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Powell's method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Clear[f, x, y];\)\), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        PlotPoints \[Rule] 35, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Then perform the iterations using the subroutine ",
+    FontFamily->"Times-Roman"],
+  StyleBox["Powell",
+    FontFamily->"Courier New"],
+  StyleBox[".",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {2.55, 1.75};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[StyleBox["Observe that in each iteration of the taxi-cab method \
+only one variable in the point is changing.  Convergence proceeds a polygonal \
+path where the segments are parallel to the coordinate axes.  If the geometry \
+of level curves is sufficiently complicated it might not be feasible to \
+zig-zag to the minimum in this manner. ",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 2.55}, {y, 1.75}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Powell's method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  ", \nThis example is referred to as Rosenbrock's parabolic valley, circa \
+1960. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2;\)\ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {1, 3, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell["Perform the Powell method search for the minimum.", "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {0.99, 1.01};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 4];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 0.99}, {y, 1.01}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 10], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Even ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is having a hard time finding the minimum of  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  ".\nSince the function is \"flat\" near the minimum, the best way to \
+achieve better accuracy is to increase the  ",
+  StyleBox["WorkingPrecision",
+    FontFamily->"Courier New"],
+  ",  i.e. use extended precision in the numerical computations."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, 0.99}, {y, 1.01}, 
+          WorkingPrecision \[Rule] 25];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 10], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Powell's method to find the minimum of  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = 
+        5  x\^2 + x\^4 - 9\ x\^2\ y + 3\ y\^2 + 2\ y\^4 + \(1\/4\) x\)]],
+  ".  \nLooking at your graphs, estimate the location of the local minima.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 
+        5  x\^2 + x\^4 - 9\ x\^2\ y + 3\ y\^2 + 
+          2\ y\^4 + \(1\/4\) x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ParametricPlot3D[{x, y, f[{x, y}]}, {x, \(-3.0\), 3.0}, {y, \(-0.5\), 
+          2.0}, PlotPoints \[Rule] {35, 35}, 
+        PlotRange \[Rule] {{\(-3.0\), 3.0}, {\(-0.5\), 2.0}, {\(-2.0\), 
+              2.0}}, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, \(-3.0\), 3.0}, {y, \(-0.5\), 2.0}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, \(-3.0\), 3.0}, {y, \(-0.5\), 2.0}, 
+        Contours \[Rule] 21, PlotPoints \[Rule] 35, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Looking at your graphs, estimate the location of the local minima.  
+Hint. The contour plot should be most useful.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Case (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({0.0, 0.0}\)]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Enter the starting point and perform the iterations.  \
+",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {0.0, 0.0};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 0.0}, {y, 0.0}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({2, 1.5}\)]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Enter the starting point and perform the iterations.  \
+",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {2.0, 1.5};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 2.0}, {y, 1.5}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({\(-2\), 1.5}\)]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Enter the starting point and perform the iterations.  \
+",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {\(-2.0\), 1.5};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, \(-2.0\)}, {y, 1.5}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Even ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is having a hard time finding the minimum of  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 
+        x\/4 + 5\ x\^2 + x\^4 - 9\ x\^2\ y + 3\ y\^2 + 2\ y\^4\)]],
+  ".\nSince the function is \"flat\" near the minimum, the best way to \
+achieve better accuracy is to increase the  ",
+  StyleBox["WorkingPrecision",
+    FontFamily->"Courier New"],
+  ",  i.e. use extended precision in the numerical computations."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, \(-2.0\)}, {y, 1.5}, 
+          WorkingPrecision \[Rule] 25];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+          PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ ;\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use Powell's Method to find  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_1\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox["  for the function  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ cos \((x)\)\  + \ sin \((y)\)\)]],
+  StyleBox[".   Use the initial point  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\_1\),
+          FontWeight->"Bold"], " ", "=", 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[\((5.5, \ 2.0)\),
+          FontWeight->"Plain"]}]]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}]\  = \ Cos[x] + Sin[y];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Clear[f, x, y];\)\), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}]\  = \ Cos[x] + Sin[y];\)\ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 0.0, 7.0}, {y, 0.0, 7.0}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 0.0, 7.0}, {y, 0.0, 7.0}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 0.0, 7.0}, {y, 0.0, 7.0}, 
+        PlotPoints \[Rule] 35, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(u\&\[RightVector]\_1\  = \ {1.0, 
+          0.0};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(u\&\[RightVector]\_2\  = \ {0.0, 
+          1.0};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(U = 
+        Transpose[{u\&\[RightVector]\_1, 
+            u\&\[RightVector]\_2}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<U = \>", MatrixForm[U]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Enter the initial point  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\_1\),
+          FontWeight->"Bold"], " ", "=", 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[\((5.5, \ 2.0)\),
+          FontWeight->"Plain"]}]]],
+  "  and set  ",
+  Cell[BoxData[
+      \(\(P\& \[RightVector] \)\_0\  = \ \(X\& \[RightVector] \)\_0\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\&\[RightVector]\_0\  = \ {5.5, 2.0};\)\ \), "\[IndentingNewLine]", 
+    \(\(P\&\[RightVector]\_0\  = \ X\&\[RightVector]\_0;\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["For  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["k=1",
+    FontFamily->"Courier New"],
+  StyleBox["  the construct the function  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[P\&\[RightVector]\_0\  + \[Gamma]\ U\&\[RightVector]\_1]\)]],
+  ". \n",
+  StyleBox["Find  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma] = \[Gamma]\_1\)]],
+  "  where",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[P\&\[RightVector]\_0\  + \[Gamma]\ U\&\[RightVector]\_1]\)]],
+  "  is a minimum.  \nAnd",
+  StyleBox[" construct  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(P\&\[RightVector]\_1\ \  = \ 
+        P\&\[RightVector]\_0\  + \[Gamma]\_1\ U\&\[RightVector]\_1\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = 
+        FindMinimum[
+          f[P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_1], {\
+\[Gamma], 0.5}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Gamma]\_1\  = \ 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(P\&\[RightVector]\_1\  = \ 
+        P\&\[RightVector]\_0\  + \ \[Gamma]\_1\ u\&\[RightVector]\_1;\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_1\)] = f[\>\"", P\&\[RightVector]\_0, "\< + \>", \[Gamma], \ 
+        u\&\[RightVector]\_1, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_1\)] = f[\>\"", 
+        P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_1, "\<]\>"];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_1\)] = \>\"", 
+        f[P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_1]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The minimum occurs at\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[Gamma] = \!\(\[Gamma]\_1\) = \>\"", \[Gamma]\_1];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_1\)  = \!\(P\&\[RightVector]\_0\) \
++ \!\(\[Gamma]\_1\) \!\(u\&\[RightVector]\_1\)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0, "\< + \>", \[Gamma]\_1, \ 
+        u\&\[RightVector]\_1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0, "\< + \>", \[Gamma]\_1\ \
+u\&\[RightVector]\_1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0\  + \ \[Gamma]\_1\ u\&\[RightVector]\_1];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_1];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["For  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["k=2",
+    FontFamily->"Courier New"],
+  StyleBox["  the construct the function  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[P\&\[RightVector]\_1\  + \[Gamma]\ U\&\[RightVector]\_2]\)]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"],
+  "\n",
+  StyleBox["Find  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma] = \[Gamma]\_2\)]],
+  "  where",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[P\&\[RightVector]\_1\  + \[Gamma]\ U\&\[RightVector]\_2]\)]],
+  "  is a minimum.  \n",
+  StyleBox["And construct  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(P\&\[RightVector]\_2\ \  = \ 
+        P\&\[RightVector]\_1\  + \[Gamma]\_2\ U\&\[RightVector]\_2\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = 
+        FindMinimum[
+          f[P\&\[RightVector]\_1\  + \[Gamma]\ u\&\[RightVector]\_2], {\
+\[Gamma], 0.5}];\)\), "\[IndentingNewLine]", 
+    \(\(\[Gamma]\_2\  = \ 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(P\&\[RightVector]\_2\  = 
+        P\&\[RightVector]\_1\  + \ \[Gamma]\_2\ u\&\[RightVector]\_2;\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_1\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = f[\>\"", P\&\[RightVector]\_1, "\< + \>", \[Gamma], \ 
+        u\&\[RightVector]\_2, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_1\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = f[\>\"", 
+        P\&\[RightVector]\_1\  + \[Gamma]\ u\&\[RightVector]\_2, "\<]\>"];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_1\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = \>\"", 
+        f[P\&\[RightVector]\_1\  + \[Gamma]\ u\&\[RightVector]\_2]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The minimum occurs at\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[Gamma] = \!\(\[Gamma]\_2\) = \>\"", \[Gamma]\_2];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_2\)  = \!\(P\&\[RightVector]\_1\) \
++ \!\(\[Gamma]\_2\) \!\(u\&\[RightVector]\_2\)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_2\)  = \>\"", 
+        P\&\[RightVector]\_1, "\< + \>", \[Gamma]\_2, \ 
+        u\&\[RightVector]\_2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_2\)  = \>\"", 
+        P\&\[RightVector]\_1, "\< + \>", \[Gamma]\_2\ \
+u\&\[RightVector]\_2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_2\)  = \>\"", 
+        P\&\[RightVector]\_1\  + \ \[Gamma]\_2\ u\&\[RightVector]\_2];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\&\[RightVector]\_2\)  = \>\"", 
+        P\&\[RightVector]\_2];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Set   ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(U\&\[RightVector]\_1\  = \ U\&\[RightVector]\_2\)]],
+  StyleBox["   and   ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(U\&\[RightVector]\_2\  = \ 
+        P\&\[RightVector]\_2\ \  - \ P\&\[RightVector]\_0\)]],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(u\&\[RightVector]\_1\  = \ 
+        u\&\[RightVector]\_2;\)\), "\[IndentingNewLine]", 
+    \(\(u\&\[RightVector]\_2\  = \ 
+        P\&\[RightVector]\_2\ \  - \ 
+          P\&\[RightVector]\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(U = 
+        Transpose[{u\&\[RightVector]\_1, 
+            u\&\[RightVector]\_2}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<U = \>", MatrixForm[U]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Find  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma] = \[Gamma]\_min\)]],
+  "  where",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[P\&\[RightVector]\_0\  + \[Gamma]\ U\&\[RightVector]\_2]\)]],
+  "  is a minimum.  \nAnd c",
+  StyleBox["onstruct  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(X\&\[RightVector]\_1\  = \ 
+        P\&\[RightVector]\_0\  + \ \[Gamma]\_min\ u\&\[RightVector]\_2\)]],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = 
+        FindMinimum[
+          f[P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_2], {\
+\[Gamma], 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Gamma]\_min\  = \ 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_1\ \  = \ 
+        P\&\[RightVector]\_0\  + \ \[Gamma]\_min\ u\&\[RightVector]\_2;\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = f[\>\"", P\&\[RightVector]\_0, "\< + \>", \[Gamma], \ 
+        u\&\[RightVector]\_2, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = f[\>\"", 
+        P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_2, "\<]\>"];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(P\&\[RightVector]\_0\) + \[Gamma] \!\(u\&\
+\[RightVector]\_2\)] = \>\"", 
+        f[P\&\[RightVector]\_0\  + \[Gamma]\ u\&\[RightVector]\_2]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The minimum occurs at\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[Gamma] = \!\(\[Gamma]\_min\) = \>\"", \
+\[Gamma]\_min];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\&\[RightVector]\_1\)  = \!\(P\&\[RightVector]\_0\) \
++ \!\(\[Gamma]\_min\) \!\(u\&\[RightVector]\_2\)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0, "\< + \>", \[Gamma]\_min, \ 
+        u\&\[RightVector]\_2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0, "\< + \>", \[Gamma]\_min\ \
+u\&\[RightVector]\_2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\&\[RightVector]\_1\)  = \>\"", 
+        P\&\[RightVector]\_0\  + \ \[Gamma]\_min\ u\&\[RightVector]\_2];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\&\[RightVector]\_1\)  = \>\"", 
+        X\&\[RightVector]\_1];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Set ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(P\&\[RightVector]\_0 = X\&\[RightVector]\_1\)]],
+  StyleBox[".  \n\nIf the minimization is done with an application of the \
+golden ratio or Fibonacci search then slightly different results might be \
+obtained. \nRecall that",
+    FontFamily->"Times-Roman"],
+  " we used ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontFamily->"Courier New"],
+  " to perform the line searches in the above computations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Perform the iteration using the subroutine ",
+    FontFamily->"Times-Roman"],
+  StyleBox["Powell",
+    FontFamily->"Courier New"],
+  StyleBox[".",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P0 = {5.5, 2.0};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 5.5}, {y, 2.0}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P\&~ = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[P\&~, {13, 12}], "\<] = \>", 
+        PaddedForm[f[P\&~], {13, 12}]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Enhanced Powell's Method",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tIn step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" of Powell's method the first vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox["  was discarded and the average direction vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  was added to the list of direction vectors.   In fact, it would \
+be better to discard the vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_r\),
+        FontWeight->"Bold"]]],
+  StyleBox["  along which the greatest decrease in  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  occurred.  It seems reasonable that the vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_r\),
+        FontWeight->"Bold"]]],
+  StyleBox["  is a large component of the average direction vector  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(U\&\[RightVector]\_n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_n\),
+            FontWeight->"Bold"], "-", 
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"]}]}]]],
+  StyleBox[".  Thus, as the number of iterations increase, the set of \
+direction vectors will tend to become ",
+    FontFamily->"Times-Roman"],
+  StyleBox["linearly dependent",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  When the set becomes linearly dependent one or more of the \
+directions will be lost and it is likely that the set of points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          StyleBox[\(X\&\[RightVector]\_k\),
+            FontWeight->"Bold"], "}"}], \(k = 0\), "\[Infinity]"]]],
+  "  ",
+  StyleBox["will not converge to the point at which the local minimum occurs. \
+ Furthermore, in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" it was assumed that the average direction vector represented a \
+good direction in which to continue the search.  But that may not be the \
+case.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Outline of the Enhanced Powell\[CloseCurlyQuote]s Method",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tSet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"], "=", " ", 
+        StyleBox[\(X\&\[RightVector]\_i\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tFor",
+    FontFamily->"Times-Roman"],
+  " ",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ",",
+  StyleBox["   \n\tfind the value of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma]\  = \ \[Gamma]\_k\)]],
+  StyleBox["  that minimizes  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox[\(P\&\[RightVector]\_\(k - 1\)\),
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["+",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            RowBox[{"\[Gamma]", 
+              StyleBox[\(U\&\[RightVector]\_k\),
+                FontWeight->"Bold"]}]}], ")"}]}]]],
+  ",  ",
+  StyleBox["\n\tand set  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_k\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_\(k - 1\)\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["+",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{\(\[Gamma]\_k\), 
+            StyleBox[\(U\&\[RightVector]\_k\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".   \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tLet ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[CapitalDelta]f\_k\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              StyleBox[\(\(P\& \[RightVector] \)\_k\),
+                FontWeight->"Bold"], ")"}]}], "-", 
+          RowBox[{"f", 
+            RowBox[{"(", 
+              StyleBox[\(\(P\& \[RightVector] \)\_\(k - 1\)\),
+                FontWeight->"Bold"], ")"}]}]}]}]]],
+  " ",
+  StyleBox[" for  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  ",
+  StyleBox[" Find the subscript  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  StyleBox["  \n\tso that  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[CapitalDelta]f\  = \(\(\(|\)\(\[CapitalDelta]f\_r\)\(|\)\) = \ 
+          max\ {\(|\)\(\[CapitalDelta]f\_k\)\(|\)}\)\)]],
+  " is the magnitude of the maximum decrease",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox[" ,  \n\tand  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(\(U\& \[RightVector] \)\_r\),
+        FontWeight->"Bold"]]],
+  StyleBox["  the direction of the maximum decrease over all the direction \
+vectors in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[". \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iv)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tIncrement the counter  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(i = i + 1\)]],
+  StyleBox[".   \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iv)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tLet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(f\_k\), " ", "=", " ", 
+        RowBox[{"f", 
+          RowBox[{"(", 
+            StyleBox[\(\(P\& \[RightVector] \)\_k\),
+              FontWeight->"Bold"], ")"}]}]}]]],
+  " ",
+  StyleBox[" for  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  ",
+  StyleBox[" \n\tLet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(f\_E\), " ", "=", " ", 
+        RowBox[{"f", 
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"2", 
+                StyleBox[\(\(P\& \[RightVector] \)\_n\),
+                  FontWeight->"Bold"]}], 
+              StyleBox["-",
+                FontWeight->"Bold"], 
+              StyleBox[\(\(P\& \[RightVector] \)\_0\),
+                FontWeight->"Bold"]}], ")"}]}]}]]],
+  " ",
+  StyleBox[" be the function value in the extended direction ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"2", 
+        RowBox[{"(", 
+          
+          StyleBox[\(\(P\& \[RightVector] \)\_n - \(P\& \[RightVector] \
+\)\_0\),
+            FontWeight->"Bold"], ")"}]}]]],
+  " from  ",
+  Cell[BoxData[
+      StyleBox[\(\(P\& \[RightVector] \)\_0\),
+        FontWeight->"Bold"]]],
+  ".  \n\tIf   ",
+  Cell[BoxData[
+      \(f\_E\  \[GreaterEqual] \ f\_0\)]],
+  " ",
+  StyleBox["  set ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_i = \ P\&\[RightVector]\_n\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["and",
+    FontFamily->"Times-Roman"],
+  " go ",
+  StyleBox["to step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[", or  \n\ti",
+    FontFamily->"Times-Roman"],
+  "f   ",
+  Cell[BoxData[
+      \(2 \((f\_0 - 2\ f\_n + 
+              f\_E)\) \((f\_0 - f\_n - \[CapitalDelta]f)\)\^2\ \  \
+\[GreaterEqual] \ \ \[CapitalDelta]f \((f\_0 - f\_E)\)\^2\)]],
+  "  ",
+  StyleBox["set ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&\[RightVector]\_i = \ P\&\[RightVector]\_n\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["and",
+    FontFamily->"Times-Roman"],
+  " go ",
+  StyleBox["to step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  \n\tOtherwise, continue to step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vi)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vi)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tSet  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(U\&\[RightVector]\_r\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_n\),
+            FontWeight->"Bold"], "-", 
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"]}]}]]],
+  ", where the subscript",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  "is given in step",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"],
+  "  ",
+  StyleBox["\n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tFind the value of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Gamma]\  = \ \[Gamma]\_min\)]],
+  StyleBox["  that minimizes  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox[\(P\&\[RightVector]\_0\),
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["+",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            RowBox[{"\[Gamma]", 
+              StyleBox[\(U\&\[RightVector]\_r\),
+                FontWeight->"Bold"]}]}], ")"}]}]]],
+  ",  \n\t",
+  StyleBox["and set  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\_i\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[\(P\&\[RightVector]\_0\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["+",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{\(\[Gamma]\_min\), 
+            StyleBox[\(U\&\[RightVector]\_r\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".   \n\t\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\tRepeat steps ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" through ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tIf the conditions in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(v)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" are satisfied, then the set of direction vectors is left \
+unchanged. The first inequality in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(v)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" indicates that there is no further decrease in the value of  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  in the average direction  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  The second inequality indicates that the decrease in the \
+function ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f ",
+    FontFamily->"Times-Italic",
+    FontSlant->"Italic"],
+  StyleBox["in the direction of greatest decrease  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_r\),
+        FontWeight->"Bold"]]],
+  StyleBox["  was not a major part of the total decrease in  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f",
+    FontFamily->"Courier New"],
+  StyleBox["  in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".   If the conditions in step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(v)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" are not satisfied, then the direction of greatest decrease  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(U\&\[RightVector]\_r\),
+        FontWeight->"Bold"]]],
+  StyleBox["  is replaced with the average direction from step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[";  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\&\[RightVector]\_n\),
+          FontWeight->"Bold"], "-", 
+        StyleBox[\(P\&\[RightVector]\_0\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[". In step ",
+    FontFamily->"Times-Roman"],
+  StyleBox["(vii)",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" the function is minimized in this direction.  Stopping criteria \
+based on the magnitudes  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"\[LeftDoubleBracketingBar]", 
+        RowBox[{
+          StyleBox[\(X\&\[RightVector]\_i\),
+            FontWeight->"Bold"], "-", 
+          StyleBox[\(X\&\[RightVector]\_\(i - 1\)\),
+            FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}]]],
+  StyleBox["  or  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"\[LeftDoubleBracketingBar]", 
+        RowBox[{"f", 
+          RowBox[{"(", 
+            StyleBox[\(X\&\[RightVector]\_i\),
+              FontWeight->"Bold"], ")"}]}], 
+        "\[RightDoubleBracketingBar]"}]]],
+  StyleBox["  are typically found in steps (v) and (vii).  We leave it for \
+the reader to investigate these enhancements.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Taxi-Cab Method and Powell's Method.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Taxi-Cab Method for Finding a \
+Minimum).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(TaxiCab[X0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({k, n = Length[X0]}\), ",", " ", "\[IndentingNewLine]", 
+              
+              
+              RowBox[{\(P\&\[RightVector]\_0\  = \ \(X\&\[RightVector]\_0\  = \
+\ X0\)\), ";", " ", 
+                RowBox[{
+                  StyleBox[\(E\&\[RightVector]\_m_\),
+                    FontWeight->"Bold"], 
+                  StyleBox[":=",
+                    FontWeight->"Bold"], \(Table[
+                    KroneckerDelta[m, p], {p, n}]\)}], ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"For", "[", 
+                  
+                  RowBox[{\(i = 1\), ",", \(i \[LessEqual] n\), ",", \(i++\), 
+                    ",", " ", 
+                    
+                    StyleBox[\(u\&\[RightVector]\_i\  = 
+                        E\&\[RightVector]\_i\),
+                      FontWeight->"Bold"]}], "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(V = {X\&\[RightVector]\_0}\), ";", 
+                " ", \(i = 0\), ";", " ", "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  RowBox[{\(i < max\), ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(k = 1\), ",", \(k \[LessEqual] n\), 
+                          ",", \(k++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            RowBox[{"Module", "[", 
+                              RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                                RowBox[{
+                                  RowBox[{"solset", "=", 
+                                    RowBox[{"FindMinimum", "[", 
+                                      RowBox[{
+                                        RowBox[{"f", "[", 
+                                        
+                                        RowBox[{\(P\&\[RightVector]\_\(k - 
+                                        1\)\), " ", "+", 
+                                        RowBox[{"\[Gamma]", " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}], "]"}], 
+                                        ",", \({\[Gamma], 0.0}\)}], "]"}]}], 
+                                  ";", " ", 
+                                  "\[IndentingNewLine]", \(\[Gamma]\_k\  = \ 
+                                    solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                                  
+                                  RowBox[{\(P\&\[RightVector]\_k\), "  ", "=",
+                                     " ", 
+                                    
+                                    RowBox[{\(P\&\[RightVector]\_\(k - 1\)\), 
+                                      " ", "+", 
+                                      RowBox[{\(\[Gamma]\_k\), " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}]}], ";", 
+                                  " ", \(V = 
+                                    Append[V, P\&\[RightVector]\_k]\), 
+                                  ";"}]}], "  ", "]"}], ";"}]}], "  ", "]"}], 
+                      ";", " ", "\[IndentingNewLine]", \(i = i + 1\), ";", 
+                      " ", \(P\&\[RightVector]\_0\  = \ \
+\(X\&\[RightVector]\_i\  = \ P\&\[RightVector]\_n\)\), ";"}]}], " ", "]"}], 
+                ";", "  ", \(Return[X\&\[RightVector]\_i]\), ";"}]}], " ", 
+            "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Taxi-Cab method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  \nUse the modified program listed above that includes graphics commands \
+to draw the vertices and edges used in finding the solution. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(P0 = {2.55, 1.75};\)\ \), "\n", 
+    \(\(X0 = TaxiCab[P0, 3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[X0, {13, 12}], "\<] = \>", 
+        PaddedForm[f[X0], {13, 12}]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    StyleBox[\(\(Needs["\<Graphics`Colors`\>"];\)\(\ \ \)\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    StyleBox[\(Needs["\<Graphics`ImplicitPlot`\>"];\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 1\), ",", \(i \[LessEqual] 7\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            
+            RowBox[{\(lin = 
+                Graphics[{{Magenta, Thickness[0.004], Line[Take[V, i]]}}]\), 
+              ";", "\[IndentingNewLine]", \(dots = 
+                ListPlot[Take[V, i], 
+                  PlotStyle \[Rule] {Red, PointSize[0.018]}, 
+                  DisplayFunction \[Rule] Identity]\), ";", " ", 
+              "\[IndentingNewLine]", 
+              
+              StyleBox[\(contvals = {\(-6.8475\), \(-6.95313\), \(-6.98828\), \
+\(-6.99707\), \(-6.99927\), \(-6.99982\), \(-6.99995\)}\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              "\[IndentingNewLine]", \(contval = Take[contvals, i]\), ";", 
+              "\[IndentingNewLine]", 
+              
+              StyleBox[\(graphcont = 
+                  ContourPlot[f[{x, y}], {x, 2.5, 3.05}, {y, 1.6, 2.15}, 
+                    Contours \[Rule] contval, PlotPoints \[Rule] 100, 
+                    ContourShading \[Rule] False, ContourStyle \[Rule] Blue, 
+                    DisplayFunction \[Rule] Identity]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              StyleBox["  ",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              RowBox[{
+                StyleBox["contval2",
+                  FontColor->GrayLevel[0]], 
+                StyleBox["=",
+                  FontColor->GrayLevel[0]], 
+                RowBox[{
+                  StyleBox["{",
+                    FontColor->GrayLevel[0]], 
+                  RowBox[{
+                    StyleBox[\(-6.6915\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.7305\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.7695\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.8085\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], \(-6.8475\), ",", 
+                    StyleBox[\(-6.868625\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.88975\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.910875\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.932\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], \(-6.95313\), ",", 
+                    StyleBox[\(-6.96016\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.96719\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.97422\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.98125\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], \(-6.98828\), ",", 
+                    StyleBox[\(-6.99048\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[\(-6.99268\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[\(-6.99487\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 
+                      0.250004]], \(-6.99707\), ",", 
+                    StyleBox[\(-6.9978\),
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[\(-6.9985\),
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[1, 0, 0]], \(-6.99927\), 
+                    ",", \(-6.99982\), ",", \(-6.99995\)}], 
+                  StyleBox["}",
+                    FontColor->GrayLevel[0]]}]}], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              
+              StyleBox[\(graphcont2 = 
+                  ContourPlot[f[{x, y}], {x, 2.5, 3.05}, {y, 1.6, 2.15}, 
+                    Contours \[Rule] contval2, PlotPoints \[Rule] 100, 
+                    ContourShading \[Rule] False, ContourStyle \[Rule] Cyan, 
+                    DisplayFunction \[Rule] Identity]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              StyleBox["  ",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              
+              StyleBox[\(Show[graphcont2, graphcont, lin, dots, 
+                  PlotRange \[Rule] {{2.5, 3.05}, {1.6, 2.15}}, 
+                  Axes \[Rule] True, AxesOrigin \[Rule] {2.5, 1.6}, 
+                  DisplayFunction \[Rule] $DisplayFunction]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              "\[IndentingNewLine]", \(Print["\<f[\>", 
+                PaddedForm[
+                  V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), {13, 12}], "\<] = \>", 
+                PaddedForm[
+                  f[V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)], {13, 12}]\ ]\), ";"}]}], 
+          StyleBox["   ",
+            FontColor->GrayLevel[0]], 
+          StyleBox["]",
+            FontColor->GrayLevel[0]]}], 
+        StyleBox[";",
+          FontColor->GrayLevel[0]]}], 
+      StyleBox[" ",
+        FontColor->GrayLevel[0]]}]}], "Input",
+  AnimationDisplayTime->0.482681],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/Powell1/\
+Powellaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Powell1/Powellaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Powell's Method for Finding a \
+Minimum).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Powell[X0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({k, n = Length[X0]}\), ",", " ", "\[IndentingNewLine]", 
+              
+              
+              RowBox[{\(P\&\[RightVector]\_0\  = \ \(X\&\[RightVector]\_0\  = \
+\ X0\)\), ";", " ", 
+                RowBox[{
+                  StyleBox[\(E\&\[RightVector]\_m_\),
+                    FontWeight->"Bold"], 
+                  StyleBox[":=",
+                    FontWeight->"Bold"], \(Table[
+                    KroneckerDelta[m, p], {p, n}]\)}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"For", "[", 
+                  
+                  RowBox[{\(i = 1\), ",", \(i \[LessEqual] n\), ",", \(i++\), 
+                    ",", " ", 
+                    
+                    StyleBox[\(u\&\[RightVector]\_i\  = 
+                        E\&\[RightVector]\_i\),
+                      FontWeight->"Bold"]}], 
+                  StyleBox[" ",
+                    FontWeight->"Bold"], "]"}], ";", 
+                "\[IndentingNewLine]", \(V = {X\&\[RightVector]\_0}\), ";", 
+                " ", \(i = 0\), ";", 
+                "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[P\&\[RightVector]\_0, {13, 12}], "\<] = \>", 
+                  PaddedForm[f[P\&\[RightVector]\_0], {13, 12}]\ ]\), ";", 
+                "  ", "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  RowBox[{\(i < max\), ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(k = 1\), ",", \(k \[LessEqual] n\), 
+                          ",", \(k++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            RowBox[{"Module", "[", 
+                              RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                                RowBox[{
+                                  RowBox[{"solset", "=", 
+                                    RowBox[{"FindMinimum", "[", 
+                                      RowBox[{
+                                        RowBox[{"f", "[", 
+                                        
+                                        RowBox[{\(P\&\[RightVector]\_\(k - 
+                                        1\)\), " ", "+", 
+                                        RowBox[{"\[Gamma]", " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}], "]"}], 
+                                        ",", \({\[Gamma], 0.0}\)}], "]"}]}], 
+                                  ";", "\[IndentingNewLine]", \(\[Gamma]\_k\  \
+= \ solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                                  
+                                  RowBox[{\(P\&\[RightVector]\_k\), "  ", "=",
+                                     " ", 
+                                    
+                                    RowBox[{\(P\&\[RightVector]\_\(k - 1\)\), 
+                                      " ", "+", 
+                                      RowBox[{\(\[Gamma]\_k\), " ", 
+                                        StyleBox[\(u\&\[RightVector]\_k\),
+                                        FontWeight->"Bold"]}]}]}], ";", 
+                                  " ", \(V = 
+                                    Append[V, P\&\[RightVector]\_k]\), 
+                                  ";"}]}], "]"}], ";", 
+                            "\[IndentingNewLine]", \(Print["\<f[\>", 
+                              PaddedForm[
+                                P\&\[RightVector]\_k, {13, 12}], "\<] = \>", 
+                              PaddedForm[
+                                f[P\&\[RightVector]\_k], {13, 12}]\ ]\), 
+                            ";"}]}], "    ", "]"}], ";", " ", 
+                      "\[IndentingNewLine]", \(i = i + 1\), ";", " ", 
+                      "\[IndentingNewLine]", 
+                      RowBox[{"For", "[", 
+                        
+                        RowBox[{\(j = 1\), ",", \(j \[LessEqual] n - 1\), 
+                          ",", \(j++\), ",", " ", 
+                          
+                          StyleBox[\(u\&\[RightVector]\_j\  = 
+                              u\&\[RightVector]\_\(j + 1\)\),
+                            FontWeight->"Bold"]}], 
+                        StyleBox[" ",
+                          FontWeight->"Bold"], "]"}], ";", " ", 
+                      
+                      StyleBox[\(u\&\[RightVector]\_n\  = \ 
+                          P\&\[RightVector]\_n - P\&\[RightVector]\_0\),
+                        FontWeight->"Bold"], 
+                      StyleBox[";",
+                        FontWeight->"Bold"], "   ", "\[IndentingNewLine]", 
+                      RowBox[{"solset", "=", 
+                        RowBox[{"FindMinimum", "[", 
+                          RowBox[{
+                            RowBox[{"f", "[", 
+                              RowBox[{\(P\&\[RightVector]\_0\), " ", "+", 
+                                RowBox[{"\[Gamma]", " ", 
+                                  StyleBox[\(u\&\[RightVector]\_n\),
+                                    FontWeight->"Bold"]}]}], "]"}], 
+                            ",", \({\[Gamma], 0.0}\)}], "]"}]}], ";", 
+                      "\[IndentingNewLine]", \(\[Gamma]\_min\  = \ 
+                        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, 2\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                      " ", \(P\&\[RightVector]\_0\  = \ \
+\(X\&\[RightVector]\_i\  = \ 
+                          P\&\[RightVector]\_0\  + \ \[Gamma]\_min\ u\&\
+\[RightVector]\_n\)\), ";", 
+                      "\[IndentingNewLine]", \(Print["\<f[\>", 
+                        PaddedForm[
+                          X\&\[RightVector]\_i, {13, 12}], "\<] = \>", 
+                        PaddedForm[f[X\&\[RightVector]\_i], {13, 12}]\ ]\), 
+                      ";", "  ", 
+                      "\[IndentingNewLine]", \(V = 
+                        Append[V, X\&\[RightVector]\_i]\), ";"}]}], "]"}], 
+                ";", "  ", \(Return[X\&\[RightVector]\_i]\), ";"}]}], " ", 
+            "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Powell's method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  \nUse the modified program listed above that includes graphics commands \
+to draw the vertices and edges used in finding the solution. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(P0 = {2.55, 1.75};\)\ \), "\n", 
+    \(\(X0 = Powell[P0, 3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<After \>", 
+        i, "\< iterations.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The minimum value of f[{x,y}] is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f\>", X0, "\<] = \>", f[X0]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    StyleBox[\(\(Needs["\<Graphics`Colors`\>"];\)\(\ \ \)\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    StyleBox[\(Needs["\<Graphics`ImplicitPlot`\>"];\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 1\), ",", \(i \[LessEqual] 7\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            
+            RowBox[{\(lin = 
+                Graphics[{{Magenta, Thickness[0.004], Line[Take[V, i]]}}]\), 
+              ";", "\[IndentingNewLine]", \(dots = 
+                ListPlot[Take[V, i], 
+                  PlotStyle \[Rule] {Red, PointSize[0.018]}, 
+                  DisplayFunction \[Rule] Identity]\), ";", " ", 
+              "\[IndentingNewLine]", 
+              
+              StyleBox[\(contvals = {\(-6.8475\), \(-6.95313\), \(-6.98828\), \
+\(-6.99991\), \(-7. \), \(-7. \), \(-7. \)}\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              "\[IndentingNewLine]", \(contval = Take[contvals, i]\), ";", 
+              "\[IndentingNewLine]", 
+              
+              StyleBox[\(graphcont = 
+                  ContourPlot[f[{x, y}], {x, 2.5, 3.05}, {y, 1.6, 2.15}, 
+                    Contours \[Rule] contval, PlotPoints \[Rule] 100, 
+                    ContourShading \[Rule] False, ContourStyle \[Rule] Blue, 
+                    DisplayFunction \[Rule] Identity]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              StyleBox["  ",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              RowBox[{
+                StyleBox["contval2",
+                  FontColor->GrayLevel[0]], 
+                StyleBox["=",
+                  FontColor->GrayLevel[0]], 
+                RowBox[{
+                  StyleBox["{",
+                    FontColor->GrayLevel[0]], 
+                  RowBox[{
+                    StyleBox[\(-6.6915\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.7305\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.7695\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[\(-6.8085\),
+                      FontColor->RGBColor[0, 1, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 1]], \(-6.8475\), ",", 
+                    StyleBox[\(-6.868625\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.88975\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.910875\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[\(-6.932\),
+                      FontColor->RGBColor[0, 1, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 1, 0]], \(-6.95313\), ",", 
+                    StyleBox[\(-6.96016\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.96719\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.97422\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[\(-6.98125\),
+                      FontColor->RGBColor[0, 0, 1]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0, 0, 1]], \(-6.98828\), ",", 
+                    StyleBox[\(-6.99048\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[\(-6.99268\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[\(-6.99487\),
+                      FontColor->RGBColor[0.500008, 0.250004, 0.250004]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[0.500008, 0.250004, 
+                      0.250004]], \(-6.99707\), ",", 
+                    StyleBox[\(-6.9978\),
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[\(-6.9985\),
+                      FontColor->RGBColor[1, 0, 0]], 
+                    StyleBox[",",
+                      FontColor->RGBColor[1, 0, 0]], \(-6.99927\), 
+                    ",", \(-6.99982\), ",", \(-6.99995\)}], 
+                  StyleBox["}",
+                    FontColor->GrayLevel[0]]}]}], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              
+              StyleBox[\(graphcont2 = 
+                  ContourPlot[f[{x, y}], {x, 2.5, 3.05}, {y, 1.6, 2.15}, 
+                    Contours \[Rule] contval2, PlotPoints \[Rule] 100, 
+                    ContourShading \[Rule] False, ContourStyle \[Rule] Cyan, 
+                    DisplayFunction \[Rule] Identity]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              StyleBox["  ",
+                FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+              
+              StyleBox[\(Show[graphcont2, graphcont, lin, dots, 
+                  PlotRange \[Rule] {{2.5, 3.05}, {1.6, 2.15}}, 
+                  Axes \[Rule] True, AxesOrigin \[Rule] {2.5, 1.6}, 
+                  DisplayFunction \[Rule] $DisplayFunction]\),
+                FontColor->GrayLevel[0]], 
+              StyleBox[";",
+                FontColor->GrayLevel[0]], 
+              "\[IndentingNewLine]", \(Print["\<f[\>", 
+                PaddedForm[
+                  V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), {13, 12}], "\<] = \>", 
+                PaddedForm[
+                  f[V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)], {13, 12}]\ ]\), ";"}]}], 
+          StyleBox["   ",
+            FontColor->GrayLevel[0]], 
+          StyleBox["]",
+            FontColor->GrayLevel[0]]}], 
+        StyleBox[";",
+          FontColor->GrayLevel[0]]}], 
+      StyleBox[" ",
+        FontColor->GrayLevel[0]]}]}], "Input",
+  AnimationDisplayTime->0.482681],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/Powell1/\
+Powellbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Powell1/Powellbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/Powell1/\
+Powell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Powell1/Powell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/PowellMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Powell's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowellMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1015, 649},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+CellLabelAutoDelete->True
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 191, 4, 35, "Text"],
+Cell[1970, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3449, 111, 4410, 123, 144, "Text"],
+Cell[7862, 236, 4765, 131, 90, "Text"],
+Cell[12630, 369, 2528, 75, 52, "Text"],
+Cell[15161, 446, 598, 20, 33, "Text"],
+Cell[15762, 468, 1121, 33, 71, "Text"],
+Cell[16886, 503, 3895, 69, 349, "Input"],
+Cell[20784, 574, 302, 10, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[21111, 588, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[21264, 594, 452, 8, 90, "Input"],
+Cell[21719, 604, 392, 6, 90, "Input"],
+Cell[22114, 612, 236, 4, 50, "Input"],
+Cell[22353, 618, 224, 7, 33, "Text"],
+Cell[22580, 627, 506, 10, 130, "Input"],
+Cell[23089, 639, 394, 5, 52, "Text"],
+Cell[23486, 646, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[23739, 658, 485, 9, 91, "Input"]
+}, Closed]],
+Cell[24239, 670, 378, 12, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[24642, 686, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[24795, 692, 223, 7, 33, "Text"],
+Cell[25021, 701, 257, 5, 50, "Input"],
+Cell[25281, 708, 224, 7, 33, "Text"],
+Cell[25508, 717, 509, 10, 130, "Input"],
+Cell[26020, 729, 3206, 92, 90, "Text"],
+Cell[29229, 823, 43842, 971, 299, "Text"],
+Cell[73074, 1796, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[73327, 1808, 526, 11, 91, "Input"]
+}, Closed]],
+Cell[73868, 1822, 4220, 120, 144, "Text"],
+Cell[78091, 1944, 13835, 430, 510, "Text"],
+Cell[91929, 2376, 612, 21, 33, "Text"],
+Cell[92544, 2399, 2523, 75, 52, "Text"],
+Cell[95070, 2476, 598, 20, 33, "Text"],
+Cell[95671, 2498, 1127, 33, 71, "Text"],
+Cell[96801, 2533, 6334, 117, 479, "Input"],
+Cell[103138, 2652, 298, 10, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[103461, 2666, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[103614, 2672, 452, 8, 90, "Input"],
+Cell[104069, 2682, 392, 6, 90, "Input"],
+Cell[104464, 2690, 236, 4, 50, "Input"],
+Cell[104703, 2696, 223, 7, 33, "Text"],
+Cell[104929, 2705, 504, 10, 130, "Input"],
+Cell[105436, 2717, 394, 5, 52, "Text"],
+Cell[105833, 2724, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[106086, 2736, 487, 9, 91, "Input"]
+}, Closed]],
+Cell[106588, 2748, 385, 11, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[106998, 2763, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[107151, 2769, 225, 8, 33, "Text"],
+Cell[107379, 2779, 367, 6, 72, "Input"],
+Cell[107749, 2787, 392, 6, 90, "Input"],
+Cell[108144, 2795, 204, 3, 50, "Input"],
+Cell[108351, 2800, 65, 0, 33, "Text"],
+Cell[108419, 2802, 504, 10, 130, "Input"],
+Cell[108926, 2814, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[109179, 2826, 466, 9, 90, "Input"],
+Cell[109648, 2837, 616, 17, 52, "Text",
+  Evaluatable->False],
+Cell[110267, 2856, 515, 11, 90, "Input"]
+}, Closed]],
+Cell[110797, 2870, 410, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[111232, 2885, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[111385, 2891, 218, 4, 63, "Input"],
+Cell[111606, 2897, 489, 8, 70, "Input"],
+Cell[112098, 2907, 402, 6, 90, "Input"],
+Cell[112503, 2915, 267, 4, 50, "Input"],
+Cell[112773, 2921, 138, 3, 52, "Text"],
+Cell[112914, 2926, 180, 7, 33, "Text"],
+Cell[113097, 2935, 121, 2, 33, "Text"],
+Cell[113221, 2939, 531, 11, 130, "Input"],
+Cell[113755, 2952, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[114008, 2964, 485, 9, 91, "Input"],
+Cell[114496, 2975, 179, 7, 33, "Text"],
+Cell[114678, 2984, 121, 2, 33, "Text"],
+Cell[114802, 2988, 531, 11, 130, "Input"],
+Cell[115336, 3001, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[115589, 3013, 485, 9, 91, "Input"],
+Cell[116077, 3024, 185, 7, 33, "Text"],
+Cell[116265, 3033, 121, 2, 33, "Text"],
+Cell[116389, 3037, 536, 11, 130, "Input"],
+Cell[116928, 3050, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[117181, 3062, 499, 10, 91, "Input"],
+Cell[117683, 3074, 640, 18, 55, "Text",
+  Evaluatable->False],
+Cell[118326, 3094, 550, 11, 91, "Input"]
+}, Closed]],
+Cell[118891, 3108, 923, 31, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[119839, 3143, 101, 2, 33, "Text"],
+Cell[119943, 3147, 155, 2, 50, "Input"],
+Cell[120101, 3151, 440, 8, 90, "Input"],
+Cell[120544, 3161, 392, 6, 90, "Input"],
+Cell[120939, 3169, 236, 4, 50, "Input"],
+Cell[121178, 3175, 378, 8, 91, "Input"],
+Cell[121559, 3185, 455, 15, 33, "Text"],
+Cell[122017, 3202, 167, 2, 52, "Input"],
+Cell[122187, 3206, 780, 26, 71, "Text"],
+Cell[122970, 3234, 2110, 39, 315, "Input"],
+Cell[125083, 3275, 828, 28, 71, "Text"],
+Cell[125914, 3305, 2102, 39, 315, "Input"],
+Cell[128019, 3346, 376, 12, 33, "Text"],
+Cell[128398, 3360, 428, 9, 92, "Input"],
+Cell[128829, 3371, 547, 18, 52, "Text"],
+Cell[129379, 3391, 2126, 39, 315, "Input"],
+Cell[131508, 3432, 575, 16, 90, "Text"],
+Cell[132086, 3450, 217, 7, 33, "Text"],
+Cell[132306, 3459, 502, 10, 130, "Input"],
+Cell[132811, 3471, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[133064, 3483, 485, 9, 91, "Input"]
+}, Closed]],
+Cell[133564, 3495, 2746, 74, 144, "Text"],
+Cell[136313, 3571, 13392, 439, 508, "Text"],
+Cell[149708, 4012, 3290, 94, 109, "Text"],
+Cell[153001, 4108, 325, 10, 35, "Text"],
+Cell[153329, 4120, 169, 3, 33, "Text"],
+Cell[153501, 4125, 3740, 70, 248, "Input"],
+Cell[157244, 4197, 437, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[157706, 4212, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[157859, 4218, 215, 8, 33, "Text"],
+Cell[158077, 4228, 399, 7, 70, "Input"],
+Cell[158479, 4237, 505, 10, 130, "Input"],
+Cell[158987, 4249, 7206, 155, 330, "Input"],
+Cell[166196, 4406, 765, 26, 33, "Text"]
+}, Closed]],
+Cell[166976, 4435, 169, 3, 30, "Text"],
+Cell[167148, 4440, 6323, 119, 401, "Input"],
+Cell[173474, 4561, 433, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[173932, 4576, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[174085, 4582, 215, 8, 33, "Text"],
+Cell[174303, 4592, 399, 7, 70, "Input"],
+Cell[174705, 4601, 444, 9, 130, "Input"],
+Cell[175152, 4612, 7194, 155, 330, "Input"],
+Cell[182349, 4769, 764, 26, 33, "Text"]
+}, Closed]],
+Cell[183128, 4798, 758, 24, 30, "Text"],
+Cell[183889, 4824, 158, 3, 35, "Text"],
+Cell[184050, 4829, 549, 16, 33, "Text"],
+Cell[184602, 4847, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

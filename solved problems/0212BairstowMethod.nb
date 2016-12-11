@@ -1,0 +1,2083 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     73075,       1969]*)
+(*NotebookOutlinePosition[     73741,       1992]*)
+(*  CellTagsIndexPosition[     73697,       1988]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Lin-Bairstow Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Quadratic Synthetic Division",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\t\n\tLet the polynomial ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " have coefficients ",
+  Cell[BoxData[
+      \({a\_i}\_\(i = 0\)\%n\)]],
+  ".  Then ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " has the familiar form  \n\n(1)\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \(\(\(a\_n\) x\^n\  + \(a\_\(n - 1\)\) 
+                    x\^\(n - 1\)\  +  ... \) + \(a\_k\) 
+                x\^k\  +  ... \) + \(a\_3\) x\^3\  + \(a\_2\) 
+            x\^2\  + \(a\_1\) x\  + a\_0\)]],
+  ". \n\nLet  ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2\  - \ r\ x\  - \ s\)]],
+  "  be a fixed quadratic term.  Then ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " can be expressed as \n\t\n(2)\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2\  - r\ x\  - s)\) Q \((x)\)\  + \ 
+          u \((x - r)\)\  + \ v\)]],
+  ",  \n\nwhere  ",
+  Cell[BoxData[
+      \(R \((x)\)\  = \ u \((x - r)\)\  + \ v\)]],
+  "  is the remainder when  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " is divided by  ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ \((x\^2\  - r\ x\  - s)\)\)]],
+  ".  Here  ",
+  Cell[BoxData[
+      \(Q \((x)\)\)]],
+  "  is a polynomial of degree  ",
+  Cell[BoxData[
+      \(n - 2\)]],
+  "  and can be represented by  \n\n(3)\t\t",
+  Cell[BoxData[
+      \(Q \((x)\) = \ \(\(b\_n\) x\^\(n - 2\)\  + \ \(b\_\(n - 1\)\) 
+                x\^\(n - 3\)\  +  ... \) + \ \(b\_4\) x\^2\  + \ 
+          b\_3\ x\  + \ b\_2\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "If we set  ",
+  Cell[BoxData[
+      \(b\_1 = u\)]],
+  "  and    ",
+  Cell[BoxData[
+      \(b\_0 = v\)]],
+  ",  then \n\n(4)\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2\  - r\ x\  - s)\) 
+            Q \((x)\)\  + \ \ R \((x)\)\)]],
+  ",   \n\twhere\t\n(5)\t\t",
+  Cell[BoxData[
+      \(R \((x)\)\  = \ \(b\_1\) \((x - r)\)\  + \ b\_0\)]],
+  "  \n\nand equation (4) can be written \n\n(6)\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2\  - r\ x\  - 
+                s)\) \((\(\(b\_n\) x\^\(n - 2\)\  + \ \(b\_\(n - 1\)\) 
+                      x\^\(n - 3\)\  +  ... \) + \ \(b\_4\) x\^2\  + \ 
+                b\_3\ x\  + \ b\_2)\)\  + \ \(b\_1\) \((x - r)\)\  + \ 
+          b\_0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "The terms in (6) can be expanded so that ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " is represented in powers of  ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  ".  \n\n(7)\t\t",
+  Cell[BoxData[{
+      \(P \((x)\)\ \  = \ \ \(\(b\_n\) 
+                  x\^n\  + \ \((b\_\(n - 1\) - r\ b\_n)\) 
+                  x\^\(n - 1\)\  + \ \((b\_\(n - 2\) - r\ b\_\(n - 1\) - 
+                      s\ b\_n)\) x\^\(n - 2\) +  ... \) + \ \((b\_k - 
+                  r\ b\_\(k + 1\) - s\ b\_\(k + 2\))\) x\^k +  ... \), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ \ \((b\_3 - r\ b\_4 - s\ b\_5)\)\) 
+          x\^3\  + \ \((b\_2 - r\ b\_3 - s\ b\_4)\) 
+          x\^2\ \  + \ \((b\_1 - r\ b\_2 - s\ b\_3)\) 
+          x\  + \ \((b\_0 - r\ b\_1 - s\ b\_2)\)\)}]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The numbers  ",
+  Cell[BoxData[
+      \(b\_k\)]],
+  "  are found by comparing the coefficients of   ",
+  Cell[BoxData[
+      \(x\^k\)]],
+  "  in equations (1) and (7).  The coefficients  ",
+  Cell[BoxData[
+      \({b\_k}\_\(k = 0\)\%n\)]],
+  "   of  ",
+  Cell[BoxData[
+      RowBox[{"Q", \((x)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "R", \((x)\)}]]],
+  "  and  are computed recursively.\n\n(8)\t\tSet    ",
+  Cell[BoxData[
+      \(b\_n\  = \ a\_n\)]],
+  " ,    and  \n\n\t\t",
+  Cell[BoxData[
+      \(b\_\(n - 1\)\  = \ a\_\(n - 1\)\  + \ r\ b\_n\)]],
+  " ,    and then  \n\n\t\t",
+  Cell[BoxData[
+      \(b\_k\  = \ a\_k\  + \ r\ b\_\(k + 1\)\  + \ s\ b\_\(k + 2\)\)]],
+  "    for    ",
+  Cell[BoxData[
+      RowBox[{\(k = n - 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(n - 3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", " ", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "0"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BairstowMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BairstowMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use quadratic synthetic division to divide   ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ 
+        x\^5 + \ 6\ x\^4\  - \ 20\ x\^2\  + \ 22\ x\  + \ 8\)]],
+  "    by   ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2\  + \ 2\ x\  - \ 3\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, construct the polynomial  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  ".    "
+}], "Text"],
+
+Cell[BoxData[{
+    \(a\_5 = 1; a\_4 = 6; a\_3 = 0; a\_2 = \(-20\); a\_1 = 22; 
+    a\_0 = 8;\ \), "\[IndentingNewLine]", 
+    \(\(n\  = \ 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(k = 0\)\%n\ \(a\_k\) x\^k;\)\ \), "\n", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Second, given   ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2 - r\ x\  - \ s\)]],
+  "  construct the polynomials ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{"Q", \((x)\), "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "R", \((x)\)}]}]]],
+  ".    "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r\  = \ \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(s\  = \ \ 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(T[x_]\  = \ x\^2\  - \ r\ x\ \  - \ s;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\_n\  = \ a\_n;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b\_\(n - 1\)\  = \ 
+        a\_\(n - 1\)\  + \ r\ b\_n;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ k = n - 2, \ 
+        0 \[LessEqual] 
+          k, \ \(k--\), \[IndentingNewLine]\(b\_k\  = \ 
+            a\_k\  + \ r\ b\_\(k + 1\)\  + \ 
+              s\ b\_\(k + 2\);\)\ ];\)\ \), "\n", 
+    \(\(Q[
+          x_]\  = \ \[Sum]\+\(k = 0\)\%\(n - 2\)\ \(b\_\(k + 2\)\) 
+            x\^k;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(R[x_]\  = \ \ b\_1\ \((x - r)\)\  + \ 
+          b\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   r = \>", r];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   s = \>", s];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<a\>"\_n, "\< = \>", 
+        a\_n, "\<  and  \>", "\<b\>"\_n, "\< = \>", "\<a\>"\_n, "\< = \>", 
+        b\_n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<a\>"\_\(n - 1\), "\< = \>", 
+        a\_\(n - 1\), "\<  and  \>", "\<b\>"\_\(n - 1\), "\< = \>", "\<a\>"\_\
+\(n - 1\), "\< + r \>", "\<b\>"\_\(n - 1\), "\< = \>", 
+        a\_\(n - 1\), "\< + (\>", r, "\<)(\>", b\_n, "\<) = \>", 
+        b\_\(n - 1\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[\ k = n - 2, \ 
+        0 \[LessEqual] 
+          k, \ \(k--\), \[IndentingNewLine]\(Print["\<a\>"\_k, "\< = \>", 
+            a\_k, "\<  and  \>", "\<b\>"\_k, "\< = \>", "\<a\>"\_k, "\< + r \
+\>", "\<b\>"\_\(k + 1\), "\< + s \>", "\<b\>"\_\(k + 2\), "\< = \>", 
+            a\_k, "\< + (\>", r, "\<)(\>", b\_\(k + 1\), "\<) + (\>", 
+            s, "\<)(\>", b\_\(k + 2\), "\<) = \>", 
+            b\_k];\)\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", \ \[Sum]\+\(k = 0\)\%\(n - 2\)\ \("\<b\>"\_\(k + 
+                  2\)\) x\^k\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<R[x] = \!\(b\_1\) (x-r) + \!\(b\_0\)\>\""\ ];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Third, verify that  ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2\  - r\ x\  - s)\) 
+            Q \((x)\)\  + \ \(b\_1\) \((x - r)\)\  + \ b\_0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r = \>", r];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s = \>", s];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<T(x) = (\!\(x\^2\) - r x - s)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(b\_1\) = \>\"", 
+        b\_1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(b\_0\) = \>\"", 
+        b\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = T(x)Q(x) + R(x)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P(x) = T(x)Q(x) + \!\(b\_1\)(x - r) + \
+\!\(b\_0\)\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P(x) = (\!\(x\^2\) - r x - s)Q(x) + \!\(b\_1\)(x - r) + \
+\!\(b\_0\)\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = (\>", T[x], "\<)(\>", Q[x], "\<) + (\>", 
+        b\_1, "\<)(\>", x\  - \ r, "\<) + (\>", 
+        b\_0, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = (\>", T[x], "\<)(\>", Q[x], "\<) + (\>", 
+        Expand[\(b\_1\) \((x\  - \ r)\)], "\<) + (\>", 
+        b\_0, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", \ \ \(b\_1\) \((x\  - \ r)\)\  + \ 
+          b\_0, "\< + \>", T[x] Q[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", \ 
+        Expand[\ \(b\_1\) \((x\  - \ r)\)\  + \ b\_0], "\< + (\>", 
+        Expand[T[x] Q[x]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", 
+        Expand[T[x] Q[x] + \ \(b\_1\) \((x\  - \ r)\)\  + \ 
+            b\_0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Is this the original polynomial ?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        ExpandAll[\ 
+          P[x]\  \[Equal] \ 
+            T[x] Q[x] + \ \(b\_1\) \((x\  - \ r)\)\  + \ 
+              b\_0]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can have ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " compute the quotient and remainder using the built in procedures  ",
+  "PolynomialQuotient",
+  "  and  ",
+  StyleBox["PolynomialRemainder",
+    FontFamily->"Courier New"],
+  ".   This is just for fun! "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q[x_] = 
+        PolynomialQuotient[P[x], T[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(R[x_] = 
+        PolynomialRemainder[P[x], T[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = T[x]Q[x] + R[x]\>"\ ];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", T[x] Q[x], "\< + (\>", 
+        R[x], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = (\>", Expand[T[x] Q[x]], "\<) + (\>", 
+        R[x], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", 
+        Expand[T[x] Q[x]\  + \ R[x]]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Heuristics",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\t\n\tIn the days when \"hand computations\" were necessary, the \
+quadratic synthetic division tableau (or table) was used.  The coefficients  \
+",
+  Cell[BoxData[
+      \({a\_k}\_\(k = 0\)\%n\)]],
+  "  of the polynomial are entered on the first row in descending order, the \
+second and third rows are reserved for the intermediate computation steps  \
+(",
+  Cell[BoxData[
+      \(\(+\ r\)\ b\_\(k + 1\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\(+\ s\)\ b\_\(k + 2\)\)]],
+  ")  and the bottom row contains the coefficients  ",
+  Cell[BoxData[
+      \(b\_n\)]],
+  ",  ",
+  Cell[BoxData[
+      \(b\_\(n - 1\) = a\_\(n - 1\) + r\ b\_n\)]],
+  "  and  ",
+  Cell[BoxData[
+      \({b\_k = a\_k + r\ b\_\(k + 1\) + s\ b\_\(k + 2\)}\_\(k = 0\)\%\(n - 2\
+\)\)]],
+  ". \n\t\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{GridBox[{
+                  {
+                    StyleBox["Input",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[1, 0, 0]]},
+                  {\(r\[IndentingNewLine]
+                    s\)}
+                  }], "|"}], GridBox[{
+                {\(a\_n\)},
+                {\(\(\ \ \)\(\(\[DownArrow]\)\(\ \ \ \
+\)\(\[IndentingNewLine]\)\(\[DownArrow]\)\(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(a\_\(n - 1\)\)\)},
+                {\(\(\(+\ r\)\ b\_n\)\(\ \)\(\[IndentingNewLine]\)
+                  \(\ \ \)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_\(n - 2\)\)\)},
+                {\(\(+\ r\)\ b\_\(n - 1\)\[IndentingNewLine]
+                  \(\(+\ s\)\(\ \)\(b\_n\)\(\ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_\(n - 3\)\)\)},
+                {\(\(+\ r\)\ b\_\(n - 2\)\[IndentingNewLine]
+                  \(+\ s\)\ b\_\(n - 1\)\)}
+                }], GridBox[{
+                {"\[CenterEllipsis]"},
+                {\(\[CenterEllipsis]\[IndentingNewLine]
+                  \[CenterEllipsis]\)}
+                }], GridBox[{
+                {\(\(\ \ \ \)\(a\_k\)\)},
+                {\(\(+\ r\)\ b\_\(k + 1\)\[IndentingNewLine]
+                  \(+\ s\)\ b\_\(k + 2\)\)}
+                }], GridBox[{
+                {"\[CenterEllipsis]"},
+                {\(\[CenterEllipsis]\[IndentingNewLine]
+                  \[CenterEllipsis]\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_2\)\)},
+                {\(\(+\ r\)\ b\_3\[IndentingNewLine]
+                  \(+\ s\)\ b\_4\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \)\(a\_1\)\)},
+                {\(\(+\ r\)\ b\_2\[IndentingNewLine]
+                  \(+\ s\)\ b\_3\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(a\_0\)\(\ \ \ \ \ \ \ \ \ \ \ \ \)\
+\)},
+                {\(\(\ \ \ \ \ \ \)\(\(+\ 
+                      r\)\ b\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\[IndentingNewLine]
+                  \ \ \ \ \ \ \(\(+\ s\)\(\ \)\(b\_2\)\(\ \ \)\)\)\)}
+                }]},
+          {
+            " ", \(\(\ \ \ \ \ \ \)\(\(\[UpperRightArrow]\)\(\
+\[IndentingNewLine]\)\(\ \)\(b\_n\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \)\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \ \ \
+\)\(b\_\(n - 
+                    1\)\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \)\(b\_\(n - 
+                    2\)\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \)\(b\_\(n - 
+                    3\)\)\)\), \(\(\[IndentingNewLine]\)\(\[CenterEllipsis]\)\
+\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\[UpperRightArrow]\)\(\
+\[IndentingNewLine]\)\(\ \ \ \ \ \ \)\(b\_k\)\)\), \
+\(\(\[IndentingNewLine]\)\(\[CenterEllipsis]\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \
+\ \)\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \)\(b\_2\
+\)\)\), 
+            RowBox[{"            ", 
+              
+              RowBox[{\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \
+\ \ \ \ \)\(b\_1\)\), " ", "\[IndentingNewLine]", "    ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}], 
+            RowBox[{"  ", "\[IndentingNewLine]", 
+              
+              RowBox[{\(\(|\)\(\ \ \ \ \ \ \ \ \)\(b\_0\)\), "    ", 
+                "\[IndentingNewLine]", "       ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox["         ",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}]}
+          },
+        RowLines->True]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use the \"",
+    FontFamily->"Times-Roman"],
+  "quadratic synthetic division tableau\"",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  "to divide  ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ 
+        x\^5 + \ 6\ x\^4\  - \ 20\ x\^2\  + \ 22\ x\  + \ 8\)]],
+  "  by  ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2\  + \ 2\ x\  - \ 3\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Use the \"",
+    FontFamily->"Times-Roman"],
+  "quadratic synthetic division tableau\"",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  "\n\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{GridBox[{
+                  {
+                    StyleBox["Input",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[1, 0, 0]]},
+                  {\(r\[IndentingNewLine]
+                    s\)}
+                  }], "|"}], GridBox[{
+                {\(a\_5\)},
+                {\(\(\ \ \)\(\(\[DownArrow]\)\(\ \ \ \
+\)\(\[IndentingNewLine]\)\(\[DownArrow]\)\(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \)\(a\_4\)\)},
+                {\(\(\ \ \)\(\(\(+\ r\)\ b\_5\)\(\ \)\(\[IndentingNewLine]\)
+                  \(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_3\)\)},
+                {\(\(+\ r\)\ b\_4\[IndentingNewLine]
+                  \(\(+\ s\)\(\ \)\(b\_5\)\(\ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(a\_2\)\)},
+                {\(\(\ \ \ \)\(\(+\ r\)\ b\_3\[IndentingNewLine]
+                  \ \ \ \(+\ s\)\ b\_4\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \)\(a\_1\)\)},
+                {\(\(\ \ \ \ \)\(\(+\ r\)\ b\_2\[IndentingNewLine]
+                  \ \ \ \ \(+\ s\)\ b\_3\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \)\(a\_0\)\(\ \ \ \ \ \ \ \ \ \ \
+\ \ \)\)},
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(\(+\ 
+                      r\)\ b\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\[IndentingNewLine]
+                  \ \ \ \ \ \ \ \ \ \(\(+\ s\)\(\ \)\(b\_2\)\(\ \ \)\)\)\)}
+                }]},
+          {
+            " ", \(\(\ \ \ \ \ \ \ \)\(\(\[UpperRightArrow]\)\(\
+\[IndentingNewLine]\)\(\ \ \)\(b\_5\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \)\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \ \
+\ \ \ \)\(b\_4\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \ \
+\)\(b\_3\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\)\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \ \ \
+\)\(b\_2\)\)\), 
+            RowBox[{"                ", 
+              
+              RowBox[{\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \
+\ \ \ \ \ \ \ \ \ \)\(b\_1\)\), "\[IndentingNewLine]", "       ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}], 
+            RowBox[{"   ", "\[IndentingNewLine]", " ", 
+              
+              RowBox[{\(\(|\)\(\ \ \ \ \ \ \ \ \ \)\(b\_0\)\), "    ", 
+                "\[IndentingNewLine]", "         ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox["        ",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}]}
+          },
+        RowLines->True]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  "Since   ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2 - r\ x\  - \ s\)]],
+  "  we use  ",
+  Cell[BoxData[
+      RowBox[{"r", "=", 
+        RowBox[{
+          RowBox[{\(-2\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", "s"}], "=", "3"}]}]]],
+  ".    \n\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{GridBox[{
+                  {
+                    StyleBox["Input",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[1, 0, 0]]},
+                  {\(r = \(-2\)\[IndentingNewLine]
+                    s = \ 3\)}
+                  }], "|"}], GridBox[{
+                {"1"},
+                {\(\(\ \ \)\(\(\[DownArrow]\)\(\ \ \ \
+\)\(\[IndentingNewLine]\)\(\[DownArrow]\)\(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(6\)\)},
+                {\(\(\ \)\(\(\(+\((\(-2\))\)\) 
+                    1\)\(\ \)\(\[IndentingNewLine]\)
+                  \(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(0\)\)},
+                {\(\(+\((\(-2\))\)\) 4\[IndentingNewLine]
+                  \ \ \ \(+\((3)\)\) 1\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \)\(-\ 20\)\)},
+                {\(\(\ \)\(\(+\((\(-2\))\)\) \((\(-5\))\)\[IndentingNewLine]
+                  \ \ \ \ \ \ \(+\((3)\)\) \((4)\)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(22\)\)},
+                {\(\(\ \ \ \ \)\(\(+\((\(-2\))\)\) 2\[IndentingNewLine]
+                  \ \(+\((3)\)\) \((\(-5\))\)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(8\)\(\ \ \ \ \ \ \
+\ \ \ \ \ \ \)\)},
+                {\(\(\ \ \ \ \ \ \ \)\(\(+\((\(-2\))\)\) 
+                    3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \[IndentingNewLine]
+                  \ \ \ \ \ \ \ \ \ \ \(+\((3)\)\) 2\)\)}
+                }]},
+          {" ", \(\(\ \)\(1\[IndentingNewLine]
+            \ 
+            b\_5\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(4\
+\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b\_4\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \
+\ \)\(\(-\ \ 5\)\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b\_3\)\), \(\(\ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \)\(2\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b\_2\)\), 
+            RowBox[{"                     ", 
+              RowBox[{
+              "3", "\[IndentingNewLine]", "                     ", \(b\_1\), 
+                "\[IndentingNewLine]", "               ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}], 
+            RowBox[{"                     ", 
+              RowBox[{
+              "8", "\[IndentingNewLine]", 
+                "  ", \(\(|\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(b\_0\)\), 
+                "    ", "\[IndentingNewLine]", "                ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox["        ",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}]}
+          },
+        RowLines->True]]],
+  "     "
+}], "Text"],
+
+Cell[TextData[{
+  "Then simplify and get. \n\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{GridBox[{
+                  {
+                    StyleBox["Input",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[1, 0, 0]]},
+                  {\(r = \(-2\)\[IndentingNewLine]
+                    s = \ 3\)}
+                  }], "|"}], GridBox[{
+                {"1"},
+                {\(\(\ \ \ \)\(\(\[DownArrow]\)\(\ \ \ \
+\)\(\[IndentingNewLine]\)\(\ \)\(\[DownArrow]\)\(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \)\(6\)\)},
+                {\(\(\ \ \ \ \ \)\(\(-\ 2\)\(\ \)\(\[IndentingNewLine]\)
+                  \(\ \ \ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \)\(0\)\)},
+                {\(\(\ \ \ \ \)\(\(-\ \ 8\)\[IndentingNewLine]
+                  \ \ \ \ \(+\ \ 3\)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(-\ 20\)\)},
+                {\(\(\ \ \ \ \ \ \)\(\(+\ 10\)\[IndentingNewLine]
+                  \ \ \ \ \ \ \(+\ 12\)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \)\(22\)\)},
+                {\(\(\ \ \ \ \)\(\(-\ \ 4\)\[IndentingNewLine]
+                  \ \ \ \(-\ 15\)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(8\)\(\ \ \ \ \ \ \ \ \ \ \ \ \
+\)\)},
+                {\(\(\ \ \ \ \ \ \ \ \)\(\(-\ \ 6\)\ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \[IndentingNewLine]
+                  \ \ \ \ \ \ \ \ \(+\ \ 6\)\)\)}
+                }]},
+          {" ", \(\(\ \ \)\(1\ \[IndentingNewLine]
+            \ \ b\_5\)\), \(\(\ \ \ \ \ \ \ \ \ \ \)\(4\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ b\_4\)\), \(\(\ \ \ \ \ \ \)\(\(-\ \ 5\)\
+\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ b\_3\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \)\(2\
+\[IndentingNewLine]
+            \ \ \ \ \ \ \ \ \ \ \ \ b\_2\)\), 
+            RowBox[{"              ", 
+              RowBox[{
+              "3", " ", "\[IndentingNewLine]", "               ", \(b\_1\), 
+                "\[IndentingNewLine]", "        ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}], 
+            RowBox[{"             ", 
+              RowBox[{
+              "8", "\[IndentingNewLine]", 
+                " ", \(\(|\)\(\ \ \ \ \ \ \ \ \ \)\(b\_0\)\), "    ", 
+                "\[IndentingNewLine]", "         ", 
+                StyleBox["Output",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox["        ",
+                  FontWeight->"Bold",
+                  FontColor->RGBColor[0, 1, 0]]}]}]}
+          },
+        RowLines->True]]],
+  "     "
+}], "Text"],
+
+Cell[TextData[{
+  "Thus we have\n\n\t\t",
+  Cell[BoxData[
+      \(Q \((x)\)\  = \ \ \(b\_5\) x\^3\  + \ \(b\_4\) x\^2\  + \ 
+          b\_3\ x\  + \ b\_2\)]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      \(Q \((x)\)\  = \ \ x\^3\  + \ 4  x\^2\  - \ 5\ \ x\  + \ 2\)]],
+  "  \n\tand\n\t\t",
+  Cell[BoxData[
+      \(R \((x)\)\  = \ \(b\_1\) \((x - r)\)\  + \ b\_0\)]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      \(R \((x)\)\  = \ 3 \((x + 2)\)\  + \ 8\)]],
+  "  \n\nThis agrees with our previous computation in Example 1.\n\nWe are \
+done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " verify the result.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P[x_]\  = \ \ x\^5\  + \ 6\ x\^4\  - \ 20\ x\^2\  + \ 22\ x\  + \ 
+          8;\)\ \), "\[IndentingNewLine]", 
+    \(\(T[x_]\  = \ \ x\^2\  + \ 2\ x\  - \ 3;\)\), "\[IndentingNewLine]", 
+    \(\(Q[x_]\  = \ \ x\^3\  + \ 4\ x\^2\  - \ 5\ x\  + \ 
+          2;\)\ \), "\[IndentingNewLine]", 
+    \(\(R[x_]\  = \ \ 3\ \((2 + x)\)\  + \ 8;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = T[x]Q[x] + R[x]\>"\ ];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", T[x] Q[x], "\< + (\>", 
+        R[x], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = (\>", Expand[T[x] Q[x]], "\<) + (\>", 
+        R[x], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", 
+        Expand[T[x] Q[x]\  + \ R[x]]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Using vector coefficients",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tAs mentioned above, it is efficient to store the coefficients  ",
+  Cell[BoxData[
+      \({a\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 1\)\%\(n + 1\)\)]],
+  "  of a polynomial  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  " of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " in the vector  ",
+  Cell[BoxData[
+      RowBox[{"a", "=", 
+        RowBox[{"{", 
+          
+          RowBox[{\(a\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              
+              "StrikeThrough"->
+                False}], \(a\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              
+              "StrikeThrough"->
+                False}], \(a\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              
+              "StrikeThrough"->
+                False}], \(a\_\(\(\[LeftDoubleBracket]\)\(n + 
+                  1\)\(\[RightDoubleBracket]\)\)\)}], "}"}]}]]],
+  ".  Notice that this is a shift of the index for ",
+  Cell[BoxData[
+      \(a\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)]],
+  " and the polynomial  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  "  is written in the form  \n\t\n\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \[Sum]\+\(k = 0\)\%n\( 
+                a\_\(\(\[LeftDoubleBracket]\)\(k + 
+                  1\)\(\[RightDoubleBracket]\)\)\) x\^k\)]],
+  ".  \n\t\t\nGiven the quadratic  ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2\  - \ r\ x\  - \ s\)]],
+  ",  the quotient  ",
+  Cell[BoxData[
+      \(Q \((x)\)\)]],
+  "  and remainder  ",
+  Cell[BoxData[
+      \(R \((x)\)\)]],
+  "  are \n\n\t\t",
+  Cell[BoxData[
+      \(Q \((x)\)\  = \ \[Sum]\+\(k = 0\)\%\(n - 2\)\ \(b\_\(\(\
+\[LeftDoubleBracket]\)\(k + 3\)\(\[RightDoubleBracket]\)\)\) x\^k\)]],
+  "\n\tand\n\t\t",
+  Cell[BoxData[
+      \(R \((x)\)\  = \ \(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) \((x - r)\)\  + \ 
+          b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)]],
+  ".   \n\nThe recursive formulas for computing the coefficients  ",
+  Cell[BoxData[
+      \({b\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 0\)\%\(n + 1\)\)]],
+  "  of  ",
+  Cell[BoxData[
+      RowBox[{"Q", \((x)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "R", \((x)\)}]]],
+  "  are  \n\n\t\t",
+  Cell[BoxData[
+      \(b\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ a\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)\)]],
+  ",   and    \n\t\t\n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \)\(b\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+        a\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)\  + \ 
+          r\ b\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\)\)\)\)]],
+  ",   and then  \n\t\t\n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \)\(b\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+        a\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  + \ 
+          r\ b\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)\  + \ 
+          s\ b\_\(\(\[LeftDoubleBracket]\)\(k + \
+2\)\(\[RightDoubleBracket]\)\)\)\)\)]],
+  "    for    ",
+  Cell[BoxData[
+      RowBox[{\(k = n - 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", " ", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "1"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the vector form of quadratic synthetic division to divide   ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ 
+        x\^5 + \ 6\ x\^4\  - \ 20\ x\^2\  + \ 22\ x\  + \ 8\)]],
+  "    by   ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2\  + \ 2\ x\  - \ 3\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, construct the polynomial  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  ".    "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a\  = \ {8, \ 22, \ \(-\ 20\), \ 0, \ 6, \ 
+          1};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n\  = \ Length[a] - 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(P[
+          x_]\  = \ \[Sum]\+\(k = 0\)\%n\ \(a\_\(\(\[LeftDoubleBracket]\)\(k \
++ 1\)\(\[RightDoubleBracket]\)\)\) x\^k;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Second, given   ",
+  Cell[BoxData[
+      \(T \((x)\)\  = \ x\^2 - r\ x\  - \ s\)]],
+  "  construct the polynomials ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{"Q", \((x)\), "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "R", \((x)\)}]}]]],
+  ".    "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r\  = \ \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(s\  = \ \ 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(T[x_]\  = \ 
+        x\^2\  - \ r\ x\ \  - \ \ s;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = \ Table[0, {i, n + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(b\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ a\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(b\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)\  = \ 
+        a\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)\  + \ 
+          r\ b\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(For[\ k = n - 1, \ 
+        1 \[LessEqual] 
+          k, \ \(k--\), \[IndentingNewLine]\(b\_\(\(\[LeftDoubleBracket]\)\(k\
+\)\(\[RightDoubleBracket]\)\)\  = \ 
+            a\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  + \
+\ r\ b\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  + \ 
+              s\ b\_\(\(\[LeftDoubleBracket]\)\(k + \
+2\)\(\[RightDoubleBracket]\)\);\)\ ];\)\ \), "\n", 
+    \(\(Q[
+          x_]\  = \ \[Sum]\+\(k = 0\)\%\(n - 2\)\(b\_\(\(\[LeftDoubleBracket]\
+\)\(k + 3\)\(\[RightDoubleBracket]\)\)\) 
+            x\^k;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(R[
+          x_]\  = \ \ b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\ \((x - r)\)\  + \ 
+          b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Third, verify that  ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2\  - r\ x\  - s)\) 
+            Q \((x)\)\  + \ \(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) \((x - r)\)\  + \ 
+          b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r = \>", r];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s = \>", s];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<T(x) = (\!\(x\^2\) - r x - s)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) = \>\"", 
+        b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\) = \>\"", 
+        b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = T(x)Q(x) + R(x)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P(x) = T(x)Q(x) + \!\(b\_\(\(\[LeftDoubleBracket]\)\(2\)\
+\(\[RightDoubleBracket]\)\)\)(x-r) + \!\(b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\)\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P(x) = (\!\(x\^2\) - r x - s)Q(x) + \!\(b\_\(\(\
+\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\)(x-r) + \!\(b\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = (\>", T[x], "\<)(\>", Q[x], "\<) + (\>", 
+        b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+"\<)(\>", x\  - \ r, "\<) + (\>", 
+        b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+"\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = (\>", T[x], "\<)(\>", Q[x], "\<) + (\>", 
+        Expand[\(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\
+\) \((x\  - \ r)\)], "\<) + (\>", 
+        b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+"\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", \ \ \(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) \((x\  - \ r)\)\  + \ 
+          b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), "\< \
++ \>", T[x] Q[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", \ 
+        Expand[\ \
+\(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\) \((x\  - \ 
+                  r)\)\  + \ 
+            b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)], "\
+\< + (\>", Expand[T[x] Q[x]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P(x) = \>", 
+        Expand[T[x] 
+              Q[x] + \ \(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) \((x\  - \ r)\)\  + \ 
+            b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]];\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<Is this the original polynomial ?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        ExpandAll[\ 
+          P[x]\  \[Equal] \ 
+            T[x] Q[x] + \(b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\) \((x\  - \ r)\)\  + \ 
+              b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Lin-Bairstow Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe now build on the previous idea and develop the ",
+  ButtonBox["Lin-Bairstow's method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/BairstowsMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " for finding a quadratic factor  ",
+  Cell[BoxData[
+      \(\((x\^2\  - r\ x\  - s)\)\)]],
+  "  of  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  ".  Suppose that we start with the initial guess  \n\n(9)\t\t",
+  Cell[BoxData[
+      \(x\^2\ \  - \ r\_0\ x\  - \ s\_0\)]],
+  " \n\t\t  \nand that  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  "  can be expressed as  \n\n\t\t",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ \((x\^2 - r\_0\ x - s\_0)\) Q \((x)\)\  + \ 
+          u \((x - r\_0)\)\  + \ v\)]],
+  ".    \n\nWhen  ",
+  StyleBox["u",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["v",
+    FontFamily->"Courier New"],
+  "  are small, the quadratic (9)  is close to a factor of  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  ".  We want to find new values  ",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_1\)}]]],
+  "  so that  \n\n(10)\t\t",
+  Cell[BoxData[
+      \(x\^2\ \  - \ r\_1\ x\  - \ s\_1\)]],
+  " \n\nis closer to a factor of  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  "  than the quadratic (9).  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tObserve that  ",
+  StyleBox["u",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["v",
+    FontFamily->"Courier New"],
+  "  are functions of  ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["s",
+    FontFamily->"Courier New"],
+  ", that is   \n\n\t\t",
+  Cell[BoxData[
+      \(u\  = \ u \((r, s)\)\)]],
+  ",   and   \n\t\t",
+  Cell[BoxData[
+      \(v\  = \ v \((r, s)\)\)]],
+  ".  \n\nThe new values  ",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_1\)}]]],
+  "  satisfy the relations  \n\n\t\t",
+  Cell[BoxData[
+      \(r\_1\  = \ r\_0\  + \ \[CapitalDelta]r\)]],
+  ",   and   \n\t\t",
+  Cell[BoxData[
+      \(s\_1\  = \ s\_0\  + \ \[CapitalDelta]s\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "The differentials of the functions  ",
+  StyleBox["u",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["v",
+    FontFamily->"Courier New"],
+  "  are used to produce the approximations\n\n\t\t",
+  Cell[BoxData[
+      \(v \((r\_1, s\_1)\)\  \[TildeTilde] \ 
+        v \((r\_0, s\_0)\) + \(v\_r\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]r + \(v\_s\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]s\)]],
+  "\n\tand\n\t\t",
+  Cell[BoxData[
+      \(u \((r\_1, s\_1)\)\  \[TildeTilde] \ 
+        u \((r\_0, s\_0)\) + \(u\_r\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]r + \(u\_s\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]s\)]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The new values  ",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_1\)}]]],
+  "  are to satisfy \n\n\t\t",
+  Cell[BoxData[
+      \(v \((r\_1, s\_1)\)\  = \ 0\)]],
+  ",  and   \n\t\t",
+  Cell[BoxData[
+      \(u \((r\_1, s\_1)\)\  = \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "When the quantities  ",
+  Cell[BoxData[
+      RowBox[{"\[CapitalDelta]r", "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "\[CapitalDelta]s"}]]],
+  "  are small, we replace the above approximations with equations and obtain \
+the linear system:\n\n\t\t",
+  Cell[BoxData[
+      \(0\  = \ 
+        v \((r\_0, s\_0)\) + \(v\_r\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]r + \(v\_s\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]s\)]],
+  "\n(11)\n\t\t",
+  Cell[BoxData[
+      \(0\  = \ 
+        u \((r\_0, s\_0)\) + \(u\_r\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]r + \(u\_s\) \((r\_0, 
+              s\_0)\) \[CapitalDelta]s\)]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "All we need to do is find the values of the partial derivatives ",
+  Cell[BoxData[
+      \(\(v\_r\) \((r\_0, s\_0)\)\)]],
+  ", v",
+  Cell[BoxData[
+      \(\(\(\_s\)\((r\_0, s\_0)\)\)\)]],
+  ", ",
+  Cell[BoxData[
+      \(\(u\_r\) \((r\_0, s\_0)\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(\(u\_s\) \((r\_0, s\_0)\)\)]],
+  " and then use Cramer's rule to compute  ",
+  Cell[BoxData[
+      RowBox[{"\[CapitalDelta]r", "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "\[CapitalDelta]s"}]]],
+  ".   Let us announce that the values of the partial derivatives are  \n\n\t\
+\t",
+  Cell[BoxData[{
+      \(\(v\_r\) \((r\_0, s\_0)\)\  = \ c\_1\), "\n", 
+      \(\(v\_s\) \((r\_0, s\_0)\)\  = \ c\_2\), "\n", 
+      \(\(u\_r\) \((r\_0, s\_0)\)\  = \ c\_2\), "\n", 
+      \(\(u\_s\) \((r\_0, s\_0)\)\  = \ c\_3\)}]],
+  "   \n\t\t\nwhere the coefficients ",
+  Cell[BoxData[
+      \({c\_k}\)]],
+  " are built upon the coefficients ",
+  Cell[BoxData[
+      \({b\_k}\)]],
+  " given in (8) and are calculated recursively using the formulas   \n\n(12)\
+\t\tSet    ",
+  Cell[BoxData[
+      \(c\_n\  = \ b\_n\)]],
+  " ,    and  \n\n\t\t",
+  Cell[BoxData[
+      \(c\_\(n - 1\)\  = \ b\_\(n - 1\)\  + \ r\ c\_n\)]],
+  " ,    and then  \n\n\t\t",
+  Cell[BoxData[
+      \(c\_k\  = \ b\_k\  + \ r\ c\_\(k + 1\)\  + \ s\ c\_\(k + 2\)\)]],
+  "    for    ",
+  Cell[BoxData[
+      RowBox[{\(k = n - 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(n - 3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", " ", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "1"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "The formulas in (12) use the coefficients ",
+  Cell[BoxData[
+      \({b\_k}\)]],
+  " in (8).  Since  \n\n\t\t",
+  Cell[BoxData[
+      \(b\_0\  = \ v \((r\_0, s\_0)\)\)]],
+  ",   and  \n  \t\t",
+  Cell[BoxData[
+      \(b\_1\  = \ u \((r\_0, s\_0)\)\)]],
+  ",   and\n\nthe linear system in (11)  can be written as  \n\n\t\t",
+  Cell[BoxData[{
+      \(c\_1\ \[CapitalDelta]r\  + \ c\_2\ \[CapitalDelta]s\ \  = \ \(-\ 
+          b\_0\)\ \ \), "\n", 
+      \(c\_2\ \[CapitalDelta]r\  + \ c\_3\ \[CapitalDelta]s\ \  = \ \(\(-\ 
+          b\_1\)\(\ \ \)\)\)}]]
+}], "Text"],
+
+Cell[TextData[{
+  "Cramer's rule can be used to solve this linear system.  The required \
+determinants are  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(d\_0\), " ", "=", " ", 
+        RowBox[{"|", GridBox[{
+              {\(c\_1\), \(c\_2\)},
+              {\(c\_2\), \(c\_3\)}
+              }], "|"}]}]]],
+  ",    ",
+  Cell[BoxData[
+      RowBox[{\(d\_1\), " ", "=", " ", 
+        RowBox[{"|", GridBox[{
+              {\(-\ b\_0\), \(c\_2\)},
+              {\(-\ b\_1\), \(c\_3\)}
+              }], "|"}]}]]],
+  ",   and   ",
+  Cell[BoxData[
+      RowBox[{\(d\_2\), " ", "=", " ", 
+        RowBox[{"|", GridBox[{
+              {\(c\_1\), \(-\ b\_0\)},
+              {\(c\_2\), \(-\ b\_1\)}
+              }], "|"}]}]]],
+  ".  \n\nand the new values  ",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_1\)}]]],
+  "  are computed using the formulas  \n\n\t\t",
+  Cell[BoxData[
+      \(r\_1\  = \ r\_0\  + \ d\_1\/d\_0\)]],
+  ",   \n\tand   \n\t\t",
+  Cell[BoxData[
+      \(s\_1\  = \ s\_0\  + \ d\_2\/d\_0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BairstowMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BairstowMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe iterative process is continued until good approximations to  ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["s",
+    FontFamily->"Courier New"],
+  "  have been found.  If the initial guesses  ",
+  Cell[BoxData[
+      RowBox[{\(r\_0\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_0\)}]]],
+  "  are chosen small, the iteration does not tend to wander for a long time \
+before converging.  When  ",
+  Cell[BoxData[
+      \(x \[TildeTilde] 0\)]],
+  ",  the larger powers of  ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  "  can be neglected in equation (1) and we have the approximation  \n\n\t\t\
+",
+  Cell[BoxData[
+      \(0\  \[TildeTilde] \ P \((x)\)\  = \ \(a\_2\) x\^2\  + \(a\_1\) x\  + 
+          a\_0\)]],
+  ". \n\nHence the initial guesses for  ",
+  Cell[BoxData[
+      RowBox[{\(r\_0\), "   ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", \(s\_0\)}]]],
+  "  could be  ",
+  Cell[BoxData[
+      \(r\_0\  = \ \(-\(a\_1\/a\_2\)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(s\_0\  = \ \(-\(a\_0\/a\_2\)\)\)]],
+  ",  provided that  ",
+  Cell[BoxData[
+      \(a\_2\  \[NotEqual] \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tIf hand calculations are done, then the quadratic synthetic division \
+tableau can be extended to form an easy way to calculate the coefficients ",
+  Cell[BoxData[
+      \({c\_k}\)]],
+  ".   \n\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{GridBox[{
+                  {
+                    StyleBox["Input",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[1, 0, 0]]},
+                  {\(r\[IndentingNewLine]s\)}
+                  }], "|"}], GridBox[{
+                {\(a\_n\)},
+                {\(\(\ \ \)\(\(\[DownArrow]\)\(\ \ \ \
+\)\(\[IndentingNewLine]\)\(\[DownArrow]\)\(\ \ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(a\_\(n - 1\)\)\)},
+                {\(\(\(+\ r\)\ b\_n\)\(\ \)\(\[IndentingNewLine]\)\(\ \ \)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_\(n - 2\)\)\)},
+                {\(\(\(+\ r\)\ b\_\(n - 1\)\)\[IndentingNewLine]\(\(+\ 
+                      s\)\(\ \)\(b\_n\)\(\ \)\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_\(n - 3\)\)\)},
+                {\(\(\(+\ r\)\ b\_\(n - 2\)\)\[IndentingNewLine]\(\(+\ 
+                      s\)\ b\_\(n - 1\)\)\)}
+                }], GridBox[{
+                {"\[CenterEllipsis]"},
+                {\(\[CenterEllipsis]\[IndentingNewLine]\[CenterEllipsis]\)}
+                }], GridBox[{
+                {\(\(\ \ \ \)\(a\_k\)\)},
+                {\(\(\(+\ r\)\ b\_\(k + 1\)\)\[IndentingNewLine]\(\(+\ 
+                      s\)\ b\_\(k + 2\)\)\)}
+                }], GridBox[{
+                {"\[CenterEllipsis]"},
+                {\(\[CenterEllipsis]\[IndentingNewLine]\[CenterEllipsis]\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \)\(a\_2\)\)},
+                {\(\(\(+\ r\)\ b\_3\)\[IndentingNewLine]\(\(+\ s\)\ b\_4\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \)\(a\_1\)\)},
+                {\(\(\(+\ r\)\ b\_2\)\[IndentingNewLine]\(\(+\ s\)\ b\_3\)\)}
+                }], GridBox[{
+                {\(\(\ \ \ \ \ \ \ \ \ \)\(a\_0\)\(\ \ \ \ \ \ \ \ \ \ \ \ \)\
+\)},
+                {\(\(\ \ \ \ \ \ \)\(\(+\ 
+                      r\)\ b\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\[IndentingNewLine]
+                  \ \ \ \ \ \ \(\(+\ s\)\(\ \)\(b\_2\)\(\ \ \)\)\)\)}
+                }]},
+          {
+            " ", \(\(\ \ \ \ \ \ \)\(\(\(\[UpperRightArrow]\)\(\
+\[IndentingNewLine]\)\(\ \)\(b\_n\)\)\[IndentingNewLine]
+            \ \ \ \(\(\[DownArrow]\)\(\ \ \ \)\(\[IndentingNewLine]\)\(\ \)\(\
+\[DownArrow]\)\(\ \)\)\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\)\(\(\(\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \ \ \ \)\
+\(b\_\(n - 1\)\)\)\[IndentingNewLine]
+            \ \ \ \ \ \ \(+\ 
+                r\)\ c\_n\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \)\(b\_\(n - 
+                    2\)\)\)\[IndentingNewLine]
+            \ \ \ \(+\ r\)\ c\_\(n - 1\)\[IndentingNewLine]
+            \ \ \ \(+\ 
+                s\)\ c\_n\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \)\(b\_\(n - 
+                    3\)\)\)\[IndentingNewLine]
+            \ \ \ \(+\ r\)\ c\_\(n - 2\)\[IndentingNewLine]
+            \ \ \ \(+\ 
+                s\)\ c\_\(n - 1\)\)\), \(\(\[IndentingNewLine]\)\(\
+\[CenterEllipsis]\[IndentingNewLine]\[CenterEllipsis]\[IndentingNewLine]\
+\[CenterEllipsis]\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \)\(b\_k\)\)\
+\[IndentingNewLine]
+            \ \ \(+\ r\)\ c\_\(k + 1\)\[IndentingNewLine]
+            \ \ \(+\ 
+                s\)\ c\_\(k + 2\)\)\), \(\(\[IndentingNewLine]\)\(\
+\[CenterEllipsis]\[IndentingNewLine]\[CenterEllipsis]\[IndentingNewLine]\
+\[CenterEllipsis]\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \)\(b\_2\)\)\
+\[IndentingNewLine]
+            \ \ \ \(+\ r\)\ c\_3\[IndentingNewLine]
+            \ \ \ \(+\ 
+                s\)\ c\_4\)\), \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \)\(\(\(\
+\[UpperRightArrow]\)\(\[IndentingNewLine]\)\(\ \ \ \ \ \ \ \ \)\(b\_1\)\)\
+\[IndentingNewLine]
+            \ \ \ \(+\ r\)\ c\_2\[IndentingNewLine]
+            \ \ \ \(\(+\ s\)\(\ \)\(c\_3\)\(\ \)\)\)\), 
+            RowBox[{"  ", "\[IndentingNewLine]", 
+              RowBox[{
+                StyleBox["|",
+                  FontColor->RGBColor[1, 0, 0]], "        ", \(b\_0\), 
+                StyleBox[
+                  RowBox[{"    ", 
+                    StyleBox["         ",
+                      FontWeight->"Bold",
+                      FontColor->RGBColor[0, 1, 0]]}]]}]}]},
+          {
+            " ", \(c\_n\), \(\(\ \ \ \ \ \ \ \ \ \)\(c\_\(n - 
+                  1\)\)\), \(\(\ \ \ \ \ \ \ \)\(c\_\(n - 
+                  2\)\)\), \(\(\ \ \ \ \ \ \ \)\(c\_\(n - 3\)\)\), 
+            "\[CenterEllipsis]", \(\(\ \ \ \ \ \ \)\(c\_k\)\), 
+            "\[CenterEllipsis]", \(\(\ \ \ \ \ \ \ \)\(c\_2\)\), \(\(\ \ \ \ \
+\ \ \ \)\(c\_1\)\), " "}
+          },
+        RowLines->True]]],
+  "\n\nBairstow's method is a special case of Newton's method in two \
+dimensions.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (Lin-Bairstow",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find ",
+    FontFamily->"New Century Schlbk"],
+  "a quadratic factor of   ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  "  given an initial approximation  ",
+  Cell[BoxData[
+      \(x\^2 - r\_0\ x - s\_0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BairstowMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BairstowMethodProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Lin-Bairstow",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{\(Bairstow[r00_, s00_, max_]\), ":=", "\[IndentingNewLine]", 
+      RowBox[{"Module", "[", 
+        RowBox[{\({j = 0, k, n = Length[a] - 1, r0\  = \ N[r00], 
+            s0\  = \ N[s00]}\), ",", "\[IndentingNewLine]", 
+          
+          RowBox[{\(c = \(b = Table[0, {i, n + 1}]\)\), ";", 
+            "\[IndentingNewLine]", \(Print[\*"\"\<\!\(x\^2\) - \>\"", "\<r\>"\
+\_j, "\< x - \>", "\<s\>"\_j, "\< = \>", \ \ PaddedForm[
+                x\^"\<2\>"\  - \ r0\ x\  - \ s0\ , {16, 15}]\ \ ]\), ";", " ",
+             "\[IndentingNewLine]", 
+            RowBox[{"While", "[", " ", 
+              RowBox[{\(j < max\), ",", "\[IndentingNewLine]", 
+                
+                RowBox[{\(b\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                    a\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                  "\[IndentingNewLine]", \(b\_\(\(\[LeftDoubleBracket]\)\(n\)\
+\(\[RightDoubleBracket]\)\)\  = \ 
+                    a\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\
+\)\)\  + \ 
+                      r0\ b\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                  "\[IndentingNewLine]", \(For[\ k = n - 1, \ 
+                    1 \[LessEqual] 
+                      k, \ \(k--\), \[IndentingNewLine]\(b\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  = \ 
+                        a\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                          r0\ b\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                          s0\ b\_\(\(\[LeftDoubleBracket]\)\(k + 2\)\(\
+\[RightDoubleBracket]\)\);\)\ ]\), ";", " ", 
+                  "\[IndentingNewLine]", \(c\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    b\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                  "\[IndentingNewLine]", \(c\_\(\(\[LeftDoubleBracket]\)\(n\)\
+\(\[RightDoubleBracket]\)\)\  = \ 
+                    b\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\
+\)\)\  + \ 
+                      r0\ c\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                  "\[IndentingNewLine]", \(For[\ k = n - 1, \ 
+                    2 \[LessEqual] 
+                      k, \ \(k--\), \[IndentingNewLine]\(c\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  = \ 
+                        b\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                          r0\ c\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                          s0\ c\_\(\(\[LeftDoubleBracket]\)\(k + 2\)\(\
+\[RightDoubleBracket]\)\);\)\ ]\), ";", " ", "\[IndentingNewLine]", 
+                  RowBox[{"d0", " ", "=", " ", 
+                    RowBox[{"Det", "[", 
+                      RowBox[{"(", GridBox[{
+                            {\(c\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\), \(c\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\)},
+                            {\(c\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\), \(c\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}
+                            }], ")"}], "]"}]}], ";", " ", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"d1", " ", "=", " ", 
+                    RowBox[{"Det", "[", 
+                      RowBox[{"(", GridBox[{
+                            {\(-b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\), \(c\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\)},
+                            {\(-b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\), \(c\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}
+                            }], ")"}], "]"}]}], ";", " ", 
+                  "\[IndentingNewLine]", 
+                  RowBox[{"d2", " ", "=", " ", 
+                    RowBox[{"Det", "[", 
+                      RowBox[{"(", GridBox[{
+                            {\(c\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\), \(-b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\)},
+                            {\(c\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\), \(-b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\)}
+                            }], ")"}], "]"}]}], ";", " ", 
+                  "\[IndentingNewLine]", \(r1\  = \ r0\  + d1\/d0\), ";", " ",
+                   "\[IndentingNewLine]", \(s1\  = \ s0\  + d2\/d0\), ";", 
+                  " ", "\[IndentingNewLine]", \(j\  = \ j + 1\), ";", "  ", 
+                  "\[IndentingNewLine]", \(Print[\*"\"\<\!\(x\^2\) - \>\"", "\
+\<r\>"\_j, "\< x - \>", "\<s\>"\_j, "\< = \>", \ \ PaddedForm[
+                      x\^"\<2\>"\  - \ r1\ x\  - \ s1\ , {16, 15}]\ \ ]\), 
+                  ";", "\[IndentingNewLine]", \(r0\  = \ r1\), ";", " ", 
+                  "\[IndentingNewLine]", \(s0\  = \ s1\), ";"}]}], "   ", 
+              "]"}], ";", " ", 
+            "\[IndentingNewLine]", \(Return[x\^2\  - \ r1\ x\  - \ s1]\), 
+            ";"}]}], " ", "]"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Given   ",
+  Cell[BoxData[
+      \(P \((x)\)\  = \ x\^4 + x\^3 + 3\ x\^2 + 4\ x + 6\)]],
+  ".  Start with  ",
+  Cell[BoxData[
+      \(r\_0\  = \ \(-2.1\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(s\_0 = \(-1.9\)\)]],
+  "  and use the Lin-Bairstow method to find a quadratic factor of  ",
+  Cell[BoxData[
+      \(P \((x)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the coefficients of the polynomial.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(a\  = \ {6, \ 4, \ 3, \ 1, \ 1};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n\  = \ Length[a] - 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(P[
+          x_]\  = \ \[Sum]\+\(k = 0\)\%n\ \(a\_\(\(\[LeftDoubleBracket]\)\(k \
++ 1\)\(\[RightDoubleBracket]\)\)\) x\^k;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Enter the starting values  ",
+  Cell[BoxData[
+      \(r\_0\  = \ \(-2.1\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(s\_0 = \(-1.9\)\)]],
+  "  and call the subroutine ",
+  StyleBox["Bairstow",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r0\  = \ \(-2.1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(s0\  = \ \ \(-1.9\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Bairstow[r0, s0, 5];\)\ \)}], "Input"],
+
+Cell["Verify that a quadratic factor has been found. ", "Text"],
+
+Cell[BoxData[{
+    \(\(T[x_]\  = \ x\^2\  - \ r1\ x\ \  - \ \ s1;\)\ \), "\n", 
+    \(\(Q[
+          x_]\  = \ \[Sum]\+\(k = 0\)\%\(n - 2\)\(b\_\(\(\[LeftDoubleBracket]\
+\)\(k + 3\)\(\[RightDoubleBracket]\)\)\) 
+            x\^k;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(R[
+          x_]\  = \ \ b\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\ \((x - r1)\)\  + \ 
+          b\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<T[x] = \>", T[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x], "\< = \>", 
+        Expand[R[x]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] \[TildeTilde] Q[x] T[x]\>"\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<P[x] \[TildeTilde] (\>", Q[x], "\<)(\>", 
+        T[x], "\<)\>"\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the factors too.  This is just for fun. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", Factor[P[x]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the roots too.  This is just for fun. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[P[x] \[Equal] 0\ ];\)\), "\[IndentingNewLine]", 
+    \(Solve[P[x] \[Equal] 0, x]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[P[x] \[Equal] 0\ ];\)\), "\[IndentingNewLine]", 
+    \(NSolve[P[x] \[Equal] 0, x]\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BairstowMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lin-Bairstow Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BairstowMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1008, 625},
+WindowMargins->{{1, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 176, 4, 35, "Text"],
+Cell[1955, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3434, 111, 1621, 53, 258, "Text"],
+Cell[5058, 166, 740, 22, 185, "Text"],
+Cell[5801, 190, 827, 20, 88, "Text"],
+Cell[6631, 212, 1383, 44, 147, "Text"],
+Cell[8017, 258, 623, 21, 33, "Text"],
+Cell[8643, 281, 362, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[9030, 297, 101, 2, 33, "Text"],
+Cell[9134, 301, 115, 5, 33, "Text"],
+Cell[9252, 308, 298, 5, 113, "Input"],
+Cell[9553, 315, 541, 17, 33, "Text"],
+Cell[10097, 334, 2509, 45, 560, "Input"],
+Cell[12609, 381, 192, 6, 33, "Text"],
+Cell[12804, 389, 2128, 40, 432, "Input"],
+Cell[14935, 431, 410, 14, 71, "Text"],
+Cell[15348, 447, 994, 18, 250, "Input"]
+}, Closed]],
+Cell[16357, 468, 4813, 116, 236, "Text"],
+Cell[21173, 586, 474, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[21672, 607, 101, 2, 33, "Text"],
+Cell[21776, 611, 3102, 73, 163, "Text"],
+Cell[24881, 686, 3554, 85, 163, "Text"],
+Cell[28438, 773, 2785, 66, 163, "Text"],
+Cell[31226, 841, 720, 23, 299, "Text"],
+Cell[31949, 866, 1186, 20, 290, "Input"]
+}, Closed]],
+Cell[33150, 889, 5019, 138, 395, "Text"],
+Cell[38172, 1029, 381, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[38578, 1045, 101, 2, 33, "Text"],
+Cell[38682, 1049, 115, 5, 33, "Text"],
+Cell[38800, 1056, 393, 7, 113, "Input"],
+Cell[39196, 1065, 541, 17, 33, "Text"],
+Cell[39740, 1084, 1885, 34, 335, "Input"],
+Cell[41628, 1120, 319, 8, 33, "Text"],
+Cell[41950, 1130, 3338, 61, 432, "Input"]
+}, Closed]],
+Cell[45303, 1194, 1648, 52, 296, "Text"],
+Cell[46954, 1248, 1012, 37, 185, "Text"],
+Cell[47969, 1287, 686, 20, 109, "Text"],
+Cell[48658, 1309, 557, 19, 90, "Text"],
+Cell[49218, 1330, 915, 26, 109, "Text"],
+Cell[50136, 1358, 1942, 59, 297, "Text"],
+Cell[52081, 1419, 584, 16, 183, "Text"],
+Cell[52668, 1437, 1307, 41, 205, "Text"],
+Cell[53978, 1480, 623, 21, 33, "Text"],
+Cell[54604, 1503, 1641, 51, 134, "Text"],
+Cell[56248, 1556, 5282, 110, 237, "Text"],
+Cell[61533, 1668, 634, 21, 33, "Text"],
+Cell[62170, 1691, 602, 19, 33, "Text"],
+Cell[62775, 1712, 464, 14, 33, "Text"],
+Cell[63242, 1728, 5280, 96, 557, "Input"],
+Cell[68525, 1826, 451, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[69001, 1847, 101, 2, 33, "Text"],
+Cell[69105, 1851, 59, 0, 33, "Text"],
+Cell[69167, 1853, 368, 6, 113, "Input"],
+Cell[69538, 1861, 261, 11, 33, "Text"],
+Cell[69802, 1874, 179, 3, 70, "Input"],
+Cell[69984, 1879, 63, 0, 33, "Text"],
+Cell[70050, 1881, 1101, 21, 255, "Input"],
+Cell[71154, 1904, 251, 9, 71, "Text"],
+Cell[71408, 1915, 143, 2, 50, "Input"],
+Cell[71554, 1919, 227, 8, 33, "Text"],
+Cell[71784, 1929, 125, 2, 50, "Input"],
+Cell[71912, 1933, 126, 2, 50, "Input"]
+}, Closed]],
+Cell[72053, 1938, 158, 3, 32, "Text"],
+Cell[72214, 1943, 561, 16, 33, "Text"],
+Cell[72778, 1961, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

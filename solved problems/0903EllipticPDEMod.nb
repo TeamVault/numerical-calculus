@@ -1,0 +1,1462 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     46336,       1289]*)
+(*NotebookOutlinePosition[     47030,       1313]*)
+(*  CellTagsIndexPosition[     46986,       1309]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Elliptic P.D.E.'s",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for Elliptic Equations",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["As examples of ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["elliptic partial differential equations",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/EllipticPartialDifferentialEquation.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", we consider the ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Laplace equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LaplacesEquation.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Poisson equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PoissonsEquation.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", and ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Helmholtz equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HelmholtzDifferentialEquation.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[". Recall that the Laplacian of the function  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u(x,y)",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is  \n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Del]\^2\ u = \ u\_xx\  + \ u\_yy\)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["With this notation, we can write the Laplace, Poisson, and \
+Helmholtz equations in the following forms:  \n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {\(\(\[Del]\^2\ u\)\(=\)\(\ \)\(0\)\(\ \)\), "  ", 
+            
+            StyleBox[\(\(\(\(Laplace\)\(\[CloseCurlyQuote]\)\) 
+                s\ equation\)\(,\)\(\ \ \ \)\),
+              FontFamily->"Times New Roman"]},
+          {\(\[Del]\^2\ u = \ g \((x, y)\)\), "  ", 
+            RowBox[{
+              StyleBox[\(\(\(Poisson\)\(\[CloseCurlyQuote]\)\) s\ equation\),
+                FontFamily->"Times New Roman"], 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSlant->"Italic"], 
+              StyleBox["  ",
+                FontFamily->"Times New Roman",
+                FontSlant->"Italic"]}]},
+          {\(\[Del]\^2\ u\  + \ f \((x, y)\) u = \ g \((x, y)\)\), "  ", 
+            
+            StyleBox[\(\(\(Helmholtz\)\(\[CloseCurlyQuote]\)\) 
+                s\ \(\(equation\)\(.\)\)\),
+              FontFamily->"Times New Roman"]}
+          }]]],
+  "  ",
+  StyleBox["\n\nIt is often the case that the boundary values for the \
+function  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u(x,y)",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["are known at all points on the sides of a rectangular region  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["R",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["in the plane. In this case, each of these equations can be solved \
+by the numerical technique known as the finite-difference method.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/EllipticPDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EllipticPDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/EllipticPDEProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EllipticPDEProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Dirichlet Method for Laplace's equation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To approximate the solution of the Laplace's equation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(u\_xx\) \((x, y)\) + \(u\_yy\) \((x, y)\) = 0\)]],
+  "  ",
+  StyleBox["over the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, y)\) : 0 \[LessEqual] x \[LessEqual] a, 
+          0 \[LessEqual] y \[LessEqual] b}\)}]]],
+  "  with  ",
+  Cell[BoxData[
+      \(u \((x, 0)\) = \(f\_1\) \((x)\)\)]],
+  ",  ",
+  Cell[BoxData[
+      \(u \((x, b)\) = \(f\_2\) \((x)\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ",  and  ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, y)\)\), "=", 
+        RowBox[{
+          RowBox[{\(f\_3\), \((y)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, y)\)}], 
+          "=", \(\(f\_4\) \((y)\)\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] y \[LessEqual] b\)]],
+  ".  It is assumed that  ",
+  Cell[BoxData[
+      \(\[CapitalDelta]x = \(\[CapitalDelta]y = h\)\)]],
+  "  and integers  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  and  m  exist so that  ",
+  Cell[BoxData[
+      RowBox[{"a", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"n", " ", "h", "   ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "   ", "b"}], " ", "=", 
+          " ", \(m\ h\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n_, 
+          m_] := \[IndentingNewLine]Module[{Err = 1.0, i, j, 
+            k = 0, \[Omega]}, \[IndentingNewLine]\[Omega]\  = \ 
+            4\/\(2 + \@\(4 - \((Cos[\[Pi]\/\(n - 1\)] + Cos[\[Pi]\/\(m - \
+1\)])\)\^2\)\); \ \ \[IndentingNewLine]While[\ 
+            And[Err > 0.001\ , \ 
+              k \[LessEqual] 70\ ], \[IndentingNewLine]Err\  = \ 
+              0.0; \ \[IndentingNewLine]For[\ j = 2, \ 
+              j \[LessEqual] 
+                m - 1, \ \(j++\), \[IndentingNewLine]\(For[\ i = 2, \ 
+                  i \[LessEqual] 
+                    n - 1, \ \(i++\), \[IndentingNewLine]Relax = \(1\/4\) \((\
+\[Omega]\ \((u\_\(\(\[LeftDoubleBracket]\)\(i, j + 1\)\(\[RightDoubleBracket]\
+\)\) + u\_\(\(\[LeftDoubleBracket]\)\(i, j - 1\)\(\[RightDoubleBracket]\)\) + 
+                              u\_\(\(\[LeftDoubleBracket]\)\(i + 1, j\)\(\
+\[RightDoubleBracket]\)\) + 
+                              u\_\(\(\[LeftDoubleBracket]\)\(i - 1, j\)\(\
+\[RightDoubleBracket]\)\) - 
+                              4\ u\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\))\))\); \ \[IndentingNewLine]u\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    u\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\  + \ Relax; \ \[IndentingNewLine]Err\  = \ 
+                    Max[Err, 
+                      Abs[Relax]];\ \ ];\)\ ]; \ \
+\[IndentingNewLine]Print["\<Max grid change = \>", 
+              Err]; \ \[IndentingNewLine]k = 
+              k + 1;\ \ ];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation over a  9 by 9  grid with boundary conditions\n\
+\t",
+  StyleBox["Top:",
+    FontWeight->"Bold"],
+  "       180\n\t",
+  StyleBox["Left:",
+    FontWeight->"Bold"],
+  "         80\n\t",
+  StyleBox["Bottom:",
+    FontWeight->"Bold"],
+  "   20\n\t",
+  StyleBox["Right:",
+    FontWeight->"Bold"],
+  "        0"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The traditional way to teach the solution of elliptic PDE's is the \
+following way, which just deals with the matrix elements and if needed the \
+graphics is \"old style\" and just deals with plotting the grid.  Usually \
+there is no labeling of the axes.  In example 3 we will see that a much more \
+complicated data structure and graphics capabilities are needed to make thing \
+better.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(n = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(u\  = \ Table[\ 70.0, {n}, {m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          80.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\[RightDoubleBracket]\)\) = 
+          0.0\ \ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          180.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\) = 
+          20.0\ ];\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, m - 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(2, m\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, 2\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, m\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, m - 1\)\(\[RightDoubleBracket]\)\))\);\
+\)\ \ \)}], "Input"],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n, m];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Plot the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(ListPlot3D[Transpose[u], 
+        AxesLabel \[Rule] {"\<y(j)\>", "\<x(i)\>", "\<u   \>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, Lighting \[Rule] False, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input",
+  AspectRatioFixed->True],
+
+Cell["To see the numerical values enter the command:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[NumberForm[TableForm[u], 4]];\)\ \)}], "Input"],
+
+Cell["\<\
+We can make a contour plot of the solution.  However, to get the orientation \
+like the table and the 3D figure requires reversing the rows in the matrix. \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(c = Table[x, {x, 0, 180, 15}];\)\ \), "\[IndentingNewLine]", 
+    \(\(ListContourPlot[Reverse[u], Contours \[Rule] c, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input"],
+
+Cell["\<\
+It is remarkable that we can obtain a contour plot from a set of data points. \
+ As usual for list plots, the axes represent the number of the row and column \
+and not the interval that were given.  \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation over a  21 by 21  grid with boundary conditions\
+\n\t",
+  StyleBox["Top:",
+    FontWeight->"Bold"],
+  "       180\n\t",
+  StyleBox["Left:",
+    FontWeight->"Bold"],
+  "         80\n\t",
+  StyleBox["Bottom:",
+    FontWeight->"Bold"],
+  "   20\n\t",
+  StyleBox["Right:",
+    FontWeight->"Bold"],
+  "        0"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+This problem has the same boundary values as Example 1.  Let's do it with a \
+21 by 21 grid which is about 5.5 times as much work. 
+It will require more iterations, but the graph will be nicer.  You most \
+likely do not want to \"look at\" the data structure which is a 21 by 21 \
+matrix. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(n = 21;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 21;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(u\  = \ Table[\ 70.0, {n}, {m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          80.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\[RightDoubleBracket]\)\) = 
+          0.0\ \ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          180.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\) = 
+          20.0\ ];\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, m - 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(2, m\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, 2\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, m\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, m - 1\)\(\[RightDoubleBracket]\)\))\);\
+\)\ \ \)}], "Input"],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n, m];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Plot the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(ListPlot3D[Transpose[u], 
+        AxesLabel \[Rule] {"\<y(j)\>", "\<x(i)\>", "\<u   \>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, Lighting \[Rule] False, 
+        ColorFunction \[Rule] Hue];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+We can make a contour plot of the solution.  However, to get the orientation \
+like the table and the 3D figure requires reversing the rows in the matrix. \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(c = Table[x, {x, 0, 180, 15}];\)\ \), "\[IndentingNewLine]", 
+    \(\(ListContourPlot[Reverse[u], Contours \[Rule] c, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input"],
+
+Cell[TextData[{
+  "The contour graph is looking better when there are more grid points.  \
+However, because of the discontinuities in each corner, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is having difficulties computing the contour lines.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Neumann",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Method for Laplace's equation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To approximate the solution of the Laplace's equation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(u\_xx\) \((x, y)\) + \(u\_yy\) \((x, y)\) = 0\)]],
+  "  ",
+  StyleBox["over the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, y)\) : 0 \[LessEqual] x \[LessEqual] a, 
+          0 \[LessEqual] y \[LessEqual] b}\)}]]],
+  "  with  ",
+  Cell[BoxData[
+      \(\(u\_y\) \((x, 0)\) = 0\)]],
+  ",  ",
+  Cell[BoxData[
+      \(u \((x, b)\) = \(f\_2\) \((x)\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ",  and  ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, y)\)\), "=", 
+        RowBox[{
+          RowBox[{\(f\_3\), \((y)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, y)\)}], 
+          "=", \(\(f\_4\) \((y)\)\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] b\)]],
+  ".  It is assumed that  ",
+  Cell[BoxData[
+      \(\[CapitalDelta]x = \(\[CapitalDelta]y = h\)\)]],
+  "  and integers  n  and  m  exist so that  ",
+  Cell[BoxData[
+      RowBox[{"a", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"n", " ", "h", "   ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "   ", "b"}], " ", "=", 
+          " ", \(m\ h\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Neumann[n_, 
+          m_] := \[IndentingNewLine]Module[{Err = 1.0, i, j, 
+            k = 0, \[Omega]}, \[IndentingNewLine]\[Omega]\  = \ 
+            4\/\(2 + \@\(4 - \((Cos[\[Pi]\/\(n - 1\)] + Cos[\[Pi]\/\(m - \
+1\)])\)\^2\)\); \ \ \[IndentingNewLine]While[\ 
+            And[Err > 0.001\ , \ 
+              k \[LessEqual] 70\ ], \[IndentingNewLine]Err\  = \ 
+              0.0; \ \[IndentingNewLine]For[\ j = 2, \ 
+              j \[LessEqual] 
+                m - 1, \ \(j++\), \[IndentingNewLine]\(For[\ i = 2, \ 
+                  i \[LessEqual] 
+                    n - 1, \ \(i++\), \[IndentingNewLine]Relax = \(1\/4\) \((\
+\[Omega]\ \((u\_\(\(\[LeftDoubleBracket]\)\(i, j + 1\)\(\[RightDoubleBracket]\
+\)\) + u\_\(\(\[LeftDoubleBracket]\)\(i, j - 1\)\(\[RightDoubleBracket]\)\) + 
+                              u\_\(\(\[LeftDoubleBracket]\)\(i + 1, j\)\(\
+\[RightDoubleBracket]\)\) + 
+                              u\_\(\(\[LeftDoubleBracket]\)\(i - 1, j\)\(\
+\[RightDoubleBracket]\)\) - 
+                              4\ u\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\))\))\); \ \[IndentingNewLine]u\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    u\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\  + \ Relax; \ \[IndentingNewLine]Err\  = \ 
+                    Max[Err, 
+                      Abs[Relax]];\ \ ];\)\ ]; \ \[IndentingNewLine]For[\ 
+              j = 2, \ j \[LessEqual] 
+                m - 1, \ \(j++\), \[IndentingNewLine]Relax = \(1\/4\) \((\
+\[Omega]\ \((2\ u\_\(\(\[LeftDoubleBracket]\)\(n - 1, j\)\(\
+\[RightDoubleBracket]\)\) + 
+                          u\_\(\(\[LeftDoubleBracket]\)\(n, j - 1\)\(\
+\[RightDoubleBracket]\)\) + 
+                          u\_\(\(\[LeftDoubleBracket]\)\(n, j + 1\)\(\
+\[RightDoubleBracket]\)\) - 
+                          4\ u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\
+\[RightDoubleBracket]\)\))\))\); \ \[IndentingNewLine]u\_\(\(\
+\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                u\_\(\(\[LeftDoubleBracket]\)\(n, \
+j\)\(\[RightDoubleBracket]\)\)\  + \ Relax; \ \[IndentingNewLine]Err\  = \ 
+                Max[Err, 
+                  Abs[Relax]];\ ]; \ \[IndentingNewLine]Print["\<Max grid \
+change = \>", Err]; \ \[IndentingNewLine]k\  = \ 
+              k + 1;\ ];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation with the Neuman boundary condition over a  9 by \
+9  grid with boundary conditions\n\t",
+  StyleBox["Top:",
+    FontWeight->"Bold"],
+  "            180\n\t",
+  StyleBox["Left:",
+    FontWeight->"Bold"],
+  "              80\n\t",
+  StyleBox["Bottom:",
+    FontWeight->"Bold"],
+  "    ",
+  Cell[BoxData[
+      \(u\_y\)]],
+  " = 0\n\t",
+  StyleBox["Right:",
+    FontWeight->"Bold"],
+  "             0"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["First set up the boundary values.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(u = Table[70.0, {9}, {9}];\)\ \ \), "\n", 
+    \(\(For[\ i = 2, i < 9, \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          80.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ i = 2, i < 9, \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 9\)\(\[RightDoubleBracket]\)\) = 
+          0.0\ \ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, j < 9, \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          180.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, j < 9, \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(9, j\)\(\[RightDoubleBracket]\)\) = 
+          20.0\ ];\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 9\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 8\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+9\)\(\[RightDoubleBracket]\)\))\);\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(9, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 80.0;\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(9, 9\)\(\[RightDoubleBracket]\)\)\  = \
+\ 0.0;\)\ \ \), "\n", 
+    \(\(For[\ j = 1, \ 
+        j \[LessEqual] 
+          9, \ \(j++\), \
+\[IndentingNewLine]\(u\_\(\(\[LeftDoubleBracket]\)\(9, j\)\(\
+\[RightDoubleBracket]\)\) = 
+            u\_\(\(\[LeftDoubleBracket]\)\(9, 1\)\(\[RightDoubleBracket]\)\) \
++ 1\/8\ \((j - 
+                    1)\)\ \((u\_\(\(\[LeftDoubleBracket]\)\(9, 9\)\(\
+\[RightDoubleBracket]\)\) - 
+                    u\_\(\(\[LeftDoubleBracket]\)\(9, 1\)\(\
+\[RightDoubleBracket]\)\))\);\)\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Neumann[9, 9];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Plot the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(ListPlot3D[Transpose[u], 
+        AxesLabel \[Rule] {"\<y(j)\>", "\<x(i)\>", "\<u   \>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, Lighting \[Rule] False, 
+        ColorFunction \[Rule] Hue];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input",
+  AspectRatioFixed->True],
+
+Cell["To see the numerical values enter the command:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[NumberForm[TableForm[u], 4]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+We can make a contour plot of the solution.  However, to get the orientation \
+like the table and the 3D figure requires reversing the rows in the matrix. \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(c = Table[x, {x, 0, 180, 15}];\)\ \), "\[IndentingNewLine]", 
+    \(\(ListContourPlot[Reverse[u], Contours \[Rule] c, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input"],
+
+Cell["This problem has smoother contours. ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Improvements in the graphics.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Making better graphics which would include realistic labels is more \
+complicated.  If you don't mind \"editing pictures\" then we can \"patch up\" \
+the graph in Example 1 by using graphics commands which \"label what ever we \
+want.\"  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation over the square ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] 1, 0 \[LessEqual] y \[LessEqual] 1\)]],
+  " where the boundary conditions are  \n\t",
+  StyleBox["Top:",
+    FontWeight->"Bold"],
+  "       180  \n\t",
+  StyleBox["Left:",
+    FontWeight->"Bold"],
+  "         80  \n\t",
+  StyleBox["Bottom:",
+    FontWeight->"Bold"],
+  "   20  \n\t",
+  StyleBox["Right :",
+    FontWeight->"Bold"],
+  "        0  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Suppose that the orientation refers to the \"standard\" the x-y plane. After \
+we graph the solution we can \"modify\" the labels in the tick marks to suit \
+our fancy.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(n = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(u\  = \ Table[\ 70.0, {n}, {m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          80.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\[RightDoubleBracket]\)\) = 
+          0.0\ \ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          180.0\ ];\)\ \ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\) = 
+          20.0\ ];\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, m - 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(2, m\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, 2\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, m\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, m - 1\)\(\[RightDoubleBracket]\)\))\);\
+\)\ \ \)}], "Input"],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n, m];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Plot the solution. Change the axes labels to \"x\" and \"y\" and manually \
+supply the tick marks that correspond to these labels. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(ListPlot3D[Transpose[u], 
+        AxesLabel \[Rule] {"\<y  \>", "\<x\>", "\<u  \>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, Lighting \[Rule] False, 
+        ColorFunction \[Rule] Hue, 
+        Ticks \[Rule] {{{1, "\<1\>"}, {5, "\<0.5\>"}, {9, "\<0\>"}}, {{1, \
+"\<0\>"}, {5, "\<0.5\>"}, {9, "\<1\>"}}, 
+            Range[0, 150, 50]}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation over the square ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] 1, 0 \[LessEqual] y \[LessEqual] 1\)]],
+  " where the boundary conditions are  \n\t",
+  StyleBox["Top:",
+    FontWeight->"Bold"],
+  "       180\n\t",
+  StyleBox["Left:",
+    FontWeight->"Bold"],
+  "         80\n\t",
+  StyleBox["Bottom:",
+    FontWeight->"Bold"],
+  "   20\n\t",
+  StyleBox["Right:",
+    FontWeight->"Bold"],
+  "        0"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "First set up the boundary values. \n",
+  " ",
+  Cell[BoxData[
+      \(u \((x, 0)\) = \(f\_1\) \((x)\)\)]],
+  ",  ",
+  Cell[BoxData[
+      \(u \((x, b)\) = \(f\_2\) \((x)\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ",  and  ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, y)\)\), "=", 
+        RowBox[{
+          RowBox[{\(f\_3\), \((y)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, y)\)}], 
+          "=", \(\(f\_4\) \((y)\)\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] y \[LessEqual] b\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F\_1[x_] = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_2[x_] = 180;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_3[y_] = 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_4[y_] = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(h = a\/\(n - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(k = a\/\(m - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_1[i_]\  = F\_1[h\ \((i - 1)\)];\)\ \), "\n", 
+    \(\(f\_2[i_]\  = F\_2[h\ \((i - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_3[j_]\  = F\_3[k \((j - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_4[j_]\  = F\_4[k \((j - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(u\  = \ Table[\ 70.0, {n}, {m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          f\_1[i]\ ];\)\ \), "\n", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\[RightDoubleBracket]\)\) = 
+          f\_2[i]\ ];\)\ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          f\_3[j]\ ];\)\ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\) = 
+          f\_4[j]\ ];\)\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, m - 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(2, m\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, 2\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, m\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, m - 1\)\(\[RightDoubleBracket]\)\))\);\
+\)\ \)}], "Input"],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n, m];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Plot the solution by making a table of 3D points and using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["ListSurfacePlot3D",
+    FontWeight->"Bold"],
+  " graphics subroutine.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(p = 
+        Table[{h\ \((i - 1)\), k\ \((j - 1)\), 
+            u\_\(\(\[LeftDoubleBracket]\)\(i, \
+j\)\(\[RightDoubleBracket]\)\)}, {i, 1, n}, {j, 1, 
+            m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ListSurfacePlot3D[p, Axes \[Rule] True, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<u\>"}, 
+        ViewPoint \[Rule] {1, \(-2\), 1}, 
+        BoxRatios \[Rule] {1, 1, 1\/2}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(u\_xx\)(x,y) + \!\(u\_yy\)(x,y) = 0\>\""];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve Laplace's equation over the square ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] 1, 0 \[LessEqual] y \[LessEqual] 1\)]],
+  " where the boundary conditions are  \n\n \t",
+  Cell[BoxData[
+      \(u \((x, 0)\) = sin \((\[Pi]\ x)\)\)]],
+  ",  ",
+  Cell[BoxData[
+      \(u \((x, b)\) = 1\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ",  \n and  \n\t ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, y)\)\), "=", 
+        RowBox[{
+          RowBox[{\(y\^2\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, y)\)}], 
+          "=", \(y\^2\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] y \[LessEqual] b\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "First set up the boundary values.\n",
+  " ",
+  Cell[BoxData[
+      \(u \((x, 0)\) = \(f\_1\) \((x)\)\)]],
+  ",  ",
+  Cell[BoxData[
+      \(u \((x, b)\) = \(f\_2\) \((x)\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ",  and  ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, y)\)\), "=", 
+        RowBox[{
+          RowBox[{\(f\_3\), \((y)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, y)\)}], 
+          "=", \(\(f\_4\) \((y)\)\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] y \[LessEqual] b\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F\_1[x_] = Sin[\[Pi]\ x];\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_2[x_] = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_3[y_] = y\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_4[y_] = y\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 21;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 21;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(h = a\/\(n - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(k = a\/\(m - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Clear[i, j];\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_1[i_]\  = \ F\_1[h\ \((i - 1)\)];\)\ \), "\n", 
+    \(\(f\_2[i_]\  = \ F\_2[h\ \((i - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_3[j_]\  = \ F\_3[k \((j - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_4[j_]\  = \ F\_4[k \((j - 1)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(u\  = \ Table[\ 0.0, {n}, {m}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\[RightDoubleBracket]\)\) = 
+          f\_1[i]\ ];\)\ \), "\n", 
+    \(\(For[\ i = 2, \ i < n, \ \(i++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\[RightDoubleBracket]\)\) = 
+          f\_2[i]\ ];\)\ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(1, j\)\(\[RightDoubleBracket]\)\) = 
+          f\_3[j]\ ];\)\ \), "\n", 
+    \(\(For[\ j = 2, \ j < m, \ \(j++\), 
+        u\_\(\(\[LeftDoubleBracket]\)\(n, j\)\(\[RightDoubleBracket]\)\) = 
+          f\_4[j]\ ];\)\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\) + 
+              u\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\))\);\)\ \), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(1, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(1, m - 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(2, m\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, 1\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, 1\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, 2\)\(\[RightDoubleBracket]\)\))\);\)\ \
+\), "\n", 
+    \(\(u\_\(\(\[LeftDoubleBracket]\)\(n, m\)\(\[RightDoubleBracket]\)\)\  = \
+\ 1\/2\ \((u\_\(\(\[LeftDoubleBracket]\)\(n - 1, m\)\(\[RightDoubleBracket]\)\
+\) + u\_\(\(\[LeftDoubleBracket]\)\(n, m - 1\)\(\[RightDoubleBracket]\)\))\);\
+\)\ \)}], "Input"],
+
+Cell["Next, solve it.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Dirichlet[n, m];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Plot the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(p = 
+        Table[{h\ \((i - 1)\), k\ \((j - 1)\), 
+            u\_\(\(\[LeftDoubleBracket]\)\(i, \
+j\)\(\[RightDoubleBracket]\)\)}, {i, 1, n}, {j, 1, 
+            m}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph = 
+        ListSurfacePlot3D[p, Axes \[Rule] True, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<u\>"}, 
+          ViewPoint \[Rule] {1, \(-1\), 1}, 
+          BoxRatios \[Rule] {1, 1, 1}];\)\ \ \)}], "Input"],
+
+Cell["\<\
+We can make a contour plot of the solution.  However, to get the orientation \
+like the table and the 3D figure requires reversing the rows in the matrix. \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(c = Table[x\/10, {x, 0, 10}];\)\ \), "\[IndentingNewLine]", 
+    \(\(ListContourPlot[Transpose[u], Contours \[Rule] c, 
+        ColorFunction \[Rule] Hue];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The boundary function is continuous for this problem and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " has no trouble computing the contours.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/EllipticPDEBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Elliptic PDE's",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EllipticPDEBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 170, 4, 35, "Text"],
+Cell[1949, 59, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3428, 111, 3477, 96, 294, "Text"],
+Cell[6908, 209, 614, 21, 33, "Text"],
+Cell[7525, 232, 600, 20, 33, "Text"],
+Cell[8128, 254, 2008, 64, 71, "Text"],
+Cell[10139, 320, 1618, 29, 317, "Input"],
+Cell[11760, 351, 496, 20, 109, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[12281, 375, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[12434, 381, 554, 12, 52, "Text",
+  Evaluatable->False],
+Cell[12991, 395, 1815, 31, 285, "Input"],
+Cell[14809, 428, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[14892, 432, 90, 2, 30, "Input"],
+Cell[14985, 436, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[15071, 440, 444, 9, 70, "Input"],
+Cell[15518, 451, 110, 2, 33, "Text",
+  Evaluatable->False],
+Cell[15631, 455, 246, 4, 70, "Input"],
+Cell[15880, 461, 229, 6, 33, "Text",
+  Evaluatable->False],
+Cell[16112, 469, 365, 6, 90, "Input"],
+Cell[16480, 477, 271, 6, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[16766, 486, 498, 20, 106, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[17289, 510, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[17442, 516, 362, 8, 52, "Text",
+  Evaluatable->False],
+Cell[17807, 526, 1817, 31, 285, "Input"],
+Cell[19627, 559, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[19710, 563, 92, 2, 30, "Input"],
+Cell[19805, 567, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[19891, 571, 427, 8, 70, "Input"],
+Cell[20321, 581, 229, 6, 33, "Text",
+  Evaluatable->False],
+Cell[20553, 589, 365, 6, 90, "Input"],
+Cell[20921, 597, 320, 8, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[21256, 608, 1945, 61, 68, "Text"],
+Cell[23204, 671, 2422, 43, 413, "Input"],
+Cell[25629, 716, 589, 23, 109, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[26243, 743, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[26396, 749, 98, 2, 33, "Text",
+  Evaluatable->False],
+Cell[26497, 753, 1889, 37, 272, "Input"],
+Cell[28389, 792, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[28472, 796, 90, 2, 30, "Input"],
+Cell[28565, 800, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[28651, 804, 427, 8, 70, "Input"],
+Cell[29081, 814, 110, 2, 33, "Text",
+  Evaluatable->False],
+Cell[29194, 818, 248, 4, 70, "Input"],
+Cell[29445, 824, 229, 6, 33, "Text",
+  Evaluatable->False],
+Cell[29677, 832, 365, 6, 90, "Input"],
+Cell[30045, 840, 100, 2, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[30160, 845, 389, 8, 49, "Text"],
+Cell[30552, 855, 610, 22, 109, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[31187, 881, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[31340, 887, 241, 6, 33, "Text",
+  Evaluatable->False],
+Cell[31584, 895, 1815, 31, 285, "Input"],
+Cell[33402, 928, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[33485, 932, 90, 2, 30, "Input"],
+Cell[33578, 936, 204, 5, 33, "Text",
+  Evaluatable->False],
+Cell[33785, 943, 566, 11, 90, "Input"]
+}, Closed]],
+Cell[34366, 957, 601, 22, 106, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[34992, 983, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[35145, 989, 685, 25, 52, "Text",
+  Evaluatable->False],
+Cell[35833, 1016, 2512, 43, 548, "Input"],
+Cell[38348, 1061, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[38431, 1065, 90, 2, 30, "Input"],
+Cell[38524, 1069, 287, 10, 33, "Text",
+  Evaluatable->False],
+Cell[38814, 1081, 680, 13, 124, "Input"]
+}, Closed]],
+Cell[39509, 1097, 886, 30, 106, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[40420, 1131, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[40573, 1137, 684, 25, 52, "Text",
+  Evaluatable->False],
+Cell[41260, 1164, 2585, 44, 568, "Input"],
+Cell[43848, 1210, 80, 2, 33, "Text",
+  Evaluatable->False],
+Cell[43931, 1214, 90, 2, 30, "Input"],
+Cell[44024, 1218, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[44110, 1222, 530, 11, 70, "Input"],
+Cell[44643, 1235, 229, 6, 33, "Text",
+  Evaluatable->False],
+Cell[44875, 1243, 196, 3, 61, "Input"],
+Cell[45074, 1248, 236, 7, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[45325, 1258, 158, 3, 32, "Text"],
+Cell[45486, 1263, 550, 16, 33, "Text"],
+Cell[46039, 1281, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

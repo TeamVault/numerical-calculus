@@ -1,0 +1,1826 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     50391,       1635]*)
+(*NotebookOutlinePosition[     51306,       1664]*)
+(*  CellTagsIndexPosition[     51262,       1660]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Newton's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tIf ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(f \((x)\)\),
+          FontSize->12], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontSize->12], 
+        RowBox[{
+          StyleBox[\(f'\),
+            FontSize->12], \((x)\)}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[
+            RowBox[{" ", 
+              StyleBox[" ",
+                FontSize->12]}]], 
+          StyleBox[\(f'\),
+            FontSize->12], \((x)\)}]}]]],
+  " are continuous near a root ",
+  Cell[BoxData[
+      \(p\)]],
+  ", then this extra information regarding the nature of ",
+  Cell[BoxData[
+      StyleBox[\(f \((x)\)\),
+        FontSize->12]]],
+  " can be used to develop algorithms that will produce sequences ",
+  Cell[BoxData[
+      \({p\_k}\)]],
+  " that converge faster to ",
+  Cell[BoxData[
+      \(p\)]],
+  " than either the bisection or false position method. The Newton-Raphson \
+(or simply Newton's) method is one of the most useful and best known \
+algorithms that relies on the continuity of ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(f'\),
+          FontSize->12], \((x)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[
+          RowBox[{" ", 
+            StyleBox[" ",
+              FontSize->12]}]], 
+        StyleBox[\(f'\),
+          FontSize->12], \((x)\)}]]],
+  ".  The method is attributed to ",
+  StyleBox[ButtonBox["Sir Isaac Newton",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Newton.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1643-1727) and ",
+  StyleBox[ButtonBox["Joseph Raphson",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Raphson.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1648-1715).  \n\n",
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Newton-Raphson Theorem",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/NewtonsMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^2\),
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      \(p \[Element] \([a, b]\)\)]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If   ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(g \((p\_k)\)\), " ", "=", "  ", 
+          RowBox[{\(p\_k\), " ", "-", 
+            StyleBox[
+              FractionBox[
+                StyleBox[\(f \((p\_k)\)\),
+                  FontSize->12], 
+                StyleBox[\(f' \((p\_k)\)\),
+                  FontSize->12]],
+              FontSize->12]}]}]}]]],
+  "    for    ",
+  Cell[BoxData[
+      \(k = 0, 1,  ... \)]],
+  "  \n\nwill converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for any initial approximation  ",
+  Cell[BoxData[
+      \(p\_0 \[Element] \([p - \[Delta], p + \[Delta]]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/Newton'sMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Newton-Raphson Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find ",
+    FontFamily->"New Century Schlbk"],
+  "a root of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given an initial approximation  ",
+  Cell[BoxData[
+      \(p\_\(\(0\)\(\ \)\)\)]],
+  "  using the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(p\_k\), "-", 
+          StyleBox[
+            FractionBox[
+              StyleBox[\(f \((p\_k)\)\),
+                FontSize->12], 
+              StyleBox[\(f' \((p\_k)\)\),
+                FontSize->12]],
+            FontSize->12]}]}]]],
+  "   for    ",
+  Cell[BoxData[
+      \(\(\(k\  = \ 
+        0\)\(,\)\(1\)\(,\)\(\[CenterEllipsis]\)\(\ \)\(,\)\(m\)\(\ \)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Newton'sMethodProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Newton-Raphson Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(NewtonRaphson[x0_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{}, \[IndentingNewLine]k\
+\  = \ 0; \ \[IndentingNewLine]p0\  = \ 
+          N[x0]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 16]\ ]; \ \[IndentingNewLine]p1\  = \ 
+          p0; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ 
+            p1; \ \[IndentingNewLine]p1\  = \ 
+            p0\  - \ f[p0]\/\(f'\)[p0]; \ \[IndentingNewLine]k\  = \ 
+            k + 1; \ \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p1, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p1], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+          NumberForm[p1, 
+            16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p1 - p0]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p1], 16]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Newton's method to find the three roots of the cubic polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ 4\ x\^3 - 15\ x\^2 + 17\ x - 6\)],
+    AspectRatioFixed->False],
+  ".  \n\nDetermine the Newton-Raphson iteration formula  ",
+  Cell[BoxData[
+      \(g[x]\  = \ x - f[x]\/\(f'\)[x]\)]],
+  "  that is used.  Show details of the computations for the starting value  \
+",
+  Cell[BoxData[
+      \(p\_0 = 3\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 4\ x\^3 - 15\ x\^2 + 17\ x - 6;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Graph the function.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-1\), 3}, 
+        PlotRange \[Rule] {{\(-1\), 3}, {\(-30\), 20}}, 
+        Ticks \[Rule] {Range[\(-1\), 3, 0.5], Range[\(-30\), 20, 10]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell["How many real roots are there ?  Really !", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 2.1}, {\(-0.9\), 0.2}}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[" The Newton-Raphson iteration formula  g[x]  is", "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_]\  = \ x - f[x]\/\(f'\)[x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(g[x_] = \ Simplify[\ g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  " Starting with  ",
+  Cell[BoxData[
+      \(p\_0 = 3\)]],
+  ", Use the Newton-Raphson method to find a numerical approximation to the \
+root.  First, do the iteration one step at a time.  Type each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[BoxData[
+    \(p0 = 3.0\)], "Input"],
+
+Cell[BoxData[
+    \(p1 = g[p0]\)], "Input"],
+
+Cell[BoxData[
+    \(p2 = g[p1]\)], "Input"],
+
+Cell[BoxData[
+    \(p3 = g[p2]\)], "Input"],
+
+Cell[BoxData[
+    \(p4 = g[p3]\)], "Input"],
+
+Cell[BoxData[
+    \(p5 = g[p4]\)], "Input"],
+
+Cell[BoxData[
+    \(p6 = g[p5]\)], "Input"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[3.0, 7];\)\)], "Input"],
+
+Cell[TextData[{
+  "From the second graph we see that there are two other real roots, use the \
+starting values  0.0  and  1.4  to find them.\nFirst, use the starting value \
+",
+  Cell[BoxData[
+      \(p\_0 = 0.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[0.0, 8];\)\)], "Input"],
+
+Cell[TextData[{
+  "Then use the starting value ",
+  Cell[BoxData[
+      \(p\_0 = 1.4\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[1.4, 5];\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in numerical root finder."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = NSolve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"],
+
+Cell[TextData[{
+  "This can also be done with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in symbolic solve procedure."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", 
+        Factor[\ f[x]\ ]\ ];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Definition (Order of a Root)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  f(x)  and its derivatives  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f' \((x)\),  ... , \(f\^\((m)\)\) \((x)\)\)]],
+  "  ",
+  StyleBox["are defined and continuous on an interval about  x = p.  We say \
+that  f(x) = 0  has a root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox["  at   x = p  if and only if  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((p)\) = 0, f' \((p)\) = 0, 
+      f'' \((p)\) = 0,  ... , \(f\^\((m - 1)\)\) \((p)\) = 
+        0, \(f\^\((m)\)\) \((p)\) \[NotEqual] 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["A root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox[" = 1  is often called a ",
+    FontFamily->"Times New Roman"],
+  StyleBox["simple root",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[", and if  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox[" > 1  it is called a ",
+    FontFamily->"Times New Roman"],
+  StyleBox["multiple root",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  A root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox[" = 2  is sometimes called a ",
+    FontFamily->"Times New Roman"],
+  StyleBox["double root",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[", and so on.  The next result will illuminate these concepts.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Order of Convergence)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\_n\)]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["converges to  p,  and set  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(E\_n\  = \ p\  - \ p\_n\ \ for\ \ n \[GreaterEqual] 0\)]],
+  StyleBox[".    If two positive constants  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(A \[NotEqual] 0\ \ and\ \ R > 0\)]],
+  StyleBox["  exist, and  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(lim\+\(n\  \[Rule] \ \[Infinity]\)\ \(\(|\)\(p\  - \ p\_\(n + 1\)\
+\)\(|\)\)\/\(\(|\)\(p\  - \ p\_n\)\( | \^R\)\) = \ \(lim\+\(n\  \[Rule] \ \
+\[Infinity]\)\ \(\(|\)\(E\_\(n + 1\)\)\(|\)\)\/\(\(|\)\(E\_n\)\( | \^R\)\)\  \
+= \ A\)\)\(,\)\)\)]],
+  "\n",
+  StyleBox["\nthen the sequence is said to converge to  p  with ",
+    FontFamily->"Times New Roman"],
+  StyleBox["order of convergence R",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  The number  A  is called the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["asymptotic error constant",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  The cases  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 1, 2\)]],
+  StyleBox["  are given special  consideration.\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["   If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 1\)]],
+  StyleBox[", the convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox["  is called ",
+    FontFamily->"Times New Roman"],
+  StyleBox["linear",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 2\)]],
+  StyleBox[", the convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["is called ",
+    FontFamily->"Times New Roman"],
+  StyleBox["quadratic",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Convergence Rate for Newton-Raphson Iteration)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that Newton-Raphson iteration produces a sequence  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["that converges to the root  p  of the function",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["If  p  is a simple root, then convergence is quadratic and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \)\(\(\(\(|\)\(f'' \((p)\
+\)\)\(|\)\)\/\(2 | f' \((p)\) | \)\) \((\(|\)\(E\_k\)\(|\))\)\^2\)\)\)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["If  p  is a multiple root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox[",  then convergence is linear and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \)\(\(m - 
+                1\)\/m\)\)\(|\)\(E\_k\)\(|\)\)\)]],
+  "  ",
+  StyleBox["for  k  sufficiently large.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/Newton'sMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Newton's method to find the roots of the cubic polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ x\^3 - 3\ x + 2\)],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["2 (a) Fast Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate quadratic convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = \(-2.4\)\)]],
+  "\n\n",
+  StyleBox["2 (b) Slow Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate linear convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = 1.2\)]]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - 3\ x + 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Graph the function.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3\), 3}, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-10\), 10}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-10\), 10, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[" The Newton-Raphson iteration formula  g[x]  is", "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_]\  = \ x - f[x]\/\(f'\)[x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(g[x_] = \ Simplify[\ g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (a) Fast Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate quadratic convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = \(-2.4\)\)]],
+  "\n\nFirst, do the iteration one step at a time.  \nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[BoxData[
+    \(p0 = \(-2.4\)\)], "Input"],
+
+Cell[BoxData[
+    \(p1 = g[p0]\)], "Input"],
+
+Cell[BoxData[
+    \(p2 = g[p1]\)], "Input"],
+
+Cell[BoxData[
+    \(p3 = g[p2]\)], "Input"],
+
+Cell[BoxData[
+    \(p4 = g[p3]\)], "Input"],
+
+Cell[BoxData[
+    \(p5 = g[p4]\)], "Input"],
+
+Cell[BoxData[
+    \(p6 = g[p5]\)], "Input"],
+
+Cell[TextData[{
+  "Notice that convergence is fast and the sequence is converging to the \
+simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[\(-2.4\), 7];\)\)], "Input"],
+
+Cell[TextData[{
+  "At the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "  we can explore the relationship",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \)\(\(\(\(|\)\(f'' \((p)\
+\)\)\(|\)\)\/\(2 | f' \((p)\) | \)\) \((\(|\)\(E\_k\)\(|\))\)\^2\)\)\)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. ",
+    FontFamily->"Times New Roman"],
+  " \n\nThis will be done by investigating the ratio",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\  \
+\[TildeTilde] \ \(\(|\)\(f'' \((p)\)\)\(|\)\)\/\(2 | f' \((p)\) | \)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Nk = 4;\)\), "\[IndentingNewLine]", 
+    \(\(Pk = NestList[g, \(-2.4\), Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = \(-2\) - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Ek\^2, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Qk, "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 15]\)}], "Input"],
+
+Cell[TextData[{
+  "Evaluate the quantity  ",
+  Cell[BoxData[
+      \(\(\(|\)\(f'' \((p)\)\)\(|\)\)\/\(2 | f' \((p)\) | \)\)]],
+  " at the root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(Abs[\(f''\)[\(-2\)]]\/\(2  Abs[\(f'\)[\(-2\)]]\)\  \[Equal] \ 
+      2\/3\ \  \[Equal] \ 0.6666666666666666\)], "Input"],
+
+Cell[TextData[{
+  "Which is close to the computed value  ",
+  Cell[BoxData[
+      \(\(\(|\)\(E\_3\)\(|\)\)\/\((\(|\)\(E\_3\)\(|\))\)\^2\  = \ 
+        0.666654809469126\)]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (b) Slow Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate linear convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = 1.2\)]],
+  "\n\nFirst, do the iteration one step at a time.  \nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[BoxData[
+    \(p0 = 1.2\)], "Input"],
+
+Cell[BoxData[
+    \(p1 = g[p0]\)], "Input"],
+
+Cell[BoxData[
+    \(p2 = g[p1]\)], "Input"],
+
+Cell[BoxData[
+    \(p3 = g[p2]\)], "Input"],
+
+Cell[BoxData[
+    \(p4 = g[p3]\)], "Input"],
+
+Cell[BoxData[
+    \(p5 = g[p4]\)], "Input"],
+
+Cell[BoxData[
+    \(p6 = g[p5]\)], "Input"],
+
+Cell[TextData[{
+  "Notice that convergence is slow, but the sequence is converging to  the \
+double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[1.2, 25];\)\)], "Input"],
+
+Cell[TextData[{
+  "At the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  "  we can explore the relationship",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \
+\)\(1\/2\)\)\(|\)\(E\_k\)\(|\)\)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. ",
+    FontFamily->"Times New Roman"],
+  " \n\nThis will be done by investigating the ratio",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\(\(|\)\(E\_k\)\(|\)\)\  \
+\[TildeTilde] \ 1\/2\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Nk = 24;\)\), "\[IndentingNewLine]", 
+    \(\(Pk = NestList[g, 1.2, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = 1 - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Abs[Ek], Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Qk, "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\(\(|\)\(E\_k\)\(|\)\)\)\>\""}}, TableSpacing \[Rule] {3, 1}], 
+      15]\)}], "Input"],
+
+Cell[TextData[{
+  "Compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in numerical root finder."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = NSolve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"],
+
+Cell[TextData[{
+  "This can also be done with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in symbolic solve procedure."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", 
+        Factor[\ f[x]\ ]\ ];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Reduce the volume of printout.\n\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "After you have debugged you program and it is working properly, delete the \
+unnecessary print statements  \n",
+  Cell[BoxData[
+      StyleBox[\(Print["p0 = ", PaddedForm[N[p0], {11, 11}], ",   f[p0] = ", 
+            f[p0]\ ];\),
+        FontWeight->"Bold"]]],
+  "  and  \n",
+  Cell[BoxData[
+      StyleBox[\(Print["p", k, " = ", PaddedForm[N[p1], {11, 11}], ",   f[p", 
+            k, "] = ", f[p1]\ ];\),
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Concise Program for the Newton-Raphson Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(NewtonRaphson[x0_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]k\  = \ 
+            0; \ \[IndentingNewLine]p0\  = \ 
+            N[x0]; \ \[IndentingNewLine]p1\  = \ 
+            p0; \ \[IndentingNewLine]While[\ 
+            k < max, \[IndentingNewLine]p0\  = \ 
+              p1; \ \ \[IndentingNewLine]p1\  = \ 
+              p0\  - \ f[p0]\/\(f'\)[p0]; \ \[IndentingNewLine]k\  = \ 
+              k + 1;\ ]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+            NumberForm[p1, 
+              16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p1 - p0]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+            NumberForm[f[p1], 16]\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell["Now test this subroutine using the function in Example 1.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 4\ x\^3 - 15\ x\^2 + 17\ x - 6;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[3.0, 7];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[0.0, 8];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[1.4, 5];\)\)], "Input"],
+
+Cell[TextData[StyleBox["Error Checking in the Newton-Raphson Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Error checking can be added to the Newton-Raphson method.  Here we have \
+added a third parameter  ",
+  Cell[BoxData[
+      \(\[Delta]\)]],
+  "  to the subroutine which estimate the accuracy of the numerical \
+solution."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[x0_, \[Delta]_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]k\  = \ 
+            0; \[IndentingNewLine]p0\  = \ 
+            N[x0]; \[IndentingNewLine]\[CapitalDelta]p\  = \ 
+            1; \[IndentingNewLine]While[\ 
+            And[\ k < max, \[Delta] < 
+                Abs[\[CapitalDelta]p]\ ], \[IndentingNewLine]\[CapitalDelta]p\
+\  = \ f[p0]\/\(f'\)[p0]; \ \[IndentingNewLine]p1\  = \ 
+              p0\  - \ \[CapitalDelta]p; \[IndentingNewLine]k\  = \ 
+              k + 1; \[IndentingNewLine]p0\  = \ 
+              p1;\ ]; \[IndentingNewLine]Print["\<  p  = \>", 
+            NumberForm[p1, 
+              11]\ ]; \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", 
+            Abs[\[CapitalDelta]p]\ ]; \[IndentingNewLine]Print["\<f[p] = \>", 
+            NumberForm[f[p1], 11]\ ];\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  "The following subroutine call uses a maximum of 20 iterations, just to \
+make sure enough iterations are performed.  However, it will terminate when \
+the difference between consecutive iterations is less than  ",
+  Cell[BoxData[
+      \(10\^\(-10\)\)]],
+  ".  By interrogating  k  afterward we can see how many iterations were \
+actually performed."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 4\ x\^3 - 15\ x\^2 + 17\ x - 6;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(NewtonRaphson[0.0, 10\^\(-10\), 20];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for Newton-Raphson Iteration.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(NewtonRaphson[x0_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{}, \[IndentingNewLine]k\
+\  = \ 0; \ \[IndentingNewLine]p0\  = \ 
+          N[x0]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \[IndentingNewLine]g[x_] = 
+          x - f[x]\/\(f'\)[x]; \ \[IndentingNewLine]Print[\*"\"\<g[x] = x - \
+\!\(f[x]\/\(f'\)[x]\)\>\""]; \ \[IndentingNewLine]Print["\<g[x] = \>", 
+          g[x]\ ]; \[IndentingNewLine]Print["\<g[x] = \>", 
+          Simplify[
+            g[x]]]; \[IndentingNewLine]Print[\*"\"\<  \!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 16]\ ]; \ \[IndentingNewLine]p1\  = \ 
+          p0; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ 
+            p1; \ \[IndentingNewLine]p1\  = \ 
+            p0\  - \ f[p0]\/\(f'\)[p0]; \ \[IndentingNewLine]k\  = \ 
+            k + 1; \ \ \[IndentingNewLine]Print["\<  p\>"\_k, "\< = \>", 
+            PaddedForm[p1, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p1], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<\>"]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \[IndentingNewLine]Print["\<  p  = \>", 
+          NumberForm[p1, 
+            16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p1 - p0]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p1], 16]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Fast Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(3  Exp[x] - 4  Cos[x]\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 3  Exp[x] - 4  Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 6;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0.0, 1.0}, PlotRange \[Rule] {{0, 1.0}, {\(-1\), 6}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], Range[\(-1\), 6, 1]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  ImageRegion->{{0, 1}, {0, 1}},
+  AnimationDisplayTime->8.65041],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Slow Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(1 - 10\ x + 25\ x\^2\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1 - 10\ x + 25\ x\^2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0.0, 1.0}, PlotRange \[Rule] {{0, 1}, {0, 16}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], Range[0, 16, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence, Oscillation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(ArcTan[x]\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.35\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\), "\[IndentingNewLine]", 
+    \(\(p0 = 1.35;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 7;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3.0\), 2.0}, 
+        PlotRange \[Rule] {{\(-3.0\), 2.0}, {\(-1.25\), 1.15}}, 
+        Ticks \[Rule] {Range[\(-3\), 2, 0.5], Range[\(-1\), 1, 0.5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtoncc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtoncc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["NON Convergence, Cycling",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(x\^3 - x + 3\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 0.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - x + 3;\)\), "\[IndentingNewLine]", 
+    \(\(p0 = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 16;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-0.5\), 3.5}, 
+        PlotRange \[Rule] {{\(-0.5\), 3.5}, {\(-1\), 30}}, 
+        Ticks \[Rule] {Range[0, 3, 1], Range[0, 30, 10]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtondd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtondd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox["NON Convergence, Diverging to Infinity",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(x\ \[ExponentialE]\^\(-x\)\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 2.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\ \[ExponentialE]\^\(-x\);\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 2.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 16;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 10.1}, PlotRange \[Rule] {{0, 10.1}, {0, 0.4}}, 
+        Ticks \[Rule] {Range[0, 10, 1], Range[0, 0.5, 0.1]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["NON Convergence, Divergent Oscillation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(ArcTan[x]\  = \ 0\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.4\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\), "\[IndentingNewLine]", 
+    \(\(p0 = 1.4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(NewtonRaphson[p0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3.0\), 2.0}, 
+        PlotRange \[Rule] {{\(-3.0\), 2.0}, {\(-1.25\), 1.15}}, 
+        Ticks \[Rule] {Range[\(-3\), 2, 0.5], Range[\(-1\), 1, 0.5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/Newtonff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " ",
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+NewtonMethod/NewtonMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+NewtonMethod/NewtonMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " ",
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/nr.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/nr.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Newton'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  "Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Raphson", "solset"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 168, 4, 35, "Text"],
+Cell[1947, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3426, 111, 4512, 148, 207, "Text"],
+Cell[7941, 261, 641, 22, 33, "Text"],
+Cell[8585, 285, 1109, 36, 77, "Text"],
+Cell[9697, 323, 620, 20, 33, "Text"],
+Cell[10320, 345, 154, 2, 33, "Text"],
+Cell[10477, 349, 1069, 18, 310, "Input"],
+Cell[11549, 369, 583, 18, 76, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[12157, 391, 101, 2, 33, "Text"],
+Cell[12261, 395, 172, 3, 50, "Input"],
+Cell[12436, 400, 35, 0, 33, "Text"],
+Cell[12474, 402, 372, 6, 70, "Input"],
+Cell[12849, 410, 57, 0, 33, "Text"],
+Cell[12909, 412, 213, 3, 50, "Input"],
+Cell[13125, 417, 63, 0, 33, "Text"],
+Cell[13191, 419, 272, 4, 105, "Input"],
+Cell[13466, 425, 307, 7, 33, "Text"],
+Cell[13776, 434, 41, 1, 30, "Input"],
+Cell[13820, 437, 43, 1, 30, "Input"],
+Cell[13866, 440, 43, 1, 30, "Input"],
+Cell[13912, 443, 43, 1, 30, "Input"],
+Cell[13958, 446, 43, 1, 30, "Input"],
+Cell[14004, 449, 43, 1, 30, "Input"],
+Cell[14050, 452, 43, 1, 30, "Input"],
+Cell[14096, 455, 59, 1, 30, "Input"],
+Cell[14158, 458, 236, 7, 52, "Text"],
+Cell[14397, 467, 59, 1, 30, "Input"],
+Cell[14459, 470, 109, 5, 33, "Text"],
+Cell[14571, 477, 59, 1, 30, "Input"],
+Cell[14633, 480, 148, 5, 33, "Text"],
+Cell[14784, 487, 142, 2, 50, "Input"],
+Cell[14929, 491, 154, 5, 33, "Text"],
+Cell[15086, 498, 229, 4, 70, "Input"]
+}, Closed]],
+Cell[15330, 505, 761, 21, 87, "Text"],
+Cell[16094, 528, 947, 30, 52, "Text"],
+Cell[17044, 560, 2900, 91, 190, "Text"],
+Cell[19947, 653, 1651, 49, 130, "Text"],
+Cell[21601, 704, 641, 22, 33, "Text"],
+Cell[22245, 728, 882, 30, 109, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[23152, 762, 101, 2, 33, "Text"],
+Cell[23256, 766, 157, 3, 50, "Input"],
+Cell[23416, 771, 35, 0, 33, "Text"],
+Cell[23454, 773, 369, 6, 70, "Input"],
+Cell[23826, 781, 63, 0, 33, "Text"],
+Cell[23892, 783, 272, 4, 105, "Input"],
+Cell[24167, 789, 450, 12, 90, "Text"],
+Cell[24620, 803, 46, 1, 30, "Input"],
+Cell[24669, 806, 43, 1, 30, "Input"],
+Cell[24715, 809, 43, 1, 30, "Input"],
+Cell[24761, 812, 43, 1, 30, "Input"],
+Cell[24807, 815, 43, 1, 30, "Input"],
+Cell[24853, 818, 43, 1, 30, "Input"],
+Cell[24899, 821, 43, 1, 30, "Input"],
+Cell[24945, 824, 165, 6, 33, "Text"],
+Cell[25113, 832, 64, 1, 30, "Input"],
+Cell[25180, 835, 833, 24, 82, "Text"],
+Cell[26016, 861, 788, 15, 186, "Input"],
+Cell[26807, 878, 204, 8, 38, "Text"],
+Cell[27014, 888, 140, 2, 44, "Input"],
+Cell[27157, 892, 192, 6, 39, "Text"],
+Cell[27352, 900, 437, 12, 90, "Text"],
+Cell[27792, 914, 41, 1, 30, "Input"],
+Cell[27836, 917, 43, 1, 30, "Input"],
+Cell[27882, 920, 43, 1, 30, "Input"],
+Cell[27928, 923, 43, 1, 30, "Input"],
+Cell[27974, 926, 43, 1, 30, "Input"],
+Cell[28020, 929, 43, 1, 30, "Input"],
+Cell[28066, 932, 43, 1, 30, "Input"],
+Cell[28112, 935, 162, 6, 33, "Text"],
+Cell[28277, 943, 60, 1, 30, "Input"],
+Cell[28340, 946, 713, 24, 80, "Text"],
+Cell[29056, 972, 774, 15, 185, "Input"],
+Cell[29833, 989, 148, 5, 33, "Text"],
+Cell[29984, 996, 142, 2, 50, "Input"],
+Cell[30129, 1000, 154, 5, 33, "Text"],
+Cell[30286, 1007, 229, 4, 70, "Input"]
+}, Closed]],
+Cell[30530, 1014, 594, 16, 107, "Text"],
+Cell[31127, 1032, 187, 4, 35, "Text"],
+Cell[31317, 1038, 748, 13, 270, "Input"],
+Cell[32068, 1053, 75, 0, 33, "Text"],
+Cell[32146, 1055, 172, 3, 50, "Input"],
+Cell[32321, 1060, 59, 1, 30, "Input"],
+Cell[32383, 1063, 59, 1, 30, "Input"],
+Cell[32445, 1066, 59, 1, 30, "Input"],
+Cell[32507, 1069, 185, 4, 35, "Text"],
+Cell[32695, 1075, 251, 7, 33, "Text"],
+Cell[32949, 1084, 890, 16, 290, "Input"],
+Cell[33842, 1102, 381, 8, 52, "Text"],
+Cell[34226, 1112, 172, 3, 50, "Input"],
+Cell[34401, 1117, 73, 1, 31, "Input"],
+Cell[34477, 1120, 310, 10, 35, "Text"],
+Cell[34790, 1132, 1509, 26, 482, "Input"],
+Cell[36302, 1160, 380, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[36707, 1178, 101, 2, 33, "Text"],
+Cell[36811, 1182, 576, 10, 130, "Input"],
+Cell[37390, 1194, 879, 29, 33, "Text"]
+}, Closed]],
+Cell[38284, 1226, 379, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[38688, 1244, 101, 2, 33, "Text"],
+Cell[38792, 1248, 502, 8, 130, "Input"],
+Cell[39297, 1258, 879, 29, 33, "Text"]
+}, Closed]],
+Cell[40191, 1290, 377, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[40593, 1308, 101, 2, 33, "Text"],
+Cell[40697, 1312, 531, 9, 130, "Input"],
+Cell[41231, 1323, 879, 29, 33, "Text"]
+}, Closed]],
+Cell[42125, 1355, 379, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[42529, 1373, 101, 2, 33, "Text"],
+Cell[42633, 1377, 517, 9, 130, "Input"],
+Cell[43153, 1388, 851, 29, 33, "Text"]
+}, Closed]],
+Cell[44019, 1420, 413, 15, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[44457, 1439, 101, 2, 33, "Text"],
+Cell[44561, 1443, 511, 8, 130, "Input"],
+Cell[45075, 1453, 879, 29, 33, "Text"]
+}, Closed]],
+Cell[45969, 1485, 390, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[46384, 1503, 101, 2, 33, "Text"],
+Cell[46488, 1507, 531, 9, 130, "Input"],
+Cell[47022, 1518, 879, 29, 33, "Text"]
+}, Closed]],
+Cell[47916, 1550, 762, 26, 30, "Text"],
+Cell[48681, 1578, 663, 22, 33, "Text"],
+Cell[49347, 1602, 158, 3, 35, "Text"],
+Cell[49508, 1607, 583, 18, 33, "Text"],
+Cell[50094, 1627, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

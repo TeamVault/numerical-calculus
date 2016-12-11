@@ -1,0 +1,1921 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     63984,       1764]*)
+(*NotebookOutlinePosition[     64650,       1787]*)
+(*  CellTagsIndexPosition[     64606,       1783]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Compartment Model",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Compartment Model I.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe \"compartment\" model is used to describe the concentration of a \
+dissolved substance in several compartments in a system.  For example, the \
+\"three-stage system\" consists of three tanks containing  ",
+  Cell[BoxData[
+      RowBox[{\(V\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(V\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(V\_3\)}]}]]],
+  "  gallons of solute.  Pure water flows at the rate  r  into the first tank \
+and is mixed, then flows at the rate  r  into the second tank and is mixed, \
+then flows at the rate  r  into the  third tank and is mixed, and finally \
+flows out of the third tank at the rate  r.  We define the constants  ",
+  Cell[BoxData[
+      RowBox[{\(k\_1 = \ r\/V\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(k\_2 = \ r\/V\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(k\_3\)}], "=", 
+          " ", \(r\/V\_3\)}]}]]],
+  ".  Then the differential equation for the system is \n\n\t",
+  Cell[BoxData[{\(\(d\ x\_1\)\/dt = \(-\ k\_1\) x\_1\), 
+    "\n", \(\(d\ x\_2\)\/dt = \ \ \ \ \(k\_1\) x\_1 - \ \(k\_2\) x\_2\), "\n",
+     
+      RowBox[{\(\(d\ x\_3\)\/dt = \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\(k\_2\) x\_2 - \ \(k\_3\) x\_3\), "\n"}], "\[IndentingNewLine]", 
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["the",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["initial",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            RowBox[{
+              StyleBox["conditions",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              StyleBox[":",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              StyleBox[" ",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "\[IndentingNewLine]", 
+              "\n", \(\(x\_1\) \((0)\)\)}]}], "=", \(a\_1\)}], " "}], "\n", 
+      RowBox[{\(\(x\_2\) \((0)\) = a\_2\), " "}], "\n", 
+      RowBox[{\(\(x\_3\) \((0)\) = a\_3\), " "}]}]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/CompartmentModelProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/CompartmentModelProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/CompartmentModelProg.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/CompartmentModelProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the solution to the \"three-stage system\" where  \n\n\t",
+  Cell[BoxData[
+      \(V\_1 = 80, V\_2 = 100, V\_3 = 120, r = 20\)]],
+  " \n\nwith the initial conditions  \n\n\t",
+  Cell[BoxData[
+      \(\(x\_1\) \((0)\) = 10, \(x\_2\) \((0)\) = 0, \(x\_3\) \((0)\) = 
+        0\)]],
+  ". \n\nPlot the solution curves for  ",
+  Cell[BoxData[
+      \(\(x\_1\) \((t)\), \(x\_2\) \((t)\), \(x\_3\) \((t)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(0\  \[LessEqual] \ t\  \[LessEqual] \ 40\)]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["For this enter the following volumes and rate of flow.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, k, r, v];\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_1\  = \ 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_2\  = \ 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_3\  = \ 120;\)\ \), "\[IndentingNewLine]", 
+    \(\(r\  = \ 20;\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(k\_1 = \ r\/v\_1;\), " "}], "\n", 
+    RowBox[{\(k\_2 = \ r\/v\_2;\), " "}], "\n", 
+    RowBox[{\(k\_3 = \ r\/v\_3;\), " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {\(-\ k\_1\), "0", "0"},
+                {\(k\_1\), \(-\ k\_2\), "0"},
+                {"0", \(k\_2\), \(-\ k\_3\)}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(Print["\<\>", MatrixForm[A]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Find the eigenvalues and eigenvectors of the matrix  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \), "\n", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", \[Lambda]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(V\_i\)} = \>\"", V];\)\ \)}], "Input"],
+
+Cell["\<\
+Construct the three vector eigenfunctions and the general solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X\_1[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\ \ \[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X\_2[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\ \
+\[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X\_3[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\ \
+\[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X[
+          t_]\  = \ \ \(c\_1\) X\_1[t]\  + \ \(c\_2\) X\_2[t]\  + \ \(c\_3\) 
+            X\_3[t];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(X\_1\)[t] = \>\"", \ 
+        MatrixForm[X\_1[t]]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(X\_2\)[t] = \>\"", \ 
+        MatrixForm[X\_2[t]]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(X\_3\)[t] = \>\"", \ 
+        MatrixForm[X\_3[t]]\ ];\)\ \), "\n", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X[t] = \>", \ MatrixForm[X[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The following calculation will verify that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  is the general solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", MatrixForm[A], 
+        MatrixForm[X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[A . X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[Expand[A . X[t]]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does X'[t]] = A X[t] ?\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[ExpandAll[\(X'\)[t]\  \[Equal] \ A . X[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now solve for the constants using the initial conditions, and replace \
+these values for the constants in  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  " and call the solution  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  ".  \nThen check out the initial condition  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "0", "]"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X[0];\)\ \), "\n", 
+    \(\(X0 = {10, 0, 0};\)\ \), "\n", 
+    \(\(Print["\<Solve  \>", \ MatrixForm[X[0]], "\< = \>", 
+        MatrixForm[X0]];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        Solve[\ X[0] \[Equal] X0, \ {\ c\_1, \ c\_2, \ c\_3}];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\t\t\>", 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]]\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(Y[t_] = 
+        ReplaceAll[\ X[t], \ 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \), "\n", 
+    \(\(Print["\<Form the solution\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", \ MatrixForm[Y[t]]\ ];\)\ \), "\n", 
+    \(\(Print["\<Y[0] = \>", \ MatrixForm[Y[0]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Extract the three coordinate functions from  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  and call them  ",
+  Cell[BoxData[
+      RowBox[{\(y\_1[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_2[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(y\_3[t]\)}]}]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(y\_1[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_2[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_3[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y[t_]\  = \ y\_1[t] + y\_2[t] + y\_3[t];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Plot the functions  ",
+  Cell[BoxData[
+      RowBox[{\(y\_1[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_2[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(y\_3[t]\)}]}]]],
+  " to see how the solute moves through the system of tanks. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[y\_1[t], {t, 0, 20}, PlotRange \[Rule] {{0, 20}, {0, 10}}, 
+        PlotStyle \[Rule] Red];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", 
+        y\_1[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_1\)[t] = \>\"", \ 
+        Limit[\ y\_1[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[y\_2[t], {t, 0, 20}, PlotRange \[Rule] {{0, 20}, {0, 10}}, 
+        PlotStyle \[Rule] Blue];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", 
+        y\_2[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_2\)[t] = \>\"", \ 
+        Limit[\ y\_2[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[y\_3[t], {t, 0, 20}, PlotRange \[Rule] {{0, 20}, {0, 10}}, 
+        PlotStyle \[Rule] Green];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", 
+        y\_3[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_3\)[t] = \>\"", \ 
+        Limit[\ y\_3[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Plot[{y\_1[t], y\_2[t], y\_3[t]}, {t, 0, 40}, 
+          PlotRange \[Rule] {{0, 20}, {0, 10}}, 
+          PlotStyle \[Rule] {Red, Blue, Green}];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "From your observations of the graphs, what do you conjecture about the \
+total amount of solute in the system at time t, \ni.e. what can you say about \
+the sum  ",
+  Cell[BoxData[
+      \(y[t]\  = \ y\_1[t] + y\_2[t] + y\_3[t]\)]],
+  ".  \nPlot the graph of the sum over the interval  ",
+  Cell[BoxData[
+      \(0\  \[LessEqual] \ t\  \[LessEqual] \ 40\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph = 
+        Plot[y[t], {t, 0, 40}, PlotRange \[Rule] {{0, 40}, {0, 10}}, 
+          PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y[t] = \!\(y\_1\)[t] + \!\(y\_2\)[t] + \
+\!\(y\_3\)[t]\>\""\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", y[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", "\< y[t] = \
+\>", \ Limit[\ y[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "What is the limit of the sum  ",
+  Cell[BoxData[
+      RowBox[{\(y[t]\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{\(y\_1[t]\), "+", \(y\_2[t]\), "+", 
+            RowBox[{\(y\_3[t]\), "  ", 
+              StyleBox["as",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "  ", "t"}]}], "\[Rule]", 
+          "\[Infinity]"}]}]]],
+  " ? \nDid you suspect that this was going to happen ?  \nWhy ",
+  "should",
+  " you expect this to happen ? "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph, gr];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y[t] = \!\(y\_1\)[t] + \!\(y\_2\)[t] + \
+\!\(y\_3\)[t]\>\""\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", y[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We could look at the portion of the chemical in each compartments over time, \
+and see how it works its way out of the system over time.  
+
+This is just for fun !\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[\ {Release[y\_1[t]], Release[y\_1[t] + y\_2[t]], 
+          Release[y\_1[t] + y\_2[t] + y\_3[t]]}, {t, 0, 
+          40}, \[IndentingNewLine]Fills \[Rule] {{{1, Axis}, Red}, {{1, 2}, 
+              Blue}, {{2, 3}, Green}}, \[IndentingNewLine]Curves \[Rule] 
+          Front, PlotRange \[Rule] {{0, 40}, {0, 
+              10}}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<            \!\(y\_1\)[t] = \>\"", 
+        y\_1[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<      \!\(y\_1\)[t]+\!\(y\_2\)[t] = \>\"", 
+        y\_1[t] + y\_2[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t]+\!\(y\_2\)[t]+\!\(y\_3\)[t] = \>\"", 
+        y\_1[t] + y\_2[t] + y\_3[t]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Compartment Model II.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tAnother \"compartment\" model is used to describe the concentration \
+of a dissolved substance in several compartments in a system.  For example, \
+the \"closed\" three-stage system consists of three tanks containing  ",
+  Cell[BoxData[
+      RowBox[{\(V\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(V\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(V\_3\)}]}]]],
+  "  gallons of solute.  The liquid flows at the rate  ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  "  from the first tank and is mixed, then flows at the rate  ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  "  into the second tank and is mixed, then flows at the rate  ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  "  into the  third tank and is mixed, and finally flows out of the third \
+tank and back into the first tank at the rate ",
+  StyleBox["r",
+    FontFamily->"Courier New"],
+  ".  We define the constants  ",
+  Cell[BoxData[
+      RowBox[{\(k\_1 = \ r\/V\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(k\_2 = \ r\/V\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(k\_3\)}], "=", 
+          " ", \(r\/V\_3\)}]}]]],
+  ".  Then the differential equation for the system is\n\n\t",
+  Cell[BoxData[{\(\(d\ x\_1\)\/dt = \(-\ k\_1\) 
+            x\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \  + \ \(k\_3\) x\_3\), 
+    "\n", \(\(d\ x\_2\)\/dt = \ \ \ \ \(k\_1\) x\_1 - \ \(k\_2\) x\_2\), "\n",
+     
+      RowBox[{\(\(d\ x\_3\)\/dt = \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\(k\_2\) x\_2 - \ \(k\_3\) x\_3\), "\n"}], "\[IndentingNewLine]", 
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["the",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["initial",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            RowBox[{
+              StyleBox["conditions",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              StyleBox[":",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              StyleBox[" ",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "\[IndentingNewLine]", 
+              "\n", \(\(x\_1\) \((0)\)\)}]}], "=", \(a\_1\)}], " "}], "\n", 
+      RowBox[{\(\(x\_2\) \((0)\) = a\_2\), " "}], "\n", 
+      RowBox[{\(\(x\_3\) \((0)\) = a\_3\), " "}]}]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the solution to the \"closed\" three-stage system where  \n\n\t",
+  Cell[BoxData[
+      \(V\_1 = 40, V\_2 = 20, V\_3 = 40, r = 20\)]],
+  " \n\nwith the initial conditions  \n\n\t",
+  Cell[BoxData[
+      \(\(x\_1\) \((0)\) = 10, \(x\_2\) \((0)\) = 0, \(x\_3\) \((0)\) = 
+        0\)]],
+  ". \n\nPlot the solution curves for  ",
+  Cell[BoxData[
+      \(\(x\_1\) \((t)\), \(x\_2\) \((t)\), \(x\_3\) \((t)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(0\  \[LessEqual] \ t\  \[LessEqual] \ 5\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["For this enter the following volumes and rate of flow.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, k, r, v];\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_1\  = \ 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_2\  = \ 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_3\  = \ 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(r\  = \ 20;\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(k\_1 = \ r\/v\_1;\), " "}], "\n", 
+    RowBox[{\(k\_2 = \ r\/v\_2;\), " "}], "\n", 
+    RowBox[{\(k\_3 = \ r\/v\_3;\), " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {\(-\ k\_1\), "0", \(k\_3\)},
+                {\(k\_1\), \(-\ k\_2\), "0"},
+                {"0", \(k\_2\), \(-\ k\_3\)}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(Print["\<\>", MatrixForm[A]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Find the eigenvalues and eigenvectors of the matrix  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \), "\n", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", \[Lambda]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(V\_i\)} = \>\"", V];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The first two eigenvalues are complex, and the corresponding eigenvectors \
+involve complex numbers.  \nWe can verify that  ",
+  Cell[BoxData[
+      \(V\_1\ \  = \ {\(-\(1\/2\)\) + \[ImaginaryI]\/2, \(-\(1\/2\)\) - \
+\[ImaginaryI]\/2, 1}\)]],
+  "  is the eigenvector that corresponds to the eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1\  = \ \(-1\) - \[ImaginaryI]\/2\)]],
+  ".  \nThis is just for fun.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(AV\_1\) = \>\"", MatrixForm[A], 
+        MatrixForm[
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)], "\< \
+= \>", MatrixForm[
+          A . V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(\[Lambda]\_1\)\!\(V\_1\)  =  (\>\"", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+"\<)\>", MatrixForm[
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)], "\< \
+= \>", MatrixForm[\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\) 
+            V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]];\)\
+\ \ \)}], "Input"],
+
+Cell["\<\
+Construct the three vector eigenfunctions and the general solution. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X\_1[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\ \ \[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X\_2[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\ \
+\[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X\_3[t_] = 
+        V\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\ \
+\[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\ t\);\)\ \), "\n", 
+    \(\(X[
+          t_]\  = \ \ \(c\_1\) X\_1[t]\  + \ \(c\_2\) X\_2[t]\  + \ \(c\_3\) 
+            X\_3[t];\)\ \), "\n", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_1\)[t] = \>\"", \ 
+        MatrixForm[X\_1[t]]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(X\_2\)[t] = \>\"", \ 
+        MatrixForm[X\_2[t]]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(X\_3\)[t] = \>\"", \ 
+        MatrixForm[X\_3[t]]\ ];\)\ \), "\n", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X[t] = \>", \ MatrixForm[X[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The following calculation will verify that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  is the general solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", MatrixForm[A], 
+        MatrixForm[X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[A . X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[Expand[A . X[t]]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does X'[t]] = A X[t] ?\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[ExpandAll[\(X'\)[t]\  \[Equal] \ A . X[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now solve for the constants using the initial conditions, and replace \
+these values for the constants in  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  " and call the solution  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  ".  \nThen check out the initial condition  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "0", "]"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[X[0] == {10, 0, 0}];\)\), "\[IndentingNewLine]", 
+    \(solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)}], \
+"Input"],
+
+Cell[BoxData[{
+    \(\(Y[t_]\  = \ 
+        ReplaceAll[X[t], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", 
+        MatrixForm[Y[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y[t_]\  = \ ComplexExpand[Y[t]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", 
+        MatrixForm[Y[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[0] = \>", MatrixForm[Y[0]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We are done and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  is the desired solution.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can also find the solution using the matrix exponential."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F[t_] = ComplexExpand[\ MatrixExp[\((A\ t)\)]\ ];\)\ \), "\n", 
+    \(\(Print["\<F[t] = \>", MatrixForm[F[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The general solution ",
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  is constructed from the matrix exponential."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(C\&\[RightVector]\  = \ {{c\_1}, {c\_2}, {c\_3}};\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(X[t_]\  = \ F[t] . C\&\[RightVector];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X[t] =  F[t].\>", 
+        MatrixForm[C\&\[RightVector]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X[t] = \>", MatrixForm[X[t]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The following calculation will verify that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  is the general solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", MatrixForm[A], 
+        MatrixForm[X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[A . X[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X'[t]] = A X[t]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< = \>", 
+        MatrixForm[Expand[A . X[t]]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does X'[t]] = A X[t] ?\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[ExpandAll[\(X'\)[t]\  \[Equal] \ A . X[t]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now solve for the constants using the initial conditions, and replace \
+these values for the constants in  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  " and call the solution  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Z",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  ".  \nThen check out the initial condition  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Z",
+          FontWeight->"Bold"], "[", "0", "]"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Z[t_]\), " ", "=", " ", 
+          RowBox[{\(F[t]\), ".", 
+            RowBox[{"(", GridBox[{
+                  {"10"},
+                  {"0"},
+                  {"0"}
+                  }], ")"}]}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Z[t] = \>", MatrixForm[Z[t]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Z[0] = \>", MatrixForm[Z[0]]];\), " "}]}], "Input"],
+
+Cell["\<\
+Observe that this is the same as the first solution we obtained. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Y[t] = \>", 
+        MatrixForm[Y[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Z[t] = \>", 
+        MatrixForm[Z[t]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Z[t] = \>", MatrixForm[Expand[Z[t]]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Extract the three coordinate functions from  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  and call them  ",
+  Cell[BoxData[
+      RowBox[{\(y\_1[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_2[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(y\_3[t]\)}]}]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(y\_1[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_2[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_3[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y[t_]\  = \ y\_1[t] + y\_2[t] + y\_3[t];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Plot the functions  ",
+  Cell[BoxData[
+      RowBox[{\(y\_1[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_2[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(y\_3[t]\)}]}]]],
+  " to see how the solute moves through the system of tanks. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[y\_1[t], {t, 0, 5}, PlotRange \[Rule] {{0, 5}, {0, 10}}, 
+        PlotStyle \[Rule] Red];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", 
+        y\_1[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_1\)[t] = \>\"", \ 
+        Limit[\ y\_1[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[y\_2[t], {t, 0, 5}, PlotRange \[Rule] {{0, 5}, {0, 10}}, 
+        PlotStyle \[Rule] Blue];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", 
+        y\_2[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_2\)[t] = \>\"", \ 
+        Limit[\ y\_2[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[y\_3[t], {t, 0, 5}, PlotRange \[Rule] {{0, 5}, {0, 10}}, 
+        PlotStyle \[Rule] Green];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", 
+        y\_3[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(lim\+\(t \[Rule] \[Infinity]\)\)\>\"", \*"\"\< \!\(y\
+\_3\)[t] = \>\"", \ 
+        Limit[\ y\_3[t], t \[Rule] \[Infinity]\ ]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Plot[{y\_1[t], y\_2[t], y\_3[t]}, {t, 0, 5}, 
+          PlotRange \[Rule] {{0, 5}, {0, 10}}, 
+          PlotStyle \[Rule] {Red, Blue, Green}];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "From your observations of the graphs, what do you conjecture about the \
+total amount of solute in the system at time t, \ni.e. what can you say about \
+the sum  ",
+  Cell[BoxData[
+      \(y[t]\  = \ y\_1[t] + y\_2[t] + y\_3[t]\)]],
+  ".  \nPlot the graph of the sum over the interval  ",
+  Cell[BoxData[
+      \(0\  \[LessEqual] \ t\  \[LessEqual] \ 5\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph = 
+        Plot[y[t], {t, 0, 5}, PlotRange \[Rule] {{0, 5}, {0, 10}}, 
+          PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y[t] = \!\(y\_1\)[t] + \!\(y\_2\)[t] + \
+\!\(y\_3\)[t]\>\""\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", y[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Did you suspect that this was going to happen ?  
+Why should you expect this to happen ? \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph, gr];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y[t] = \!\(y\_1\)[t] + \!\(y\_2\)[t] + \
+\!\(y\_3\)[t]\>\""\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", y[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", \ y\_1[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", \ y\_2[t]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", \ y\_3[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We could look at how the three curves \"stack up.\"   
+
+This is just for fun !\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[\ {Release[y\_1[t]], Release[y\_1[t] + y\_2[t]], 
+          Release[y\_1[t] + y\_2[t] + y\_3[t]]}, {t, 0, 
+          5}, \[IndentingNewLine]Fills \[Rule] {{{1, Axis}, Red}, {{1, 2}, 
+              Blue}, {{2, 3}, Green}}, \[IndentingNewLine]Curves \[Rule] 
+          Front, PlotRange \[Rule] {{0, 5}, {0, 
+              10}}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<            \!\(y\_1\)[t] = \>\"", 
+        y\_1[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<      \!\(y\_1\)[t]+\!\(y\_2\)[t] = \>\"", 
+        y\_1[t] + y\_2[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t]+\!\(y\_2\)[t]+\!\(y\_3\)[t] = \>\"", 
+        y\_1[t] + y\_2[t] + y\_3[t]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Compartment Model III.\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\tThe \"five-stage system\" consists of five tanks containing  ",
+  Cell[BoxData[
+      RowBox[{\(v\_1\), ",", \(v\_2\), ",", \(v\_3\), ",", \(v\_4\), ",", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], " ", \(v\_5\)}]}]]],
+  "  gallons of solute.  Pure water flows at the rate ",
+  Cell[BoxData[
+      \(r\)]],
+  " into the first tank and is mixed, then flows at the rate ",
+  Cell[BoxData[
+      \(r\)]],
+  " into the second tank and is mixed, then flows at the rate ",
+  Cell[BoxData[
+      \(r\)]],
+  " into successive tanks and is mixed, and finally flows out of the fifth \
+tank at the rate ",
+  Cell[BoxData[
+      \(r\)]],
+  ".  \nWe define the constants  ",
+  Cell[BoxData[
+      \(k\_1 = r\/v\_1\)]],
+  ", ",
+  Cell[BoxData[
+      \(k\_2 = r\/v\_2\)]],
+  ", ",
+  Cell[BoxData[
+      \(k\_3 = r\/v\_3\)]],
+  ", ",
+  Cell[BoxData[
+      \(k\_4 = r\/v\_4\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(k\_5 = r\/v\_5\)]],
+  ".  Then the differential equation for the system is \n\n\t",
+  Cell[BoxData[{
+      \(\(d\ x\_1\)\/dt = \(-\ k\_1\) x\_1\), "\n", 
+      \(\(d\ x\_2\)\/dt = \ \ \ \ \(k\_1\) x\_1 - \ \(k\_2\) x\_2\), "\n", 
+      \(\(d\ x\_3\)\/dt = \ \ \ \ \(k\_2\) x\_2 - \ \(k\_3\) x\_3\), 
+    "\[IndentingNewLine]", 
+      \(\(d\ x\_4\)\/dt = \ \ \ \ \(k\_3\) x\_3 - \ \(k\_4\) x\_4\), 
+    "\[IndentingNewLine]", 
+      \(\(d\ x\_5\)\/dt = \ \ \ \ \(k\_4\) x\_4 - \ \(k\_5\) x\_5\)}]],
+  "    \n\nwith the initial conditions    \n\n\t",
+  Cell[BoxData[{
+      \(\(x\_1\) \((0)\) = a\_1\), "\n", 
+      \(\(x\_2\) \((0)\) = a\_2\), "\n", 
+      \(\(x\_3\) \((0)\) = a\_3\), "\n", 
+      \(\(x\_4\) \((0)\) = a\_4\), "\n", 
+      \(\(x\_5\) \((0)\) = a\_5\)}]],
+  "\n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " For a tractable example, if the size of the tanks is increasing then \
+ordinary eigenvectors are obtained to form the solution.  Otherwise, the \
+system might require \"generalized eigenvectors\" which are important, but we \
+do not want to digress in that direction in this module. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the solution to the \"five-stage system\" where  \n\n\t",
+  Cell[BoxData[
+      \(V\_1 = 60, V\_2 = 80, V\_3 = 100, V\_4 = 120, V\_5 = 150, r = 24\)]],
+  "   \n\nwith the initial conditions   \n\n\t",
+  Cell[BoxData[
+      \(\(x\_1\) \((0)\) = 10, \(x\_2\) \((0)\) = 0, \(x\_3\) \((0)\) = 
+        0, \(x\_5\) \((0)\) = 0, \(x\_5\) \((0)\) = 0\)]],
+  ".  \n\nPlot the solution curves for  ",
+  Cell[BoxData[
+      \(\(x\_1\) \((t)\), \(x\_2\) \((t)\), \(x\_3\) \((t)\), \(x\_4\) \
+\((t)\), \(x\_5\) \((t)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 50\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, k, r, v];\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_1\  = \ 60;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_2\  = \ 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_3\  = \ 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_4\  = \ 120;\)\ \), "\[IndentingNewLine]", 
+    \(\(v\_5\  = \ 150;\)\ \), "\[IndentingNewLine]", 
+    \(\(r\  = \ 24;\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(k\_1 = \ r\/v\_1;\), " "}], "\n", 
+    RowBox[{\(k\_2 = \ r\/v\_2;\), " "}], "\n", 
+    RowBox[{\(k\_3 = \ r\/v\_3;\), " "}], "\n", 
+    RowBox[{\(k\_4 = \ r\/v\_4;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(k\_5 = \ r\/v\_5;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {\(-k\_1\), "0", "0", "0", "0"},
+                {\(k\_1\), \(-k\_2\), "0", "0", "0"},
+                {"0", \(k\_2\), \(-k\_3\), "0", "0"},
+                {"0", "0", \(k\_3\), \(-k\_4\), "0"},
+                {"0", "0", "0", \(k\_4\), \(-k\_5\)}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(Print["\<\>", MatrixForm[A]];\), " "}]}], "Input"],
+
+Cell["Find the eigenvalues and eigenvectors.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \), "\n", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", \[Lambda]];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(V\_i\)} = \>\"", V];\)\ \)}], "Input"],
+
+Cell["The parts forming the general solution are:", "Text"],
+
+Cell[BoxData[
+    \(\(\(\[ExponentialE]\^\(\[Lambda]\ t\)\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(V\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+There are five eigenfunctions involved in the solution.  Recall that the \
+first eigenfunction will be  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\) \
+\[ExponentialE]\^\(\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\ t\)\)], "Input"],
+
+Cell["\<\
+The next formula constructs the general solution which is the linear \
+combination of the eigenfunctions.  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X[
+          t_]\  = \[Sum]\+\(i = 1\)\%5\( 
+                c\_i\) \(V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\) \[ExponentialE]\^\(\[Lambda]\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ t\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X[t] = \>", MatrixForm[X[t]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The following calculation will verify that ",
+  Cell[BoxData[
+      \(X[t]\)]],
+  " is the general solution.  This is just for fun !  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[\(X'\)[t]], "\< = \>", 
+        MatrixForm[A . X[t]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[\(X'\)[t]], "\< = \>", 
+        MatrixForm[Expand[A . X[t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(eqn = \(X'\)[t]\  \[Equal] \ A . X[t]\ ;\)\ \), "\n", 
+    \(\(Print["\<Does X'[t] \[Equal] A.X[t] ?\>"];\)\), "\n", 
+    \(MapAll[\ Expand, eqn\ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Now solve for the constants using the initial conditions, and replace \
+these values for the constants in ",
+  Cell[BoxData[
+      \(X[t]\)]],
+  " and call the solution ",
+  Cell[BoxData[
+      \(Y[t]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = \ X[0] \[Equal] {10, 0, 0, 0, 0};\)\ \ \), "\n", 
+    \(\(vars = {c\_1, c\_2, c\_3, c\_4, 
+          c\_5};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[eqns];\)\ \ \), "\n", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<\t\t\>", 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]]\
+;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Y[t_] = 
+        ReplaceAll[\ X[t], \ 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \), "\n", 
+    \(\(Print["\<Form the solution\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", \ MatrixForm[Y[t]]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<Y[0] = \>", \ \ MatrixForm[Y[0]]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Extract the five coordinate functions from  ",
+  Cell[BoxData[
+      \(Y[t]\)]],
+  "  and call them  ",
+  Cell[BoxData[
+      \(Y\_i[t]\)]],
+  ".  \nIf this is done with one command then the syntax  \"",
+  Cell[BoxData[
+      \( := \)]],
+  "\"  rule delayed must be used, because the value of i is and unknown \
+integer until the function is called. \nNote that the output is not printed \
+with the rule delayed construction. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Y\_i_[
+        t]\)\(\ \)\(:=\)\(\ \)\(\(Y[
+            t]\)\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)\
+\(\ \ \)\)\)], "Input"],
+
+Cell["Print them out now if you are curious. ", "Text"],
+
+Cell[BoxData[
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \[IndentingNewLine]\(Print["\<Y\>"\_i, "\<[t] = \>", 
+            Y\_i[t]];\)\ ];\)\)], "Input"],
+
+Cell["\<\
+Plot the functions to see how the solute moves through the system of \
+compartments.
+The extra command \"Evaluate\" must be used in the \"Plot\" command if things \
+are done in this automated fashion. \"Release\" will also work.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(clr = {Red, Brown, \ Orange, \ Green, \ 
+          Blue};\)\), "\[IndentingNewLine]", 
+    \(\(gr = {0, 0, 0, 0, 0};\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \
+\[IndentingNewLine]gr\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = Plot[\ Evaluate[Y\_i[t]], {t, 0, 50}, 
+            PlotRange \[Rule] {{0, 50}, {0, 10}}, 
+            PlotStyle \[Rule] 
+              clr\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+; \ \ \[IndentingNewLine]Print["\<Y\>"\_i, "\<[t] = \>", 
+          Y\_i[t]];\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[gr];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \(Print["\<Y\>"\_i, "\<[t] = \>", 
+            Y\_i[t]];\)\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "From your observations of the graphs, what do you conjecture about the \
+total amount of solute in the system at time t, i.e. what can you say about \
+the sum  ",
+  Cell[BoxData[
+      \(\(y\_1\) \((t)\) + \(y\_2\) \((t)\) + \(y\_3\) \((t)\) + \(y\_4\) \
+\((t)\) + \(y\_5\) \((t)\)\)]],
+  ".  Plot the graph of the sum over the interval  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 50\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(s[t_] = \(\(Y\_1[t]\)\(+\)\(Y\_2[t]\)\(+\)\(Y\_3[t]\)\(+\)\(Y\_4[
+          t]\)\(+\)\(Y\_5[t]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(graph = 
+        Plot[s[t], {t, 0, 50}, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "What is the limit of the sum  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(y\_1\) \((t)\)\), "+", \(\(y\_2\) \((t)\)\), 
+          "+", \(\(y\_3\) \((t)\)\), "+", \(\(y\_4\) \((t)\)\), "+", 
+          RowBox[{\(y\_5\), \((t)\), "  ", 
+            StyleBox["as",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", "t"}]}], "\[Rule]", 
+        "\[Infinity]"}]]],
+  " ? \nDid you suspect that this was going to happen ?  \nWhy ",
+  "should",
+  " you expect this to happen ?"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Limit[s[t], t \[Rule] \[Infinity]]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[graph, gr];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \(Print["\<Y\>"\_i, "\<[t] = \>", 
+            Y\_i[t]];\)\ ];\)\)}], "Input"],
+
+Cell["\<\
+We could look at the portion of the chemical in each compartments over time, \
+and see how it works its way out of the system over time.  
+
+This is just for fun !  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[\ {Release[Y\_1[t]], Release[Y\_1[t] + Y\_2[t]], 
+          Release[Y\_1[t] + Y\_2[t] + Y\_3[t]], 
+          Release[Y\_1[t] + Y\_2[t] + Y\_3[t] + Y\_4[t]], 
+          Release[Y\_1[t] + Y\_2[t] + Y\_3[t] + Y\_4[t] + Y\_5[t]]}, {t, 0, 
+          50}, Fills \[Rule] {{{1, Axis}, Red}, {{1, 2}, Brown}, {{2, 3}, 
+              Orange}, {{3, 4}, Green}, {{4, 5}, Blue}}, 
+        Curves \[Rule] Front, 
+        PlotRange \[Rule] {{0, 50}, {0, 
+              10}}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<                         \!\(Y\_1\)[t] = \>\"", 
+        Y\_1[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<                   \!\(Y\_1\)[t]+\!\(Y\_2\)[t] = \>\"", 
+        Y\_1[t] + Y\_2[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<             \!\(Y\_1\)[t]+\!\(Y\_2\)[t]+\!\(Y\_3\)[t] = \
+\>\"", Y\_1[t] + Y\_2[t] + Y\_3[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<      \!\(Y\_1\)[t]+\!\(Y\_2\)[t]+\!\(Y\_3\)[t]+\!\(Y\_4\
+\)[t]] = \>\"", 
+        Y\_1[t] + Y\_2[t] + Y\_3[t] + 
+          Y\_4[t]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_1\)[t]+\!\(Y\_2\)[t]+\!\(Y\_3\)[t]+\!\(Y\_4\)[t]+\
+\!\(Y\_5\)[t]] = \>\"", 
+        Y\_1[t] + Y\_2[t] + Y\_3[t] + Y\_4[t] + Y\_5[t]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/N310/projects2/e14.htm"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/N310/projects2/e14.htm"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/CompartmentModelBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Compartment Model",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/CompartmentModelBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 174, 4, 35, "Text"],
+Cell[1953, 59, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3432, 111, 5972, 153, 336, "Text"],
+Cell[9407, 266, 640, 22, 33, "Text"],
+Cell[10050, 290, 626, 21, 33, "Text"],
+Cell[10679, 313, 615, 18, 185, "Text"],
+
+Cell[CellGroupData[{
+Cell[11319, 335, 101, 2, 33, "Text"],
+Cell[11423, 339, 72, 0, 33, "Text"],
+Cell[11498, 341, 274, 5, 110, "Input"],
+Cell[11775, 348, 193, 9, 34, "Text"],
+Cell[11971, 359, 496, 12, 184, "Input"],
+Cell[12470, 373, 165, 6, 34, "Text"],
+Cell[12638, 381, 285, 5, 90, "Input"],
+Cell[12926, 388, 91, 2, 33, "Text"],
+Cell[13020, 392, 1157, 23, 191, "Input"],
+Cell[14180, 417, 211, 7, 33, "Text"],
+Cell[14394, 426, 1028, 17, 290, "Input"],
+Cell[15425, 445, 536, 18, 52, "Text"],
+Cell[15964, 465, 858, 18, 210, "Input"],
+Cell[16825, 485, 1132, 35, 33, "Text"],
+Cell[17960, 522, 645, 13, 153, "Input"],
+Cell[18608, 537, 1038, 30, 33, "Text"],
+Cell[19649, 569, 473, 8, 98, "Input"],
+Cell[20125, 579, 404, 7, 78, "Input"],
+Cell[20532, 588, 422, 7, 78, "Input"],
+Cell[20957, 597, 487, 8, 110, "Input"],
+Cell[21447, 607, 396, 10, 71, "Text"],
+Cell[21846, 619, 500, 8, 98, "Input"],
+Cell[22349, 629, 716, 19, 71, "Text"],
+Cell[23068, 650, 473, 7, 130, "Input"],
+Cell[23544, 659, 186, 5, 71, "Text"],
+Cell[23733, 666, 904, 14, 170, "Input"]
+}, Closed]],
+Cell[24652, 683, 6280, 164, 336, "Text"],
+Cell[30935, 849, 620, 18, 185, "Text"],
+
+Cell[CellGroupData[{
+Cell[31580, 871, 101, 2, 33, "Text"],
+Cell[31684, 875, 72, 0, 33, "Text"],
+Cell[31759, 877, 272, 5, 110, "Input"],
+Cell[32034, 884, 193, 9, 34, "Text"],
+Cell[32230, 895, 501, 12, 184, "Input"],
+Cell[32734, 909, 165, 6, 34, "Text"],
+Cell[32902, 917, 285, 5, 90, "Input"],
+Cell[33190, 924, 443, 10, 74, "Text"],
+Cell[33636, 936, 740, 14, 50, "Input"],
+Cell[34379, 952, 92, 2, 33, "Text"],
+Cell[34474, 956, 1213, 24, 211, "Input"],
+Cell[35690, 982, 211, 7, 33, "Text"],
+Cell[35904, 991, 1028, 17, 290, "Input"],
+Cell[36935, 1010, 536, 18, 52, "Text"],
+Cell[37474, 1030, 176, 3, 50, "Input"],
+Cell[37653, 1035, 487, 10, 110, "Input"],
+Cell[38143, 1047, 335, 11, 71, "Text"],
+Cell[38481, 1060, 154, 2, 50, "Input"],
+Cell[38638, 1064, 215, 8, 33, "Text"],
+Cell[38856, 1074, 355, 6, 94, "Input"],
+Cell[39214, 1082, 211, 7, 33, "Text"],
+Cell[39428, 1091, 1028, 17, 290, "Input"],
+Cell[40459, 1110, 536, 18, 52, "Text"],
+Cell[40998, 1130, 470, 12, 100, "Input"],
+Cell[41471, 1144, 89, 2, 33, "Text"],
+Cell[41563, 1148, 264, 5, 70, "Input"],
+Cell[41830, 1155, 1132, 35, 33, "Text"],
+Cell[42965, 1192, 645, 13, 153, "Input"],
+Cell[43613, 1207, 1038, 30, 33, "Text"],
+Cell[44654, 1239, 471, 8, 98, "Input"],
+Cell[45128, 1249, 402, 7, 78, "Input"],
+Cell[45533, 1258, 420, 7, 78, "Input"],
+Cell[45956, 1267, 485, 8, 110, "Input"],
+Cell[46444, 1277, 395, 10, 71, "Text"],
+Cell[46842, 1289, 340, 6, 70, "Input"],
+Cell[47185, 1297, 113, 3, 52, "Text"],
+Cell[47301, 1302, 473, 7, 130, "Input"],
+Cell[47777, 1311, 102, 4, 71, "Text"],
+Cell[47882, 1317, 902, 14, 170, "Input"]
+}, Closed]],
+Cell[48799, 1334, 2445, 68, 460, "Text"],
+Cell[51247, 1404, 716, 19, 185, "Text"],
+
+Cell[CellGroupData[{
+Cell[51988, 1427, 101, 2, 33, "Text"],
+Cell[52092, 1431, 383, 7, 150, "Input"],
+Cell[52478, 1440, 193, 9, 34, "Text"],
+Cell[52674, 1451, 760, 16, 292, "Input"],
+Cell[53437, 1469, 56, 0, 33, "Text"],
+Cell[53496, 1471, 285, 5, 90, "Input"],
+Cell[53784, 1478, 59, 0, 33, "Text"],
+Cell[53846, 1480, 82, 1, 30, "Input"],
+Cell[53931, 1483, 50, 1, 30, "Input"],
+Cell[53984, 1486, 128, 3, 33, "Text"],
+Cell[54115, 1491, 196, 3, 31, "Input"],
+Cell[54314, 1496, 131, 3, 33, "Text"],
+Cell[54448, 1501, 354, 7, 73, "Input"],
+Cell[54805, 1510, 166, 5, 33, "Text"],
+Cell[54974, 1517, 484, 9, 150, "Input"],
+Cell[55461, 1528, 244, 9, 33, "Text"],
+Cell[55708, 1539, 911, 18, 230, "Input"],
+Cell[56622, 1559, 458, 13, 71, "Text"],
+Cell[57083, 1574, 171, 4, 31, "Input"],
+Cell[57257, 1580, 55, 0, 33, "Text"],
+Cell[57315, 1582, 176, 4, 50, "Input"],
+Cell[57494, 1588, 252, 5, 52, "Text"],
+Cell[57749, 1595, 695, 14, 131, "Input"],
+Cell[58447, 1611, 206, 5, 50, "Input"],
+Cell[58656, 1618, 441, 11, 52, "Text"],
+Cell[59100, 1631, 137, 2, 30, "Input"],
+Cell[59240, 1635, 207, 4, 50, "Input"],
+Cell[59450, 1641, 738, 19, 71, "Text"],
+Cell[60191, 1662, 81, 1, 30, "Input"],
+Cell[60275, 1665, 278, 6, 70, "Input"],
+Cell[60556, 1673, 188, 5, 71, "Text"],
+Cell[60747, 1680, 1447, 24, 210, "Input"]
+}, Closed]],
+Cell[62209, 1707, 723, 22, 30, "Text"],
+Cell[62935, 1731, 158, 3, 35, "Text"],
+Cell[63096, 1736, 588, 18, 33, "Text"],
+Cell[63687, 1756, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,1669 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     46332,       1468]*)
+(*NotebookOutlinePosition[     47247,       1497]*)
+(*  CellTagsIndexPosition[     47203,       1493]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Secant Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tThe Newton-Raphson algorithm requires two functions evaluations per \
+iteration, ",
+  Cell[BoxData[
+      StyleBox[\(f \((p\_k)\)\),
+        FontSize->12]]],
+  " and  ",
+  Cell[BoxData[
+      StyleBox[\(f' \((p\_k)\)\),
+        FontSize->12]]],
+  ".  Historically, the calculation of a derivative could involve \
+considerable effort.  But, with modern computer algebra software packages \
+such as ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ", this has become less of an issue.  Moreover, many functions have \
+non-elementary forms (integrals, sums, discrete solution to an I.V.P.), and \
+it is desirable to have a method for finding a root that does not depend on \
+the computation of a derivative. The secant method does not need a formula \
+for the derivative and it can be coded so that only one new function \
+evaluation is required per iteration.  \n\n\tThe formula for the secant \
+method is the same one that was used in the regula falsi method, except that \
+the logical decisions regarding how to define each succeeding term are \
+different.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Secant Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^2\),
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      \(p \[Element] \([a, b]\)\)]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If   ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(g \((p\_\(k - 1\), p\_k)\)\), " ", "=", " ", 
+          RowBox[{\(p\_k\), " ", "-", " ", 
+            FractionBox[
+              RowBox[{
+                StyleBox["f",
+                  FontSize->12], 
+                StyleBox[\((p\_k)\),
+                  FontSize->12], 
+                RowBox[{"(", 
+                  RowBox[{
+                    StyleBox[\(p\_k\),
+                      FontSize->12], " ", "-", "  ", 
+                    StyleBox[\(p\_\(k - 1\)\),
+                      FontSize->12]}], ")"}]}], 
+              RowBox[{
+                StyleBox[\(f \((p\_k)\)\),
+                  FontSize->12], " ", "-", "  ", 
+                StyleBox[\(f \((p\_\(k - 1\))\)\),
+                  FontSize->12]}]]}]}]}]]],
+  "    for    ",
+  Cell[BoxData[
+      \(k = 0, 1,  ... \)]],
+  "  \n\nwill converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for certain initial approximations  ",
+  Cell[BoxData[
+      \(p\_0, p\_1 \[Element] \([p - \[Delta], p + \[Delta]]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/SecantMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SecantMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SecantMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "Find a root of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given two initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(p\_1\)}]]],
+  "  using the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(p\_k\), " ", "-", " ", 
+          FractionBox[
+            RowBox[{
+              StyleBox["f",
+                FontSize->12], 
+              StyleBox[\((p\_k)\),
+                FontSize->12], 
+              RowBox[{"(", 
+                RowBox[{
+                  StyleBox[\(p\_k\),
+                    FontSize->12], " ", "-", "  ", 
+                  StyleBox[\(p\_\(k - 1\)\),
+                    FontSize->12]}], ")"}]}], 
+            RowBox[{
+              StyleBox[\(f \((p\_k)\)\),
+                FontSize->12], " ", "-", "  ", 
+              StyleBox[\(f \((p\_\(k - 1\))\)\),
+                FontSize->12]}]]}]}]]],
+  "   for    ",
+  Cell[BoxData[
+      \(\(\(k\  = \ 
+        1\)\(,\)\(2\)\(,\)\(\[CenterEllipsis]\)\(\ \)\(,\)\(m\)\(\ \)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/SecantMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SecantMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Secant Method).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[x0_, x1_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{}, \[IndentingNewLine]k\
+\  = \ 1; \ \[IndentingNewLine]p0\  = \ N[x0]; \ \[IndentingNewLine]p1\  = \ 
+          N[x1]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 
+            16]\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = \>\"", 
+          PaddedForm[p1, {16, 16}], \*"\"\<,   f[\!\(p\_1\)] = \>\"", 
+          NumberForm[f[p1], 16]\ ]; \ \ \[IndentingNewLine]p2\  = \ 
+          p1; \ \[IndentingNewLine]p1\  = \ p0; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ 
+            p1; \ \[IndentingNewLine]p1\  = \ 
+            p2; \ \[IndentingNewLine]p2\  = \ 
+            p1\  - \ \(f[p1] \((p1\  - \ p0)\)\)\/\(f[p1]\  - \ f[p0]\); \ \
+\[IndentingNewLine]k\  = \ 
+            k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p2, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p2], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+          NumberForm[p2, 
+            16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p2 - p1]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p2], 16]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the secant method to find the three roots of the cubic polynomial  \
+",
+  Cell[BoxData[
+      \(f[x]\  = \ 4\ x\^3 - 16  x\^2 + 17  x - 4\)],
+    AspectRatioFixed->False],
+  ".  \nDetermine the ",
+  "secant",
+  " iteration formula  ",
+  Cell[BoxData[
+      \(g[x]\  = \ x - f[x]\/\(f'\)[x]\)]],
+  "  that is used.  \nShow details of the computations for the starting value \
+ ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"3", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "2.8"}]}]]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the function.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The secant iteration formula  ",
+  Cell[BoxData[
+      \(g[x\_0, x\_1]\)]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x1, x2];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_]\  = \ 
+        x1 - \(f[x1] \((x1\  - \ x0)\)\)\/\(f[x1]\  - \ f[x0]\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_] = \ 
+        Simplify[\ g[x0, x1]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Hopefully, the iteration  ",
+  Cell[BoxData[
+      \(p\_\(n + 1\) = g[p\_\(n - 1\), p\_n]\)]],
+  "  will converge to a root of  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "Graph the function  ",
+  Cell[BoxData[
+      \(y = f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {\(-5\), 8}}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["There are three real root. ", "Text"],
+
+Cell[TextData[{
+  "Starting with the values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"3", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "2.8"}]}]]],
+  ".  \n\nUse the secant method to find a numerical approximation to the \
+root.  \n\nFirst, do the iteration one step at a time.  \n\nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(p0\)\(=\)\(3.0\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p1\)\(=\)\(2.8\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p2\)\(=\)\(g[p0, p1]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p3\)\(=\)\(g[p1, p2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p4\)\(=\)\(g[p2, p3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p5\)\(=\)\(g[p3, p4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p6\)\(=\)\(g[p4, p5]\)\(\ \)\)\)], "Input"],
+
+Cell["Now use the subroutine. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[3.0, 2.8, 10];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "From the second graph we see that there are two other real roots. \n\nUse \
+the starting values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"0.6", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "0.5"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[0.6, 0.5, 10];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Use the starting values ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{"1.0", "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  "}]}]]],
+  Cell[BoxData[
+      \(\(\(p\_1\)\(=\)\(1.1\)\(\ \)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[1.0, 1.1, 8];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in numerical root finder."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = NSolve[f[x] \[Equal] 0, x];\)\ \), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\ \)}], "Input"],
+
+Cell["Let's see how good they are.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(x1 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x1  = \>", x1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x1] = \>", f[x1]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x2 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x2  = \>", x2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x2] = \>", f[x2]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x3 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(3, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x3  = \>", x3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x3] = \>", f[x3]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can obtain better numerical answers, but the number of iterations needs \
+to be increased. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can also solve for the roots symbolically."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[f[x] \[Equal] 0, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<0 = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[solset]];\)\ \)}], "Input"],
+
+Cell["The answers can be manipulated into real expressions.", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[MapAll[ComplexExpand, solset]]];\)\(\ \)\)\)], "Input"],
+
+Cell["The answers can be expressed in decimal form.", "Text"],
+
+Cell[BoxData[
+    \(\(\(NumberForm[TableForm[Chop[N[solset]]], 17]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+These answers are in agreement with the ones we found with the \
+secant method.  \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Newton's method to find the roots of the cubic polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ x\^3 - 3\ x + 2\)],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["2 (a) Fast Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate quadratic convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(p\_0\), "=", 
+          RowBox[{
+            RowBox[{\(-2.6\), "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "  ", \(p\_1\)}], 
+            "=", \(-2.4\)}]}]}]]],
+  "\n\n",
+  StyleBox["2 (b) Slow Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate linear convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"1.4", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(p\_1\)}], "=", "1.2"}]}]]]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - 3\ x + 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Graph the function.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3\), 3}, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-10\), 10}}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The secant iteration formula  ",
+  Cell[BoxData[
+      \(g[x\_0, x\_1]\)]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x1, x2];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_]\  = \ 
+        x1 - \(f[x1] \((x1\  - \ x0)\)\)\/\(f[x1]\  - \ f[x0]\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_] = \ 
+        Simplify[\ g[x0, x1]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (a) Fast Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate quadratic convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{\(-2.6\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(p\_1\)}], 
+          "=", \(-2.4\)}]}]]],
+  " \n\nFirst, do the iteration one step at a time.  \nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(p0 = \(-2.6\)\)], "Input"],
+
+Cell[BoxData[
+    \(p1 = \(-2.4\)\)], "Input"]
+}, Open  ]],
+
+Cell[BoxData[
+    \(p2 = g[p0, p1]\)], "Input"],
+
+Cell[BoxData[
+    \(p3 = g[p1, p2]\)], "Input"],
+
+Cell[BoxData[
+    \(p4 = g[p2, p3]\)], "Input"],
+
+Cell[BoxData[
+    \(p5 = g[p3, p4]\)], "Input"],
+
+Cell[BoxData[
+    \(p6 = g[p4, p5]\)], "Input"],
+
+Cell[TextData[{
+  "Notice that convergence is fast and the sequence is converging to the \
+simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(SecantMethod[\(-2.6\), \(-2.4\), 8]\)], "Input"],
+
+Cell[TextData[{
+  "At the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ", the order of convergence is known to be ",
+  Cell[BoxData[
+      \(\(\@5 + 1\)\/2\)]],
+  ".  We can explore the ratio",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^\(\(\@5 + 1\
+\)\/2\)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Nk = 7;\)\), "\n", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\ \), "\n", 
+    \(\(Pk = Vk;\)\), "\[IndentingNewLine]", 
+    \(\(Pk\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = \
+\(-2.6\);\)\ \), "\n", 
+    \(\(Pk\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = \
+\(-2.4\);\)\ \), "\n", 
+    \(\(For[i = 3, 
+        i \[LessEqual] 
+          Nk + 1, \(i++\), \
+\[IndentingNewLine]\(Pk\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+            g[Pk\_\(\(\[LeftDoubleBracket]\)\(i - \
+2\)\(\[RightDoubleBracket]\)\), 
+              Pk\_\(\(\[LeftDoubleBracket]\)\(i - \
+1\)\(\[RightDoubleBracket]\)\)];\)\ ];\)\ \), "\n", 
+    \(\(Ek = \(-2\) - Pk;\)\ \), "\n", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Abs[Ek]\^\(\(\@5 + 1\)\/2\), Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Qk, "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^\(\(\@5 + 1\)\/2\)\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 15]\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (b) Slow Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate linear convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ",  using the starting value  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"1.4", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(p\_1\)}], "=", "1.2"}]}]]],
+  "\n\nFirst, do the iteration one step at a time.  \nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(p0 = 1.4\)], "Input"],
+
+Cell[BoxData[
+    \(p1 = 1.2\)], "Input"]
+}, Open  ]],
+
+Cell[BoxData[
+    \(p2 = g[p0, p1]\)], "Input"],
+
+Cell[BoxData[
+    \(p3 = g[p1, p2]\)], "Input"],
+
+Cell[BoxData[
+    \(p4 = g[p2, p3]\)], "Input"],
+
+Cell[BoxData[
+    \(p5 = g[p3, p4]\)], "Input"],
+
+Cell[BoxData[
+    \(p6 = g[p4, p5]\)], "Input"],
+
+Cell[TextData[{
+  "Notice that convergence is slow, but the sequence is converging to  the \
+double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(SecantMethod[1.4, 1.2, 30]\)], "Input"],
+
+Cell[TextData[{
+  "Compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in numerical root finder."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = NSolve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"],
+
+Cell[TextData[{
+  "This can also be done with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in symbolic solve procedure."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[f[x] \[Equal] 0, x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", 
+        Factor[\ f[x]\ ]\ ];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 11]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Reduce the volume of printout.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "After you have debugged you program and it is working properly, delete the \
+unnecessary print statements  \n\n",
+  Cell[BoxData[
+      \(\(Print["p0 = ", PaddedForm[N[p0], {11, 11}], ",   f[p0] = ", 
+          f[p0]\ ];\)\)],
+    FontWeight->"Bold"],
+  "  and  \n",
+  Cell[BoxData[
+      \(\(Print["p1 = ", PaddedForm[N[p1], {11, 11}], ",   f[p1] = ", 
+          f[p1]\ ];\)\)],
+    FontWeight->"Bold"],
+  "  and  \n",
+  Cell[BoxData[
+      \(\(Print["p", k, " = ", PaddedForm[N[p2], {11, 11}], ",   f[p", k, 
+          "] = ", f[p2]\ ];\)\)],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[StyleBox["Concise Program for the Secant Method",
+  FontFamily->"New Century Schlbk",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[x0_, x1_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]k\  = \ 
+            1; \ \[IndentingNewLine]p0\  = \ 
+            N[x0]; \ \[IndentingNewLine]p1\  = \ 
+            N[x1]; \ \[IndentingNewLine]p2\  = \ 
+            p1; \ \[IndentingNewLine]p1\  = \ 
+            p0; \ \[IndentingNewLine]While[\ 
+            k < max, \[IndentingNewLine]p0\  = \ 
+              p1; \ \[IndentingNewLine]p1\  = \ 
+              p2; \ \[IndentingNewLine]p2\  = \ 
+              p1\  - \ \(f[p1] \((p1\  - \ p0)\)\)\/\(f[p1]\  - \ f[p0]\); \ \
+\[IndentingNewLine]k\  = \ 
+              k + 1;\ ]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+            NumberForm[p2, 
+              16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p2 - p1]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+            NumberForm[f[p2], 16]\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell["Now test this subroutine using the function in Example 1. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[3.0, 2.8, 10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[0.6, 0.5, 10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(SecantMethod[1.0, 1.1, 8];\)\)], "Input"],
+
+Cell[TextData[StyleBox["Error Checking in the Secant Method",
+  FontFamily->"New Century Schlbk",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Error checking can be added to the ",
+  "secant",
+  " method.  Here we have added a third parameter  ",
+  Cell[BoxData[
+      \(\[Delta]\)]],
+  "  to the subroutine which estimate the accuracy of the numerical \
+solution."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SecantMethod[x0_, x1_, \[Delta]_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]k\  = \ 
+            0; \[IndentingNewLine]p0\  = \ N[x0]; \[IndentingNewLine]p1\  = \ 
+            N[x1]; \[IndentingNewLine]\[CapitalDelta]p\  = \ 
+            1; \[IndentingNewLine]While[\ 
+            And[\ k < max, \[Delta] < 
+                Abs[\[CapitalDelta]p]\ ], \[IndentingNewLine]\[CapitalDelta]p\
+\  = \ \(f[p1] \((p1\  - \ p0)\)\)\/\(f[p1]\  - \ f[p0]\); \ \
+\[IndentingNewLine]p2\  = \ 
+              p1\  - \ \[CapitalDelta]p; \[IndentingNewLine]k\  = \ 
+              k + 1; \[IndentingNewLine]p0\  = \ 
+              p1; \[IndentingNewLine]p1\  = \ 
+              p2;\ ]; \[IndentingNewLine]Print["\<  p  = \>", 
+            NumberForm[p2, 
+              11]\ ]; \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", 
+            Abs[\[CapitalDelta]p]\ ]; \[IndentingNewLine]Print["\<f[p] = \>", 
+            NumberForm[f[p2], 11]\ ];\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  "The following subroutine call uses a maximum of 20 iterations, just to \
+make sure enough iterations are performed.  \nHowever, it will terminate when \
+the difference between consecutive iterations is less than  ",
+  Cell[BoxData[
+      \(10\^\(-10\)\)]],
+  ".  \nBy interrogating  k  afterward we can see how many iterations were \
+actually performed."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(SecantMethod[3.0, 2.8, 10\^\(-10\), 
+        20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The number of iterations used was \>", k];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(SecantMethod[0.6, 0.5, 10\^\(-10\), 
+        20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The number of iterations used was \>", k];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(SecantMethod[1.0, 1.1, 10\^\(-10\), 20];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The number of iterations used was \>", k];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Secant Method.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[x0_, x1_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{}, \[IndentingNewLine]k\
+\  = \ 1; \ \[IndentingNewLine]p0\  = \ N[x0]; \ \[IndentingNewLine]p1\  = \ 
+          N[x1]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \[IndentingNewLine]Print[\*"\"\<\!\(p\_\(k + 1\)\) = \
+g[\!\(p\_k\),\!\(p\_\(k - 1\)\)] = \!\(p\_k\) - \!\(\(f[p\_k] \((p\_k - \
+p\_\(k - 1\))\)\)\/\(f[p\_k] - f[p\_\(k - 1\)]\)\)\>\""]; \ \
+\[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 
+            16]\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = \>\"", 
+          PaddedForm[p1, {16, 16}], \*"\"\<,   f[\!\(p\_1\)] = \>\"", 
+          NumberForm[f[p1], 16]\ ]; \ \ \[IndentingNewLine]p2\  = \ 
+          p1; \ \[IndentingNewLine]p1\  = \ p0; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ 
+            p1; \ \[IndentingNewLine]p1\  = \ 
+            p2; \ \[IndentingNewLine]p2\  = \ 
+            p1\  - \ \(f[p1] \((p1\  - \ p0)\)\)\/\(f[p1]\  - \ f[p0]\); \ \
+\[IndentingNewLine]k\  = \ 
+            k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p2, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p2], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<\>"]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \[IndentingNewLine]Print["\<  p  = \>", 
+          NumberForm[p2, 
+            16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p2 - p1]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p2], 16]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Fast Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(3  Exp[x] - 4  Cos[x]\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(p\_0 = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 0.9\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 3  Exp[x] - 4  Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p1 = 0.9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 9;\)\ \), "\[IndentingNewLine]", 
+    \(\(SecantMethod[p0, p1, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0.0, 1.0}, PlotRange \[Rule] {{0, 1.0}, {\(-1\), 6}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], Range[\(-1\), 6, 1]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  ImageRegion->{{0, 1}, {0, 1}},
+  AnimationDisplayTime->8.65041],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Slow Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(1 - 10\ x + 25\ x\^2\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(p\_0 = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 0.9\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1 - 10\ x + 25\ x\^2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p1 = 0.9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 28;\)\ \), "\[IndentingNewLine]", 
+    \(\(SecantMethod[p0, p1, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0.0, 1.0}, PlotRange \[Rule] {{0, 1}, {0, 16}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], Range[0, 16, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence, Oscillation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(ArcTan[x]\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(p\_0 = 1.35\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 1.30\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{\(f[x_] = ArcTan[x];\), "\[IndentingNewLine]", 
+    StyleBox[\(\(p0 = 1.35;\)\(\ \ \)\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    RowBox[{\(p1 = 1.30;\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(n = 6;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(SecantMethod[p0, p1, n];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Plot[f[x], {x, \(-3.0\), 2.0}, 
+          PlotRange \[Rule] {{\(-3.0\), 2.0}, {\(-1.25\), 1.15}}, 
+          Ticks \[Rule] {Range[\(-3\), 2, 0.5], Range[\(-1\), 1, 0.5]}, 
+          PlotStyle \[Rule] Magenta];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(x\^3 - x + 3\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(p\_0 = 2.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 1.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - x + 3;\)\), "\[IndentingNewLine]", 
+    \(\(p0 = 2.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p1 = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 16;\)\ \), "\[IndentingNewLine]", 
+    \(\(SecantMethod[p0, p1, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3.2\), 3.5}, 
+        PlotRange \[Rule] {{\(-3.2\), 3.5}, {\(-5\), 32}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 30, 10]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox["NON Convergence, Diverging to Infinity",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(x\ \[ExponentialE]\^\(-x\)\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(p\_0 = 1.5\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 2.0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\ \[ExponentialE]\^\(-x\);\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p1 = 2.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 16;\)\ \), "\[IndentingNewLine]", 
+    \(\(SecantMethod[p0, p1, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 10.1}, PlotRange \[Rule] {{0, 10.1}, {0, 0.4}}, 
+        Ticks \[Rule] {Range[0, 10, 1], Range[0, 0.5, 0.1]}, 
+        PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(ArcTan[x]\  = \ 0\)]],
+  ".  \nUse the Secant Method and the starting approximations  ",
+  Cell[BoxData[
+      \(\(p\_0 = 1.60;\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_1 = 1.50\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(f[x_] = ArcTan[x];\),
+      FontColor->GrayLevel[0]], "\[IndentingNewLine]", 
+    RowBox[{\(p0 = 1.60;\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(p1 = 1.50;\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(n = 6;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(SecantMethod[p0, p1, n];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Plot[f[x], {x, \(-3.0\), 2.0}, 
+          PlotRange \[Rule] {{\(-3.0\), 2.0}, {\(-1.25\), 1.15}}, 
+          Ticks \[Rule] {Range[\(-3\), 2, 0.5], Range[\(-1\), 1, 0.5]}, 
+          PlotStyle \[Rule] Magenta];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[ButtonBox[" Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/Secantff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+SecantMethod/SecantMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant  Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+SecantMethod/SecantMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[") .",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations. "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/SecantMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SecantMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Raphson", "solset"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 170, 4, 35, "Text"],
+Cell[1949, 59, 1464, 49, 141, "Text"]
+}, Closed]],
+Cell[3428, 111, 1100, 24, 125, "Text"],
+Cell[4531, 137, 1779, 57, 133, "Text"],
+Cell[6313, 196, 620, 22, 33, "Text"],
+Cell[6936, 220, 1685, 51, 76, "Text"],
+Cell[8624, 273, 600, 20, 33, "Text"],
+Cell[9227, 295, 143, 2, 33, "Text"],
+Cell[9373, 299, 1401, 23, 390, "Input"],
+Cell[10777, 324, 767, 26, 76, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[11569, 354, 101, 2, 33, "Text"],
+Cell[11673, 358, 37, 0, 33, "Text"],
+Cell[11713, 360, 185, 4, 50, "Input"],
+Cell[11901, 366, 115, 5, 33, "Text"],
+Cell[12019, 373, 521, 10, 126, "Input"],
+Cell[12543, 385, 202, 8, 33, "Text"],
+Cell[12748, 395, 98, 5, 33, "Text"],
+Cell[12849, 402, 279, 4, 70, "Input"],
+Cell[13131, 408, 43, 0, 33, "Text"],
+Cell[13177, 410, 498, 12, 147, "Text"],
+Cell[13678, 424, 61, 1, 30, "Input"],
+Cell[13742, 427, 61, 1, 30, "Input"],
+Cell[13806, 430, 67, 1, 30, "Input"],
+Cell[13876, 433, 67, 1, 30, "Input"],
+Cell[13946, 436, 67, 1, 30, "Input"],
+Cell[14016, 439, 67, 1, 30, "Input"],
+Cell[14086, 442, 67, 1, 30, "Input"],
+Cell[14156, 445, 40, 0, 33, "Text"],
+Cell[14199, 447, 74, 1, 30, "Input"],
+Cell[14276, 450, 354, 11, 71, "Text"],
+Cell[14633, 463, 74, 1, 30, "Input"],
+Cell[14710, 466, 283, 10, 33, "Text"],
+Cell[14996, 478, 73, 1, 30, "Input"],
+Cell[15072, 481, 148, 5, 33, "Text"],
+Cell[15223, 488, 146, 2, 50, "Input"],
+Cell[15372, 492, 46, 0, 33, "Text"],
+Cell[15421, 494, 265, 5, 70, "Input"],
+Cell[15689, 501, 265, 5, 70, "Input"],
+Cell[15957, 508, 265, 5, 70, "Input"],
+Cell[16225, 515, 176, 5, 33, "Text"],
+Cell[16404, 522, 127, 4, 33, "Text"],
+Cell[16534, 528, 207, 3, 70, "Input"],
+Cell[16744, 533, 69, 0, 33, "Text"],
+Cell[16816, 535, 104, 2, 30, "Input"],
+Cell[16923, 539, 61, 0, 33, "Text"],
+Cell[16987, 541, 89, 1, 30, "Input"],
+Cell[17079, 544, 105, 3, 33, "Text"]
+}, Closed]],
+Cell[17199, 550, 1722, 52, 106, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[18946, 606, 101, 2, 33, "Text"],
+Cell[19050, 610, 157, 3, 50, "Input"],
+Cell[19210, 615, 35, 0, 33, "Text"],
+Cell[19248, 617, 298, 5, 70, "Input"],
+Cell[19549, 624, 115, 5, 33, "Text"],
+Cell[19667, 631, 521, 10, 126, "Input"],
+Cell[20191, 643, 854, 23, 90, "Text"],
+
+Cell[CellGroupData[{
+Cell[21070, 670, 46, 1, 30, "Input"],
+Cell[21119, 673, 46, 1, 30, "Input"]
+}, Open  ]],
+Cell[21180, 677, 47, 1, 30, "Input"],
+Cell[21230, 680, 47, 1, 30, "Input"],
+Cell[21280, 683, 47, 1, 30, "Input"],
+Cell[21330, 686, 47, 1, 30, "Input"],
+Cell[21380, 689, 47, 1, 30, "Input"],
+Cell[21430, 692, 165, 6, 33, "Text"],
+Cell[21598, 700, 68, 1, 30, "Input"],
+Cell[21669, 703, 472, 17, 62, "Text"],
+Cell[22144, 722, 1307, 28, 297, "Input"],
+Cell[23454, 752, 828, 22, 90, "Text"],
+
+Cell[CellGroupData[{
+Cell[24307, 778, 41, 1, 30, "Input"],
+Cell[24351, 781, 41, 1, 30, "Input"]
+}, Open  ]],
+Cell[24407, 785, 47, 1, 30, "Input"],
+Cell[24457, 788, 47, 1, 30, "Input"],
+Cell[24507, 791, 47, 1, 30, "Input"],
+Cell[24557, 794, 47, 1, 30, "Input"],
+Cell[24607, 797, 47, 1, 30, "Input"],
+Cell[24657, 800, 162, 6, 33, "Text"],
+Cell[24822, 808, 59, 1, 30, "Input"],
+Cell[24884, 811, 148, 5, 33, "Text"],
+Cell[25035, 818, 142, 2, 50, "Input"],
+Cell[25180, 822, 154, 5, 33, "Text"],
+Cell[25337, 829, 229, 4, 70, "Input"]
+}, Closed]],
+Cell[25581, 836, 799, 24, 143, "Text"],
+Cell[26383, 862, 163, 3, 33, "Text"],
+Cell[26549, 867, 931, 17, 330, "Input"],
+Cell[27483, 886, 74, 0, 33, "Text"],
+Cell[27560, 888, 185, 4, 50, "Input"],
+Cell[27748, 894, 74, 1, 30, "Input"],
+Cell[27825, 897, 74, 1, 30, "Input"],
+Cell[27902, 900, 63, 1, 30, "Input"],
+Cell[27968, 903, 161, 3, 33, "Text"],
+Cell[28132, 908, 253, 8, 33, "Text"],
+Cell[28388, 918, 1011, 18, 330, "Input"],
+Cell[29402, 938, 385, 8, 71, "Text"],
+Cell[29790, 948, 185, 4, 50, "Input"],
+Cell[29978, 954, 179, 3, 51, "Input"],
+Cell[30160, 959, 179, 3, 51, "Input"],
+Cell[30342, 964, 168, 2, 51, "Input"],
+Cell[30513, 968, 303, 10, 35, "Text"],
+Cell[30819, 980, 1750, 29, 486, "Input"],
+Cell[32572, 1011, 458, 17, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[33055, 1032, 101, 2, 33, "Text"],
+Cell[33159, 1036, 630, 11, 150, "Input"],
+Cell[33792, 1049, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[34580, 1078, 457, 17, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[35062, 1099, 101, 2, 33, "Text"],
+Cell[35166, 1103, 556, 9, 150, "Input"],
+Cell[35725, 1114, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[36513, 1143, 456, 17, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[36994, 1164, 101, 2, 33, "Text"],
+Cell[37098, 1168, 674, 11, 150, "Input"],
+Cell[37775, 1181, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[38563, 1210, 444, 17, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[39032, 1231, 101, 2, 33, "Text"],
+Cell[39136, 1235, 576, 10, 150, "Input"],
+Cell[39715, 1247, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[40503, 1276, 491, 18, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[41019, 1298, 101, 2, 33, "Text"],
+Cell[41123, 1302, 565, 9, 150, "Input"],
+Cell[41691, 1313, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[42479, 1342, 448, 17, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[42952, 1363, 101, 2, 33, "Text"],
+Cell[43056, 1367, 683, 12, 150, "Input"],
+Cell[43742, 1381, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[44530, 1410, 781, 24, 30, "Text"],
+Cell[45314, 1436, 158, 3, 35, "Text"],
+Cell[45475, 1441, 557, 17, 33, "Text"],
+Cell[46035, 1460, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

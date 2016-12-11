@@ -1,0 +1,974 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     30897,        868]*)
+(*NotebookOutlinePosition[     31591,        892]*)
+(*  CellTagsIndexPosition[     31547,        888]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the van der Pol System",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The van der Pol Equation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe ",
+  ButtonBox["van der Pol equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/vanderPolEquation.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " is\n\n\t\t",
+  Cell[BoxData[
+      \(x''\  - \ \[Mu] \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ",  \nwhere  \n\t\t",
+  Cell[BoxData[
+      \(\[Mu] > 0\)]],
+  "  is a constant.  \n\t\t\nWhen  ",
+  Cell[BoxData[
+      \(\[Mu] = 0\)]],
+  "  the equation reduces to  ",
+  Cell[BoxData[
+      \(x''\  + \ x\  = \ 0\)]],
+  ",   and has the familiar solution  ",
+  Cell[BoxData[
+      \(x \((t)\) = \(c\_1\) cos \((t)\) + \(c\_2\) sin \((t)\)\)]],
+  ".  Usually the term  ",
+  Cell[BoxData[
+      \(\(-\ \[Mu]\) \((1 - x\^2)\) x'\)]],
+  "  in equation (1) should be regarded as friction or resistance, and this \
+is the case when the coefficient ",
+  Cell[BoxData[
+      \(\(-\ \[Mu]\) \((1 - u\^2)\)\)]],
+  "  is positive.  However, if the coefficient  ",
+  Cell[BoxData[
+      \(\(-\ \[Mu]\) \((1 - x\^2)\)\)]],
+  "  is negative then we have the case of \"negative resistance.\"  In the \
+age of \"vacuum tube\" radios, the \"",
+  ButtonBox["tetrode vacuum tube",
+    ButtonData:>{
+      URL[ "http://www.oneillselectronicmuseum.com/page10d.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "\" (cathode, grid, plate),  was used for a power amplifier and was known \
+to exhibit \"negative resistance.\"  The mathematics is amazing too, and  van \
+der Pol, Balthasar (1889-1959) is credited with developing equation (1).  ",
+  StyleBox["The solution curves exhibits ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["orbital stability",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearStability.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe van der Pol equation can be written as a second order system  \n\n\t\
+",
+  Cell[BoxData[
+      \(x'\  = \ \ y\)]],
+  ",   \nand  \n\t",
+  Cell[BoxData[
+      \(y' = \(-\ x\) + \[Mu] \((1 - x\^2)\) y\)]],
+  ".  ",
+  StyleBox["  \n\nAny convenient numerical differential equation solver such \
+as the ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Runge-Kutta method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Runge-KuttaMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" can be used to compute the solutions.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["van der Pol System",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/VanDerPolProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["van der Pol System",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/VanDerPolProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The Runge-Kutta method is used to numerically solve O.D.E.'s over",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Extension to 2D.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The Runge-Kutta method is easily extended to solve a system of D.E.'s ",
+  StyleBox["over the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ t\  \[LessEqual] \ b\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["van der Pol System",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/VanDerPolProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["van der Pol System",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/VanDerPolProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" (Runge-Kutta Method in 2D space)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'\  = \ \(f\_1\) \((t, x, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((a)\) = \[Alpha]\)]],
+  ",  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ \(f\_2\) \((t, x, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \[Beta]\)]],
+  StyleBox[",  \n\nover the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ t\  \[LessEqual] \ b\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "at a discrete set of points. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge2D[a0_, b0_, \[Alpha]_, \[Beta]_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{a = a0, b = b0, j, 
+          m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]T\  = \ 
+          Table[\ a + \((j - 1)\) h, {j, 1, 
+              m + 1}]; \ \[IndentingNewLine]Z = \ 
+          Table[\ {\[Alpha], \[Beta]}, {j, 1, 
+              m + 1}]; \ \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_3]; \ \
+\[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                    k\_4)\);\ \ ]; \ \[IndentingNewLine]Return[
+          Z];\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Runge-Kutta method in 2D is a \"vector form\" of the one-dimensional \
+method, here the function ",
+  StyleBox["f",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " is replaced with ",
+  StyleBox["F",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 0\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 0;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.283185;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 400;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 1\/16\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  - \ \(1\/16\) \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 1\/16;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 18.87226;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 1\/4\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  - \ \(1\/4\) \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 1\/4;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 17.3002;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 1\/2\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  - \ \(1\/2\) \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 1\/2;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 12.9078;\)\), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 1\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  - \ 1 \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 1;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 10.209022;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the van der Pol equation with  ",
+  Cell[BoxData[
+      \(\[Mu] = 4\)]],
+  ".  \n\t",
+  Cell[BoxData[
+      \(x''\  - \ 4 \((1 - x\^2)\) x'\  + \ x\  = \ 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Mu] = 4;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\ x\) + \[Mu] \((1 - x\^2)\) 
+            y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 20.067424;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, 0.0, 3.0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-6\), 6, 1]}, 
+          AspectRatio \[Rule] 1];\)\ \ \), "\n", 
+    \(\(Print["\<The solution to van der Pol's equation with  \[Mu] = \>", \
+\[Mu]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' - \>", 
+        ReplaceAll[x + f\_2[t, x, y], 
+          y \[Rule] 1], "\<x' + x = 0\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[{x', y'}], "\< = \>", 
+        MatrixForm[F[t, {x, y}]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Over the interval \>", 
+        a, "\< \[LessEqual] t \[LessEqual] \>", b, "\< using n = \>", 
+        n, "\< steps.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Starting point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  end point = \>", 
+        Z\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The van der Pol Equation",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/VanDerPolBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The van der Pol Equation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/VanDerPolBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{933, 622},
+WindowMargins->{{36, Automatic}, {Automatic, 1}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 175, 4, 35, "Text"],
+Cell[1954, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3433, 111, 1906, 51, 258, "Text"],
+Cell[5342, 164, 621, 18, 147, "Text"],
+Cell[5966, 184, 612, 21, 33, "Text"],
+Cell[6581, 207, 283, 10, 33, "Text"],
+Cell[6867, 219, 340, 10, 33, "Text"],
+Cell[7210, 231, 598, 20, 33, "Text"],
+Cell[7811, 253, 1060, 33, 128, "Text"],
+Cell[8874, 288, 1616, 27, 309, "Input"],
+Cell[10493, 317, 390, 14, 34, "Text"],
+Cell[10886, 333, 265, 11, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[11176, 348, 101, 2, 33, "Text"],
+Cell[11280, 352, 280, 11, 33, "Text"],
+Cell[11563, 365, 944, 17, 211, "Input"],
+Cell[12510, 384, 49, 0, 33, "Text"],
+Cell[12562, 386, 1446, 28, 290, "Input"]
+}, Closed]],
+Cell[14023, 417, 303, 11, 55, "Text"],
+
+Cell[CellGroupData[{
+Cell[14351, 432, 101, 2, 33, "Text"],
+Cell[14455, 436, 280, 11, 33, "Text"],
+Cell[14738, 449, 948, 17, 224, "Input"],
+Cell[15689, 468, 49, 0, 33, "Text"],
+Cell[15741, 470, 1446, 28, 290, "Input"]
+}, Closed]],
+Cell[17202, 501, 301, 11, 55, "Text"],
+
+Cell[CellGroupData[{
+Cell[17528, 516, 101, 2, 33, "Text"],
+Cell[17632, 520, 280, 11, 33, "Text"],
+Cell[17915, 533, 947, 17, 224, "Input"],
+Cell[18865, 552, 49, 0, 33, "Text"],
+Cell[18917, 554, 1445, 28, 290, "Input"]
+}, Closed]],
+Cell[20377, 585, 301, 11, 55, "Text"],
+
+Cell[CellGroupData[{
+Cell[20703, 600, 101, 2, 33, "Text"],
+Cell[20807, 604, 280, 11, 33, "Text"],
+Cell[21090, 617, 947, 17, 224, "Input"],
+Cell[22040, 636, 49, 0, 33, "Text"],
+Cell[22092, 638, 1441, 28, 290, "Input"]
+}, Closed]],
+Cell[23548, 669, 291, 11, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[23864, 684, 101, 2, 33, "Text"],
+Cell[23968, 688, 280, 11, 33, "Text"],
+Cell[24251, 701, 944, 17, 211, "Input"],
+Cell[25198, 720, 49, 0, 33, "Text"],
+Cell[25250, 722, 1447, 28, 290, "Input"]
+}, Closed]],
+Cell[26712, 753, 291, 11, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[27028, 768, 101, 2, 33, "Text"],
+Cell[27132, 772, 280, 11, 33, "Text"],
+Cell[27415, 785, 944, 17, 211, "Input"],
+Cell[28362, 804, 49, 0, 33, "Text"],
+Cell[28414, 806, 1448, 28, 290, "Input"]
+}, Closed]],
+Cell[29877, 837, 158, 3, 32, "Text"],
+Cell[30038, 842, 559, 16, 33, "Text"],
+Cell[30600, 860, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

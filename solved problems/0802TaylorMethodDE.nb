@@ -1,0 +1,2203 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     69061,       2004]*)
+(*NotebookOutlinePosition[     69800,       2029]*)
+(*  CellTagsIndexPosition[     69756,       2025]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Taylor's Method for solving O.D.E.'s",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell["\<\
+\t The Taylor  series method is of general applicability and it is the \
+standard to which we can compare the accuracy of the various other numerical \
+methods for solving an I. V. P.  It can be devised to have any specified \
+degree of accuracy.  \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Taylor Series  Method of Order n)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["f(t,y)",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "is continuous and satisfies a ",
+  ButtonBox["Lipschits condition",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LipschitzCondition.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " in the variable  ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ",  and consider the  I. V. P. (initial value problem)",
+  StyleBox[" \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox[" with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \(t\_0 = \[Alpha]\)\)]],
+  ",  over the interval  ",
+  Cell[BoxData[
+      \(a \[LessEqual] t \[LessEqual] b\)]],
+  ". \n\t\t\nThe Taylor series method uses the formulas ",
+  Cell[BoxData[
+      \(t\_\(k + 1\)\  = \ t\_k + h\)]],
+  ",  and  \n\n\t\t",
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ \(y\_j + 
+              d\_1\ h\  + \(d\_2\/\(2!\)\) h\^2 + \(d\_3\/\(3!\)\) 
+                h\^3 + \  ... \)\  + \(d\_n\/\(n!\)\) h\^n\)]],
+  "     for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(m - 1\)}]]],
+  "  \n\nwhere ",
+  Cell[BoxData[
+      \(d\_k\)]],
+  " is  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["y", 
+          TagBox[\((k)\),
+            Derivative],
+          MultilineFunction->None], "[", "t", "]"}]]],
+  "  evaluated at  ",
+  Cell[BoxData[
+      \(t\_k\)]],
+  ",  as an approximate solution to the differential equation using the \
+discrete set of points",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\((t\_k, y\_k)\)}\_\(k = 0\)\%m\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Series  Method for O. D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Precision  of Taylor Series  Method of Order n)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(\ \)\(y = y \((t)\)\)\)\)]],
+  StyleBox["  is the solution to the I.V.P.  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((t\_0)\) = y\_0\)]],
+  StyleBox[".  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(y \((t)\)\), "\[Element]", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["C",
+              FontWeight->"Bold"], \(n + 1\)], "[", \(t\_0, b\), "]"}]}]]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\((t\_k, y\_k)\)}\_\(k = 0\)\%m\)]],
+  StyleBox["  is the sequence of approximations generated by the Taylor \
+series method of order  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox[", then at each step, the local truncation error ",
+    FontFamily->"Times New Roman"],
+  "is of the order  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], \((h\^\(n + 1\))\)}]]],
+  ",  and the overall ",
+  StyleBox["global truncation error  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(e\_k\)]],
+  " ",
+  StyleBox[" is of the order\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(e\_k\)\(|\)\), " ", "=", " ", 
+        RowBox[{\(\(|\)\(y \((t\_k)\)\  - \ y\_k\)\(|\)\), " ", "=", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^n)\)}]}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman",
+    FontSize->4],
+  StyleBox["The error at the right end of the interval is called the final \
+global error  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(E \((y \((b)\), h)\)\), " ", "=", " ", 
+        RowBox[{\(\(|\)\(y \((b)\)\  - \ y\_m\)\(|\)\), " ", "=", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^n)\)}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Series  Method for O. D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorDEProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+Taylor/Taylor.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/Taylor/\
+Taylor.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (Taylor Series ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" To compute a numerical approximation for the solution of the \
+initial value problem  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  " ",
+  StyleBox[" with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((t\_0)\) = \(y\_0 = \[Alpha]\)\)]],
+  "  over ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([t\_0, b]\) = \([a, b]\)\)]],
+  "  at a discrete set of points using the formulas  \n\n\t",
+  Cell[BoxData[
+      \(t\_\(k + 1\)\  = \ t\_k + h\)]],
+  ",  and  ",
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ \(y\_j + 
+              d\_1\ h\  + \(d\_2\/\(2!\)\) h\^2 + \(d\_3\/\(3!\)\) 
+                h\^3 + \  ... \)\  + \(d\_n\/\(n!\)\) h\^n\)]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(m - 1\)}]]],
+  "  \n\t\nwhere ",
+  Cell[BoxData[
+      \(d\_k\)]],
+  " is  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["y", 
+          TagBox[\((k)\),
+            Derivative],
+          MultilineFunction->None], "[", "t", "]"}]]],
+  "  evaluated at  ",
+  Cell[BoxData[
+      \(t\_k\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorDEProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Taylor Series  Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorDEProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Taylor Series  Method of \
+Order n=4).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(TaylorMeth[a_, b_, \[Alpha]_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{j, 
+          m\  = \ m0}, \[IndentingNewLine]h\  = \ \(b - a\)\/m; \ \
+\[IndentingNewLine]Y = \(T\  = \ 
+            Table[0, {m + 
+                  1}]\); \ \
+\[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\  = \ a; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \[Alpha]; \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] 
+            m, \ \(j++\), \[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(j \
++ 1\)\(\[RightDoubleBracket]\)\) = 
+            a + h\ j; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(j + \
+1\)\(\[RightDoubleBracket]\)\) = 
+            Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+              d\_1[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)] 
+                h + \(\(\(\ \)\(d\_2[
+                      T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+                      Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)]\)\)\/\(2!\)\) h\^2 + 
+              d\_3[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]\/\(3!\)\ h\
+\^3 + \(d\_4[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\), 
+                      Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)]\/\(4!\)\) h\^4;]; \ \[IndentingNewLine]Return[
+          Transpose[{T, Y}]]\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Compute the ",
+  StyleBox["Taylor series",
+    FontFamily->"Times New Roman"],
+  " solution based on 25 subintervals and plot the results."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 1\  - \ t\ \ y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the D.E.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "First, enter the function  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  and create explicit formulas for  ",
+  Cell[BoxData[
+      \(D1, D2, D3, D4\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ",  respectively, which will involve  ",
+  Cell[BoxData[
+      RowBox[{"t", "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(y[t]\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\[IndentingNewLine]", 
+    \(\(\(y'\)[t_] = 1\  - \ t\ \ y[t];\)\ \), "\n", 
+    \(\(D1 = Together[\ D[y[t], t]\ ];\)\ \), "\n", 
+    \(\(D2 = Together[\ D[y[t], {t, 2}]\ ];\)\ \), "\n", 
+    \(\(D3 = Together[\ D[y[t], {t, 3}]\ ];\)\ \), "\n", 
+    \(\(D4 = Together[\ D[y[t], {t, 4}]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", D1];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", D2];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", D3];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", D4];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\nSecond, replace  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  with   ",
+  Cell[BoxData[
+      \(y\)]],
+  "  and construct the implicit formulas  ",
+  Cell[BoxData[
+      \(d\_1[t, y], d\_2[t, y], d\_3[t, y], d\_4[t, y]\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ", respectively.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d\_1[t_, y_] = ReplaceAll[D1, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_2[t_, y_] = ReplaceAll[D2, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_3[t_, y_] = ReplaceAll[D3, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_4[t_, y_] = ReplaceAll[D4, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", d\_1[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", d\_2[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", d\_3[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", d\_4[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = TaylorMeth[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\[IndentingNewLine]", 
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          1 - \ t\ \ y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  solset and \
+put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(pts3 = Transpose[{T, f[T]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Taylor  series solution and the analytic solution. \
+Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the error for the ",
+  "Taylor  series ",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(pts4 = Transpose[{T, f[T] - Y1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph4 = 
+        ListPlot[pts4, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for the Taylor series method using \>", 
+        n, "\< subintervals,\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since we have the analytic or \"true solution\" at hand, we can run \
+experiments to verify that ",
+  "Taylor  series ",
+  "'s method has order  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^4)\)}]]],
+  ".   Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error.\nRecalculate points for Taylor  series \
+'s method, and the analytic solution using twice as many subintervals.\nThen \
+Plot the error for ",
+  "Taylor  series ",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 50;\)\), "\[IndentingNewLine]", 
+    \(\(TaylorMeth[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1 = Y;\)\ \)}], "Input"],
+
+Cell["The error for Taylor series 's method.", "Text"],
+
+Cell[BoxData[{
+    \(\(pts6 = Transpose[{T, f[T] - Y1}];\)\), "\[IndentingNewLine]", 
+    \(\(graph6 = 
+        ListPlot[pts6, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Taylor series 's method using \>", 
+        n, "\< subintervals,\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Compare the error for ",
+  "Taylor  series ",
+  "'s method with 25 and 50 subintervals. \n",
+  StyleBox["Question 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " When the step size is reduced by ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/2\)]],
+  " estimate how much is the error reduced ?  (Theoretically is is ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/16\)]],
+  ".)  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph4, graph6, 
+        PlotRange \[Rule] All];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for the Taylor series method using \>", 
+        n/2, "\< and \>", n, "\< subintervals.\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Solve  ",
+  Cell[BoxData[
+      \(y' = \ 30 - 5  y\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0)\) = 1\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 5\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 30 - 5\ y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the D.E.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "First, enter the function  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  and create explicit formulas for  ",
+  Cell[BoxData[
+      \(D1, D2, D3, D4\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ",  respectively, which will involve  ",
+  Cell[BoxData[
+      RowBox[{"t", "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(y[t]\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\n", 
+    \(\(\(y'\)[t_] = 30 - 5\ y[t]\ ;\)\ \), "\n", 
+    \(\(D1 = Together[\ D[y[t], t]\ ];\)\ \), "\n", 
+    \(\(D2 = Together[\ D[y[t], {t, 2}]\ ];\)\ \), "\n", 
+    \(\(D3 = Together[\ D[y[t], {t, 3}]\ ];\)\ \), "\n", 
+    \(\(D4 = Together[\ D[y[t], {t, 4}]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", D1];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", D2];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", D3];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", D4];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\nSecond, replace  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  with   ",
+  Cell[BoxData[
+      \(y\)]],
+  "  and construct the implicit formulas  ",
+  Cell[BoxData[
+      \(d\_1[t, y], d\_2[t, y], d\_3[t, y], d\_4[t, y]\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ", respectively.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d\_1[t_, y_] = ReplaceAll[D1, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_2[t_, y_] = ReplaceAll[D2, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_3[t_, y_] = ReplaceAll[D3, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_4[t_, y_] = ReplaceAll[D4, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", d\_1[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", d\_2[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", d\_3[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", d\_4[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 50;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = TaylorMeth[0.0, 5.0, 1, n];\)\ \), "\n", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {{0, 5.2}, {0, 7.4}}, 
+          PlotStyle \[Rule] Green];\)\ \), "\n", 
+    \(\(Print["\<The Taylor series solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\[IndentingNewLine]", 
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          30 - 5  y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MapAll[Expand, solset]];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  solset and \
+put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        MapAll[Expand, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(pts3 = Transpose[{T, f[T]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 5.2}, {0, 
+                7.4}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Taylor  series solution and the analytic solution. \
+Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the absolute value of the error for ",
+  "Taylor  series ",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(pts4 = Transpose[{T, f[T] - Y1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph4 = 
+        ListPlot[Abs[pts4], PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for the Taylor series method using \>", 
+        n, "\< subintervals,\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error.\nRecalculate points for Taylor  series \
+'s method, and the analytic solution using twice as many subintervals.\nThen \
+Plot the error for ",
+  "Taylor  series ",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(TaylorMeth[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1 = Y;\)\ \)}], "Input"],
+
+Cell["The error for Taylor  series 's method.", "Text"],
+
+Cell[BoxData[{
+    \(\(pts6 = Transpose[{T, f[T] - Y1}];\)\), "\[IndentingNewLine]", 
+    \(\(graph6 = 
+        ListPlot[Abs[pts6], PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for the Taylor series method using \>", 
+        n, "\< subintervals,\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Compare the error for ",
+  "Taylor series ",
+  "'s method with 50 and 100 subintervals. \n",
+  StyleBox["Question 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " When the step size is reduced by ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/2\)]],
+  " estimate how much is the error reduced ?  (Theoretically is is ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/16\)]],
+  ".)  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph4, graph6, 
+        PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for the Taylor series method using \>", 
+        n/2, "\< and \>", n, "\< subintervals.\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{\(t\^2\), " ", "+", 
+            RowBox[{\(y\^2\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "1"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Compute the Taylor series solution based on 50 subintervals and plot the \
+results.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ t\^2\  + y\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the D.E.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "First, enter the function  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  and create explicit formulas for  ",
+  Cell[BoxData[
+      \(D1, D2, D3, D4\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ",  respectively, which will involve  ",
+  Cell[BoxData[
+      RowBox[{"t", "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(y[t]\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\n", 
+    \(\(\(y'\)[t_] = t\^2 + \ y[t]\^2;\)\ \ \), "\n", 
+    \(\(D1 = Together[\ D[y[t], t]\ ];\)\ \), "\n", 
+    \(\(D2 = Together[\ D[y[t], {t, 2}]\ ];\)\ \), "\n", 
+    \(\(D3 = Together[\ D[y[t], {t, 3}]\ ];\)\ \), "\n", 
+    \(\(D4 = Together[\ D[y[t], {t, 4}]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", D1];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", D2];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", D3];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", D4];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\nSecond, replace  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  with   ",
+  Cell[BoxData[
+      \(y\)]],
+  "  and construct the implicit formulas  ",
+  Cell[BoxData[
+      \(d\_1[t, y], d\_2[t, y], d\_3[t, y], d\_4[t, y]\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ", respectively.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d\_1[t_, y_] = ReplaceAll[D1, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_2[t_, y_] = ReplaceAll[D2, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_3[t_, y_] = ReplaceAll[D3, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(d\_4[t_, y_] = ReplaceAll[D4, y[t] \[Rule] y];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", d\_1[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", d\_2[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", d\_3[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", d\_4[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = TaylorMeth[0.0, 1.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell["\<\
+Compute the Taylor series solution based on 100 subintervals and plot the \
+results.
+Observe that one fewer subinterval is computed for this case.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n = 99;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = 
+        TaylorMeth[0.0, 0.99, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(\>", 
+        T\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\), \
+"\<) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell["\<\
+Compute the Taylor series solution based on 200 subintervals and plot the \
+results.
+Observe that four fewer subintervals are computed for this case.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n = 196;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = 
+        TaylorMeth[0.0, 0.98, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(\>", 
+        T\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\), \
+"\<) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{\(t\^2\), " ", "+", 
+            RowBox[{\(y\^2\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", "1"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[t, y];\)\ \), "\n", 
+    \(y = 0; \ Remove[y];\), "\[IndentingNewLine]", 
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          t\^2 + \ y[t]\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[t_] = 
+        MapAll[FullSimplify, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", f[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  solset and \
+put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        MapAll[FullSimplify, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        Plot[f[t], {t, 0, 0.969}, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0.001, 0.98}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Taylor  series solution and the analytic solution. \
+Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3, 
+        PlotRange \[Rule] {{0.001, 0.98}, {0, 
+              100}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3, 
+        PlotRange \[Rule] {{0.001, 0.98}, {0, 
+              1000}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor series and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Something strange is happening, it appears that the solution to  ",
+  Cell[BoxData[
+      \(y' = \ \(\(t\^2\)\(+\)\(\ \)\(y\^2\)\(\ \)\)\)]],
+  "has a vertical asymptote, yet ",
+  "Taylor series ",
+  "'s method is able to move past this asymptote!  How can this happen?  If \
+the step size is chosen smaller, then these methods will not tend to \
+overshoot the asymptote. The location of the asymptote can be found using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure FindRoot."
+}], "Text"],
+
+Cell[BoxData[
+    \(FindRoot[
+      16\ \((\(-32\)\ \[Pi]\ BesselJ[1\/4, 
+                t\^2\/2] + \@2\ BesselJ[\(-\(1\/4\)\), 
+                t\^2\/2]\ \((\(-4\)\ Gamma[\(-\(1\/4\)\)]\^2 + 
+                  30\ Gamma[\(-\(5\/4\)\)]\ Gamma[3\/4])\))\), {t, 
+        0.9}]\)], "Input"],
+
+Cell["\<\
+Numerical methods with a higher order of precision will not tend to overshoot \
+the asymptote. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Taylor's Method for solving O.D.E's",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(TaylorMethOrder3[a_, b_, \[Alpha]_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{j, 
+          m\  = \ m0}, \[IndentingNewLine]h\  = \ \(b - a\)\/m; \ \
+\[IndentingNewLine]Y = \(T\  = \ 
+            Table[0, {m + 
+                  1}]\); \ \
+\[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\  = \ a; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \[Alpha]; \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] 
+            m, \ \(j++\), \[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(j \
++ 1\)\(\[RightDoubleBracket]\)\) = 
+            a + h\ j; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(j + \
+1\)\(\[RightDoubleBracket]\)\) = 
+            Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+              d\_1[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)] 
+                h + \(\(\(\ \)\(d\_2[
+                      T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+                      Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)]\)\)\/\(2!\)\) h\^2 + 
+              d\_3[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]\/\(3!\)\ h\
+\^3;]; \ \[IndentingNewLine]Return[
+          Transpose[{T, Y}]]\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", " ", 
+            RowBox[{"t", " ", \(\@y\%3\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".    Compute a Taylor series solution of order n=3 solution to the I.V.P."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, enter the function  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  and create explicit formulas for  ",
+  Cell[BoxData[
+      \(D1, D2, D3\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y'''\)]],
+  ",  respectively, which will involve  ",
+  Cell[BoxData[
+      RowBox[{"t", "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(y[t]\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[f, t, y];\)\ \), "\n", 
+    \(\(\(y'\)[t_] = 1 - \ t\ \@\(y[t]\)\%3;\)\ \ \), "\n", 
+    \(\(D1 = Together[\ D[y[t], t]\ ];\)\ \), "\n", 
+    \(\(D2 = Together[\ D[y[t], {t, 2}]\ ];\)\ \), "\n", 
+    \(\(D3 = Together[\ D[y[t], {t, 3}]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", D1];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", D2];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", D3];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Second, replace  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  with   ",
+  Cell[BoxData[
+      \(y\)]],
+  "  and construct the implicit formulas  ",
+  Cell[BoxData[
+      \(d\_1[t, y], d\_2[t, y], d\_3[t, y], d\_4[t, y]\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ", respectively.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d\_1[t_, y_] = 
+        ReplaceAll[D1, 
+          y[t]\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3];\)\), "\n", 
+    \(\(d\_2[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D2]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D2]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(d\_2[t_, y_] = 
+        ReplaceAll[
+          d\_2[t, y], {y\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3, 
+            y\^\(2/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(2/3\), 
+            y\^\(4/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(4/3\)}];\)\), "\n", 
+    \(\(d\_3[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D3]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D3]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(d\_3[t_, y_] = 
+        ReplaceAll[
+          d\_3[t, y], {y\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3, 
+            y\^\(2/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(2/3\), 
+            y\^\(4/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(4/3\), 
+            y\^\(5/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(5/3\)}];\)\), "\n", 
+    \(\(d\_4[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D4]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D4]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(Print["\<y'[t] = \>", d\_1[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", d\_2[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", d\_3[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Third, use the subroutine to compute the set of points and store them in \
+the variable ",
+  StyleBox["taylorset",
+    FontWeight->"Bold"],
+  ".  Then plot this set of points using the built in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["ListPlot",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMethOrder3[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 3 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMethOrder3[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 3 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 150;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMethOrder3[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 3 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor's method of order 3",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+Taylor1/Tayloraa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor's method of order 3",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/Taylor1/\
+Tayloraa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", " ", 
+            RowBox[{"t", " ", \(\@y\%3\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".    Compute a Taylor  series solution of order n=4 solution to the \
+I.V.P."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution  12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, enter the function  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  and create explicit formulas for  ",
+  Cell[BoxData[
+      \(D1, D2, D3, D4\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ",  respectively, which will involve  ",
+  Cell[BoxData[
+      RowBox[{"t", "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(y[t]\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[f, t, y];\)\ \), "\n", 
+    \(\(\(y'\)[t_] = 1 - \ t\ \@\(y[t]\)\%3;\)\ \ \), "\n", 
+    \(\(D1 = Together[\ D[y[t], t]\ ];\)\ \), "\n", 
+    \(\(D2 = Together[\ D[y[t], {t, 2}]\ ];\)\ \), "\n", 
+    \(\(D3 = Together[\ D[y[t], {t, 3}]\ ];\)\ \), "\n", 
+    \(\(D4 = Together[\ D[y[t], {t, 4}]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'[t] = \>", D1];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", D2];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", D3];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", D4];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Second, replace  ",
+  Cell[BoxData[
+      \(\(y'\)[t]\)]],
+  "  with   ",
+  Cell[BoxData[
+      \(y\)]],
+  "  and construct the implicit formulas  ",
+  Cell[BoxData[
+      \(d\_1[t, y], d\_2[t, y], d\_3[t, y], d\_4[t, y]\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(y', y'', y''', y''''\)]],
+  ", respectively.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d\_1[t_, y_] = 
+        ReplaceAll[D1, 
+          y[t]\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3];\)\), "\n", 
+    \(\(d\_2[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D2]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D2]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(d\_2[t_, y_] = 
+        ReplaceAll[
+          d\_2[t, y], {y\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3, 
+            y\^\(2/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(2/3\), 
+            y\^\(4/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(4/3\)}];\)\), "\n", 
+    \(\(d\_3[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D3]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D3]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(d\_3[t_, y_] = 
+        ReplaceAll[
+          d\_3[t, y], {y\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3, 
+            y\^\(2/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(2/3\), 
+            y\^\(4/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(4/3\), 
+            y\^\(5/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(5/3\)}];\)\), "\n", 
+    \(\(d\_4[t_, y_] = 
+        ReplaceAll[Expand[Numerator[D4]\ \@\(y[t]\)\%3], y[t] \[Rule] y]/
+          ReplaceAll[Expand[Denominator[D4]\ \@\(y[t]\)\%3], 
+            y[t] \[Rule] y];\)\), "\n", 
+    \(\(d\_4[t_, y_] = 
+        ReplaceAll[
+          d\_4[t, y], {y\^\(1/3\) \[Rule] Sign[y] \@\(Abs[y]\)\%3, 
+            y\^\(2/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(2/3\), 
+            y\^\(4/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(4/3\), 
+            y\^\(5/3\) \[Rule] Sign[y] \((Abs[y])\)\^\(5/3\), 
+            y\^\(8/3\) \[Rule] 
+              Sign[y] \((Abs[y])\)\^\(8/3\)}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'[t] = \>", d\_1[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''[t] = \>", d\_2[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y'''[t] = \>", d\_3[t, y]\ ];\)\ \), "\n", 
+    \(\(Print["\<y''''[t] = \>", d\_4[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Third, use the subroutine to compute the set of points and store them in \
+the variable ",
+  StyleBox["taylorset",
+    FontWeight->"Bold"],
+  ".  Then plot this set of points using the built in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["ListPlot",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMeth[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph2\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 4 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMeth[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph2\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 4 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 150;\)\), "\[IndentingNewLine]", 
+    \(\(taylorset\  = \ 
+        TaylorMeth[a, b, y0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph2\  = \ 
+        ListPlot[taylorset, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Taylor solution of order n = 4 for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n, "\<  subintervals.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[taylorset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor's method of order 4",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+Taylor2/Taylorbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor's method of order 4",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/Taylor2/\
+Taylorbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+Taylor/Taylor.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/Taylor/\
+Taylor.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor's Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/td.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor's Method for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/td.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \nInternet hyperlinks  to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Taylor Series  Method for ODE's",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorDEBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Series  Method for ODE's",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorDEBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateFontOptions->{"FontType"->"Outline"}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 189, 4, 32, "Text"],
+Cell[1968, 59, 1464, 49, 90, "Text"]
+}, Closed]],
+Cell[3447, 111, 272, 5, 44, "Text"],
+Cell[3722, 118, 3511, 110, 166, "Text"],
+Cell[7236, 230, 642, 20, 30, "Text"],
+Cell[7881, 252, 3850, 117, 162, "Text"],
+Cell[11734, 371, 642, 20, 30, "Text"],
+Cell[12379, 393, 794, 24, 30, "Text"],
+Cell[13176, 419, 3136, 100, 116, "Text"],
+Cell[16315, 521, 667, 21, 30, "Text"],
+Cell[16985, 544, 166, 3, 30, "Text"],
+Cell[17154, 549, 1642, 28, 220, "Input"],
+Cell[18799, 579, 619, 19, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[19443, 602, 102, 2, 30, "Text"],
+Cell[19548, 606, 170, 5, 30, "Text"],
+Cell[19721, 613, 234, 4, 61, "Input"],
+Cell[19958, 619, 475, 18, 30, "Text",
+  Evaluatable->False],
+Cell[20436, 639, 589, 11, 197, "Input"],
+Cell[21028, 652, 343, 14, 47, "Text"],
+Cell[21374, 668, 536, 8, 146, "Input"],
+Cell[21913, 678, 921, 17, 180, "Input"]
+}, Closed]],
+Cell[22849, 698, 720, 22, 27, "Text"],
+
+Cell[CellGroupData[{
+Cell[23594, 724, 102, 2, 30, "Text"],
+Cell[23699, 728, 647, 13, 180, "Input"],
+Cell[24349, 743, 224, 5, 47, "Text"],
+Cell[24576, 750, 598, 12, 129, "Input"],
+Cell[25177, 764, 135, 3, 30, "Text"],
+Cell[25315, 769, 187, 3, 44, "Input"]
+}, Closed]],
+Cell[25517, 775, 178, 7, 27, "Text"],
+
+Cell[CellGroupData[{
+Cell[25720, 786, 102, 2, 30, "Text"],
+Cell[25825, 790, 425, 7, 78, "Input"],
+Cell[26253, 799, 387, 13, 32, "Text"]
+}, Closed]],
+Cell[26655, 815, 395, 12, 62, "Text"],
+
+Cell[CellGroupData[{
+Cell[27075, 831, 102, 2, 30, "Text"],
+Cell[27180, 835, 162, 3, 61, "Input"],
+Cell[27345, 840, 54, 0, 30, "Text"],
+Cell[27402, 842, 416, 7, 78, "Input"],
+Cell[27821, 851, 430, 14, 49, "Text"],
+Cell[28254, 867, 243, 4, 44, "Input"]
+}, Closed]],
+Cell[28512, 874, 359, 16, 27, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[28896, 894, 102, 2, 30, "Text"],
+Cell[29001, 898, 231, 4, 61, "Input"],
+Cell[29235, 904, 475, 18, 30, "Text",
+  Evaluatable->False],
+Cell[29713, 924, 569, 11, 197, "Input"],
+Cell[30285, 937, 343, 14, 47, "Text"],
+Cell[30631, 953, 536, 8, 146, "Input"],
+Cell[31170, 963, 854, 17, 163, "Input"]
+}, Closed]],
+Cell[32039, 983, 808, 26, 27, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[32872, 1013, 102, 2, 30, "Text"],
+Cell[32977, 1017, 660, 13, 180, "Input"],
+Cell[33640, 1032, 224, 5, 47, "Text"],
+Cell[33867, 1039, 626, 13, 129, "Input"],
+Cell[34496, 1054, 135, 3, 30, "Text"],
+Cell[34634, 1059, 187, 3, 44, "Input"]
+}, Closed]],
+Cell[34836, 1065, 196, 7, 27, "Text"],
+
+Cell[CellGroupData[{
+Cell[35057, 1076, 102, 2, 30, "Text"],
+Cell[35162, 1080, 464, 8, 78, "Input"]
+}, Closed]],
+Cell[35641, 1091, 395, 12, 62, "Text"],
+
+Cell[CellGroupData[{
+Cell[36061, 1107, 102, 2, 30, "Text"],
+Cell[36166, 1111, 165, 3, 61, "Input"],
+Cell[36334, 1116, 55, 0, 30, "Text"],
+Cell[36392, 1118, 445, 7, 78, "Input"],
+Cell[36840, 1127, 430, 14, 49, "Text"],
+Cell[37273, 1143, 245, 4, 44, "Input"]
+}, Closed]],
+Cell[37533, 1150, 624, 19, 27, "Text"],
+
+Cell[CellGroupData[{
+Cell[38182, 1173, 102, 2, 30, "Text"],
+Cell[38287, 1177, 107, 3, 30, "Text"],
+Cell[38397, 1182, 233, 4, 61, "Input"],
+Cell[38633, 1188, 475, 18, 30, "Text",
+  Evaluatable->False],
+Cell[39111, 1208, 573, 11, 197, "Input"],
+Cell[39687, 1221, 343, 14, 47, "Text"],
+Cell[40033, 1237, 536, 8, 146, "Input"],
+Cell[40572, 1247, 919, 17, 180, "Input"],
+Cell[41494, 1266, 170, 4, 47, "Text"],
+Cell[41667, 1272, 1014, 20, 180, "Input"],
+Cell[42684, 1294, 173, 4, 47, "Text"],
+Cell[42860, 1300, 1015, 20, 180, "Input"]
+}, Closed]],
+Cell[43890, 1323, 529, 17, 27, "Text"],
+
+Cell[CellGroupData[{
+Cell[44444, 1344, 103, 2, 30, "Text"],
+Cell[44550, 1348, 828, 17, 197, "Input"],
+Cell[45381, 1367, 224, 5, 47, "Text"],
+Cell[45608, 1374, 554, 12, 112, "Input"],
+Cell[46165, 1388, 135, 3, 30, "Text"],
+Cell[46303, 1393, 256, 5, 44, "Input"],
+Cell[46562, 1400, 257, 5, 44, "Input"],
+Cell[46822, 1407, 533, 12, 47, "Text"],
+Cell[47358, 1421, 288, 6, 46, "Input"],
+Cell[47649, 1429, 119, 3, 30, "Text"]
+}, Closed]],
+Cell[47783, 1435, 324, 10, 29, "Text"],
+Cell[48110, 1447, 1473, 26, 220, "Input"],
+Cell[49586, 1475, 702, 19, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[50313, 1498, 103, 2, 30, "Text"],
+Cell[50419, 1502, 464, 18, 30, "Text",
+  Evaluatable->False],
+Cell[50886, 1522, 436, 8, 152, "Input"],
+Cell[51325, 1532, 341, 14, 30, "Text"],
+Cell[51669, 1548, 1484, 29, 217, "Input"],
+Cell[53156, 1579, 353, 12, 30, "Text"],
+Cell[53512, 1593, 1150, 22, 237, "Input"],
+Cell[54665, 1617, 1150, 22, 237, "Input"],
+Cell[55818, 1641, 1151, 22, 237, "Input"],
+Cell[56972, 1665, 787, 26, 30, "Text"]
+}, Closed]],
+Cell[57774, 1694, 705, 20, 28, "Text"],
+
+Cell[CellGroupData[{
+Cell[58504, 1718, 103, 2, 30, "Text"],
+Cell[58610, 1722, 475, 18, 30, "Text",
+  Evaluatable->False],
+Cell[59088, 1742, 546, 10, 186, "Input"],
+Cell[59637, 1754, 341, 14, 30, "Text"],
+Cell[59981, 1770, 1955, 38, 259, "Input"],
+Cell[61939, 1810, 353, 12, 30, "Text"],
+Cell[62295, 1824, 1144, 22, 237, "Input"],
+Cell[63442, 1848, 1144, 22, 237, "Input"],
+Cell[64589, 1872, 1145, 22, 237, "Input"],
+Cell[65737, 1896, 787, 26, 30, "Text"]
+}, Closed]],
+Cell[66539, 1925, 756, 24, 27, "Text"],
+Cell[67298, 1951, 722, 20, 47, "Text"],
+Cell[68023, 1973, 158, 3, 32, "Text"],
+Cell[68184, 1978, 577, 16, 30, "Text"],
+Cell[68764, 1996, 293, 6, 30, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

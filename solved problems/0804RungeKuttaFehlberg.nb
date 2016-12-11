@@ -1,0 +1,1339 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     42528,       1186]*)
+(*NotebookOutlinePosition[     43284,       1212]*)
+(*  CellTagsIndexPosition[     43240,       1208]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for ",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Runge-Kutta-Fehlberg Method for O.D.E.'s",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Runge-Kutta-Fehlberg Method (RKF45)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["\n\tOne way to guarantee accuracy in the solution of an I.V.P. is \
+to solve the problem twice using step sizes ",
+    FontFamily->"Times New Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[" and",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h\/2\)]],
+  StyleBox[" and compare answers at the mesh points corresponding to the \
+larger step size.  But this requires a significant amount of computation for \
+the smaller step size and must be repeated if it is determined that the \
+agreement is not good enough. The Runge-Kutta-Fehlberg method (denoted RKF45) \
+is one way to try to resolve this problem.  It has a procedure to determine \
+if the proper step size ",
+    FontFamily->"Times New Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is being used.  At each step, two different approximations for \
+the solution are made and compared.  If the two answers are in close \
+agreement, the approximation is accepted. If the two answers do not agree to \
+a specified accuracy, the step size is reduced.  If the answers agree to more \
+significant digits than required, the step size is increased.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tEach ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Runge-Kutta-Fehlberg",
+    FontFamily->"Times New Roman"],
+  StyleBox[" step requires the use of the following six values:\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[{
+      \(\(\(k\_1\  = \ h\ f \((t\_j, y\_j)\)\)\(\[IndentingNewLine]\)
+      \)\), "\n", 
+      \(\(\(k\_2\  = \ 
+        h\ f \((t\_j + \(1\/4\) h, \ 
+            y\_j + \(1\/4\) k\_1)\)\)\(\[IndentingNewLine]\)
+      \)\), "\n", 
+      \(\(\(k\_3\  = \ 
+        h\ f \((t\_j + \(3\/8\) h, 
+            y\_j + \(3\/32\) k\_1 + \(9\/32\) 
+                k\_2)\)\)\(\[IndentingNewLine]\)
+      \)\), "\n", 
+      \(\(\(k\_4\  = \ 
+        h\ f \((t\_j + \(12\/13\) h, 
+            y\_j + \(1932\/2197\) k\_1 - \(7200\/2197\) k\_2 + \(7296\/2197\) 
+                k\_3)\)\)\(\[IndentingNewLine]\)
+      \)\), "\n", 
+      \(\(\(k\_5\  = \ 
+        h\ f \((t\_j + h, 
+            y\_j + \(439\/216\) k\_1 - 
+              8  k\_2 + \(3680\/513\) k\_3 - \(845\/4104\) 
+                k\_4)\)\)\(\[IndentingNewLine]\)
+      \)\), "\n", 
+      \(k\_6\  = \ 
+        h\ f \((t\_j + \(1\/2\) h, 
+            y\_j - \(8\/27\) k\_1 + 2  k\_2 - \(3544\/2565\) k\_3 + 
+              1859\/4104\ k\_4 - \(11\/40\) k\_5)\)\)}]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Then an approximation to the solution of the I.V.P. is made using \
+a Runge-Kutta method of order 4: \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ 
+        y\_j + \(25\/216\) k\_1 + \(1408\/2565\) k\_3 + \(2197\/4104\) 
+            k\_4 - \(1\/5\) k\_5\)], "Input",
+    FontWeight->"Plain"],
+  "  ",
+  StyleBox["\n\nAnd a better value for the solution is determined using a \
+Runge-Kutta method of order 5: \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z\_\(j + 1\)\  = \ 
+        y\_j + \(16\/135\) k\_1 + \(6656\/12825\) k\_3 + \(28561\/56430\) 
+            k\_4 - \(9\/50\) k\_5 + \(2\/55\) k\_6\)]],
+  " ",
+  StyleBox["\n\nThe optimal step size ",
+    FontFamily->"Times New Roman"],
+  StyleBox["sh",
+    FontFamily->"Courier New"],
+  StyleBox[" can be determined by multiplying the scalar ",
+    FontFamily->"Times New Roman"],
+  StyleBox["s",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["times the current step size ",
+    FontFamily->"Times New Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[". The scalar ",
+    FontFamily->"Times New Roman"],
+  StyleBox["s",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(s = \(\((\(\[Epsilon]\ h\)\/\(2 | z\_\(j + 1\) - y\_\(j + 1\) | \))\)\
+\^\(1/4\)\  = \ 
+          0.840896\ \((\(\[Epsilon]\ h\)\/\(\(|\)\(z\_\(j + 1\) - y\_\(j + \
+1\)\)\(|\)\))\)\^\(1/4\)\)\)]],
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  StyleBox[" is the specified error control tolerance.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RungeKuttaFehlbergProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RungeKuttaFehlbergProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RungeKuttaFehlbergProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RungeKuttaFehlbergProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Runge-Kutta-Fehlberg Method RFK45)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox[" with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \[Alpha]\)]],
+  " over",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  " at a discrete set of points with an error control  ",
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  ".  Start with the initial point  ",
+  Cell[BoxData[
+      \(\((a, \[Alpha])\) = \((t\_1, y\_1)\)\)]],
+  "  and generate the sequence of approximations  ",
+  Cell[BoxData[
+      \({\((t\_j, y\_j)\)}\_\(j = 1\)\%m\)]],
+  ".  The step size is automatically adjusted.  Thus the number ",
+  Cell[BoxData[
+      \(m\)]],
+  " is determined by the subroutine.  At each step the final answer is \
+computed using the formula   ",
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ 
+        y\_j + \(25\/216\) k\_1 + \(1408\/2565\) k\_3 + \(2197\/4104\) 
+            k\_4 - \(1\/5\) k\_5\)], "Input",
+    FontWeight->"Plain"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(RKF45[a0_, 
+          b0_, \[Alpha]_, \[Epsilon]_] := \[IndentingNewLine]Module[{a, b, c, 
+            d, e, h, j, k, n, r, T, Y}, \[IndentingNewLine]a\_0\  = \ 
+            N[a0]; \ b\_0\  = \ N[b0]; \ \ \[IndentingNewLine]a\_2 = 1\/4; 
+          b\_2 = 1\/4; a\_3 = 3\/8; b\_3 = 3\/32; c\_3 = 9\/32; 
+          a\_4 = 12\/13; b\_4 = 1932\/2197; c\_4 = \(-7200\)\/2197; 
+          d\_4 = 7296\/2197; a\_5 = 1; b\_5 = 439\/216; c\_5 = \(-8\); 
+          d\_5 = 3680\/513; e\_5 = \(-845\)\/4104; a\_6 = 1\/2; 
+          b\_6 = \(-8\)\/27; c\_6 = 2; d\_6 = \(-\(3544\/2565\)\); 
+          e\_6 = 1859\/4104; f\_6 = \(-11\)\/40; r\_1 = 1\/360; 
+          r\_3 = \(-128\)\/4275; r\_4 = \(-2197\)\/75240; r\_5 = 1\/50; 
+          r\_6 = 2\/55; n\_1 = 25\/216; n\_3 = 1408\/2565; n\_4 = 2197\/4104; 
+          n\_5 = \(-1\)\/5; \[IndentingNewLine]T\  = \ {}; \ \
+\[IndentingNewLine]T\  = \ 
+            AppendTo[T, 
+              a\_0]; \ \[IndentingNewLine]Y\  = \ {}; \ \[IndentingNewLine]Y\ \
+ = \ AppendTo[Y, \[Alpha]]; \ \[IndentingNewLine]hmin\  = \ 
+            0.001; \ \[IndentingNewLine]hmax\  = \ 
+            0.250; \ \[IndentingNewLine]max1\  = \ 
+            200; \ \[IndentingNewLine]h = 
+            0.2500; \ \[IndentingNewLine]j\  = \ 
+            1; \ \[IndentingNewLine]br\  = \ 
+            b\_0 - 0.00001\ Abs[b\_0]; \ \[IndentingNewLine]While[
+            T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) < 
+              b\_0, \[IndentingNewLine]If[\ 
+              T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  h > br, \ 
+              h = b\_0 - 
+                  T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)\ ]; \ \[IndentingNewLine]k\_1\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_2\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_2\ k\_1]; \ \[IndentingNewLine]k\_3\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_3\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_3\ k\_1 + c\_3\ k\_2]; \ \[IndentingNewLine]k\_4\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_4\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_4\ k\_1 + c\_4\ k\_2 + d\_4\ k\_3]; \ \[IndentingNewLine]k\_5\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_5\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_5\ k\_1 + c\_5\ k\_2 + d\_5\ k\_3 + 
+                    e\_5\ k\_4]; \ \[IndentingNewLine]k\_6\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_6\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_6\ k\_1 + c\_6\ k\_2 + d\_6\ k\_3 + e\_6\ k\_4 + 
+                    f\_6\ k\_5]; \ \[IndentingNewLine]err\  = \ 
+              Abs[r\_1\ k\_1 + r\_3\ k\_3 + r\_4\ k\_4 + r\_5\ k\_5 + 
+                  r\_6\ k\_6]; \ \[IndentingNewLine]ynew\  = \ 
+              Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                n\_1\ k\_1 + n\_3\ k\_3 + n\_4\ k\_4 + 
+                n\_5\ k\_5; \ \[IndentingNewLine]If[\ 
+              Or[err < \[Epsilon], \ 
+                h < 2\ hmin\ ], \[IndentingNewLine]\(Module[{}, \
+\[IndentingNewLine]Y\  = \ AppendTo[Y, ynew]; \ \[IndentingNewLine]If[\ 
+                    T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h > br, \[IndentingNewLine]T\  = \ 
+                      AppendTo[T, b\_0], \[IndentingNewLine]\(T\  = \ 
+                        AppendTo[T, 
+                          T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) + h];\)\ ]; \ \ \[IndentingNewLine]j\  = \ 
+                    j + 1;\ \ ];\)\ \ ]; \ \[IndentingNewLine]If[\ 
+              err \[Equal] 0, \ s = 0, \ 
+              s = \((\(\[Epsilon]\ h\)\/\(2\ err\))\)\^0.25]; \ \
+\[IndentingNewLine]If[\ And[s < 0.1], \ 
+              s = 0.1\ ]; \ \ \ \[IndentingNewLine]If[\ And[s > 4.0], \ 
+              s = 4.0\ ]; \ \ \ \[IndentingNewLine]h = 
+              s\ \ h; \ \ \[IndentingNewLine]If[\ h > hmax, \ 
+              h = hmax]; \ \ \ \[IndentingNewLine]If[\ h < hmin, \ 
+              h = hmin]; \ \ \ \[IndentingNewLine]If[\ max1 \[Equal] j, \ 
+              Break[]\ ];]; \ \[IndentingNewLine]Return[\ 
+            Transpose[{T, Y}]\ ];\ \ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  The formula for adjusting the step size is a popular choice for \
+numerical analysis textbooks.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  Some textbooks are now promoting the use of the RK order five \
+formula  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z\_\(j + 1\)\)]],
+  StyleBox["  as the accepted value instead of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y\_\(j + 1\)\)]],
+  StyleBox["  from the order four formula.  The following subroutine includes \
+these adjustments.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Runge-Kutta-Fehlberg Method RFK54)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox[" with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \[Alpha]\)]],
+  " over",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  " at a discrete set of points with an error control  ",
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  ".  Start with the initial point  ",
+  Cell[BoxData[
+      \(\((a, \[Alpha])\) = \((t\_1, y\_1)\)\)]],
+  "  and generate the sequence of approximations  ",
+  Cell[BoxData[
+      \({\((t\_j, y\_j)\)}\_\(j = 1\)\%m\)]],
+  ".  The step size is automatically adjusted.   Thus the number ",
+  Cell[BoxData[
+      \(m\)]],
+  " is determined by the subroutine.  At each step the final answer is \
+computed using the formula   ",
+  Cell[BoxData[
+      \(z\_\(j + 1\)\  = \ 
+        y\_j + \(16\/135\) k\_1 + \(6656\/12825\) k\_3 + \(28561\/56430\) 
+            k\_4 - \(9\/50\) k\_5 + \(2\/55\) k\_6\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(RKF54[a0_, 
+          b0_, \[Alpha]_, \[Epsilon]_] := \[IndentingNewLine]Module[{a, b, c, 
+            d, e, h, j, k, n, r, T, Y}, \[IndentingNewLine]a\_0\  = \ 
+            N[a0]; \ b\_0\  = \ N[b0]; \ \ \[IndentingNewLine]a\_2 = 1\/4; 
+          b\_2 = 1\/4; a\_3 = 3\/8; b\_3 = 3\/32; c\_3 = 9\/32; 
+          a\_4 = 12\/13; b\_4 = 1932\/2197; c\_4 = \(-7200\)\/2197; 
+          d\_4 = 7296\/2197; a\_5 = 1; b\_5 = 439\/216; c\_5 = \(-8\); 
+          d\_5 = 3680\/513; e\_5 = \(-845\)\/4104; a\_6 = 1\/2; 
+          b\_6 = \(-8\)\/27; c\_6 = 2; d\_6 = \(-\(3544\/2565\)\); 
+          e\_6 = 1859\/4104; f\_6 = \(-11\)\/40; r\_1 = 1\/360; 
+          r\_3 = \(-128\)\/4275; r\_4 = \(-2197\)\/75240; r\_5 = 1\/50; 
+          r\_6 = 2\/55; n\_1 = 16\/135; n\_3 = 6656\/12825; 
+          n\_4 = 28561\/56430; n\_5 = \(-9\)\/50; 
+          n\_6 = 2\/55; \[IndentingNewLine]T\  = \ {}; \ \[IndentingNewLine]T\
+\  = \ AppendTo[T, 
+              a\_0]; \ \[IndentingNewLine]Y\  = \ {}; \ \[IndentingNewLine]Y\ \
+ = \ AppendTo[Y, \[Alpha]]; \ \[IndentingNewLine]hmin\  = \ 
+            0.001; \ \[IndentingNewLine]hmax\  = \ 
+            0.250; \ \[IndentingNewLine]max1\  = \ 
+            200; \ \[IndentingNewLine]h = 
+            0.2500; \ \[IndentingNewLine]j\  = \ 
+            1; \ \[IndentingNewLine]br\  = \ 
+            b\_0 - 0.00001\ Abs[b\_0]; \ \[IndentingNewLine]While[
+            T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) < 
+              b\_0, \[IndentingNewLine]If[\ 
+              T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  h > br, \ 
+              h = b\_0 - 
+                  T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)\ ]; \ \[IndentingNewLine]k\_1 = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_2\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_2\ k\_1]; \ \[IndentingNewLine]k\_3\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_3\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_3\ k\_1 + c\_3\ k\_2]; \ \[IndentingNewLine]k\_4\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_4\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_4\ k\_1 + c\_4\ k\_2 + d\_4\ k\_3]; \ \[IndentingNewLine]k\_5\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_5\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_5\ k\_1 + c\_5\ k\_2 + d\_5\ k\_3 + 
+                    e\_5\ k\_4]; \ \[IndentingNewLine]k\_6\  = \ 
+              h\ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + a\_6\ h, \ 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + b\_6\ k\_1 + c\_6\ k\_2 + d\_6\ k\_3 + e\_6\ k\_4 + 
+                    f\_6\ k\_5]; \ \[IndentingNewLine]err\  = \ 
+              Abs[r\_1\ k\_1 + r\_3\ k\_3 + r\_4\ k\_4 + r\_5\ k\_5 + 
+                  r\_6\ k\_6]; \ \[IndentingNewLine]ynew\  = \ 
+              Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                n\_1\ k\_1 + n\_3\ k\_3 + n\_4\ k\_4 + n\_5\ k\_5 + 
+                n\_6\ k\_6; \ \[IndentingNewLine]If[\ 
+              Or[err < \[Epsilon], \ 
+                h < 2\ hmin\ ], \[IndentingNewLine]\(Module[{}, \
+\[IndentingNewLine]Y\  = \ AppendTo[Y, ynew]; \ \[IndentingNewLine]If[\ 
+                    T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h > br, \[IndentingNewLine]T\  = \ 
+                      AppendTo[T, b\_0], \[IndentingNewLine]\(T\  = \ 
+                        AppendTo[T, 
+                          T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) + h];\)\ ]; \ \ \[IndentingNewLine]j\  = \ 
+                    j + 1;\ \ ];\)\ \ ]; \ \[IndentingNewLine]If[\ 
+              err \[Equal] 0, \ s = 0, \ 
+              s = \((\(\[Epsilon]\ h\)\/\(2\ err\))\)\^0.25]; \ \
+\[IndentingNewLine]If[\ And[s < 0.1], \ 
+              s = 0.1\ ]; \ \ \ \[IndentingNewLine]If[\ And[s > 4.0], \ 
+              s = 4.0\ ]; \ \ \ \[IndentingNewLine]h = 
+              s\ \ h; \ \ \[IndentingNewLine]If[\ h > hmax, \ 
+              h = hmax]; \ \ \ \[IndentingNewLine]If[\ h < hmin, \ 
+              h = hmin]; \ \ \ \[IndentingNewLine]If[\ max1 \[Equal] j, \ 
+              Break[]\ ];]; \ \[IndentingNewLine]Return[\ 
+            Transpose[{T, Y}]\ ];\ \ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  One might question the wisdom of using the RKF54 instead of the \
+RKF45, it is still being debated.  In some sense the \"guarantee\" of \
+accuracy is diminished.  The RKF54 is given for you to explore. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve  ",
+  Cell[BoxData[
+      \(y' = \ 1 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0.0)\) = 0.5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0.0, 1.1]\)\)]],
+  ".  Use the Runge Kutta methods. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_] = 1 + y\^2;\)\ \ \), "\n", 
+    \(\(Print["\<y' = \>", f[t, y]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = 1.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = 0.5;\)\), "\[IndentingNewLine]", 
+    \(\(RKF45set = 
+        RKF45[a, b, \[Alpha], 0.000001];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph1 = 
+        ListPlot[RKF45set, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Blue];\)\ \), "\n", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The RKF45 solution.\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[RKF45set];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = 1.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = 0.5;\)\), "\[IndentingNewLine]", 
+    \(\(RKF54set = 
+        RKF54[a, b, \[Alpha], 0.000001];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph2 = 
+        ListPlot[RKF54set, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Green];\)\ \), "\n", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The RKF54 solution.\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[RKF54set];\)\)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve  ",
+  Cell[BoxData[
+      \(y' = \ 1 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0)\) = 0.5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1.1]\)\)]],
+  ".  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s NDSolve procedure. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Compute ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s solution using the built in procedure NDSolve."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"nde", "=", 
+        RowBox[{"NDSolve", "[", 
+          RowBox[{
+            RowBox[{"{", 
+              RowBox[{
+                RowBox[{
+                  RowBox[{
+                    SuperscriptBox["y", "\[Prime]",
+                      MultilineFunction->None], "[", "t", "]"}], 
+                  "==", \(1 + y[t]\^2\)}], ",", \(y[0] == 0.5\)}], "}"}], 
+            ",", \(y[t]\), ",", \({t, 0.0, 1.1}\)}], "]"}]}], ";"}], "\n", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(graph3 = 
+          Plot[Evaluate[Replace[y[t], nde]], {t, 0, 1.1}, 
+            PlotRange \[Rule] {All, {0, 20}}, PlotStyle \[Rule] Red];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Solve  \>\"", ",", "\"\<\!\(
+\*SuperscriptBox[\(y\),  \(\[Prime]\),
+MultilineFunction->None]\) = \>\"", ",", \(f[t, y]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<Mathematica's solution using \
+NDSolve\>"];\)}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Compare the solution using RKF45 with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure NDSolve.\nLook at the two solution curves. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{\(Show[graph3, graph1];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Solve  \>\"", ",", "\"\<\!\(
+\*SuperscriptBox[\(y\),  \(\[Prime]\),
+MultilineFunction->None]\) = \>\"", ",", \(f[t, y]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<Mathematica's solution using \
+NDSolve\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<And the RKF45 solution.\>"];\), "  "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve  ",
+  Cell[BoxData[
+      \(y' = \ 1 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0)\) = 0.5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1.1]\)\)]],
+  ".  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s DSolve procedure. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure DSolve to get an analytic solution. (This is the \"true \
+solution.\") "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"solset", "=", 
+          RowBox[{"DSolve", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{
+                  RowBox[{
+                    RowBox[{
+                      SuperscriptBox["y", "\[Prime]",
+                        MultilineFunction->None], "[", "t", "]"}], 
+                    "==", \(1 + y[t]\^2\)}], ",", \(y[0] \[Equal] 1\/2\)}], 
+                "}"}], ",", \(y[t]\), ",", "t"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(g[t_] = 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), 
+      "  "}], "\[IndentingNewLine]", \(graph4 = 
+        Plot[g[t], {t, 0, 1.1}, PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Magenta];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Solve  \>\"", ",", "\"\<\!\(
+\*SuperscriptBox[\(y\),  \(\[Prime]\),
+MultilineFunction->None]\) = \>\"", ",", \(f[t, y]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<The analytic solution \
+is\>"];\), "\[IndentingNewLine]", \(Print["\<y = g[x] = \>", 
+        g[x]];\)}], "Input"],
+
+Cell["\<\
+Look at the solution curves for RKF45 and the \"true solution.\"   \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{\(Show[graph4, graph1];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Solve  \>\"", ",", "\"\<\!\(
+\*SuperscriptBox[\(y\),  \(\[Prime]\),
+MultilineFunction->None]\) = \>\"", ",", \(f[t, y]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<The analytic solution\>"];\), \
+"\[IndentingNewLine]", \(Print["\<y = g[x] = \>", 
+        g[x]];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<And the RKF45 solution.\>"];\), "  "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Determine the error for the RKF45 solution that was found in Example 1. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Get the abscissas and ordinates out of the data structure of the \
+points in the RKF45 solution.  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(X = \(Transpose[RKF45set]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(Y = \(Transpose[RKF45set]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\)], "Input"],
+
+Cell["Evaluate the \"true solution\" at the abscissas.  ", "Text"],
+
+Cell[BoxData[
+    \(g[X]\)], "Input"],
+
+Cell[TextData[{
+  "Look at the ",
+  Cell[BoxData[
+      \(error = g[X] - Y\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(g[X] - Y\)], "Input"],
+
+Cell["Find the maximum error.", "Text"],
+
+Cell[BoxData[
+    \(errRKF45 = Max[Abs[g[X] - Y]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(errpts = Transpose[{X, g[X] - Y}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ListPlot[errpts, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Error in RKF45\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is \>", errRKF45];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Determine the error for the RKF54 solution that was found in Example 1.  \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Get the abscissas and ordinates out of the data structure of the \
+points in the RKF45 solution.  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(X = \(Transpose[RKF54set]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\)], "Input"],
+
+Cell[BoxData[
+    \(Y = \(Transpose[RKF54set]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\)], "Input"],
+
+Cell["Evaluate the \"true solution\" at the abscissas.  ", "Text"],
+
+Cell[BoxData[
+    \(g[X]\)], "Input"],
+
+Cell[TextData[{
+  "Look at the ",
+  Cell[BoxData[
+      \(error = g[X] - Y\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(g[X] - Y\)], "Input"],
+
+Cell["Find the maximum error.", "Text"],
+
+Cell[BoxData[
+    \(errRKF54 = Max[Abs[g[X] - Y]]\)], "Input"],
+
+Cell[BoxData[{
+    \(\(errpts = Transpose[{X, g[X] - Y}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ListPlot[errpts, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Error in RKF54\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is \>", errRKF54];\)\)}], "Input"],
+
+Cell["Compare the error in the RKF45 and RKF54 methods", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The maximum error in RKF45 \>", 
+        errRKF45];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error in RKF54 \>", errRKF54];\)\)}], "Input"],
+
+Cell["The RKF54 is slightly better for this example. ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve  ",
+  Cell[BoxData[
+      \(y' = \ t\^2 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0.0)\) = 0.5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0.0, 1.5]\)\)]],
+  ".   Use the Runge Kutta methods. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(f[t_, y_] = t\^2 + y\^2;\), "  "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\*SuperscriptBox[\(y\),  \(\[Prime]\),
+MultilineFunction->None]\) = \>\"", ",", \(f[t, y]\)}], "]"}], ";"}], 
+      "  "}]}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = 0.5;\)\), "\[IndentingNewLine]", 
+    \(\(RKF45set = 
+        RKF45[a, b, \[Alpha], 0.000001];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph1 = 
+        ListPlot[RKF45set, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Blue];\)\ \), "\n", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The RKF45 solution.\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(RKF45set\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha] = 0.5;\)\), "\[IndentingNewLine]", 
+    \(\(RKF54set = 
+        RKF54[a, b, \[Alpha], 0.000001];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph2 = 
+        ListPlot[RKF54set, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Green];\)\ \), "\n", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The RKF54 solution.\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(RKF54set\)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Given  ",
+  Cell[BoxData[
+      \(y' = \ t\^2 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0.0)\) = 0.5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0.0, 1.5]\)\)]],
+  ".  This D.E. is known to be a ",
+  ButtonBox["Riccati equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/RiccatiDifferentialEquation.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  ".  \nThe analytic solution is known to be  ",
+  Cell[BoxData[
+      \(\(\(y[
+          t]\)\(\ \)\(=\)\(\ \)\(\(t\ \((8\ \[Pi]\ BesselJ[\(-\(3\/4\)\), 
+                      t\^2\/2] + \@2\ BesselJ[3\/4, 
+                      t\^2\/2]\ Gamma[\(-\(1\/4\)\)]\^2)\)\)\/\(\(-8\)\ \[Pi]\
+\ BesselJ[1\/4, t\^2\/2] + \@2\ BesselJ[\(-\(1\/4\)\), 
+                  t\^2\/2]\ Gamma[\(-\(1\/4\)\)]\^2\)\)\(\ \)\)\)]],
+  ";  compare it with the solutions that were found in Example 6.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Plot the analytic solution over the given interval.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[Y];\)\), "\[IndentingNewLine]", 
+    \(\(Y[
+          t_] = \(t\ \((8\ \[Pi]\ BesselJ[\(-\(3\/4\)\), t\^2\/2] + \@2\ \
+BesselJ[3\/4, t\^2\/2]\ Gamma[\(-\(1\/4\)\)]\^2)\)\)\/\(\(-8\)\ \[Pi]\ \
+BesselJ[1\/4, t\^2\/2] + \@2\ BesselJ[\(-\(1\/4\)\), t\^2\/2]\ \
+Gamma[\(-\(1\/4\)\)]\^2\)\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        Plot[Y[t], {t, 0, 1.5}, PlotRange \[Rule] {All, {0, 20}}, 
+          PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[t]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[graph3, graph1];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<And the RKF45 solution.\>"];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[graph3, graph2];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<And the RKF54 solution.\>"];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve  ",
+  Cell[BoxData[
+      \(y' = \ t\^2 + y\^2\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0)\) = 1\/2\)]],
+  ".   Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s DSolve procedure. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+There might be some SeriesData messages, ignore them.  You will \
+need to FullSimplify the result.  \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[t, y, Y];\)\), "\[IndentingNewLine]", 
+    \(\(solset = 
+        DSolve[{\(y'\)[t] \[Equal] t\^2 + \ y[t]\^2, y[0] \[Equal] 1\/2}, 
+          y[t], t];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Y[t_] = \ 
+        solset\_\(\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)\(\ \)\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve   \>", "\<y' = \>", 
+        f[t, y]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With y[\>", 
+        a, "\<] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Y[t_] = \ Simplify[Y[t]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Y[t_] = \ FullSimplify[Y[t]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", Y[x]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RungeKuttaFehlbergBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta-Fehlberg Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RungeKuttaFehlbergBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 337, 11, 35, "Text"],
+Cell[2116, 66, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3595, 118, 1528, 35, 147, "Text"],
+Cell[5126, 155, 1308, 35, 285, "Text"],
+Cell[6437, 192, 1858, 53, 278, "Text"],
+Cell[8298, 247, 657, 22, 33, "Text"],
+Cell[8958, 271, 643, 21, 33, "Text"],
+Cell[9604, 294, 1412, 42, 95, "Text"],
+Cell[11019, 338, 4815, 81, 892, "Input"],
+Cell[15837, 421, 257, 7, 33, "Text"],
+Cell[16097, 430, 543, 16, 52, "Text"],
+Cell[16643, 448, 1400, 41, 95, "Text"],
+Cell[18046, 491, 4842, 81, 892, "Input"],
+Cell[22891, 574, 362, 8, 52, "Text"],
+Cell[23256, 584, 375, 16, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[23656, 604, 101, 2, 33, "Text"],
+Cell[23760, 608, 144, 3, 50, "Input"],
+Cell[23907, 613, 823, 17, 210, "Input"],
+Cell[24733, 632, 824, 17, 210, "Input"]
+}, Closed]],
+Cell[25572, 652, 426, 19, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[26023, 675, 101, 2, 33, "Text"],
+Cell[26127, 679, 195, 7, 33, "Text",
+  Evaluatable->False],
+Cell[26325, 688, 1079, 26, 111, "Input"],
+Cell[27407, 716, 232, 7, 52, "Text",
+  Evaluatable->False],
+Cell[27642, 725, 471, 9, 90, "Input"]
+}, Closed]],
+Cell[28128, 737, 425, 19, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[28578, 760, 101, 2, 33, "Text"],
+Cell[28682, 764, 226, 8, 33, "Text",
+  Evaluatable->False],
+Cell[28911, 774, 1274, 29, 163, "Input"],
+Cell[30188, 805, 141, 5, 33, "Text",
+  Evaluatable->False],
+Cell[30332, 812, 526, 10, 110, "Input"]
+}, Closed]],
+Cell[30873, 825, 240, 8, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[31138, 837, 101, 2, 33, "Text"],
+Cell[31242, 841, 122, 3, 33, "Text"],
+Cell[31367, 846, 122, 2, 31, "Input"],
+Cell[31492, 850, 122, 2, 31, "Input"],
+Cell[31617, 854, 66, 0, 33, "Text"],
+Cell[31686, 856, 37, 1, 30, "Input"],
+Cell[31726, 859, 90, 4, 33, "Text"],
+Cell[31819, 865, 41, 1, 30, "Input"],
+Cell[31863, 868, 39, 0, 33, "Text"],
+Cell[31905, 870, 62, 1, 30, "Input"],
+Cell[31970, 873, 430, 6, 110, "Input"]
+}, Closed]],
+Cell[32415, 882, 241, 8, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[32681, 894, 101, 2, 33, "Text"],
+Cell[32785, 898, 122, 3, 33, "Text"],
+Cell[32910, 903, 122, 2, 31, "Input"],
+Cell[33035, 907, 122, 2, 31, "Input"],
+Cell[33160, 911, 66, 0, 33, "Text"],
+Cell[33229, 913, 37, 1, 30, "Input"],
+Cell[33269, 916, 90, 4, 33, "Text"],
+Cell[33362, 922, 41, 1, 30, "Input"],
+Cell[33406, 925, 39, 0, 33, "Text"],
+Cell[33448, 927, 62, 1, 30, "Input"],
+Cell[33513, 930, 430, 6, 110, "Input"],
+Cell[33946, 938, 64, 0, 33, "Text"],
+Cell[34013, 940, 188, 3, 50, "Input"],
+Cell[34204, 945, 63, 0, 33, "Text"]
+}, Closed]],
+Cell[34282, 948, 379, 16, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[34686, 968, 101, 2, 33, "Text"],
+Cell[34790, 972, 320, 9, 50, "Input"],
+Cell[35113, 983, 811, 17, 210, "Input"],
+Cell[35927, 1002, 812, 17, 210, "Input"]
+}, Closed]],
+Cell[36754, 1022, 1030, 30, 74, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[37809, 1056, 101, 2, 33, "Text"],
+Cell[37913, 1060, 67, 0, 33, "Text"],
+Cell[37983, 1062, 810, 15, 192, "Input"],
+Cell[38796, 1079, 464, 8, 130, "Input"],
+Cell[39263, 1089, 464, 8, 130, "Input"]
+}, Closed]],
+Cell[39742, 1100, 374, 16, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[40141, 1120, 101, 2, 33, "Text"],
+Cell[40245, 1124, 172, 5, 33, "Text",
+  Evaluatable->False],
+Cell[40420, 1131, 1032, 19, 284, "Input"]
+}, Closed]],
+Cell[41467, 1153, 158, 3, 32, "Text"],
+Cell[41628, 1158, 600, 18, 33, "Text"],
+Cell[42231, 1178, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

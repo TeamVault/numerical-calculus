@@ -1,0 +1,1492 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     45906,       1342]*)
+(*NotebookOutlinePosition[     46572,       1365]*)
+(*  CellTagsIndexPosition[     46528,       1361]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Tri-Diagonal Linear Systems",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\tIn applications, it is often the case that systems of equations arise \
+where the coefficient matrix has a special structure.  ",
+  ButtonBox["Sparse matrices",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SparseMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " which contain a majority of zeros occur are often encountered.  It is \
+usually more efficient to solve these systems using a taylor-made algorithm \
+which takes advantage of the special structure.  Important examples are band \
+matrices, and the most common cases are the tridiagonal matrices.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Tridiagonal Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TridiagonalMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  An  n\[Times]n  matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is called a tridiagonal matrix if  ",
+  Cell[BoxData[
+      \(a\_\(i, j\) = 0\)]],
+  "  whenever ",
+  Cell[BoxData[
+      \(i + 1 \[LessEqual] j\ \ or\ \ j + 1 \[LessEqual] i\)]],
+  ".  A tridiagonal matrix has the for\n\n\t",
+  StyleBox["\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "(1)",
+  StyleBox["\t",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], " ", "=", 
+        RowBox[{"(", GridBox[{
+              {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), "0", "0", 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                 "0", "0", "0", "0"},
+              {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), "0", 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                 "0", "0", "0", "0"},
+              {"0", \(a\_\(3, 4\)\), \(a\_\(3, 4\)\), \(a\_\(3, 4\)\), 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                 "0", "0", "0", "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", "0"},
+              {"0", "0", "0", 
+                "\[CenterEllipsis]", \(a\_\(i, i - 1\)\), \(a\_\(i, 
+                    i\)\), \(a\_\(i, i + 1\)\), "\[CenterEllipsis]", "0", "0",
+                 "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", \(a\_\(n - 2, n - 3\)\), \(a\_\(n - 2, 
+                    n - 2\)\), \(a\_\(n - 2, n - 1\)\), "0"},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", 
+                "0", \(a\_\(n - 1, n - 2\)\), \(a\_\(n - 1, 
+                    n - 1\)\), \(a\_\(n - 1, n\)\)},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", 
+                "0", \(\(\ \)\(0\)\), \(a\_\(n, n - 1\)\), \(a\_\(n, n\)\)}
+              }], ")"}]}]]],
+  ".\n"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Suppose that the tri-diagonal linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  has  ",
+  Cell[BoxData[
+      \(a\_\(i, i - 1\) \[NotEqual] 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(a\_\(i, i + 1\) \[NotEqual] 0\)]],
+  " for ",
+  Cell[BoxData[
+      RowBox[{\(i = 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  ".  If   ",
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(1, 
+            1\)\)\(|\)\(\(\[GreaterEqual]\)\(\(|\)\(a\_\(1, 
+                2\)\)\(|\)\)\)\)\)]],
+  ",  and  ",
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(i, 
+            i\)\)\(|\)\(\(\[GreaterEqual]\)\(\(|\)\(a\_\(i, 
+                i - 1\)\)\(|\)\(+\(\(|\)\(a\_\(i, 
+                    i + 1\)\)\(|\)\)\)\)\)\)\)]],
+  "  ",
+  Cell[BoxData[
+      RowBox[{\(i = 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  ",  and  ",
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(n, 
+            n\)\)\(|\)\(\(\[GreaterEqual]\)\(\(|\)\(a\_\(n, 
+                n - 1\)\)\(|\)\)\)\)\)]],
+  ", then there exists a unique solution.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Tri-DiagonalProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Tri-DiagonalProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe enumeration scheme for the elements ",
+  Cell[BoxData[
+      \(a\_\(i, j\)\)]],
+  " in (1) do not take advantage of the overwhelming number of zeros.  If the \
+two subscripts were retained the computer would reserve storage for  ",
+  Cell[BoxData[
+      \(n\^2\)]],
+  " elements.  Since practical applications involve large values of  ",
+  Cell[BoxData[
+      \(n >> 1000\)]],
+  ", it is important to devise a more efficient way to label only those \
+elements that will be used and conceptualize the existence of all those off \
+diagonal zeros.  The idea that is often used is to call elements of the main \
+diagonal ",
+  Cell[BoxData[
+      \({d\_i}\_\(i = 1\)\%n\)]],
+  ", ",
+  ButtonBox["subdiagonal elements",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Subdiagonal.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " ",
+  Cell[BoxData[
+      \({a\_i}\_\(i = 1\)\%\(n - 1\)\)]],
+  "  are directly below the main diagonal, and the ",
+  ButtonBox["superdiagonal elements",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Superdiagonal.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%\(n - 1\)\)]],
+  "  are directly above the main diagonal.  Taking advantage of the single \
+subscripts on ",
+  Cell[BoxData[
+      RowBox[{\(a\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(d\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(and\ c\_i\)}]]],
+  " we can reduce the storage requirement to merely ",
+  Cell[BoxData[
+      \(3  n - 2\)]],
+  "  elements.  This bizarre way of looking at a tridiagonal matrix is  \n\n\
+",
+  StyleBox["\t",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], " ", "=", 
+        RowBox[{"(", GridBox[{
+              {\(d\_1\), \(c\_1\), "0", "0", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                "0"},
+              {\(a\_1\), \(d\_2\), \(c\_2\), "0", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                "0"},
+              {"0", \(a\_2\), \(d\_3\), \(c\_3\), "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", "0"},
+              {"0", "0", "0", 
+                "\[CenterEllipsis]", \(a\_\(i - 1\)\), \(d\_i\), \(c\_i\), 
+                "\[CenterEllipsis]", "0", "0", "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", \(a\_\(n - 3\)\), \(d\_\(n - 
+                      2\)\), \(c\_\(n - 2\)\), "0"},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", 
+                "0", \(a\_\(n - 2\)\), \(d\_\(n - 1\)\), \(c\_\(n - 1\)\)},
+              {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]", 
+                "\[CenterEllipsis]", 
+                "0", \(\(\ \)\(0\)\), \(a\_\(n - 1\)\), \(d\_n\)}
+              }], ")"}]}]]],
+  ".\n\nObserve that ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " does not have the usual alphabetical connection with its new elements \
+named  ",
+  Cell[BoxData[
+      RowBox[{\(a\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(d\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(and\ c\_i\)}]]],
+  ", and that the length of the subdiagonal and superdiagonal is ",
+  StyleBox["n-1",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["tri-diagonal",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TridiagonalMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[" system).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is tridiagonal, then a tridiagonal system is",
+  StyleBox["\n\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "(2)",
+  StyleBox["\t",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(d\_1\), \(c\_1\), "0", "0", "\[CenterEllipsis]", 
+                  "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                  "0"},
+                {\(a\_1\), \(d\_2\), \(c\_2\), "0", "\[CenterEllipsis]", 
+                  "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                  "0"},
+                {"0", \(a\_2\), \(d\_3\), \(c\_3\), "\[CenterEllipsis]", 
+                  "\[CenterEllipsis]", "\[CenterEllipsis]", "0", "0", "0", 
+                  "0"},
+                {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                  "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                  "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                  "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                  "\[VerticalEllipsis]", "\[VerticalEllipsis]", "0"},
+                {"0", "0", "0", 
+                  "\[CenterEllipsis]", \(a\_\(i - 1\)\), \(d\_i\), \(c\_i\), 
+                  "\[CenterEllipsis]", "0", "0", "0"},
+                {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                  "\[VerticalEllipsis]", "\[AscendingEllipsis]", 
+                  "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                  "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+                  "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                  "\[VerticalEllipsis]"},
+                {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                   "\[CenterEllipsis]", \(a\_\(n - 3\)\), \(d\_\(n - 
+                        2\)\), \(c\_\(n - 2\)\), "0"},
+                {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                   "\[CenterEllipsis]", 
+                  "0", \(a\_\(n - 2\)\), \(d\_\(n - 1\)\), \(c\_\(n - 1\)\)},
+                {"0", "0", "0", "0", "\[CenterEllipsis]", "\[CenterEllipsis]",
+                   "\[CenterEllipsis]", 
+                  "0", \(\(\ \)\(0\)\), \(a\_\(n - 1\)\), \(d\_n\)}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_1\)},
+                {\(x\_2\)},
+                {\(x\_3\)},
+                {" "},
+                {\(x\_i\)},
+                {" "},
+                {\(x\_\(n - 2\)\)},
+                {\(x\_\(n - 1\)\)},
+                {\(x\_n\)}
+                }], ")"}]}], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {\(b\_1\)},
+              {\(b\_2\)},
+              {\(b\_3\)},
+              {" "},
+              {\(b\_i\)},
+              {" "},
+              {\(b\_\(n - 2\)\)},
+              {\(b\_\(n - 1\)\)},
+              {\(b\_n\)}
+              }], ")"}]}]]],
+  StyleBox["\n\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "A tri-diagonal linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  can be written in the form    \n\n(3)\t",
+  Cell[BoxData[GridBox[{
+          {\(d\_1\ x\_1\), \(\(+\ c\_1\)\ x\_2\), "  ", "  ", "  ", "  ", 
+            "  ", "  ", "=", \(b\_\(\(1\)\(\ \ \ \)\)\)},
+          {\(a\_1\ x\_1\), \(\(+\ d\_2\)\ x\_2\), \(\(+\ c\_2\)\ x\_3\), "  ",
+             "  ", "  ", "  ", "  ", "=", \(b\_\(\(2\)\(\ \ \ \)\)\)},
+          {
+            "  ", \(\(\ \ \ \)\(a\_2\ x\_2\)\), \(\(+\ d\_3\)\ x\_3\), \(\(+\ 
+                c\_3\)\ x\_4\), "  ", "  ", "  ", "  ", 
+            "=", \(b\_\(\(3\)\(\ \ \ \)\)\)},
+          {"  ", "  ", "  ", "  ", "  ", "  ", "  ", "  ", "  ", "  "},
+          {"  ", "  ", "  ", "  ", 
+            "  ", \(a\_\(n - 2\)\ x\_\(n - 2\)\), \(\(+\ d\_\(n - 1\)\) 
+              x\_\(n - 1\)\), \(\(+\ c\_\(n - 1\)\) x\_n\), 
+            "=", \(b\_\(n - 1\)\)},
+          {"  ", "  ", "  ", "  ", "  ", 
+            "  ", \(\(\ \ \ \)\(a\_\(n - 1\)\ x\_\(n - 1\)\)\), \(\(+\ \ \ \
+d\_n\) x\_n\), "=", \(b\_\(\(n\)\(\ \ \ \)\)\)}
+          }]]],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Goals",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nTo understand the \"Gaussian elimination process.\"  \nTo understand \
+solutions to\"large matrices\" that are contain mostly zero elements, called \
+\"sparse matrices.\"  \nTo be aware of the uses for advanced topics in \
+numerical analysis:  \n",
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "    Used in the construction of cubic splines, \n",
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   Used in the Finite difference solution of boundary value problems,  \n\
+",
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Used in the solution of parabolic P.D.E.'s. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(tridiagonal linear system).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Solve a tri-diagonal ",
+    FontFamily->"Times New Roman"],
+  "system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  given in (2-3)",
+  StyleBox[".  \n",
+    FontFamily->"Times New Roman"],
+  "Below diagonal elements:",
+  StyleBox["\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {\(a\_k\), 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[\(k = 1, 2,  ... , n - 1\),
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}]}
+          }]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  "Main diagonal elements:",
+  StyleBox["\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {\(d\_k\), 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[\(k = 1, 2,  ... , n\),
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}]}
+          }]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  "Above diagonal elements:\t",
+  Cell[BoxData[GridBox[{
+          {\(c\_k\), 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[\(k = 1, 2,  ... , n - 1\),
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}]}
+          }]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  "Column vector elements:\t",
+  Cell[BoxData[GridBox[{
+          {\(b\_k\), 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[\(k = 1, 2,  ... , n\),
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}]}
+          }]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Tri-DiagonalProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Tri-DiagonalProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["tri-diagonal linear system",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(TriDiagonal[a0_, d0_, c0_, 
+          b0_]\  := \[IndentingNewLine]Module[{\ a = a0, b = b0, c = c0, 
+            d = d0, k, m, n = Length[b0], x\ }, \[IndentingNewLine]For[\ 
+            k = 2, \ k \[LessEqual] 
+              n, \ \(k++\), \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\  = \ d\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ \  - \
+\ \(\(\ \)\(a\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\[RightDoubleBracket]\)\)\
+\)\)\/\(\(\ \)\(d\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\[RightDoubleBracket]\
+\)\)\)\)\ \ c\_\(\(\[LeftDoubleBracket]\)\(k - \
+1\)\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]b\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  = \ 
+              b\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  \
+- \ \(\(\ \)\(a\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\[RightDoubleBracket]\)\
+\)\)\)\/\(\(\ \)\(d\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\)\)\ b\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\);\ ]; \ \[IndentingNewLine]x = 
+            Table[0, {n}]; \ \[IndentingNewLine]x\_\(\(\[LeftDoubleBracket]\)\
+\(n\)\(\[RightDoubleBracket]\)\)\  = \(\(\ \
+\)\(b\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)\)\)\/d\_\(\(\
+\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ k = n - 1, \ 
+            1 \[LessEqual] 
+              k, \ \(k--\), \
+\[IndentingNewLine]\(x\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\
+\)\)\  = \ \(b\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  \
+- \ c\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ x\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\)\/d\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\);\)\ ]; \ \
+\[IndentingNewLine]Return[x];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Create a 31 by 31 tridiagonal matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " where the main diagonal elements are all \"2\" and all elements of the \
+subdiagonal and superdiagonal elements are \"1.\"  Then solve the linear \
+system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  where",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 15, 
+              14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)\)\^T\)}]]],
+  ".  Compute the solution using decimal arithmetic and rational arithmetic.  \
+"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        Table[16.0 - Abs[i - 16.0], {i, 1, 
+            n}];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", B\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The column form for ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " is:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<B = \>", MatrixForm[B]\ ];\)\(\ \ \ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " can be constructed with the command."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = DiagonalMatrix[Table[2.0, {n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n - 1, \(i++\), \
+\[IndentingNewLine]\(A\_\(\(\[LeftDoubleBracket]\)\(i, i + 1\)\(\
+\[RightDoubleBracket]\)\) = \(A\_\(\(\[LeftDoubleBracket]\)\(i + 1, i\)\(\
+\[RightDoubleBracket]\)\) = 1.0\);\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\ \ \)}], "Input"],
+
+Cell["We can print out the system to be solved if we wish.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x];\)\), "\[IndentingNewLine]", 
+    \(\(vars\  = \ Table["\<x\>"\_i, {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Solve the system ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in  ",
+  StyleBox["LinearSolve[A,B]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  procedure.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Z1 = LinearSolve[A, B];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_1\) = \>\"", MatrixForm[vars], "\< = \>", 
+        MatrixForm[Z1]\ , "\< = \>", 
+        NumberForm[MatrixForm[Z1], 17]];\)\)}], "Input"],
+
+Cell["\<\
+Notice that this linear system is producing some round off error near the \
+14th decimal place. \
+\>", "Text"],
+
+Cell["Verify the answer.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A], MatrixForm[Chop[Z1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A . Z1], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\ \(Print[
+        MatrixForm[A . Z1]\  \[Equal] \ 
+          MatrixForm[B]\ ];\)\ \ \ \ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        Table[16 - Abs[i - 16], {i, 1, 
+            n}];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", B\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The column form for ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " is:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<B = \>", MatrixForm[B]\ ];\)\(\ \ \ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " can be constructed with the command."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = DiagonalMatrix[Table[2, {n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n - 1, \(i++\), \
+\[IndentingNewLine]\(A\_\(\(\[LeftDoubleBracket]\)\(i, i + 1\)\(\
+\[RightDoubleBracket]\)\) = \(A\_\(\(\[LeftDoubleBracket]\)\(i + 1, i\)\(\
+\[RightDoubleBracket]\)\) = 1\);\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\ \ \)}], "Input"],
+
+Cell["We can print out the system to be solved if we wish.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x];\)\), "\[IndentingNewLine]", 
+    \(\(vars\  = \ Table["\<x\>"\_i, {i, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Solve the system ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in  ",
+  StyleBox["LinearSolve[A,B]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  procedure.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X1 = LinearSolve[A, B];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_1\) = \>\"", 
+        MatrixForm[vars], "\< = \>" MatrixForm[X1]\ ];\)\)}], "Input"],
+
+Cell["Verify the answer.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A], MatrixForm[X1], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\ \(Print[MatrixForm[A . X1], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\ \(Print[
+        MatrixForm[A . X1]\  \[Equal] \ 
+          MatrixForm[B]\ ];\)\ \ \ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The 31\[Times]31 matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " in Example 1 has 961 elements, 870 of which are zeros.  This is an \
+example of a \"sparse\" matrix.   Do those zeros contribute to the solution ? \
+ Since the matrix is tri-diagonal and diagonally dominant, there are other \
+algorithms which can be used to compute the solution.  Our tri-diagonal \
+subroutine will work, and it requires only  12.3%  as much space to save the \
+necessary information to solve the problem.  In larger matrices the savings \
+will be even more.  It is more efficient to use vectors instead of matrices \
+when you have sparse matrices that are tri-diagonal.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the 31 by 31 system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  in Example 1 using our ",
+    FontFamily->"Times New Roman"],
+  StyleBox["TriDiagonal[a,d,c,b]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " subroutine.  Compute the solution using decimal arithmetic and rational \
+arithmetic.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(d = Table[2.0, {n}]\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(a = \(\(c\)\(=\)\(Table[1.0, {n - 1}]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(b\)\(=\)\(Table[
+        16.0 - Abs[i - 16.0], {i, 1, n}]\)\(\ \ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Z2\)\(=\)\(TriDiagonal[a, d, c, b]\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+We can compare this answer with the previous one in Example 1.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(X\_1\) = \>\"", MatrixForm[vars], "\< = \>", 
+        MatrixForm[Z1], \ \*"\"\<  and  \!\(X\_2\) = \>\"", 
+        MatrixForm[vars], "\< = \>", MatrixForm[Z2]\ , "\< = \>", 
+        NumberForm[MatrixForm[Z2], 17]];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is able to get a slightly better answer. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(d = Table[2, {n}]\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(a = \(\(c\)\(=\)\(Table[1, {n - 1}]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(b\)\(=\)\(Table[
+        16 - Abs[i - 16], {i, 1, n}]\)\(\ \ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\)\(=\)\(TriDiagonal[a, d, c, b]\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+We can compare this answer with the previous one in Example 1.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(X\_1\) = \>\"", MatrixForm[vars], "\< = \>", 
+        MatrixForm[Chop[X1]], \ \*"\"\<  and  \!\(X\_2\) = \>\"", 
+        MatrixForm[vars], "\< = \>", MatrixForm[X2]\ ];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the 31 by 31 system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  in Example 1 using ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Mathematica",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["'s built in ",
+    FontFamily->"Times New Roman"],
+  StyleBox["TridiagonalSolve[a,d,c,b]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" procedure.  ",
+    FontFamily->"Times New Roman"],
+  "  Compute the solution using decimal arithmetic and rational arithmetic.  \
+"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \), "\[IndentingNewLine]", 
+    \(d = Table[2.0, {n}]\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(a = \(\(c\)\(=\)\(Table[1.0, {n - 1}]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(b\)\(=\)\(Table[
+        16.0 - Abs[i - 16.0], {i, 1, n}]\)\(\ \ \ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`Tridiagonal`\>"];\)\ \ \), "\n", 
+    \(Z3 = TridiagonalSolve[a, d, c, b]\ \ \)}], "Input"],
+
+Cell["\<\
+We can compare this answer with the previous one in Examples 1 and  2.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(Print[\ \*"\"\<         \!\(X\_3\)        \>\"", \ \
+\*"\"\<          \!\(X\_2\)        \>\"", \ \*"\"\<          \
+\!\(X\_1\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        NumberForm[MatrixForm[Chop[Z3]], 17], \ \ NumberForm[
+          MatrixForm[Chop[Z2]], 17], \ \ NumberForm[MatrixForm[Chop[Z1]], 
+          17]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 31;\)\ \ \), "\[IndentingNewLine]", 
+    \(d = Table[2, {n}]\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(a = \(\(c\)\(=\)\(Table[1, {n - 1}]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(b\)\(=\)\(Table[
+        16 - Abs[i - 16], {i, 1, n}]\)\(\ \ \ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`Tridiagonal`\>"];\)\ \ \), "\n", 
+    \(X3 = TridiagonalSolve[a, d, c, b]\ \ \)}], "Input"],
+
+Cell["\<\
+We can compare this answer with the previous one in Examples 1 and  2.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\ \*"\"\<\!\(X\_3\) = \>\"", X3];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ \*"\"\<\!\(X\_2\) = \>\"", X2];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ \*"\"\<\!\(X\_1\) = \>\"", X1];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Conclusion.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], " "}]]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  "is tri-diagonal this structure should be considered because the stored \
+zeros do not contribute to the accuracy of the solution and just waste space \
+in the computer. Since tri-diagonal systems occur in the solution of boundary \
+value differential equations, practical problems could easily involve \
+tri-diagonal matrices of dimension 1000 x 1000.  This would involve 1,000,000 \
+entries if a square matrix was used but only 2998 entries if the vector form \
+of the tri-diagonal matrix is used. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the 31 by 31 system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  in Example 1 using the inverse matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  StyleBox[" and the computation",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(-1\)], 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(X4 = Inverse[A] . B;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<The inverse matrix is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<Compute the solution using the formula X = \!\(A\^\(-1\)\
+\)B\>\""];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[Inverse[A]], MatrixForm[B], "\< = \>", 
+        MatrixForm[X4]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compare this answer with the previous ones we obtained in Examples 1-3.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\ \*"\"\<\!\(X\_4\) = \>\"", X4];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ \*"\"\<\!\(X\_3\) = \>\"", X3];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ \*"\"\<\!\(X\_2\) = \>\"", X2];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ \*"\"\<\!\(X\_1\) = \>\"", X1];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  For a tri-diagonal matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " would you use the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(-1\)], 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  "  method of solution ?  Why ?"
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Z4 = Inverse[N[A]] . N[B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[N[A]], MatrixForm[vars], "\< = \>", 
+        MatrixForm[N[B]]\ ];\)\ \ \ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<Compute the solution using the formula X = \!\(A\^\(-1\
+\)\)B\>\"", "\< = \>", MatrixForm[Z4]];\)\(\ \ \ \ \)\)\)], "Input"],
+
+Cell["\<\
+Compare this answer with the previous ones we obtained in Examples 1-3.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(Print[\ \*"\"\<         \!\(X\_4\)        \>\"", \ \
+\*"\"\<          \!\(X\_3\)        \>\"", \ \*"\"\<          \!\(X\_2\)       \
+ \>\"", \ \*"\"\<          \!\(X\_1\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        NumberForm[MatrixForm[Chop[Z4]], 17], \ \ NumberForm[
+          MatrixForm[Chop[Z3]], 17], \ \ NumberForm[MatrixForm[Chop[Z2]], 
+          17], \ \ NumberForm[MatrixForm[Chop[Z1]], 17]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  For a tri-diagonal matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " would you use the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(-1\)], 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  "  method of solution ?  Why ?"
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Tri-DiagonalBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Tri-Diagonal Matrices",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Tri-DiagonalBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 180, 4, 35, "Text"],
+Cell[1959, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3438, 111, 701, 14, 106, "Text"],
+Cell[4142, 127, 3124, 71, 237, "Text"],
+Cell[7269, 200, 2797, 88, 52, "Text"],
+Cell[10069, 290, 630, 21, 33, "Text"],
+Cell[10702, 313, 5107, 126, 307, "Text"],
+Cell[15812, 441, 4697, 113, 345, "Text"],
+Cell[20512, 556, 783, 21, 166, "Text"],
+Cell[21298, 579, 3713, 114, 109, "Text"],
+Cell[25014, 695, 616, 20, 33, "Text"],
+Cell[25633, 717, 377, 11, 33, "Text"],
+Cell[26013, 730, 1922, 31, 292, "Input"],
+Cell[27938, 763, 902, 27, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[28865, 794, 105, 2, 33, "Text"],
+Cell[28973, 798, 228, 5, 70, "Input"],
+Cell[29204, 805, 103, 5, 33, "Text"],
+Cell[29310, 812, 88, 1, 30, "Input"],
+Cell[29401, 815, 127, 5, 33, "Text"],
+Cell[29531, 822, 441, 8, 90, "Input"],
+Cell[29975, 832, 68, 0, 33, "Text"],
+Cell[30046, 834, 318, 5, 90, "Input"],
+Cell[30367, 841, 227, 9, 34, "Text"],
+Cell[30597, 852, 245, 4, 50, "Input"],
+Cell[30845, 858, 120, 3, 33, "Text"],
+Cell[30968, 863, 34, 0, 33, "Text"],
+Cell[31005, 865, 429, 8, 90, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[31471, 878, 105, 2, 30, "Text"],
+Cell[31579, 882, 224, 5, 70, "Input"],
+Cell[31806, 889, 103, 5, 33, "Text"],
+Cell[31912, 896, 88, 1, 30, "Input"],
+Cell[32003, 899, 127, 5, 33, "Text"],
+Cell[32133, 906, 437, 8, 90, "Input"],
+Cell[32573, 916, 68, 0, 33, "Text"],
+Cell[32644, 918, 318, 5, 90, "Input"],
+Cell[32965, 925, 227, 9, 34, "Text"],
+Cell[33195, 936, 192, 3, 50, "Input"],
+Cell[33390, 941, 34, 0, 33, "Text"],
+Cell[33427, 943, 423, 8, 90, "Input"]
+}, Closed]],
+Cell[33865, 954, 781, 15, 87, "Text"],
+Cell[34649, 971, 554, 18, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[35228, 993, 105, 2, 33, "Text"],
+Cell[35336, 997, 109, 2, 50, "Input"],
+Cell[35448, 1001, 82, 1, 30, "Input"],
+Cell[35533, 1004, 108, 2, 30, "Input"],
+Cell[35644, 1008, 83, 1, 30, "Input"],
+Cell[35730, 1011, 86, 2, 33, "Text"],
+Cell[35819, 1015, 268, 4, 30, "Input"],
+Cell[36090, 1021, 126, 4, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[36253, 1030, 105, 2, 30, "Text"],
+Cell[36361, 1034, 107, 2, 50, "Input"],
+Cell[36471, 1038, 80, 1, 30, "Input"],
+Cell[36554, 1041, 104, 2, 30, "Input"],
+Cell[36661, 1045, 83, 1, 30, "Input"],
+Cell[36747, 1048, 86, 2, 33, "Text"],
+Cell[36836, 1052, 222, 3, 30, "Input"]
+}, Closed]],
+Cell[37073, 1058, 757, 25, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[37855, 1087, 105, 2, 33, "Text"],
+Cell[37963, 1091, 107, 2, 50, "Input"],
+Cell[38073, 1095, 82, 1, 30, "Input"],
+Cell[38158, 1098, 108, 2, 30, "Input"],
+Cell[38269, 1102, 137, 2, 50, "Input"],
+Cell[38409, 1106, 94, 2, 33, "Text"],
+Cell[38506, 1110, 392, 7, 70, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[38935, 1122, 105, 2, 30, "Text"],
+Cell[39043, 1126, 105, 2, 50, "Input"],
+Cell[39151, 1130, 80, 1, 30, "Input"],
+Cell[39234, 1133, 104, 2, 30, "Input"],
+Cell[39341, 1137, 137, 2, 50, "Input"],
+Cell[39481, 1141, 94, 2, 33, "Text"],
+Cell[39578, 1145, 232, 3, 70, "Input"]
+}, Closed]],
+Cell[39825, 1151, 784, 18, 68, "Text"],
+Cell[40612, 1171, 841, 31, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[41478, 1206, 105, 2, 33, "Text"],
+Cell[41586, 1210, 251, 4, 70, "Input"],
+Cell[41840, 1216, 191, 3, 51, "Input"],
+Cell[42034, 1221, 232, 4, 51, "Input"],
+Cell[42269, 1227, 95, 2, 33, "Text"],
+Cell[42367, 1231, 309, 4, 90, "Input"],
+Cell[42679, 1237, 512, 19, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[43228, 1261, 105, 2, 30, "Text"],
+Cell[43336, 1265, 263, 4, 70, "Input"],
+Cell[43602, 1271, 161, 2, 31, "Input"],
+Cell[43766, 1275, 95, 2, 33, "Text"],
+Cell[43864, 1279, 478, 7, 90, "Input"],
+Cell[44345, 1288, 512, 19, 33, "Text"]
+}, Closed]],
+Cell[44872, 1310, 158, 3, 32, "Text"],
+Cell[45033, 1315, 573, 17, 33, "Text"],
+Cell[45609, 1334, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

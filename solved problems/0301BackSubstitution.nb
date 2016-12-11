@@ -1,0 +1,1837 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     55843,       1676]*)
+(*NotebookOutlinePosition[     56822,       1706]*)
+(*  CellTagsIndexPosition[     56778,       1702]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Forward Substitution and Back \
+Substitution",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe will now develop the ",
+  StyleBox["back-substitution algorithm",
+    FontSlant->"Italic"],
+  ", which is useful for solving a linear system of equations that has an \
+upper-triangular coefficient matrix. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Upper-Triangular Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/UpperTriangularMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  An ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", \([a\_\(i, j\)]\)}]]],
+  " is called ",
+  StyleBox["upper-triangular",
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  " provided that the elements satisfy ",
+  Cell[BoxData[
+      \(a\_\(i, j\) = 0\)]],
+  " whenever ",
+  Cell[BoxData[
+      \(i > j\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tIf ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is an upper-triangular matrix, then ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " is said to be an upper-triangular system of linear equations.  \n\n(1)\t\
+",
+  Cell[BoxData[{
+      \(\(a\_\(1, 1\)\) x\_1 + \(a\_\(1, 2\)\) x\_2 + \(a\_\(1, 3\)\) 
+            x\_3 + \[CenterEllipsis] + \(a\_\(1, n - 1\)\) 
+            x\_\(n - 1\) + \(a\_\(1, n\)\) x\_n\  = \ b\_1\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(a\_\(2, 2\)\) 
+            x\_2 + \(a\_\(2, 3\)\) 
+            x\_3 + \[CenterEllipsis] + \(a\_\(2, n - 1\)\) 
+            x\_\(n - 1\) + \(a\_\(2, n\)\) x\_n\  = \ b\_2\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\(a\_\(3, 3\)\) x\_3 + \[CenterEllipsis] + \(a\_\(3, n - 1\)\) 
+            x\_\(n - 1\) + \(a\_\(3, n\)\) x\_n\  = \ b\_3\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\[VerticalEllipsis]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \[VerticalEllipsis]\
+\ \ \ \ \ \ \ \ \ \[VerticalEllipsis]\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(a\_\(n - 1, n - 1\)\) 
+            x\_\(n - 1\) + \(a\_\(n - 1, n\)\) x\_n\  = \ b\_\(n - 1\)\), 
+    "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \(a\_\(n, n\)\) x\_n\  = \ b\_n\)}]],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Back Substitution",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/GaussianElimination.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Suppose that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  is an upper-triangular system with the form given above in (1).  If  ",
+  Cell[BoxData[
+      \(a\_\(i, i\) \[NotEqual] 0\)]],
+  " for ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  " then there exists a unique solution."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/BackSubstitutionProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BackSubstitutionProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["The back substitution algorithm.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To solve the upper-triangular system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " by the method of back-substitution. Proceed with the method only if all \
+the diagonal elements are nonzero. First compute  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(x\_1\), " ", "=", " ", 
+        FractionBox[
+          StyleBox[\(b\_1\),
+            FontSize->12], 
+          StyleBox[\(a\_\(1, 1\)\),
+            FontSize->12]]}]]],
+  "  \n\nand then use the rule  \n\n\t",
+  Cell[BoxData[
+      \(x\_i = \(b\_i\  - \ \[Sum]\+\(j = \ i + 1\)\%n\( a\_\(i, j\)\) x\_j\)\
+\/a\_\(i, i\)\)]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(i = n - 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1"}]]],
+  " \n\t\nOr, use the \"generalized rule\"  \n\n\t",
+  Cell[BoxData[
+      \(x\_i = \(b\_i\  - \ \[Sum]\+\(j = \ i + 1\)\%n\( a\_\(i, j\)\) x\_j\)\
+\/a\_\(i, i\)\)]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(i = n\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1"}]]],
+  " \n\nwhere the \"understood convention\" is that ",
+  Cell[BoxData[
+      \(\[Sum]\+\(j = \ n + 1\)\%n\( a\_\(n + 1, j\)\) x\_j\)]],
+  " is an \"empty summation\" because the lower index of summation is greater \
+than the upper index of summation. \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The loop control structure will permit us to use one formula.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/BackSubstitutionProg.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BackSubstitutionProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Back Substitution).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(BackSub[\ a0_, b0_, 
+          n_\ ] := \[IndentingNewLine]Module[\ {\ a = a0, \ b = b0, \ i, j, 
+            x\ }, \[IndentingNewLine]x\  = \ 
+            Table[0, {n}]; \ \[IndentingNewLine]For[\ i = n, \ 
+            1 \[LessEqual] 
+              i, \ \(i--\), \
+\[IndentingNewLine]\(x\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)\  = \ \(b\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) - \
+\[Sum]\+\(j = \ i + 1\)\%n\( a\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) x\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/a\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\);\)\ ]; \ \[IndentingNewLine]Return[
+            x];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell["Pedagogical version for \"printing all the details.\"", "Text"],
+
+Cell[BoxData[
+    \(\(\(BackSubDetails[\ a0_, b0_, 
+          n_\ ] := \[IndentingNewLine]Module[\ {\ a = a0, b = b0, i, j, x, 
+            X\ }, \[IndentingNewLine]x\  = \ 
+            Table["\<x\>"\_i, {i, 1, n}]; \ \[IndentingNewLine]X\  = \ 
+            Table["\<x\>"\_i, {i, 1, n}]; \ \[IndentingNewLine]For[\ i = n, \ 
+            1 \[LessEqual] i, \ \(i--\), \[IndentingNewLine]Print[
+              Flatten[Chop[
+                      a\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)] . X] \[Equal] 
+                b\_\(\(\[LeftDoubleBracket]\)\(i, \
+1\)\(\[RightDoubleBracket]\)\)]; \[IndentingNewLine]If[i < n, 
+              Print[Flatten[
+                      Chop[a\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]] . Flatten[x] \[Equal] 
+                  b\_\(\(\[LeftDoubleBracket]\)\(i, \
+1\)\(\[RightDoubleBracket]\)\)]; \[IndentingNewLine]Print[\(a\_\(\(\
+\[LeftDoubleBracket]\)\(i, i\)\(\[RightDoubleBracket]\)\)\) 
+                    x\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) \[Equal] \
+\((b\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) - \
+\[Sum]\+\(j = \ i + 1\)\%n\( a\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) x\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\))\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)];]; \
+\[IndentingNewLine]x\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(b\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) - \
+\[Sum]\+\(j = \ i + 1\)\%n\( a\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) x\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/a\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]Print["\<x\>"\_i, "\< = \>", 
+              x\_\(\(\[LeftDoubleBracket]\)\(i, \
+1\)\(\[RightDoubleBracket]\)\), "\<\n\>"]]; \ \[IndentingNewLine]Return[
+            x];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the back-substitution method to solve the upper-triangular linear \
+system  ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {"4", \(-1\), "2", "3"},
+                  {"0", \(-2\), "7", \(-4\)},
+                  {"0", "0", "6", "5"},
+                  {"0", "0", "0", "3"}
+                  }], ")"}], 
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(x\_1\)},
+                    {\(x\_2\)},
+                    {\(x\_3\)},
+                    {\(x\_4\)}
+                    }], "\[NoBreak]", ")"}],
+              MatrixForm[ {
+                Subscript[ x, 1], 
+                Subscript[ x, 2], 
+                Subscript[ x, 3], 
+                Subscript[ x, 4]}]]}], " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"20"},
+                {\(-7\)},
+                {"4"},
+                {"6"}
+                }], ")"}]}]}]]],
+  ".  \n\n",
+  StyleBox["Example 1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the back-substitution method to solve the upper-triangular linear \
+system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"4", \(-1\), "2", "3"},
+                  {"0", \(-2\), "7", \(-4\)},
+                  {"0", "0", "6", "5"},
+                  {"0", "0", "0", "7"}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"20"},
+              {\(-7\)},
+              {"4"},
+              {"6"}
+              }], ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 ( a)",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use the menu \"Input\" then submenu \"Create Table/Matrix/Palette\" to \
+enter matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"4", \(-1\), "2", "3"},
+                {"0", \(-2\), "7", \(-4\)},
+                {"0", "0", "6", "5"},
+                {"0", "0", "0", "3"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"20"},
+                {\(-7\)},
+                {"4"},
+                {"6"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\
+\!\(x\_2\)\>\"", \*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\
+\[IndentingNewLine]", \(Print["\<Solve the system\>"];\), \
+"\[IndentingNewLine]", \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Then perform back-substitution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(X\  = \ BackSubDetails[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(X\  = \ BackSub[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], \ "\< ?\>"\ ];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A . X], "\< = \>", MatrixForm[B]\ ];\)\ \ \), "\n", 
+    \(\(Print[A . X\  \[Equal] \ B\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 ( b)",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Observe that only the element ",
+  Cell[BoxData[
+      \(A\_\(\(\[LeftDoubleBracket]\)\(4, 4\)\(\[RightDoubleBracket]\)\)\)]],
+  " different from the matrix in part (a).  We can make an editorial change \
+of the old matrix to form the new matrix.   "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(A\_\(\(\[LeftDoubleBracket]\)\(4, 
+        4\)\(\[RightDoubleBracket]\)\)\)\(\ \)\)\)], "Input"],
+
+Cell["Now make the change.   ", "Text"],
+
+Cell[BoxData[
+    \(\(\(A\_\(\(\[LeftDoubleBracket]\)\(4, 
+          4\)\(\[RightDoubleBracket]\)\)\)\(\ \)\(=\)\(7\)\(\ \ \)\)\)], \
+"Input"],
+
+Cell["Check it out to make sure it was changed.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  If you like numerical solutions, then make the matrix and vector into \
+decimal form.\nIf you do not do this you will obtain fractional answers."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(A\)\(=\)\(\ \)\(N[A]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(B\)\(=\)\(N[B]\)\(\ \ \)\)\)], "Input"],
+
+Cell["Then perform back-substitution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(X\  = \ BackSubDetails[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(X\  = \ BackSub[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], \ "\< ?\>"\ ];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A . X], "\< = \>", MatrixForm[B]\ ];\)\ \ \), "\n", 
+    \(\(Print[A . X\  \[Equal] \ B\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Are you happy with the few digits that are displayed ? 
+Usually they are enough for educational purposes.  
+
+If you want more, then you will need to learn that computations are done with \
+16 digit accuracy.  The digits are always there, but just not displayed. \
+\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<X = \>", 
+        NumberForm[MatrixForm[X], 16]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell["What if you are a \"digit\" freak and wanted more digits ?", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"4", \(-1\), "2", "3"},
+                {"0", \(-2\), "7", \(-4\)},
+                {"0", "0", "6", "5"},
+                {"0", "0", "0", "7"}
+                }], ")"}]}], ";", " ", 
+        RowBox[{"B", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"20"},
+                {\(-7\)},
+                {"4"},
+                {"6"}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(X\  = \ BackSub[A, B, 4];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<X = \>", NumberForm[\ N[MatrixForm[X], 70]\ ]\ ];\), 
+      "  "}]}], "Input"],
+
+Cell["\<\
+What computer languages have double precision, triple precision, \
+quadruple precision, \"infinite\" precision in its numerical answers ?\
+\>", \
+"Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Lower-triangular systems.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\n\n\tWe will now develop the ",
+  StyleBox["lower-substitution algorithm",
+    FontSlant->"Italic"],
+  ", which is useful for solving a linear system of equations that has a \
+lower-triangular coefficient matrix. \n\n",
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Lower-Triangular Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LowerTriangularMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  An ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", \([a\_\(i, j\)]\)}]]],
+  " is called ",
+  StyleBox["lower-triangular",
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  " provided that the elements satisfy ",
+  Cell[BoxData[
+      \(a\_\(i, j\) = 0\)]],
+  " whenever ",
+  Cell[BoxData[
+      \(i < j\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tIf ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is an lower-triangular matrix, then ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " is said to be a lower-triangular system of linear equations.\n\n(2)\t",
+  Cell[BoxData[{
+      \(\ \ \ \(a\_\(1, 1\)\) 
+          x\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  = \ b\_1\), "\n", 
+      \(\ \ \ \(a\_\(2, 1\)\) x\_1 + \ \ \ \ \(a\_\(2, 2\)\) 
+            x\_2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \  = \ b\_2\), "\n", 
+      \(\ \ \ \(a\_\(3, 1\)\) x\_1 + \ \ \ \ \(a\_\(3, 2\)\) 
+            x\_2 + \ \ \ \(a\_\(3, 3\)\) 
+            x\_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  = \ b\_3\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \[VerticalEllipsis]\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \[VerticalEllipsis]\
+\ \ \ \ \ \ \ \ \ \ \ \[VerticalEllipsis]\), "\n", 
+      \(\(a\_\(n - 1, 1\)\) x\_1 + \(a\_\(n - 1, 2\)\) 
+            x\_2 + \(a\_\(n - 1, 3\)\) 
+            x\_3 + \[CenterEllipsis] + \(a\_\(n - 1, n - 1\)\) 
+            x\_\(n - 1\)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  = \ b\_\(n - 1\)\),
+     "\n", 
+      \(\ \ \ \(a\_\(n, 1\)\) x\_1 + \ \ \ \ \(a\_\(n, 2\)\) 
+            x\_2 + \ \ \ \(a\_\(n, 3\)\) 
+            x\_3 + \[CenterEllipsis] + \ \ \ \(a\_\(n, n - 1\)\) 
+            x\_\(n - 1\) + \(a\_\(n, n\)\) x\_n\  = \ b\_n\)}]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Forward Substitution).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Suppose that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  is an lower-triangular system with the form given above in (2).  If  ",
+  Cell[BoxData[
+      \(a\_\(i, i\) \[NotEqual] 0\)]],
+  " for ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  " then there exists a unique solution."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/BackSubstitutionProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BackSubstitutionProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["The forward substitution algorithm.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To solve the lower-triangular system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " by the method of forward-substitution. Proceed with the method only if \
+all the diagonal elements are nonzero. First compute  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(x\_1\), " ", "=", " ", 
+        FractionBox[
+          StyleBox[\(b\_1\),
+            FontSize->12], 
+          StyleBox[\(a\_\(1, 1\)\),
+            FontSize->12]]}]]],
+  "  \n\nand then use the rule  \n\n\t",
+  Cell[BoxData[
+      \(x\_i\  = \ \(b\_i - \[Sum]\+\(j = \ 1\)\%\(i - 1\)\(a\_\(i, j\)\) \
+x\_j\)\/a\_\(i, i\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\t\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The loop control structure will permit us to use one formula \n\n\t",
+  Cell[BoxData[
+      \(x\_i\  = \ \(b\_i - \[Sum]\+\(j = \ 1\)\%\(i - 1\)\(a\_\(i, j\)\) \
+x\_j\)\/a\_\(i, i\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["2",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/BackSubstitutionProg.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BackSubstitutionProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Forward Substitution).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(ForeSub[\ a0_, b0_, 
+          n_\ ] := \[IndentingNewLine]Module[\ {\ a = a0, \ b = b0, \ i, j\ , 
+            x}, \[IndentingNewLine]x\  = \ 
+            Table[0, {n}]; \ \[IndentingNewLine]For[\ i = 1, \ 
+            i \[LessEqual] 
+              n, \ \(i++\), \
+\[IndentingNewLine]x\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(b\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) - \
+\[Sum]\+\(j = \ 1\)\%\(i - 1\)\(a\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) x\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/a\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)\ ]; \ \[IndentingNewLine]Return[
+            x];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the forward-substitution method to solve the lower-triangular linear \
+system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"3", "0", "0", "0"},
+                {\(-1\), "1", "0", "0"},
+                {"3", \(-2\), \(-1\), "0"},
+                {"1", \(-2\), "6", "2"}
+                }], ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"5"},
+              {"6"},
+              {"4"},
+              {"2"}
+              }], ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use the menu \"Input\" then submenu \"Create Table/Matrix/Palette\" to \
+enter matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"3", "0", "0", "0"},
+                {\(-1\), "1", "0", "0"},
+                {"3", \(-2\), \(-1\), "0"},
+                {"1", \(-2\), "6", "2"}
+                }], ")"}]}], ";"}], "  "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"5"},
+                {"6"},
+                {"4"},
+                {"2"}
+                }], ")"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \
+\*"\"\<\!\(x\_2\)\>\"", \*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\
+\[IndentingNewLine]", \(Print["\<Solve the system\>"];\), \
+"\[IndentingNewLine]", \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Then perform forward-substitution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(X\  = \ ForeSub[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], \ "\< ?\>"\ ];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A . X], "\< = \>", MatrixForm[B]\ ];\)\ \ \), "\n", 
+    \(\(Print[A . X\  \[Equal] \ B\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+To do it in decimals, you can enter decimal values in the matrix \
+and vector. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", " ", "=", " ", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"3.", "0.", "0.", "0."},
+                {\(-1. \), "1.", "0.", "0."},
+                {"3.", \(-2. \), \(-1. \), "0."},
+                {"1.", \(-2. \), "6.", "2."}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}], "    "}], "\n", 
+    RowBox[{
+      RowBox[{"B", " ", "=", " ", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"5."},
+                {"6."},
+                {"4."},
+                {"2."}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "But why require yourself to type all those decimal points ?\nThe same \
+thing could be accomplished by using the convert to numerical function, \
+that's the reserved word  ",
+  Cell[BoxData[
+      StyleBox["N",
+        FontWeight->"Bold"]]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"3", "0", "0", "0"},
+              {\(-1\), "1", "0", "0"},
+              {"3", \(-2\), \(-1\), "0"},
+              {"1", \(-2\), "6", "2"}
+              }], ")"}]}], "  "}], "\n", 
+    RowBox[{
+      RowBox[{"B", " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"5"},
+              {"6"},
+              {"4"},
+              {"2"}
+              }], ")"}]}], "  "}]}], "Input"],
+
+Cell[BoxData[{
+    \(A = N[A]\ \ \), "\[IndentingNewLine]", 
+    \(B = N[B]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(X\  = \ ForeSub[A, B, 4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars]\ , "\< = \>", 
+        MatrixForm[X]];\)\ \ \)}], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Does A X = B ?\>"];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], \ "\< ?\>"\ ];\)\ \ \), "\n", 
+    \(\(Print[MatrixForm[A . X], "\< = \>", MatrixForm[B]\ ];\)\ \ \), "\n", 
+    \(\(Print[A . X\  \[Equal] \ B\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Newton Interpolation Polynomial.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\n\n\tThe following result is an alternate representation for a \
+polynomial which is useful in the area of interpolation. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/\
+NewtonsDividedDifferenceInterpolationFormula.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The following expression is called a Newton polynomial of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  ".\n\n\t",
+  Cell[BoxData[{
+      \(P \((t)\)\  = \ 
+        c\_1\  + \ \(c\_2\) \((t - x\_1)\)\  + \ \(c\_3\) \((t - 
+                x\_1)\)\ \((t - x\_2)\)\  + \ \(c\_4\) \((t - x\_1)\)\ \((t - 
+                x\_2)\)\ \((t - x\_3)\)\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\  ... \)\), 
+    "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\(+\ \ c\_\(n + 1\
+\)\) \((t - x\_1)\)\ \((t - x\_2)\)\ \((t - x\_3)\)\  ... \) \((t - 
+            x\_n)\)\)}]],
+  "  \nor\n\t",
+  Cell[BoxData[
+      \(P \((t)\)\  = \ \[Sum]\+\(i = 1\)\%\(n + 1\)\((\(c\_i\) \
+\(\[Product]\+\(j = 1\)\%\(i - 1\)\((t - x\_j)\)\))\)\)]],
+  "\n\nIf  ",
+  StyleBox["n+1",
+    FontFamily->"Courier New"],
+  "  points  ",
+  Cell[BoxData[
+      \({\((x\_k, y\_k)\)}\_\(k = 1\)\%\(n + 1\)\)]],
+  "  are given, then the following equations can be used to solve for the  ",
+  StyleBox["n+1",
+    FontFamily->"Courier New"],
+  "  coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%\(n + 1\)\)]],
+  ". \n\n\t",
+  Cell[BoxData[
+      \(P \((x\_k)\)\  = \ y\_k\)]],
+  "  \nor\n\t",
+  Cell[BoxData[
+      \(\[Sum]\+\(i = 1\)\%\(n + 1\)\((\(c\_i\) \(\[Product]\+\(j = 1\)\%\(i \
+- 1\)\((x\_k - x\_j)\)\))\)\  = \ y\_k\)]],
+  "   for   ",
+  StyleBox["k=1",
+    FontFamily->"Courier New"],
+  ", ",
+  StyleBox["2",
+    FontFamily->"Courier New"],
+  ",",
+  StyleBox["...",
+    FontFamily->"Courier New"],
+  ",",
+  StyleBox[" n+1",
+    FontFamily->"Courier New"],
+  ".  \n\nThis system of equations is lower-triangular. \n\n\t",
+  Cell[BoxData[
+      \(c\_1\  = \ y\_1\)]],
+  "  \n\t\n\t",
+  Cell[BoxData[
+      \(c\_1 + c\_2\ \((x\_2 - x\_1)\)\  = \ y\_2\)]],
+  "  \n\t\n\t",
+  Cell[BoxData[
+      \(c\_1 + c\_2\ \((x\_3 - x\_1)\) + 
+          c\_3\ \((x\_3 - x\_1)\)\ \((x\_3 - x\_2)\)\  = \ y\_3\)]],
+  "  \n\t\n\t",
+  Cell[BoxData[
+      \(c\_1 + c\_2\ \((x\_4 - x\_1)\) + 
+          c\_3\ \((x\_4 - x\_1)\)\ \((x\_4 - x\_2)\) + 
+          c\_4\ \((x\_4 - x\_1)\)\ \((x\_4 - x\_2)\)\ \((x\_4 - x\_3)\)\  = \ 
+        y\_4\)]],
+  " \n\t",
+  StyleBox["...  ",
+    FontFamily->"Courier New"],
+  "\n\t",
+  Cell[BoxData[
+      \(\(c\_1 + c\_2\ \((x\_\(n + 1\) - x\_1)\) + 
+              c\_3\ \((x\_\(n + 1\) - x\_1)\)\ \((x\_\(n + 1\) - 
+                    x\_2)\) +  ... \) + 
+          c\_\(n + 1\)\ \((x\_\(n + 1\) - x\_1)\)\ \((x\_\(n + 1\) - 
+                x\_2)\)\ \((x\_\(n + 1\) - x\_3)\)\  = \ y\_\(n + 1\)\)]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the Newton polynomial of degree  ",
+  StyleBox["n=3",
+    FontFamily->"Courier New"],
+  "  that passes through the four points ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "1"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \((5, 3)\)}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Set up the four equations to be solved.", "Text"],
+
+Cell[BoxData[{
+    \(x\_1 = 1; x\_2 = 2; x\_3 = 4; x\_4 = 5;\), "\[IndentingNewLine]", 
+    \(y\_1 = 4; y\_2 = 2; y\_3 = 1; y\_4 = 3;\), "\[IndentingNewLine]", 
+    \(\(n = 3;\)\), "\[IndentingNewLine]", 
+    \(\(eq[
+          k_] := \[Sum]\+\(i = 1\)\%\(n + 1\)\((\(c\_i\) \(\[Product]\+\(j = \
+1\)\%\(i - 1\)\((x\_k - x\_j)\)\))\) \[Equal] 
+          y\_k;\)\), "\[IndentingNewLine]", 
+    \(\(eqns = {eq[1], eq[2], eq[3], eq[4]};\)\), "\[IndentingNewLine]", 
+    \(TableForm[eqns]\)}], "Input"],
+
+Cell[TextData[{
+  "Solve these equations for the coefficients  ",
+  Cell[BoxData[
+      RowBox[{\(c\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(c\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(c\_3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox["  ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(c\_4\)}]}]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {c\_1, c\_2, c\_3, c\_4};\)\), "\[IndentingNewLine]", 
+    \(coeff = Solve[eqns, vars]\)}], "Input"],
+
+Cell[TextData[{
+  "If the matrix method  ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "  is preferred, then we can have ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " convert the 4 equations to a 4\[Cross]4 matrix and a column vector. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(AB = LinearEquationsToMatrices[eqns, vars]\ \)}], "Input"],
+
+Cell["\<\
+The first part of this data structure is the matrix A and the \
+second part is the column vector B.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 
+        AB\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(b = 
+        AB\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[a]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[b]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the linear system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[a], MatrixForm[vars], "\< = \>", 
+        MatrixForm[b]];\)\ \)}], "Input"],
+
+Cell["\<\
+The solution can be found by using our forward substitution \
+subroutine.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X = ForeSub[\ a, b, 4\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[a], MatrixForm[vars], "\< = \>", 
+        MatrixForm[b]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<or\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[vars, "\< = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "If you prefer, you could even let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " do it with the built in procedure ",
+  StyleBox["LinearSolve",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(LinearSolve[a, b]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+In any event, we have determined the coefficients of the desired \
+Newton polynomial. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(P[t_] = 
+        ReplaceAll[\[Sum]\+\(i = 1\)\%\(n + 1\)\((\(c\_i\) \(\[Product]\+\(j \
+= 1\)\%\(i - 1\)\((t - x\_j)\)\))\), 
+          coeff\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Newton polynomial\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[t] = \>", P[t]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[1] = \>", P[1]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[2] = \>", P[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[4] = \>", P[4]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[5] = \>", P[5]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We see that  ",
+  StyleBox["P[t]",
+    FontFamily->"Courier New"],
+  "  passes through the given points ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "1"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          StyleBox[" ",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \((5, 3)\)}]}]]],
+  ". \n\n",
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\nWe can graph the polynomial, just for fun! "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = {{x\_1, y\_1}, {x\_2, y\_2}, {x\_3, y\_3}, {x\_4, 
+            y\_4}};\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot[P[t], {t, 0, 6}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{0, 6}, {0, 8}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The Newton polynomial\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[t] = \>", P[t]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/BackSubstitutionBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Triangular Systems and Back Substitution",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/BackSubstitutionBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Raphson", "solset", "Steffensen's", "Steffensen", 
+    "Aitken's", "Aitken", "eqn"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 197, 5, 35, "Text"],
+Cell[1976, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3455, 112, 330, 9, 68, "Text"],
+Cell[3788, 123, 878, 33, 33, "Text"],
+Cell[4669, 158, 1729, 36, 164, "Text"],
+Cell[6401, 196, 1630, 51, 33, "Text"],
+Cell[8034, 249, 678, 22, 33, "Text"],
+Cell[8715, 273, 3179, 91, 353, "Text"],
+Cell[11897, 366, 664, 21, 33, "Text"],
+Cell[12564, 389, 147, 2, 33, "Text"],
+Cell[12714, 393, 759, 13, 156, "Input"],
+Cell[13476, 408, 69, 0, 33, "Text"],
+Cell[13548, 410, 1969, 33, 290, "Input"],
+Cell[15520, 445, 2322, 73, 151, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[17867, 522, 105, 2, 33, "Text"],
+Cell[17975, 526, 225, 9, 33, "Text"],
+Cell[18203, 537, 877, 23, 211, "Input"],
+Cell[19083, 562, 95, 2, 33, "Text",
+  Evaluatable->False],
+Cell[19181, 566, 190, 3, 50, "Input"],
+Cell[19374, 571, 183, 3, 50, "Input"],
+Cell[19560, 576, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[19647, 580, 314, 5, 90, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[19998, 590, 105, 2, 30, "Text"],
+Cell[20106, 594, 281, 6, 33, "Text"],
+Cell[20390, 602, 120, 2, 30, "Input"],
+Cell[20513, 606, 39, 0, 33, "Text"],
+Cell[20555, 608, 142, 3, 30, "Input"],
+Cell[20700, 613, 59, 0, 33, "Text"],
+Cell[20762, 615, 258, 4, 70, "Input"],
+Cell[21023, 621, 307, 8, 52, "Text",
+  Evaluatable->False],
+Cell[21333, 631, 69, 1, 30, "Input"],
+Cell[21405, 634, 63, 1, 30, "Input"],
+Cell[21471, 637, 95, 2, 33, "Text",
+  Evaluatable->False],
+Cell[21569, 641, 190, 3, 50, "Input"],
+Cell[21762, 646, 183, 3, 50, "Input"],
+Cell[21948, 651, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[22035, 655, 314, 5, 90, "Input"],
+Cell[22352, 662, 336, 9, 90, "Text",
+  Evaluatable->False],
+Cell[22691, 673, 109, 2, 30, "Input"],
+Cell[22803, 677, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[22928, 681, 721, 19, 118, "Input"],
+Cell[23652, 702, 211, 6, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[23878, 711, 1203, 41, 106, "Text"],
+Cell[25084, 754, 1916, 40, 164, "Text"],
+Cell[27003, 796, 1350, 42, 52, "Text"],
+Cell[28356, 840, 678, 22, 33, "Text"],
+Cell[29037, 864, 3152, 95, 279, "Text"],
+Cell[32192, 961, 664, 21, 33, "Text"],
+Cell[32859, 984, 150, 2, 33, "Text"],
+Cell[33012, 988, 759, 13, 158, "Input"],
+Cell[33774, 1003, 1090, 36, 73, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[34889, 1043, 101, 2, 33, "Text"],
+Cell[34993, 1047, 225, 9, 33, "Text"],
+Cell[35221, 1058, 878, 23, 211, "Input"],
+Cell[36102, 1083, 98, 2, 33, "Text",
+  Evaluatable->False],
+Cell[36203, 1087, 183, 3, 50, "Input"],
+Cell[36389, 1092, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[36476, 1096, 314, 5, 90, "Input"],
+Cell[36793, 1103, 151, 5, 33, "Text",
+  Evaluatable->False],
+Cell[36947, 1110, 780, 22, 146, "Input"],
+Cell[37730, 1134, 327, 10, 52, "Text",
+  Evaluatable->False],
+Cell[38060, 1146, 498, 16, 146, "Input"],
+Cell[38561, 1164, 93, 2, 50, "Input"],
+Cell[38657, 1168, 183, 3, 50, "Input"],
+Cell[38843, 1173, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[38930, 1177, 314, 5, 90, "Input"]
+}, Closed]],
+Cell[39259, 1185, 267, 6, 68, "Text"],
+Cell[39529, 1193, 3028, 90, 491, "Text"],
+Cell[42560, 1285, 3084, 92, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[45669, 1381, 101, 2, 33, "Text"],
+Cell[45773, 1385, 55, 0, 33, "Text"],
+Cell[45831, 1387, 497, 9, 168, "Input"],
+Cell[46331, 1398, 1546, 46, 33, "Text"],
+Cell[47880, 1446, 130, 2, 50, "Input"],
+Cell[48013, 1450, 312, 11, 33, "Text"],
+Cell[48328, 1463, 166, 3, 50, "Input"],
+Cell[48497, 1468, 123, 3, 33, "Text"],
+Cell[48623, 1473, 568, 11, 130, "Input"],
+Cell[49194, 1486, 97, 3, 33, "Text"],
+Cell[49294, 1491, 468, 8, 130, "Input"],
+Cell[49765, 1501, 225, 8, 33, "Text"],
+Cell[49993, 1511, 64, 1, 30, "Input"],
+Cell[50060, 1514, 110, 3, 33, "Text"],
+Cell[50173, 1519, 656, 11, 185, "Input"],
+Cell[50832, 1532, 3065, 91, 109, "Text"],
+Cell[53900, 1625, 841, 15, 170, "Input"]
+}, Closed]],
+Cell[54756, 1643, 158, 3, 32, "Text"],
+Cell[54917, 1648, 626, 18, 33, "Text"],
+Cell[55546, 1668, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

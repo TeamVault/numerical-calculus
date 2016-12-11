@@ -1,0 +1,4087 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    132829,       3793]*)
+(*NotebookOutlinePosition[    133523,       3817]*)
+(*  CellTagsIndexPosition[    133479,       3813]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Galerkin's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tTo start we need some background regarding an the inner product.  \n\
+\n",
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Inner Product",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/InnerProduct.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Consider the ",
+  ButtonBox["vector space",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/VectorSpace.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of real functions whose domain is the closed interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  ".  We define the ",
+  ButtonBox["inner product of two functions",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/InnerProduct.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{"f", \((x)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", "g", \((x)\)}]]],
+  " as follows  \n\n\t",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]f, g\[RightAngleBracket]\  = \ \[Integral]\_a\%b\ 
+          f \((x)\) g \((x)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The inner product is a continuous infinite dimensional analog to the \
+ordinary ",
+  ButtonBox["dot product",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/DotProduct.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " that is studied in linear algebra.  If the inner product is zero then ",
+  Cell[BoxData[
+      RowBox[{"f", \((x)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", "g", \((x)\)}]]],
+  " are said to be orthogonal to each other on ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  ".  All the functions we use are assumed to be square-integrable, i. e.  ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]f, 
+          f\[RightAngleBracket]\  = \ \[Integral]\_a\%b\ \(\((f[
+                      x])\)\^2\) \[DifferentialD]x < \ \[Infinity]\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Function (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Inner Product",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " To compute the inner product of two real functions over ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\[LeftAngleBracket]f_, 
+        g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+          g[x] \(\(\[DifferentialD]x\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the inner product of   ",
+  Cell[BoxData[
+      \(f \((x)\) = x\^2 - 3  x + 3\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(g \((x)\) = 2  x\^3 + x\^2 + 5  x - 5\)]],
+  "  over ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  \n\n",
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the inner product of   ",
+  Cell[BoxData[
+      \(f \((x)\) = x\^2 - 3  x + 3\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(g \((x)\) = 2  x\^3 + x\^2 + 5  x - 5\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".   \n\n",
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the inner product of   ",
+  Cell[BoxData[
+      \(f \((x)\) = Cos[x] + Sin[2  x]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(g \((x)\) = Sin[2  x] + Cos[3  x]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2  \[Pi]]\)\)]],
+  ".   "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = x\^2 - 3  x + 3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = 2  x\^3 + x\^2 + 5  x - 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\[LeftAngleBracket]f_, 
+        g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+          g[x] \(\(\[DifferentialD]x\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"],
+
+Cell["The details of this computation.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = x\^2 - 3  x + 3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = 2  x\^3 + x\^2 + 5  x - 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[LeftAngleBracket]f_, 
+          g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+            g[x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[
+          x_]\  = \ \[Integral]f[x] 
+            g[x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[LeftAngleBracket]\>", f[x], "\< , \>", 
+        g[x], "\<\[RightAngleBracket]\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", f[x], "\<)(\>", 
+        g[x], "\<)\[DifferentialD]x\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Find the anti-derivative\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", "\<\[Integral]\>", "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", P[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compute the definite integral\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = P[\>", b, "\<] - P[\>", 
+        a, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = (\>", P[b], "\<) - (\>", 
+        P[a], "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = \>", \[LeftAngleBracket]f, 
+          g\[RightAngleBracket]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \ 
+        5\ x\^3 - 3\ x\^2 - 3\ x + 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = 
+        35\ x\^4 - 30\ x\^2 + 7\ x + 3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\[LeftAngleBracket]f_, 
+        g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+          g[x] \(\(\[DifferentialD]x\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"],
+
+Cell["The details of this computation.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \ 
+        5\ x\^3 - 3\ x\^2 - 3\ x + 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = 
+        35\ x\^4 - 30\ x\^2 + 7\ x + 3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[LeftAngleBracket]f_, 
+          g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+            g[x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[
+          x_]\  = \ \[Integral]f[x] 
+            g[x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[LeftAngleBracket]\>", f[x], "\< , \>", 
+        g[x], "\<\[RightAngleBracket]\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", f[x], "\<)(\>", 
+        g[x], "\<)\[DifferentialD]x\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Find the anti-derivative\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", "\<\[Integral]\>", "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", P[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compute the definite integral\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = P[\>", b, "\<] - P[\>", 
+        a, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = (\>", P[b], "\<) - (\>", 
+        P[a], "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = \>", \[LeftAngleBracket]f, 
+          g\[RightAngleBracket]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \ Cos[x] + Sin[2  x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = \ Sin[2  x] + Cos[3  x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\[LeftAngleBracket]f_, 
+        g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+          g[x] \(\(\[DifferentialD]x\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g[x] = \>", g[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"],
+
+Cell["The details of this computation.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \ Cos[x] + Sin[2  x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = \ Sin[x] + Cos[2  x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[LeftAngleBracket]f_, 
+          g_\[RightAngleBracket] := \[Integral]\_a\%b f[x] 
+            g[x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ 
+        FullSimplify[\[Integral]f[x] 
+              g[x] \[DifferentialD]x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[LeftAngleBracket]\>", f[x], "\< , \>", 
+        g[x], "\<\[RightAngleBracket]\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", f[x], "\<)(\>", 
+        g[x], "\<)\[DifferentialD]x\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Find the anti-derivative\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", "\<\[Integral]\>", "\<(\>", 
+        Expand[f[x] 
+            g[x]], "\<)\[DifferentialD]x\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<       P[x] = \>", P[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compute the definite integral\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = P[\>", b, "\<] - P[\>", 
+        a, "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = (\>", P[b], "\<) - (\>", 
+        P[a], "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        Expand[f[x] g[x]], "\<)\[DifferentialD]x = \>", \[LeftAngleBracket]f, 
+          g\[RightAngleBracket]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[LeftAngleBracket]f[x],g[x]\[RightAngleBracket] = \>", \
+\[LeftAngleBracket]f, g\[RightAngleBracket]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Lemma.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]w, 
+          f\[RightAngleBracket]\  = \ \(\[Integral]\_a\%b\ 
+            w \((x)\) f \((x)\) \[DifferentialD]x\  = \ 0\)\)]],
+  "  for any function  ",
+  Cell[BoxData[
+      \(w \((x)\)\)]],
+  ",  then  ",
+  Cell[BoxData[
+      \(f \((x)\) \[Congruent] 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Basis for a Vector Space",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA complete ",
+  ButtonBox["basis",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/VectorSpaceBasis.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " for a ",
+  ButtonBox["vector space",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/VectorSpace.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " ",
+  StyleBox["V",
+    FontFamily->"Courier New"],
+  " of functions is a set of ",
+  ButtonBox["linear independent",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearlyIndependent.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " functions ",
+  Cell[BoxData[
+      \(S = {\(\[Phi]\_i\) \((x)\)}\_\(i = 0\)\%\[Infinity]\)]],
+  "  which has the property that any ",
+  Cell[BoxData[
+      \(f \((x)\) \[Element] V\)]],
+  " can be written uniquely as a linear combination  \n\t\n\t\t",
+  Cell[BoxData[
+      \(f \((x)\)\  = \ \[Sum]\+\(j = 0\)\%\[Infinity]\ \(c\_j\) \
+\(\[Phi]\_j\) \((x)\)\)]],
+  ".  \n\nFor example, if ",
+  StyleBox["V",
+    FontFamily->"Courier New"],
+  " the set of all polynomials and power series, then a complete basis is  ",
+  Cell[BoxData[
+      \(S = {\(\[Phi]\_i\) \((x)\) = x\^i}\_\(i = 0\)\%\[Infinity]\)]],
+  ".  \n\n",
+  StyleBox["Property.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(f \((x)\) \[Element] V\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]\[Phi]\_i, f\[RightAngleBracket] = 0\)]],
+  "  all  ",
+  Cell[BoxData[
+      \(\[Phi]\_i \[Element] S\)]],
+  "  then  ",
+  Cell[BoxData[
+      \(f \((x)\) \[Congruent] 0\)]],
+  ".  \n\nWe mention these concepts without proof so as to provide a little \
+background.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Weighted Residual Methods",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA weighted residual method uses a finite number of functions ",
+  Cell[BoxData[
+      \({\(\[Phi]\_i\) \((x)\)}\_\(i = 0\)\%n\)]],
+  ".  Consider the differential equation  \n\n(1)\t\t",
+  Cell[BoxData[
+      \(L[y \((x)\)]\  + \ f \((x)\)\  = \ 0\)]],
+  "     over the interval  ",
+  Cell[BoxData[
+      \(a \[LessEqual] x \[LessEqual] b\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "The term ",
+  Cell[BoxData[
+      \(L[y \((x)\)]\)]],
+  " denotes a ",
+  ButtonBox["linear differential operator",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/DifferentialOperator.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  \n\n\tMultiplying (1) by any arbitrary weight function ",
+  Cell[BoxData[
+      \(w \((x)\)\)]],
+  " and integrating over the interval ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  " one obtains \n\n(2)\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          w \((x)\) \((L[y \((x)\)]\  + \ 
+                f \((x)\))\) \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for any arbitrary  ",
+  Cell[BoxData[
+      \(w \((x)\)\)]],
+  ".    \n\nEquations (1) and (2) are equivalent, because ",
+  Cell[BoxData[
+      \(w \((x)\)\)]],
+  " is any arbitrary function.  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tWe introduce a trial solution ",
+  Cell[BoxData[
+      \(u \((x)\)\)]],
+  " to (1) of the form \n\n(3)\t\t",
+  Cell[BoxData[
+      \(u \((x)\)\  = \ \(\[Phi]\_0\) \((x)\)\  + \ \[Sum]\+\(j = 1\)\%n\ \(c\
+\_j\) \(\[Phi]\_j\) \((x)\)\)]],
+  ",\n\nand replace ",
+  Cell[BoxData[
+      \(y \((x)\)\)]],
+  " with ",
+  Cell[BoxData[
+      \(u \((x)\)\)]],
+  " on the left side of  (1).  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe ",
+  StyleBox["residual",
+    FontColor->RGBColor[0, 0, 1]],
+  " is defined as follows \n\n(4)\t\t",
+  Cell[BoxData[
+      \(r \((x)\)\  = \ L[u \((x)\)]\  + \ f \((x)\)\)]],
+  "     "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe goal is to construct ",
+  Cell[BoxData[
+      \(u \((x)\)\)]],
+  " so that the integral of the residual will be zero for some choices of \
+weight functions.  That is, ",
+  Cell[BoxData[
+      \(u \((x)\)\)]],
+  " will partially satisfy (2) in the sense that \n\n(5)\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          w \((x)\) \((L[u \((x)\)]\  + \ 
+                f \((x)\))\) \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for some choices of  ",
+  Cell[BoxData[
+      \(w \((x)\)\)]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Galerkin's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tOne of the most important weighted residual methods was invented by \
+the Russian mathematician ",
+  ButtonBox["Boris Grigoryevich Galerkin",
+    ButtonData:>{
+      URL[ "http://smitu.cef.spbstu.ru/galerkin_en.htm"], None},
+    ButtonStyle->"Hyperlink"],
+  " (February 20, 1871 - July 12, 1945).  Galerkin's method selects the \
+weight function functions in a special way:  they are chosen from the basis \
+functions, i.e.  ",
+  Cell[BoxData[
+      \(w \((x)\) \[Element] {\(\[Phi]\_i\) \((x)\)}\_\(i = 1\)\%n\)]],
+  ".  It is required that the following ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations hold true \n\t\n(6)\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[u \((x)\)]\  + \ 
+                f \((x)\))\) \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nTo apply the method, all we need to do is solve these ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations for the coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Galerkin's Method for solving an I. V. P.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSuppose we wish to solve the initial value problem\n\t\n",
+  StyleBox["(i)  ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(L[y \((x)\)]\  + \ f \((x)\)\  = \ 0\)]],
+  ",  \n\twith\n\t\t",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ y\_0\)]],
+  "   over the interval  ",
+  Cell[BoxData[
+      \(a \[LessEqual] x \[LessEqual] b\)]],
+  ".  \n\nWe use the trial function  \n\n",
+  StyleBox["(ii) ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(u \((x)\)\  = \ 
+        y\_0\  + \ \[Sum]\+\(j = 1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)\)]],
+  ".  \n\nThere are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve   ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ",  i.e.   \n\n",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)]\  + \ L[y\_0] + 
+                f \((x)\))\) \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  For the solution of an I. V. P. we choose  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\) = y\_0\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve   ",
+  Cell[BoxData[
+      \(\(y'\)[x]\  + \ 2  y[x]\  + \ 6 + 4\ x\  = \ 0\)]],
+  ",   with the initial condition   ",
+  Cell[BoxData[
+      \(y[0] = 1\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Form the linear operator, the differential equation and the initial \
+condition. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L[y_]\ \  = \(y'\)[x] + 5  y[x];\)\ \ \), "\n", 
+    \(\(f[x_] = \(-\ 1\) - x + \ Sin[2  x];\)\ \), "\[IndentingNewLine]", 
+    \(\(ode = L[y] + f[x] \[Equal] 0;\)\ \ \), "\n", 
+    \(\(y\_0 = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(ics = y[0] \[Equal] y\_0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I. V. P.\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With  \>", ics\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We will solve the I. V. P. by choosing ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " functions ",
+  Cell[BoxData[
+      \({\ \(\[Phi]\_i\) \((x)\) = x\^i\ }\_\(i = 1\)\%n\)]],
+  ".   The trial solution is a linear combination of the basis functions. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 7;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Clear[i];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] n, \(i++\), \[IndentingNewLine]\[Phi]\_i[x_]\  = \ 
+          x\^i];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi][x_]\  = \ 
+        y\_0\  + \ \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \[Phi]\_i[
+                x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The basis functions are\>"];\)\ \ \), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<{\!\(\[Phi]\_i\)[x]}\>\""\_\(i = 1\)\%n, "\< = \>", 
+        Table[\[Phi]\_i[x], {i, 1, n}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The trial solution is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi][x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The residual is formed by substituting  ",
+  Cell[BoxData[
+      \(u[x] = \[CapitalPhi][x]\)]],
+  "  into  ",
+  Cell[BoxData[
+      \(L[u[x]] + f[x]\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_]\  = \ 
+        ReplaceAll[\ 
+          L[u] + f[
+              x], {u[x] \[Rule] \[CapitalPhi][x], \(u'\)[
+                x] \[Rule] \(\[CapitalPhi]'\)[
+                x]}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ L[u] + f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Substitute u[x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Get the residual\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Galerkin's requirement is that the inner product of the residual with  ",
+  Cell[BoxData[
+      \({\(\[Phi]\_i\) \((x)\) = x\^i}\_\(i = 1\)\%7\)]],
+  "  is zero. \nThis leads to a linear system in the coefficients  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%7\)]],
+  "  of the trial function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = {};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]\(eqns\  = \ 
+            Append[eqns, \[Integral]\_a\%b \[Phi]\_i[x] 
+                    r[x] \[DifferentialD]x\  \[Equal] \ 
+                0];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We must solve",
+  " for the coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%7\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ NSolve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<Solve\>"];\)\ \ \), "\n", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<For \>", vars\ ];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[Partition[solset, 1]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%7\)]],
+  "  to form the Galerkin solution.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 
+        ReplaceAll[\[CapitalPhi][x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[g[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        Ticks \[Rule] {Range[0, 3, 1], 
+            Range[0, 1.0, 0.5]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With  \>", ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution.  This is just for fun !"
+}], "Text"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to solve the initial value problem."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(sol = DSolve[{ode, ics}, y[x], x];\)\ \), "\n", 
+    \(\(sol = MapAll[Simplify, sol];\)\ \), "\n", 
+    \(\(z[x_]\  = \ 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<Solve the I. V. P.\>"];\)\ \ \), "\n", 
+    \(\(Print[\ ode];\)\ \ \), "\n", 
+    \(\(Print["\<With  \>", ics\ ];\)\ \), "\n", 
+    \(\(Print["\<Get the analytic solution\>"];\)\ \ \ \), "\n", 
+    \(\(Print["\<y[x] = \>", z[x]\ ];\)\ \ \)}], "Input"],
+
+Cell["Plot the analytic solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 3, 1], 
+            Range[0, 1.0, 0.5]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With  \>", ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", z[x]\ ];\)\)}], "Input"],
+
+Cell["Plot both the analytic and Galerkin solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{z[x], g[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+        Ticks \[Rule] {Range[0, 3, 1], 
+            Range[0, 1.0, 0.5]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = z[x] \>", z[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+Check out the difference between the analytic solution and the Galerkin \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x] - g[x], {x, a, b}, 
+        PlotRange \[Rule] {{0, 3}, {\(-0.015\), 0.005}}, 
+        PlotStyle \[Rule] Green, 
+        Ticks \[Rule] {Range[0, 3, 1], 
+            Range[\(-0.02\), 0.01, 0.005]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error = Analyic - Galerkin\>"];\)\ \)}], "Input"],
+
+Cell["So the Galerkin solution appears to be good. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using Galerkin's method because the \
+linear system might be ill conditioned, i.e. the solution is highly sensitive \
+to round off errors in the matrix and vector.  Let us investigate the \
+situation for this example. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(M = 
+        N[LinearEquationsToMatrices[eqns, 
+            vars]];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[X, 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", VectorNorm[X, 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        VectorNorm[X, 2]*
+          MatrixConditionNumber[N[A]]*$MachineEpsilon];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Although ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, there is a possibility \
+that the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  might not have this much accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  "We are really done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can calculate the coefficients  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%n\)]],
+  "  by directly setting up the matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  " vector ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["B",
+        FontWeight->"Bold"]]],
+  ".  This is just for fun !  "
+}], "Text"],
+
+Cell[TextData[{
+  "If we are solving an initial value problem with ",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ y\_0\)]],
+  "  we have  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ y\_0\)]],
+  "  and there are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve\n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[y\_0] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = \ y\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<L[y[x]] = \>", L[y]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  L[\!\(y\_0\)] = \>\"", 
+        Expand[L[s]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the linear operator is  ",
+  Cell[BoxData[
+      RowBox[{\(L[y]\), " ", "=", " ", 
+        RowBox[{\(5  y[x]\), "+", 
+          RowBox[{
+            SuperscriptBox["y", "\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}]}]}]]],
+  "  we have  ",
+  Cell[BoxData[
+      \(L[y\_0] = 5\)]],
+  "  which must be entered into the integrals on the right hand side. \n\n\t\
+",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((5 + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe matrix form of the solution is now given.    "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = 
+        N[Table[\ \[Integral]\_a\%b \[Phi]\_i[x] 
+                L[\[Phi]\_j] \[DifferentialD]x, {i, 1, n}, {j, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        N[Table[\ \ \(-\(\[Integral]\_a\%b \[Phi]\_i[
+                    x] \((5 + f[x])\) \[DifferentialD]x\)\), \ {i, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system to solve is  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell["This is the same as we obtained previously.  ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Galerkin's Method for solving an a B. V. P.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSuppose we wish to solve a boundary value problem over the interval  \
+",
+  Cell[BoxData[
+      \(a \[LessEqual] x \[LessEqual] b\)]],
+  ",  \n\t\n",
+  StyleBox["(I)  ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(L[y \((x)\)]\  + \ f \((x)\)\  = \ 0\)]],
+  ",  \n\twith\n\t\t",
+  Cell[BoxData[{
+      \(y \((a)\)\  = \ z\_a\), "\[IndentingNewLine]", 
+      \(y \((b)\)\  = \ z\_b\)}]],
+  "   \n\nWe define  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ 
+        z\_a + \((z\_b - z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\)\)]],
+  "  and use the trial function  \n\n",
+  StyleBox["(II) ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(u \((x)\)\  = \ \(\[Phi]\_0\) \((x)\)\  + \ \[Sum]\+\(j = 1\)\%n\ \(c\
+\_j\) \(\[Phi]\_j\) \((x)\)\)]],
+  ".  \n\nThere are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve   ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ",  i.e. \n\n",
+  StyleBox["(III)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)]\  + \ L[\(\[Phi]\_0\) \((x)\)] + 
+                f \((x)\))\) \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The functions  ",
+  Cell[BoxData[
+      \({\(\[Phi]\_i\) \((x)\)}\_\(i = 1\)\%n\)]],
+  "  must all be chosen with the boundary properties \n\n\t\t",
+  Cell[BoxData[
+      \(\(\[Phi]\_i\) \((a)\) = 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_i\) \((b)\) = 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve   ",
+  Cell[BoxData[
+      \(\(y''\)[x] + y[x]\  + \ 2\ x\ \((1 - x)\)\  = \ 0\)]],
+  ".  \n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Use the boundary values  ",
+  Cell[BoxData[
+      \(y[0] = 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(y[1] = 0\)]],
+  ".   \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Use the boundary values  ",
+  Cell[BoxData[
+      \(y[0] = 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(y[1] = 1\/2\)]],
+  ".   "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Form the linear operator, the differential equation and the boundary values. \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L[y_]\ \  = \(y''\)[x] + y[x];\)\ \ \), "\n", 
+    \(\(f[x_]\  = 2\ x\ \((1 - x)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ode = L[y] + f[x] \[Equal] 0;\)\ \ \), "\n", 
+    \(\(a = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(z\_a = 0;\)\ \ \), "\n", 
+    \(\(z\_b = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ics = {y[a] \[Equal] z\_a, 
+          y[b] \[Equal] z\_b};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the D. E.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The first function ",
+  Cell[BoxData[
+      \(\[Phi]\_0[x]\)]],
+  " will be chosen to be the straight line between the boundary points. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi]\_0[x_]\  = \ 
+        z\_a + \((z\_b - 
+                z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Given the points (\>", a, "\<,\>", 
+        z\_a, "\<) and \>", "\<(\>", b, "\<,\>", 
+        z\_b, "\<).\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        a, "\<] = \>", \[Phi]\_0[a]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        b, "\<] = \>", \[Phi]\_0[b]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The other ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " function ",
+  Cell[BoxData[
+      \({\[Phi]\_i[x]}\_\(i = 1\)\%n\)]],
+  " will be chosen to be zero at the endpoints. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_1[x_]\  = \ \ x \((x - 1)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_2[
+          x_]\  = \ \ \(x\^2\) \((x - 1)\)\^2;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[Phi]\_3[
+          x_]\  = \ \ \(x\^3\) \((x - 1)\)\^3;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[CapitalPhi][
+          x_]\  = \ \[Phi]\_0[
+            x]\  + \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \[Phi]\_i[
+                x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The basis functions are\>"];\)\ \ \), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<{\!\(\[Phi]\_i\)[x]}\>\""\_\(i = 1\)\%n, "\< = \>", 
+        Table[\[Phi]\_i[x], {i, 1, n}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The trial solution is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi][x] = \>", \[CapitalPhi][x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The residual is formed by substituting  ",
+  Cell[BoxData[
+      \(u[x] = \[CapitalPhi][x]\)]],
+  "  into  ",
+  Cell[BoxData[
+      \(L[u[x]] + f[x]\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_]\  = \ 
+        ReplaceAll[\ 
+          L[u] + f[
+              x], {u[x] \[Rule] \[CapitalPhi][x], \(u'\)[
+                x] \[Rule] \(\[CapitalPhi]'\)[x], \(u''\)[
+                x] \[Rule] \(\[CapitalPhi]''\)[
+                x]}\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ L[u] + f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Substitute u[x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<Get\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(R = 0;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] n, \(i++\), \[IndentingNewLine]R = 
+          R + \ \(c\_i\) 
+              Expand[Coefficient[Collect[r[x], vars], \ 
+                  c\_i]]; \[IndentingNewLine]S = 
+          Expand[r[x] - R]; \ \[IndentingNewLine]r[x_]\  = \ 
+          R + S\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Galerkin's requirement is that the inner product of the residual with ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{\(\[Phi]\_1 = \ x \((x - 1)\)\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            
+            "StrikeThrough"->
+              False}], \(\[Phi]\_2 = \ \(x\^2\) \((x - 1)\)\^2\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            
+            "StrikeThrough"->
+              False}], \(\[Phi]\_3 = \(x\^3\) \((x - 1)\)\^3\)}], "}"}]]],
+  " is zero. "
+}], "Text"],
+
+Cell[TextData[{
+  "Form the equations  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {};\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]\(eqns\  = \ 
+            Append[eqns, \[Integral]\_a\%b \[Phi]\_i[x] 
+                    r[x] \[DifferentialD]x\  \[Equal] \ 
+                0];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We must solve",
+  " for the coefficients   ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%3\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<Solve\>"];\)\ \ \), "\n", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<For \>", vars\ ];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[Partition[solset, 1]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(nsolset = solset;\)\), "\[IndentingNewLine]", 
+    \(\(nsolset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\) = 
+        N[solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[Partition[nsolset, 1]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%3\)]],
+  "  to form the Galerkin solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 
+        ReplaceAll[\[CapitalPhi][x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[g[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        PlotRange \[Rule] {{0, 1}, {0, 0.06}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Range[0, 0.06, 0.01]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", N[g[x]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(sol = DSolve[{ode, ics}, y[x], x];\)\ \), "\n", 
+    \(\(sol = MapAll[Simplify, sol];\)\ \), "\n", 
+    \(\(z[x_]\  = \ 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<Solve the B. V. P.\>"];\)\ \), "\n", 
+    \(\(Print[\ ode];\)\ \), "\n", 
+    \(\(Print[\ ics\ ];\)\ \ \), "\n", 
+    \(\(Print["\<Get the analytic solution\>"];\)\ \ \), "\n", 
+    \(\(Print["\<y[x] = \>", z[x]\ ];\)\ \)}], "Input"],
+
+Cell["Plot the analytic solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+        PlotRange \[Rule] {{0, 1}, {0, 0.06}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Range[0, 0.06, 0.01]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", z[x]\ ];\)\)}], "Input"],
+
+Cell["Plot both the analytic and Galerkin solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{z[x], g[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+        PlotRange \[Rule] {{0, 1}, {0, 0.06}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Range[0, 0.06, 0.01]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = z[x] \>", z[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+Check out the difference between the analytic solution and the Galerkin \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x] - g[x], {x, a, b}, PlotStyle \[Rule] Green, 
+        PlotRange \[Rule] {{0, 1}, {\(-5.3\)\[Times]10\^\(-9\), 
+              5.3\[Times]10\^\(-9\)}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error = Analyic - Galerkin\>"];\)\ \)}], "Input"],
+
+Cell["So the Galerkin solution is very accurate. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using Galerkin's method because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(M = 
+        N[LinearEquationsToMatrices[eqns, 
+            vars]];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[X, 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", VectorNorm[X, 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        VectorNorm[X, 2]*
+          MatrixConditionNumber[N[A]]*$MachineEpsilon];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains most of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  "We are really done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can calculate the coefficients  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%n\)]],
+  "  by directly setting up the matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  " vector ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["B",
+        FontWeight->"Bold"]]],
+  ".  This is just for fun !  "
+}], "Text"],
+
+Cell[TextData[{
+  "The boundary values  ",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ z\_a, \ y \((b)\)\  = \ z\_b\)]],
+  "  are used to form  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ 
+        z\_a + \((z\_b - z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\)\)]],
+  "  and there are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve  \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\[Phi]\_0[x]] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = \ \[Phi]\_0[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< L[y[x]] = \>", L[y]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<L[\!\(\[Phi]\_0\)[x]] = \>\"", 
+        Expand[L[s]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the linear operator is  ",
+  Cell[BoxData[
+      RowBox[{\(L[y]\), " ", "=", " ", 
+        RowBox[{\(y[x]\), "+", 
+          RowBox[{
+            SuperscriptBox["y", "\[Prime]\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}]}]}]]],
+  "  we have  ",
+  Cell[BoxData[
+      \(L[\[Phi]\_0[x]] = 0\)]],
+  "  which must be entered into the integrals on the right hand side. \n\n\t\
+",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((0 + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe matrix form of the solution is  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = 
+        N[Table[\ \[Integral]\_a\%b \[Phi]\_i[x] 
+                L[\[Phi]\_j] \[DifferentialD]x, {i, 1, n}, {j, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        N[Table[\ \ \(-\(\[Integral]\_a\%b \[Phi]\_i[
+                    x] \((0 + f[x])\) \[DifferentialD]x\)\), \ {i, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell["This is the same as we obtained above.  ", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Form the linear operator, the differential equation and the boundary values. \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L[y_]\ \  = \(y''\)[x] + y[x];\)\ \ \), "\n", 
+    \(\(f[x_]\  = 2\ x\ \((1 - x)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ode = L[y] + f[x] \[Equal] 0;\)\ \ \), "\n", 
+    \(\(a = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(z\_a = 0;\)\ \ \), "\n", 
+    \(\(z\_b = 1\/2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ics = {y[a] \[Equal] z\_a, 
+          y[b] \[Equal] z\_b};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the D. E.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The first function ",
+  Cell[BoxData[
+      \(\[Phi]\_0[x]\)]],
+  " will be chosen to be the straight line between the boundary points. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi]\_0[x_]\  = \ 
+        z\_a + \((z\_b - 
+                z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Given the points (\>", a, "\<,\>", 
+        z\_a, "\<) and \>", "\<(\>", b, "\<,\>", 
+        z\_b, "\<).\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        a, "\<] = \>", \[Phi]\_0[a]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        b, "\<] = \>", \[Phi]\_0[b]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The other ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " function ",
+  Cell[BoxData[
+      \({\[Phi]\_i[x]}\_\(i = 1\)\%n\)]],
+  " will be chosen to be zero at the endpoints. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_1[x_]\  = \ \ x \((x - 1)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_2[
+          x_]\  = \ \ \(x\^2\) \((x - 1)\)\^2;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[Phi]\_3[
+          x_]\  = \ \ \(x\^2\) \((x - 1)\)\^3;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[Phi]\_4[
+          x_]\  = \ \ \(x\^3\) \((x - 1)\)\^3;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[Phi]\_5[
+          x_]\  = \ \ \(x\^4\) \((x - 1)\)\^3;\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(\[CapitalPhi][
+          x_]\  = \ \[Phi]\_0[
+            x]\  + \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \[Phi]\_i[
+                x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The basis functions are\>"];\)\ \ \), "\[IndentingNewLine]", \
+
+    \(\(Print[
+        Table[\[Phi]\_i[x], {i, 1, n}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The trial solution is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi][x] = \>", \[CapitalPhi][x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The residual is formed by substituting  ",
+  Cell[BoxData[
+      \(u[x] = \[CapitalPhi][x]\)]],
+  "  into  ",
+  Cell[BoxData[
+      \(L[u[x]] + f[x]\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_]\  = \ 
+        ReplaceAll[\ 
+          L[u] + f[
+              x], {u[x] \[Rule] \[CapitalPhi][x], \(u'\)[
+                x] \[Rule] \(\[CapitalPhi]'\)[x], \(u''\)[
+                x] \[Rule] \(\[CapitalPhi]''\)[
+                x]}\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ L[u] + f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Substitute u[x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<Get\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(R = 0;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] n, \(i++\), \[IndentingNewLine]R = 
+          R + \ \(c\_i\) 
+              Expand[Coefficient[Collect[r[x], vars], \ 
+                  c\_i]]; \[IndentingNewLine]S = 
+          Expand[r[x] - R]; \ \[IndentingNewLine]r[x_]\  = \ 
+          R + S\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Galerkin's requirement is that the inner product of the residual with ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{\(\[Phi]\_1 = x \((x - 1)\)\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(\[Phi]\_2 = \(x\^2\) \((x - 1)\)\^2\),
+           
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(\[Phi]\_3 = \(x\^2\) \((x - 1)\)\^3\),
+           
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(\[Phi]\_4 = \(x\^3\) \((x - 1)\)\^3\),
+           
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            
+            "StrikeThrough"->
+              False}], \(\[Phi]\_5 = \(x\^4\) \((x - 1)\)\^3\)}], "}"}]]],
+  " is zero. "
+}], "Text"],
+
+Cell[TextData[{
+  "Form the equations  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "5"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {};\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]\(eqns\  = \ 
+            Append[eqns, \[Integral]\_a\%b \[Phi]\_i[x] 
+                    r[x] \[DifferentialD]x\  \[Equal] \ 
+                0];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We must solve",
+  " for the coefficients   ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%5\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<Solve\>"];\)\ \ \), "\n", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<For \>", vars\ ];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[Partition[solset, 1]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(nsolset = solset;\)\), "\[IndentingNewLine]", 
+    \(\(nsolset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\) = 
+        N[solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[Partition[nsolset, 1]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%5\)]],
+  "  to form the Galerkin solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 
+        ReplaceAll[\[CapitalPhi][x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[g[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        PlotRange \[Rule] {{0, 1}, {0, 0.6}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Range[0, 0.6, 0.1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", N[g[x]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution.  This is just for fun !  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(sol = DSolve[{ode, ics}, y[x], x];\)\ \), "\n", 
+    \(\(sol = MapAll[Simplify, sol];\)\ \), "\n", 
+    \(\(z[x_]\  = \ 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<Solve the B. V. P.\>"];\)\ \), "\n", 
+    \(\(Print[\ ode];\)\ \), "\n", 
+    \(\(Print[\ ics\ ];\)\ \ \), "\n", 
+    \(\(Print["\<Get the analytic solution\>"];\)\ \ \), "\n", 
+    \(\(Print["\<y[x] = \>", z[x]\ ];\)\ \)}], "Input"],
+
+Cell["Plot the analytic solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+        PlotRange \[Rule] {{0, 1}, {0, 0.6}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Range[0, 0.6, 0.1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", z[x]\ ];\)\)}], "Input"],
+
+Cell["Plot both the analytic and Galerkin solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{z[x], g[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+        PlotRange \[Rule] \ All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = z[x] \>", z[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+Check out the difference between the analytic solution and the Galerkin \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x] - g[x], {x, a, b}, PlotStyle \[Rule] Green, 
+        PlotRange \[Rule] {{0, 1}, {\(-0.0011\), 0.0011}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], 
+            Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error = Analyic - Galerkin\>"];\)\ \)}], "Input"],
+
+Cell["So the Galerkin solution appears to be good. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using Galerkin's method because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(M = 
+        N[LinearEquationsToMatrices[eqns, 
+            vars]];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[X, 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", VectorNorm[X, 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        VectorNorm[X, 2]*
+          MatrixConditionNumber[N[A]]*$MachineEpsilon];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains most of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check out the matrix form for setting up the Galerkin equations.  \
+This is just for fun "
+}], "Text"],
+
+Cell[TextData[{
+  "The boundary values  ",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ z\_a, \ y \((b)\)\  = \ z\_b\)]],
+  "  are used to form  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ 
+        z\_a + \((z\_b - z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\)\)]],
+  "  and there are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve  \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\[Phi]\_0[x]] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = \ \[Phi]\_0[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< L[y[x]] = \>", L[y]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<L[\!\(\[Phi]\_0\)[x]] = \>\"", 
+        Expand[L[s]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the linear operator is   ",
+  Cell[BoxData[
+      RowBox[{\(L[y]\), " ", "=", " ", 
+        RowBox[{\(y[x]\), "+", 
+          RowBox[{
+            SuperscriptBox["y", "\[Prime]\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}]}]}]]],
+  " we have ",
+  Cell[BoxData[
+      \(L[\[Phi]\_0[x]] = x\/2\)]],
+  " which must be entered into the integrals on the right hand side. \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((x\/2 + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe matrix form of the solution is  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = 
+        N[Table[\ \[Integral]\_a\%b \[Phi]\_i[x] 
+                L[\[Phi]\_j] \[DifferentialD]x, {i, 1, n}, {j, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        N[Table[\ \ \(-\(\[Integral]\_a\%b \[Phi]\_i[
+                    x] \((x\/2 + f[x])\) \[DifferentialD]x\)\), \ {i, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell["This is the same as we obtained above.  ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve   ",
+  Cell[BoxData[
+      \(\(y''\)[x]\  + \ 2  y[x]\  + \ 2\ x\ \((x - \[Pi])\)\  = \ 0\)]],
+  ".  \n",
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Use the boundary values  ",
+  Cell[BoxData[
+      \(y[0] = 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(y[\[Pi]] = 0\)]],
+  ".   \n",
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Use the boundary values  ",
+  Cell[BoxData[
+      \(y[0] = 0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(y[\[Pi]] = 1\)]],
+  ".   "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Form the linear operator, the differential equation and the boundary values. \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L[y_]\ \  = \(y''\)[x] + 2  y[x];\)\ \ \), "\n", 
+    \(\(f[x_]\  = 2\ x\ \((x - \[Pi])\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ode = L[y] + f[x] \[Equal] 0;\)\ \ \), "\n", 
+    \(\(a = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(z\_a = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(z\_b = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ics = {y[a] \[Equal] z\_a, 
+          y[b] \[Equal] z\_b};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the D. E.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The first function ",
+  Cell[BoxData[
+      \(\[Phi]\_0[x]\)]],
+  " will be chosen to be the straight line between the boundary points. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi]\_0[x_]\  = \ 
+        z\_a + \((z\_b - 
+                z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Given the points (\>", a, "\<,\>", 
+        z\_a, "\<) and \>", "\<(\>", b, "\<,\>", 
+        z\_b, "\<).\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        a, "\<] = \>", \[Phi]\_0[a]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        b, "\<] = \>", \[Phi]\_0[b]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The other ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " function ",
+  Cell[BoxData[
+      \({\[Phi]\_i[x]}\_\(i = 1\)\%n\)]],
+  " will be chosen to be zero at the endpoints. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_1[x_]\  = \ Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_2[x_]\  = \ Sin[3\ x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_3[x_]\  = \ Sin[5\ x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi][
+          x_]\  = \ \[Phi]\_0[
+            x]\  + \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \[Phi]\_i[
+                x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The basis functions are\>"];\)\ \ \), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<{\!\(\[Phi]\_i\)[x]}\>\""\_\(i = 1\)\%n, "\< = \>", 
+        Table[\[Phi]\_i[x], {i, 1, n}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The trial solution is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi][x] = \>", \[CapitalPhi][x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The residual is formed by substituting  ",
+  Cell[BoxData[
+      \(u[x] = \[CapitalPhi][x]\)]],
+  "  into  ",
+  Cell[BoxData[
+      \(L[u[x]] + f[x]\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_]\  = \ 
+        ReplaceAll[\ 
+          L[u] + f[
+              x], {u[x] \[Rule] \[CapitalPhi][x], \(u'\)[
+                x] \[Rule] \(\[CapitalPhi]'\)[x], \(u''\)[
+                x] \[Rule] \(\[CapitalPhi]''\)[
+                x]}\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ L[u] + f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Substitute u[x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<Get\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(R = 0;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] n, \(i++\), \[IndentingNewLine]R = 
+          R + \ \(c\_i\) 
+              Expand[Coefficient[Collect[r[x], vars], \ 
+                  c\_i]]; \[IndentingNewLine]S = 
+          Expand[r[x] - R]; \ \[IndentingNewLine]r[x_]\  = \ 
+          R + S\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Galerkin's requirement is that the inner product of the residual with ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{\(\[Phi]\_1 = Sin[x]\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(\[Phi]\_2 = Sin[3\ x]\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(\[Phi]\_3 = Sin[5\ x]\)}], "}"}]]],
+  " is zero. "
+}], "Text"],
+
+Cell[TextData[{
+  "Form the equations  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {};\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]\(eqns\  = \ 
+            Append[eqns, \[Integral]\_a\%b \[Phi]\_i[x] 
+                    r[x] \[DifferentialD]x\  \[Equal] \ 
+                0];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We must solve",
+  " for the coefficients   ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%3\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<Solve\>"];\)\ \ \), "\n", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<For \>", vars\ ];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[Partition[solset, 1]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(nsolset = solset;\)\), "\[IndentingNewLine]", 
+    \(\(nsolset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\) = 
+        N[solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[Partition[nsolset, 1]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%3\)]],
+  "  to form the Galerkin solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 
+        ReplaceAll[\[CapitalPhi][x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[g[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 5.2}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Range[0, 5, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", N[g[x]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(sol = DSolve[{ode, ics}, y[x], x];\)\ \), "\n", 
+    \(\(sol = MapAll[Simplify, sol];\)\ \), "\n", 
+    \(\(z[x_]\  = \ 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<Solve the B. V. P.\>"];\)\ \), "\n", 
+    \(\(Print[\ ode];\)\ \), "\n", 
+    \(\(Print[\ ics\ ];\)\ \ \), "\n", 
+    \(\(Print["\<Get the analytic solution\>"];\)\ \ \ \ \), "\n", 
+    \(\(Print["\<y[x] = \>", z[x]\ ];\)\ \)}], "Input"],
+
+Cell["Plot the analytic solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 5.2}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Range[0, 5, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", z[x]\ ];\)\)}], "Input"],
+
+Cell["Plot both the analytic and Galerkin solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{z[x], g[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 5.2}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Range[0, 5, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = z[x] \>", z[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+Check out the difference between the analytic solution and the Galerkin \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x] - g[x], {x, a, b}, PlotStyle \[Rule] Green, 
+        PlotRange \[Rule] {{0, \[Pi]}, {\(-0.00045\), 0.00035}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error = Analyic - Galerkin\>"];\)\ \)}], "Input"],
+
+Cell["So the Galerkin solution appears to be good. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We proceed with caution when using Galerkin's method because the linear \
+system might be ill conditioned. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(M = 
+        N[LinearEquationsToMatrices[eqns, 
+            vars]];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell["\<\
+The condition number is small, we should expect a good solution. \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check out the matrix form for setting up the Galerkin equations.  \
+This is just for fun !  "
+}], "Text"],
+
+Cell[TextData[{
+  "The boundary values  ",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ z\_a, \ y \((b)\)\  = \ z\_b\)]],
+  "  are used to form  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ 
+        z\_a + \((z\_b - z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\)\)]],
+  "  and there are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve  \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\[Phi]\_0[x]] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = \ \[Phi]\_0[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< L[y[x]] = \>", L[y]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<L[\!\(\[Phi]\_0\)[x]] = \>\"", 
+        Expand[L[s]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the linear operator is   ",
+  Cell[BoxData[
+      RowBox[{\(L[y]\), " ", "=", " ", 
+        RowBox[{\(2\ y[x]\), "+", 
+          RowBox[{
+            SuperscriptBox["y", "\[Prime]\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}]}]}]]],
+  " we have ",
+  Cell[BoxData[
+      \(L[\[Phi]\_0[x]] = 0\)]],
+  " which must be entered into the integrals on the right hand side. \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((0 + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe matrix form of the solution is  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = 
+        N[Table[\ \[Integral]\_a\%b \[Phi]\_i[x] 
+                L[\[Phi]\_j] \[DifferentialD]x, {i, 1, n}, {j, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        N[Table[\ \ \(-\(\[Integral]\_a\%b \[Phi]\_i[
+                    x] \((0 + f[x])\) \[DifferentialD]x\)\), \ {i, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell["This is the same as we obtained above.  ", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Form the linear operator, the differential equation and the boundary values. \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L[y_]\ \  = \(y''\)[x] + 2  y[x];\)\ \ \), "\n", 
+    \(\(f[x_]\  = 2\ x\ \((x - \[Pi])\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ode = L[y] + f[x] \[Equal] 0;\)\ \ \), "\n", 
+    \(\(a = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(z\_a = 0;\)\ \ \), "\n", 
+    \(\(z\_b = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(ics = {y[a] \[Equal] z\_a, 
+          y[b] \[Equal] z\_b};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the D. E.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The first function ",
+  Cell[BoxData[
+      \(\[Phi]\_0[x]\)]],
+  " will be chosen to be the straight line between the boundary points. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi]\_0[x_]\  = \ 
+        z\_a + \((z\_b - 
+                z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Given the points (\>", a, "\<,\>", 
+        z\_a, "\<) and \>", "\<(\>", b, "\<,\>", 
+        z\_b, "\<).\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        a, "\<] = \>", \[Phi]\_0[a]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Phi]\_0\)[\>\"", 
+        b, "\<] = \>", \[Phi]\_0[b]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The other ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " function ",
+  Cell[BoxData[
+      \({\[Phi]\_i[x]}\_\(i = 1\)\%n\)]],
+  " will be chosen to be zero at the endpoints. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 7;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_1[x_]\  = \ Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_2[x_]\  = \ Sin[2\ x];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_3[x_]\  = \ Sin[3\ x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_4[x_]\  = \ Sin[4\ x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_5[x_]\  = \ Sin[5\ x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_6[x_]\  = \ Sin[6\ x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Phi]\_7[x_]\  = \ Sin[7\ x];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi][
+          x_]\  = \ \[Phi]\_0[
+            x]\  + \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \[Phi]\_i[
+                x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The basis functions are\>"];\)\ \ \), "\[IndentingNewLine]", \
+
+    \(\(Print[\*"\"\<{\!\(\[Phi]\_i\)[x]}\>\""\_\(i = 1\)\%n, "\< = \>", 
+        Table[\[Phi]\_i[x], {i, 1, n}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The trial solution is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi][x] = \>", \[CapitalPhi][x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The residual is formed by substituting  ",
+  Cell[BoxData[
+      \(u[x] = \[CapitalPhi][x]\)]],
+  "  into  ",
+  Cell[BoxData[
+      \(L[u[x]] + f[x]\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_]\  = \ 
+        ReplaceAll[\ 
+          L[u] + f[
+              x], {u[x] \[Rule] \[CapitalPhi][x], \(u'\)[
+                x] \[Rule] \(\[CapitalPhi]'\)[x], \(u''\)[
+                x] \[Rule] \(\[CapitalPhi]''\)[
+                x]}\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ L[u] + f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Substitute u[x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<Get\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(R = 0;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] n, \(i++\), \[IndentingNewLine]R = 
+          R + \ \(c\_i\) 
+              Expand[Coefficient[Collect[r[x], vars], \ 
+                  c\_i]]; \[IndentingNewLine]S = 
+          Expand[r[x] - R]; \ \[IndentingNewLine]r[x_]\  = \ 
+          R + S\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Galerkin's requirement is that the inner product of the residual with  ",
+  Cell[BoxData[
+      \({\[Phi]\_i[x]\  = \ Sin[i\ x]}\_\(i = 1\)\%7\)]],
+  "  is zero. "
+}], "Text"],
+
+Cell[TextData[{
+  "Form the equations  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) 
+            r[x] \[DifferentialD]x\ \  = \ \ 0\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {};\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]\(eqns\  = \ 
+            Append[eqns, \[Integral]\_a\%b \[Phi]\_i[x] 
+                    r[x] \[DifferentialD]x\  \[Equal] \ 
+                0];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We must solve",
+  " for the coefficients   ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%7\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \), "\n", 
+    \(\(Print["\<Solve\>"];\)\ \ \), "\n", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<For \>", vars\ ];\)\ \), "\n", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[Partition[solset, 1]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(nsolset = solset;\)\), "\[IndentingNewLine]", 
+    \(\(nsolset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\) = 
+        N[solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[Partition[nsolset, 1]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%n\)]],
+  "  to form the Galerkin solution."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 
+        ReplaceAll[\[CapitalPhi][x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[g[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 4.5}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Range[0, 4, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", N[g[x]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(sol = DSolve[{ode, ics}, y[x], x];\)\ \), "\n", 
+    \(\(sol = MapAll[Simplify, sol];\)\ \), "\n", 
+    \(\(z[x_]\  = \ 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<Solve the B. V. P.\>"];\)\ \), "\n", 
+    \(\(Print[\ ode];\)\ \), "\n", 
+    \(\(Print[\ ics\ ];\)\ \ \), "\n", 
+    \(\(Print["\<Get the analytic solution\>"];\)\ \ \), "\n", 
+    \(\(Print["\<y[x] = \>", z[x]\ ];\)\ \)}], "Input"],
+
+Cell["Plot the analytic solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 4.5}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Range[0, 4, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ode\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With the boundary values\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ ics\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", z[x]\ ];\)\)}], "Input"],
+
+Cell["Plot both the analytic and Galerkin solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{z[x], g[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+        PlotRange \[Rule] \ All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = z[x] \>", z[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The Galerkin solution is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", g[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+Check out the difference between the analytic solution and the Galerkin \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[z[x] - g[x], {x, a, b}, PlotStyle \[Rule] Green, 
+        PlotRange \[Rule] {{0, \[Pi]}, {\(-0.005\), 0.01}}, 
+        Ticks \[Rule] {Range[0, \[Pi], \[Pi]\/4], 
+            Automatic}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error = Analyic - Galerkin\>"];\)\ \)}], "Input"],
+
+Cell["So the Galerkin solution appears to be good. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We proceed with caution when using Galerkin's method because the linear \
+system might be ill conditioned. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(M = 
+        N[LinearEquationsToMatrices[eqns, 
+            vars]];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell["\<\
+The condition number is small, we should expect a good solution. \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check out the matrix form for setting up the Galerkin equations.  \
+This is just for fun !"
+}], "Text"],
+
+Cell[TextData[{
+  "The boundary values  ",
+  Cell[BoxData[
+      \(y \((a)\)\  = \ z\_a, \ y \((b)\)\  = \ z\_b\)]],
+  "  are used to form  ",
+  Cell[BoxData[
+      \(\(\[Phi]\_0\) \((x)\)\  = \ 
+        z\_a + \((z\_b - z\_a)\) \(\(x\)\(-\)\(a\)\(\ \)\)\/\(b - a\)\)]],
+  "  and there are ",
+  Cell[BoxData[
+      \(n\)]],
+  " equations to solve  \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+0\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\[Phi]\_0[x]] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = \ \[Phi]\_0[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< L[y[x]] = \>", L[y]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(\[Phi]\_0\)[x] = \>\"", \[Phi]\_0[
+          x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<L[\!\(\[Phi]\_0\)[x]] = \>\"", 
+        Expand[L[s]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the linear operator is   ",
+  Cell[BoxData[
+      RowBox[{\(L[y]\), " ", "=", " ", 
+        RowBox[{\(2\ y[x]\), "+", 
+          RowBox[{
+            SuperscriptBox["y", "\[Prime]\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}]}]}]]],
+  " we have ",
+  Cell[BoxData[
+      \(L[\[Phi]\_0[x]] = \(2\ x\)\/\[Pi]\)]],
+  " which must be entered into the integrals on the right hand side. \n\n\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((L[\ \[Sum]\+\(j = \
+1\)\%n\ \(c\_j\) \(\[Phi]\_j\) \((x)\)])\) \[DifferentialD]x\ \  = \ \(-\ \(\
+\[Integral]\_a\%b\ \ \(\[Phi]\_i\) \((x)\) \((\(2\ x\)\/\[Pi] + 
+                  f \((x)\))\) \[DifferentialD]x\)\)\)]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe matrix form of the solution is  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = 
+        N[Table[\ \[Integral]\_a\%b \[Phi]\_i[x] 
+                L[\[Phi]\_j] \[DifferentialD]x, {i, 1, n}, {j, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = 
+        N[Table[\ \ \(-\(\[Integral]\_a\%b \[Phi]\_i[
+                    x] \((\(2\ x\)\/\[Pi] + 
+                      f[x])\) \[DifferentialD]x\)\), \ {i, 1, 
+              n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = Table[c\_i, {i, 1, n}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = LinearSolve[A, B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell["This is the same as we obtained above.  ", "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Galerkin Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GalerkinBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{983, 641},
+WindowMargins->{{Automatic, 13}, {Automatic, 3}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 195, 5, 35, "Text"],
+Cell[1974, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3122, 101, 1838, 55, 164, "Text"],
+Cell[4963, 158, 1433, 39, 53, "Text"],
+Cell[6399, 199, 790, 24, 33, "Text"],
+Cell[7192, 225, 163, 3, 42, "Input"],
+Cell[7358, 230, 1002, 40, 109, "Text"],
+
+Cell[CellGroupData[{
+Cell[8385, 274, 105, 2, 33, "Text"],
+Cell[8493, 278, 691, 11, 184, "Input"],
+Cell[9187, 291, 48, 0, 33, "Text"],
+Cell[9238, 293, 2417, 42, 486, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[11692, 340, 105, 2, 30, "Text"],
+Cell[11800, 344, 734, 13, 184, "Input"],
+Cell[12537, 359, 48, 0, 33, "Text"],
+Cell[12588, 361, 2460, 44, 486, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[15085, 410, 105, 2, 30, "Text"],
+Cell[15193, 414, 701, 11, 184, "Input"],
+Cell[15897, 427, 48, 0, 33, "Text"],
+Cell[15948, 429, 2438, 42, 486, "Input"]
+}, Closed]],
+Cell[18401, 474, 433, 16, 31, "Text"],
+Cell[18837, 492, 1788, 56, 242, "Text"],
+Cell[20628, 550, 487, 14, 109, "Text"],
+Cell[21118, 566, 1154, 36, 148, "Text"],
+Cell[22275, 604, 415, 15, 109, "Text"],
+Cell[22693, 621, 221, 8, 71, "Text"],
+Cell[22917, 631, 538, 17, 72, "Text"],
+Cell[23458, 650, 1983, 56, 186, "Text"],
+Cell[25444, 708, 323, 12, 33, "Text"],
+Cell[25770, 722, 2991, 93, 301, "Text"],
+Cell[28764, 817, 223, 8, 33, "Text"],
+Cell[28990, 827, 323, 12, 33, "Text"],
+Cell[29316, 841, 348, 12, 33, "Text"],
+Cell[29667, 855, 288, 11, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[29980, 870, 101, 2, 33, "Text"],
+Cell[30084, 874, 105, 3, 33, "Text"],
+Cell[30192, 879, 501, 8, 170, "Input"],
+Cell[30696, 889, 291, 8, 33, "Text"],
+Cell[30990, 899, 805, 15, 215, "Input"],
+Cell[31798, 916, 190, 8, 33, "Text"],
+Cell[31991, 926, 531, 11, 110, "Input"],
+Cell[32525, 939, 328, 8, 52, "Text"],
+Cell[32856, 949, 486, 10, 145, "Input"],
+Cell[33345, 961, 130, 6, 33, "Text"],
+Cell[33478, 969, 411, 7, 150, "Input"],
+Cell[33892, 978, 127, 5, 33, "Text"],
+Cell[34022, 985, 665, 12, 150, "Input"],
+Cell[34690, 999, 262, 9, 71, "Text"],
+Cell[34955, 1010, 130, 5, 33, "Text"],
+Cell[35088, 1017, 507, 10, 170, "Input"],
+Cell[35598, 1029, 43, 0, 33, "Text"],
+Cell[35644, 1031, 426, 7, 110, "Input"],
+Cell[36073, 1040, 61, 0, 33, "Text"],
+Cell[36137, 1042, 472, 7, 110, "Input"],
+Cell[36612, 1051, 107, 3, 33, "Text"],
+Cell[36722, 1056, 327, 6, 70, "Input"],
+Cell[37052, 1064, 61, 0, 33, "Text"],
+Cell[37116, 1066, 368, 8, 52, "Text"],
+Cell[37487, 1076, 904, 19, 190, "Input"],
+Cell[38394, 1097, 299, 10, 33, "Text"],
+Cell[38696, 1109, 198, 4, 50, "Input"],
+Cell[38897, 1115, 2481, 78, 109, "Text"],
+Cell[41381, 1195, 1237, 23, 173, "Input"],
+Cell[42621, 1220, 493, 17, 33, "Text"],
+Cell[43117, 1239, 609, 23, 71, "Text"],
+Cell[43729, 1264, 1463, 44, 72, "Text"],
+Cell[45195, 1310, 229, 4, 70, "Input"],
+Cell[45427, 1316, 1635, 46, 110, "Text"],
+Cell[47065, 1364, 918, 17, 197, "Input"],
+Cell[47986, 1383, 61, 0, 33, "Text"]
+}, Closed]],
+Cell[48062, 1386, 3226, 99, 318, "Text"],
+Cell[51291, 1487, 1271, 41, 71, "Text"],
+Cell[52565, 1530, 323, 12, 33, "Text"],
+Cell[52891, 1544, 348, 12, 33, "Text"],
+Cell[53242, 1558, 695, 30, 74, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[53962, 1592, 154, 4, 33, "Text",
+  Evaluatable->False],
+Cell[54119, 1598, 103, 3, 33, "Text"],
+Cell[54225, 1603, 724, 14, 250, "Input"],
+Cell[54952, 1619, 168, 5, 33, "Text"],
+Cell[55123, 1626, 648, 13, 121, "Input"],
+Cell[55774, 1641, 215, 8, 33, "Text"],
+Cell[55992, 1651, 897, 18, 213, "Input"],
+Cell[56892, 1671, 190, 8, 33, "Text"],
+Cell[57085, 1681, 1077, 22, 250, "Input"],
+Cell[58165, 1705, 920, 26, 33, "Text"],
+Cell[59088, 1733, 785, 25, 34, "Text"],
+Cell[59876, 1760, 388, 8, 105, "Input"],
+Cell[60267, 1770, 132, 6, 33, "Text"],
+Cell[60402, 1778, 765, 14, 210, "Input"],
+Cell[61170, 1794, 125, 5, 33, "Text"],
+Cell[61298, 1801, 855, 15, 190, "Input"],
+Cell[62156, 1818, 262, 9, 71, "Text"],
+Cell[62421, 1829, 489, 10, 170, "Input"],
+Cell[62913, 1841, 43, 0, 33, "Text"],
+Cell[62959, 1843, 544, 9, 130, "Input"],
+Cell[63506, 1854, 61, 0, 33, "Text"],
+Cell[63570, 1856, 524, 8, 130, "Input"],
+Cell[64097, 1866, 107, 3, 33, "Text"],
+Cell[64207, 1871, 347, 6, 51, "Input"],
+Cell[64557, 1879, 59, 0, 33, "Text"],
+Cell[64619, 1881, 229, 6, 33, "Text"],
+Cell[64851, 1889, 904, 19, 190, "Input"],
+Cell[65758, 1910, 299, 10, 33, "Text"],
+Cell[66060, 1922, 198, 4, 50, "Input"],
+Cell[66261, 1928, 2481, 78, 109, "Text"],
+Cell[68745, 2008, 1237, 23, 173, "Input"],
+Cell[69985, 2033, 471, 16, 33, "Text"],
+Cell[70459, 2051, 609, 23, 71, "Text"],
+Cell[71071, 2076, 1545, 45, 75, "Text"],
+Cell[72619, 2123, 353, 6, 90, "Input"],
+Cell[72975, 2131, 1635, 46, 110, "Text"],
+Cell[74613, 2179, 833, 15, 177, "Input"],
+Cell[75449, 2196, 56, 0, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[75542, 2201, 154, 4, 30, "Text",
+  Evaluatable->False],
+Cell[75699, 2207, 103, 3, 33, "Text"],
+Cell[75805, 2212, 727, 14, 264, "Input"],
+Cell[76535, 2228, 168, 5, 33, "Text"],
+Cell[76706, 2235, 648, 13, 121, "Input"],
+Cell[77357, 2250, 215, 8, 33, "Text"],
+Cell[77575, 2260, 1040, 24, 253, "Input"],
+Cell[78618, 2286, 190, 8, 33, "Text"],
+Cell[78811, 2296, 1077, 22, 250, "Input"],
+Cell[79891, 2320, 1569, 43, 33, "Text"],
+Cell[81463, 2365, 1059, 33, 34, "Text"],
+Cell[82525, 2400, 388, 8, 105, "Input"],
+Cell[82916, 2410, 132, 6, 33, "Text"],
+Cell[83051, 2418, 765, 14, 210, "Input"],
+Cell[83819, 2434, 125, 5, 33, "Text"],
+Cell[83947, 2441, 852, 15, 190, "Input"],
+Cell[84802, 2458, 264, 9, 71, "Text"],
+Cell[85069, 2469, 489, 10, 170, "Input"],
+Cell[85561, 2481, 43, 0, 33, "Text"],
+Cell[85607, 2483, 541, 9, 130, "Input"],
+Cell[86151, 2494, 61, 0, 33, "Text"],
+Cell[86215, 2496, 432, 6, 110, "Input"],
+Cell[86650, 2504, 107, 3, 33, "Text"],
+Cell[86760, 2509, 302, 5, 50, "Input"],
+Cell[87065, 2516, 61, 0, 33, "Text"],
+Cell[87129, 2518, 229, 6, 33, "Text"],
+Cell[87361, 2526, 904, 19, 190, "Input"],
+Cell[88268, 2547, 299, 10, 33, "Text"],
+Cell[88570, 2559, 198, 4, 50, "Input"],
+Cell[88771, 2565, 2481, 78, 109, "Text"],
+Cell[91255, 2645, 1237, 23, 173, "Input"],
+Cell[92495, 2670, 471, 16, 33, "Text"],
+Cell[92969, 2688, 210, 6, 33, "Text"],
+Cell[93182, 2696, 1545, 45, 75, "Text"],
+Cell[94730, 2743, 353, 6, 90, "Input"],
+Cell[95086, 2751, 1637, 45, 115, "Text"],
+Cell[96726, 2798, 836, 15, 177, "Input"],
+Cell[97565, 2815, 56, 0, 33, "Text"]
+}, Closed]],
+Cell[97636, 2818, 711, 30, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[98372, 2852, 154, 4, 33, "Text",
+  Evaluatable->False],
+Cell[98529, 2858, 103, 3, 33, "Text"],
+Cell[98635, 2863, 752, 14, 250, "Input"],
+Cell[99390, 2879, 168, 5, 33, "Text"],
+Cell[99561, 2886, 648, 13, 121, "Input"],
+Cell[100212, 2901, 215, 8, 33, "Text"],
+Cell[100430, 2911, 830, 14, 213, "Input"],
+Cell[101263, 2927, 190, 8, 33, "Text"],
+Cell[101456, 2937, 1077, 22, 250, "Input"],
+Cell[102536, 2961, 825, 22, 33, "Text"],
+Cell[103364, 2985, 785, 25, 34, "Text"],
+Cell[104152, 3012, 388, 8, 105, "Input"],
+Cell[104543, 3022, 132, 6, 33, "Text"],
+Cell[104678, 3030, 765, 14, 210, "Input"],
+Cell[105446, 3046, 125, 5, 33, "Text"],
+Cell[105574, 3053, 861, 15, 202, "Input"],
+Cell[106438, 3070, 262, 9, 71, "Text"],
+Cell[106703, 3081, 493, 10, 170, "Input"],
+Cell[107199, 3093, 43, 0, 33, "Text"],
+Cell[107245, 3095, 550, 9, 141, "Input"],
+Cell[107798, 3106, 61, 0, 33, "Text"],
+Cell[107862, 3108, 530, 8, 143, "Input"],
+Cell[108395, 3118, 107, 3, 33, "Text"],
+Cell[108505, 3123, 317, 5, 61, "Input"],
+Cell[108825, 3130, 61, 0, 33, "Text"],
+Cell[108889, 3132, 223, 6, 33, "Text"],
+Cell[109115, 3140, 904, 19, 190, "Input"],
+Cell[110022, 3161, 299, 10, 33, "Text"],
+Cell[110324, 3173, 198, 4, 50, "Input"],
+Cell[110525, 3179, 89, 2, 33, "Text"],
+Cell[110617, 3183, 213, 6, 33, "Text"],
+Cell[110833, 3191, 1545, 45, 75, "Text"],
+Cell[112381, 3238, 353, 6, 90, "Input"],
+Cell[112737, 3246, 1634, 45, 110, "Text"],
+Cell[114374, 3293, 833, 15, 177, "Input"],
+Cell[115210, 3310, 56, 0, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[115303, 3315, 154, 4, 30, "Text",
+  Evaluatable->False],
+Cell[115460, 3321, 103, 3, 33, "Text"],
+Cell[115566, 3326, 735, 14, 250, "Input"],
+Cell[116304, 3342, 168, 5, 33, "Text"],
+Cell[116475, 3349, 648, 13, 121, "Input"],
+Cell[117126, 3364, 215, 8, 33, "Text"],
+Cell[117344, 3374, 1104, 18, 293, "Input"],
+Cell[118451, 3394, 190, 8, 33, "Text"],
+Cell[118644, 3404, 1077, 22, 250, "Input"],
+Cell[119724, 3428, 194, 5, 33, "Text"],
+Cell[119921, 3435, 1059, 33, 34, "Text"],
+Cell[120983, 3470, 388, 8, 105, "Input"],
+Cell[121374, 3480, 132, 6, 33, "Text"],
+Cell[121509, 3488, 765, 14, 210, "Input"],
+Cell[122277, 3504, 125, 5, 33, "Text"],
+Cell[122405, 3511, 861, 15, 202, "Input"],
+Cell[123269, 3528, 262, 9, 71, "Text"],
+Cell[123534, 3539, 489, 10, 170, "Input"],
+Cell[124026, 3551, 43, 0, 33, "Text"],
+Cell[124072, 3553, 550, 9, 141, "Input"],
+Cell[124625, 3564, 61, 0, 33, "Text"],
+Cell[124689, 3566, 432, 6, 110, "Input"],
+Cell[125124, 3574, 107, 3, 33, "Text"],
+Cell[125234, 3579, 314, 5, 61, "Input"],
+Cell[125551, 3586, 61, 0, 33, "Text"],
+Cell[125615, 3588, 223, 6, 33, "Text"],
+Cell[125841, 3596, 904, 19, 190, "Input"],
+Cell[126748, 3617, 299, 10, 33, "Text"],
+Cell[127050, 3629, 198, 4, 50, "Input"],
+Cell[127251, 3635, 89, 2, 33, "Text"],
+Cell[127343, 3639, 211, 6, 33, "Text"],
+Cell[127557, 3647, 1545, 45, 75, "Text"],
+Cell[129105, 3694, 353, 6, 90, "Input"],
+Cell[129461, 3702, 1662, 45, 115, "Text"],
+Cell[131126, 3749, 870, 16, 177, "Input"],
+Cell[131999, 3767, 56, 0, 33, "Text"]
+}, Closed]],
+Cell[132070, 3770, 158, 3, 32, "Text"],
+Cell[132231, 3775, 298, 8, 33, "Text"],
+Cell[132532, 3785, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,2937 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     89236,       2754]*)
+(*NotebookOutlinePosition[     90486,       2793]*)
+(*  CellTagsIndexPosition[     90442,       2789]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the QR Method for Eigenvalues",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for QR Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\t",
+  StyleBox["Suppose that ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is a real symmetric matrix.  Householder\[CloseCurlyQuote]s \
+method is used to construct a similar tridiagonal matrix.  Then the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["QR",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" method is used to find all eigenvalues of the tridiagonal \
+matrix.  In the latter construction, plane rotations similar to those that \
+were introduced in Jacobi\[CloseCurlyQuote]s method are used to construct the \
+orthogonal matrices  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["Q",
+          FontWeight->"Bold"], "i"]]],
+  ".  The important step ",
+  StyleBox["the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["QR",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" method ",
+    FontFamily->"Times New Roman"],
+  "is the factorization  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], "i"], "=", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "i"], 
+          SubscriptBox[
+            StyleBox["R",
+              FontWeight->"Bold"], "i"]}]}]]],
+  "  and iteration  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], \(i + 1\)], "=", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(R\_i\),
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(Q\_i\),
+              FontWeight->"Bold"]}], "=", 
+          RowBox[{
+            SubsuperscriptBox[
+              StyleBox["Q",
+                FontWeight->"Bold"], "i", "T"], " ", 
+            SubscriptBox[
+              StyleBox["A",
+                FontWeight->"Bold"], "i"], " ", 
+            StyleBox[\(Q\_i\),
+              FontWeight->"Bold"]}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["QR Decomposition",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/QRDecomposition.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tFor a nonsingular square matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", there exists a factorization    \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"]}]}]]],
+  " \n\nwhere  ",
+  Cell[BoxData[
+      StyleBox["Q",
+        FontWeight->"Bold"]]],
+  "  is a unitary and  ",
+  Cell[BoxData[
+      StyleBox["R",
+        FontWeight->"Bold"]]],
+  "  is an ",
+  ButtonBox["upper triangular matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/UpperTriangularMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  ",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  Cell[BoxData[
+      StyleBox["Q",
+        FontWeight->"Bold"]]],
+  "  is a unitary means  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            SuperscriptBox[
+              StyleBox["Q",
+                FontWeight->"Bold"], "T"], "_"], " ", 
+          StyleBox["Q",
+            FontWeight->"Bold"]}], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox["I",
+          FontWeight->"Bold"]}]]],
+  ".\n\n\tFor a real nonsingular square matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", there exists a factorization    \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"]}]}]]],
+  " \n\nwhere  ",
+  Cell[BoxData[
+      StyleBox["Q",
+        FontWeight->"Bold"]]],
+  "  is an ",
+  ButtonBox["orthogonal matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/OrthogonalMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " and  ",
+  Cell[BoxData[
+      StyleBox["R",
+        FontWeight->"Bold"]]],
+  "  is an ",
+  ButtonBox["upper triangular matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/UpperTriangularMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  ",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  Cell[BoxData[
+      StyleBox["Q",
+        FontWeight->"Bold"]]],
+  "  is a orthogonal means  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "T"], " ", 
+          StyleBox["Q",
+            FontWeight->"Bold"]}], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox["I",
+          FontWeight->"Bold"]}]]],
+  "  (also ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "T"]}], " ", 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox["I",
+          FontWeight->"Bold"]}]]],
+  ").  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " decomposition of the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", "4", "2"},
+                {\(-1\), "0", \(-4\)},
+                {"2", "2", \(-1\)}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"2", "4", "2"},
+                  {\(-1\), "0", \(-4\)},
+                  {"2", "2", \(-1\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({QT, R} = QRDecomposition[A];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Q = Conjugate[Transpose[QT]];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<  Q = \>", MatrixForm[Q]\ ];\), "  "}], "\n", 
+    RowBox[{\(Print["\<  R = \>", MatrixForm[R]\ ];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The A = QR factorization \
+is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A = \>", MatrixForm[A], "\< = \>", MatrixForm[Q], 
+          MatrixForm[R]\ ];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\nWe can verify the factorization. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Q R = \>", MatrixForm[Q]\ , 
+        MatrixForm[R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q R = \>", 
+        MatrixForm[Q . R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  A = \>", 
+        MatrixForm[A]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does Q R = A ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Q . R == A];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " We can verify that ",
+  StyleBox["Q",
+    FontWeight->"Bold"],
+  " is unitary.  This is just for fun!"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Verify that Q is a unitary matrix.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) = \>\"", 
+        MatrixForm[QT]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  Q = \>", 
+        MatrixForm[Q]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", MatrixForm[QT]\ , 
+        MatrixForm[Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", 
+        MatrixForm[QT . Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Does  \!\(\(Q\^T\)\&_\) Q = I ?\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\ QT . Q \[Equal] IdentityMatrix[3]\ ];\)\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   For some reason, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["QRDecomposition",
+    FontWeight->"Bold"],
+  " procedure returns  ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "T"], ",", 
+          StyleBox["R",
+            FontWeight->"Bold"]}], "}"}]]],
+  " instead of ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], ",", 
+          StyleBox["R",
+            FontWeight->"Bold"]}], "}"}]]],
+  ".  \nPerhaps it is because ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " has chosen to use the formula ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "T"], 
+          StyleBox["R",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  " instead of ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(Q\ R\),
+          FontWeight->"Bold"], "=", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  ". \nThe documentation for ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " states: \"The original matrix ",
+  StyleBox["m", "TI"],
+  " is equal to ",
+  StyleBox["Conjugate[Transpose[", "MR"],
+  StyleBox["q", "TI"],
+  StyleBox["]]", "MR"],
+  " ",
+  StyleBox[".", "MR"],
+  " ",
+  StyleBox["r", "TI"],
+  "\""
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the  ",
+  Cell[BoxData[
+      StyleBox[\(Q\ R\),
+        FontWeight->"Bold"]]],
+  "  decomposition of the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"4.0", "1.0", "3.0", \(-2.0\)},
+              {"1.0", \(-2.0\), "4.0", "1.0"},
+              {"3.0", "4.0", "1.0", "2.0"},
+              {\(-2.0\), "1.0", "2.0", "3.0"}
+              }], ")"}]}]]],
+  ".  \n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Perform the computation using decimal arithmetic.  \n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Perform the computation using exact arithmetic.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"4.0", "1.0", "3.0", \(-2.0\)},
+                {"1.0", \(-2.0\), "4.0", "1.0"},
+                {"3.0", "4.0", "1.0", "2.0"},
+                {\(-2.0\), "1.0", "2.0", "3.0"}
+                }], ")"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({QT, R} = QRDecomposition[A];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Q = Conjugate[Transpose[QT]];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<  Q = \>", MatrixForm[Q]\ ];\), "  "}], "\n", 
+    RowBox[{\(Print["\<  R = \>", MatrixForm[R]\ ];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The A = QR factorization \
+is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A = \>", MatrixForm[A], "\< = \>", MatrixForm[Q], 
+          MatrixForm[R]\ ];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\nWe can verify the factorization. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Q R = \>", MatrixForm[Q]\ , 
+        MatrixForm[R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q R = \>", 
+        MatrixForm[Q . R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  A = \>", 
+        MatrixForm[A]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does Q R = A ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Q . R == A];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " We can verify that ",
+  StyleBox["Q",
+    FontWeight->"Bold"],
+  " is unitary.  This is just for fun!"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Verify that Q is a unitary matrix.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) = \>\"", 
+        MatrixForm[QT]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  Q = \>", 
+        MatrixForm[Q]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", MatrixForm[QT]\ , 
+        MatrixForm[Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", 
+        MatrixForm[QT . Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", 
+        MatrixForm[Chop[QT . Q]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Does  \!\(\(Q\^T\)\&_\) Q = I ?\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\ 
+        Chop[QT . Q] \[Equal] IdentityMatrix[4]\ ];\)\ \ \ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"4", "1", "3", \(-2\)},
+                {"1", \(-2\), "4", "1"},
+                {"3", "4", "1", "2"},
+                {\(-2\), "1", "2", "3"}
+                }], ")"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({QT, R} = QRDecomposition[A];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Q = Conjugate[Transpose[QT]];\), "  "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<  Q = \>", MatrixForm[Q]\ ];\), "  "}], "\n", 
+    RowBox[{\(Print["\<  R = \>", MatrixForm[R]\ ];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The A = QR factorization \
+is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A = \>", MatrixForm[A], "\< = \>", MatrixForm[Q], 
+          MatrixForm[R]\ ];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\nWe can verify the factorization. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Q R = \>", MatrixForm[Q]\ , 
+        MatrixForm[R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q R = \>", 
+        MatrixForm[Q . R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q R = \>", 
+        MatrixForm[Simplify[Q . R]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  A = \>", 
+        MatrixForm[A]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does Q R = A ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Simplify[Q . R] == A];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " We can verify that ",
+  StyleBox["Q",
+    FontWeight->"Bold"],
+  " is unitary.  This is just for fun!"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Verify that Q is a unitary matrix.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) = \>\"", 
+        MatrixForm[QT]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  Q = \>", 
+        MatrixForm[Q]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", MatrixForm[QT]\ , 
+        MatrixForm[Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", 
+        MatrixForm[QT . Q]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\(Q\^T\)\&_\) Q = \>\"", 
+        MatrixForm[Simplify[QT . Q]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Does  \!\(\(Q\^T\)\&_\) Q = I ?\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\ 
+        Simplify[QT . Q] \[Equal] IdentityMatrix[4]\ ];\)\ \ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["QR transformation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tAfter finding the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"]}]}]]],
+  "  factorization, the ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Q",
+          FontWeight->"Bold"], " ", 
+        StyleBox["R",
+          FontWeight->"Bold"]}]]],
+  " transformation is  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\&^\),
+          FontWeight->"Bold"], " ", "=", 
+        RowBox[{
+          RowBox[{
+            StyleBox["R",
+              FontWeight->"Bold"], " ", 
+            StyleBox["Q",
+              FontWeight->"Bold"]}], "=", 
+          RowBox[{
+            SuperscriptBox[
+              StyleBox["Q",
+                FontWeight->"Bold"], "T"], " ", 
+            StyleBox["A",
+              FontWeight->"Bold"], " ", 
+            StyleBox["Q",
+              FontWeight->"Bold"]}]}]}]]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We will not write our own subroutine for finding the   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"]}]}]]],
+  "  factorization, we will use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine.   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["QR Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe now investigate a well known and efficient method for finding all \
+the eigenvalues of a general ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " real matrix.  The ",
+  Cell[BoxData[
+      StyleBox[\(Q  R\),
+        FontWeight->"Bold"]]],
+  " method can be used for an arbitrary real matrix, but for a general matrix \
+it takes many iterations and becomes time consuming.   \n\t\n\tThe ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(Q  R\),
+          FontWeight->"Bold"]}]]],
+  " method works much faster on special matrices, preferably:  \n\t\t",
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   ",
+  ButtonBox["symmetric",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  ButtonBox["tri-diagonal",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TridiagonalMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ",  \n\t\t",
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  ButtonBox["Hessenberg matrices",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HessenbergMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ",  \n\t\t",
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  ButtonBox["symmetric",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  band matrices.  \n\t\n\tFor this module, we will illustrate the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method for  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " real symmetric matrices.  \n\n\tWhen solving for eigenvalues of a dense \
+symmetric matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", the standard practice is to reduce the dense matrix to a tridiagonal \
+matrix ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  " through a series of orthogonal transformations, and then to apply an \
+eigenvalue solver for tridiagonal matrices to ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  ".  The transformations applied to ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " preserve eigenvalues, and the eigenvalues of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  " are the same. \n\n\tThe popular eigenvalue solver for symmetric \
+tridiagonal matrices is called the implicit",
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(Q  R\),
+          FontWeight->"Bold"]}]]],
+  " method.  It applies a series of orthogonal transformations ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["Q",
+          FontWeight->"Bold"], "i"]]],
+  " to a tridiagonal matrix ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  " which converges to a diagonal matrix ",
+  Cell[BoxData[
+      StyleBox["D",
+        FontWeight->"Bold"]]],
+  ".  Furthermore, ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  " has the same eigenvalues as ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox["D",
+          FontWeight->"Bold"]}]]],
+  " which are the diagonal elements of ",
+  Cell[BoxData[
+      StyleBox["D",
+        FontWeight->"Bold"]]],
+  ".  In addition, the product of the orthogonal transformations ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Q",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          RowBox[{
+            RowBox[{
+              SubscriptBox[
+                StyleBox["Q",
+                  FontWeight->"Bold"], "1"], 
+              SubscriptBox[
+                StyleBox["Q",
+                  FontWeight->"Bold"], "2"]}], "..."}], 
+          SubscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "n"]}]}]]],
+  " is a matrix whose columns are the eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["T",
+        FontWeight->"Bold"]]],
+  ".  The method is called ",
+  Cell[BoxData[
+      StyleBox[\(Q  R\),
+        FontWeight->"Bold"]]],
+  " because in each iteration the ",
+  Cell[BoxData[
+      StyleBox[\(Q  R\),
+        FontWeight->"Bold"]]],
+  " factorization is computed.  The ",
+  ButtonBox["LAPACK",
+    ButtonData:>{
+      URL[ "http://www.netlib.org/lapack/"], None},
+    ButtonStyle->"Hyperlink"],
+  " routine implementing the implicit ",
+  Cell[BoxData[
+      StyleBox[\(Q  R\),
+        FontWeight->"Bold"]]],
+  " algorithm on tridiagonal symmetric matrices is called DSTEQR. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["QR Algorithm.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  The pseudocode for the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method is:\n\n\t\t1.  i = 0  \n\t\t2.  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], "1"], "=", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  "    \n\t\t3.  repeat  \n\t\t4.       Factor  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], "i"], "=", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "i"], 
+          SubscriptBox[
+            StyleBox["R",
+              FontWeight->"Bold"], "i"]}]}]]],
+  "  \n\t\t5.            ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], \(i + 1\)], "=", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(R\_i\),
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(Q\_i\),
+              FontWeight->"Bold"]}], "=", 
+          RowBox[{
+            SubsuperscriptBox[
+              StyleBox["Q",
+                FontWeight->"Bold"], "i", "T"], " ", 
+            SubscriptBox[
+              StyleBox["A",
+                FontWeight->"Bold"], "i"], " ", 
+            StyleBox[\(Q\_i\),
+              FontWeight->"Bold"]}]}]}]]],
+  "\n\t\t6.            i = i+1  \n\t\t7.  until convergence  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(QR method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  real tri-diagonal matrix   ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  to diagonal form.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(QRmethod[A_, 
+          m0_] := \[IndentingNewLine]Module[\ {A0 = N[A], A1, i, 
+            m = m0}, \[IndentingNewLine]Print["\<A\>"\_0, "\< = \>", \ 
+              MatrixForm[
+                Chop[A0, 5.0\ 10\^\(-6\)]]\ ]\[IndentingNewLine]For[\ 
+              i = 1, \ i < m, \ \(i++\), \[IndentingNewLine]{Q0, R0}\  = \ 
+                QRDecomposition[A0]; \ \[IndentingNewLine]A1\  = \ 
+                R0 . Transpose[
+                    Q0]; \ \[IndentingNewLine]Print["\<A\>"\_\(i + 1\), "\< = \
+\>", \ MatrixForm[
+                  Chop[A1, 
+                    5.0\ 10\^\(-6\)]]\ ]; \ \[IndentingNewLine]A0\  = \ 
+                A1\ ]; \ \[IndentingNewLine]Return[
+            A0];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Apply the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method to transform the tri-diagonal matrix   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(0\)\), \(\(\ \)\(0\
+\)\)},
+              {\(\(\ \)\(3\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(0\
+\)\)},
+              {\(\(\ \)\(0\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(4\
+\)\)},
+              {\(\(\ \)\(0\)\), \(\(\ \)\(0\)\), \(\(\ \)\(4\)\), \(\(\ \)\(1\
+\)\)}
+              }], ")"}]}]]],
+  "  into diagonal matrix ",
+  StyleBox["D",
+    FontWeight->"Bold"],
+  " that has the same eigenvalues.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {\(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(0\)\), \(\(\ \)\(0\
+\)\)},
+              {\(\(\ \)\(3\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(0\
+\)\)},
+              {\(\(\ \)\(0\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(4\
+\)\)},
+              {\(\(\ \)\(0\)\), \(\(\ \)\(0\)\), \(\(\ \)\(4\)\), \(\(\ \)\(1\
+\)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(d = QRmethod[A, 40];\), " "}]}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<Given the matrix\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The diagonal matrix is \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<D = \>", 
+        MatrixForm[Chop[d, 5.0\ 10\^\(-6\)]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check our work with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure ",
+  StyleBox["Eigenvalues",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<D = \>", 
+        MatrixForm[Chop[d, 5.0\ 10\^\(-6\)]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[d]]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Reduction to Hessenberg Form ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["We",
+    FontFamily->"Times New Roman"],
+  " need to find the ",
+  ButtonBox["Hessenberg",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HessenbergMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " form.  ",
+  StyleBox["Suppose that ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is a symmetric",
+    FontFamily->"Times New Roman"],
+  " ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " ",
+  StyleBox["matrix.  Start with",
+    FontFamily->"Times New Roman"],
+  " \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  "  ",
+  StyleBox["\n\nConstruct the sequence  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "1"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], \(n - 1\)]}]]],
+  StyleBox["  of Householder matrices, so that\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_k\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox[\(\(P\_k\) \(A\_\(k - 1\)\) P\_k\),
+          FontWeight->"Bold"]}]]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 2\)}]]],
+  ",  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["where ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_k\),
+        FontWeight->"Bold"]]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["has zeros below the subdiagonal in columns  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "k"}]]],
+  StyleBox[".  Then  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_\(n - 2\)\),
+        FontWeight->"Bold"]]],
+  StyleBox["  is a Hessenberg matrix that is similar to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[". This process is called Householder\[CloseCurlyQuote]s method.\n\
+\n\tWe are most interested in ",
+    FontFamily->"Times New Roman"],
+  "finding eigenvalues of symmetric matrices.  If  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  is symmetric, then the above process will construct a symmetric \
+tri-diagonal matrix. we will build on this theme. ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  "As mentioned previously, the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " iteration will work faster on tri-diagonal matrices  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Householder reduction to upper-Hessenberg Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  "To reduce the  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  real matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  to Hessenberg form by using  ",
+  Cell[BoxData[
+      \(n - 2\)]],
+  " Householder transformations. The following version of the program uses \
+\"loops\" extensively and is more traditional in programming structure.  It \
+also contains a print statement so that you can watch the Householder \
+transformations perform their \"magic.\"  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Hessenberg[
+          A0_] := \[IndentingNewLine]Module[\ {A = N[A0], B, i, j, k, 
+            n = Length[A0]}, \[IndentingNewLine]Q = 
+            IdentityMatrix[
+              n]; \ \[IndentingNewLine]Print["\<A\>"\_0, "\< = \>", 
+            MatrixForm[Chop[A, 5.0\ 10\^\(-6\)]]]; \ \[IndentingNewLine]For[\ 
+            k = 1, \ k \[LessEqual] n - 2, \ \(k++\), \[IndentingNewLine]u = 
+              Table[0, {n}]; \ \[IndentingNewLine]u\_\(\(\[LeftDoubleBracket]\
+\)\(\ \)\(Range[k + 1, n]\)\(\ \)\(\[RightDoubleBracket]\)\)\  = \ 
+              A\_\(\(\[LeftDoubleBracket]\)\(\ \)\(Range[k + 1, n], \ k\)\(\ \
+\)\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]u\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+              u\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\
+\)\  + \ Sign[
+                    A\_\(\(\[LeftDoubleBracket]\)\(k + 1, k\)\(\
+\[RightDoubleBracket]\)\)] \@\(\[Sum]\+\(j = k + 1\)\%n\((A\_\(\(\
+\[LeftDoubleBracket]\)\(j, k\)\(\[RightDoubleBracket]\)\))\)\^2\); \ \
+\[IndentingNewLine]P = IdentityMatrix[n]; \ \[IndentingNewLine]P\  = \ 
+              P\  - \ \(2  Outer[Times, u, u]\)\/u . u; \ \
+\[IndentingNewLine]Q\  = \ Q . P; \ \[IndentingNewLine]Ak = 
+              A; \ \[IndentingNewLine]A\  = \ 
+              P . A . P; \ \[IndentingNewLine]Print["\<P\>"\_k, "\< = \>", 
+              MatrixForm[
+                Chop[P, 
+                  5.0\ 10\^\(-6\)]]]; \[IndentingNewLine]Print["\<A\>"\_k, \
+"\< = \>", "\<P\>"\_k, "\<A\>"\_\(k - 1\), "\<P\>"\_k]; \
+\[IndentingNewLine]Print[MatrixForm[Chop[P, 5.0\ 10\^\(-6\)]], 
+              MatrixForm[Chop[Ak, 5.0\ 10\^\(-6\)]], 
+              MatrixForm[Chop[P, 5.0\ 10\^\(-6\)]], "\< = \>" 
+                MatrixForm[
+                  Chop[A, 
+                    5.0\ 10\^\(-6\)]]]; \ \
+\[IndentingNewLine]Print["\<A\>"\_k, "\< = \>", 
+              MatrixForm[
+                Chop[A, 5.0\ 10\^\(-6\)]]];\ ]; \ \[IndentingNewLine]H = 
+            Chop[A]; \ \[IndentingNewLine]Return[{Q, 
+              H}];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Apply the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method and find the eigenvalues of the following matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\
+\)\)},
+              {\(\(\ \)\(2\)\), \(-3\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\)},
+              {\(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(1\
+\)\)},
+              {\(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(2\
+\)\)}
+              }], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, use the subroutine ",
+  StyleBox["Hessenberg",
+    FontWeight->"Bold"],
+  " and transform ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " into tri-diagonal matrix ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(2\)\), \(\(\ \
+\)\(1\)\)},
+                {\(\(\ \)\(2\)\), \(-3\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\)},
+                {\(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \
+\)\(1\)\)},
+                {\(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \
+\)\(2\)\)}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\({Q, H} = \ Hessenberg[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Given the matrix\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Hessenberg matrix is\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<H = \>", 
+        MatrixForm[H]\ ];\)}], "Input"],
+
+Cell[TextData[{
+  "Second, use the subroutine ",
+  StyleBox["QRmethod",
+    FontWeight->"Bold"],
+  " and transform tri-diagonal matrix ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  " into a diagonal matrix .  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d = QRmethod[H, 54];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Given the matrix\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", MatrixForm[H]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The diagonal matrix is \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<D = \>", 
+        MatrixForm[Chop[d, 5.0\ 10\^\(-6\)]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check our work with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure ",
+  StyleBox["Eigenvalues",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", MatrixForm[Chop[H]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[H]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<D = \>", 
+        MatrixForm[Chop[d, 5.0\ 10\^\(-6\)]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[d]]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Acceleration shifts for the QR method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n",
+  "\tAs outlined above ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method will work, but convergence is slow, even for matrices of small \
+dimension.  We can add a shifting technique that speeds up the rate of \
+convergence.  ",
+  StyleBox["Recall that if  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_j\)]],
+  " ",
+  StyleBox["is an eigenvalue of  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["A",
+    FontWeight->"Bold"],
+  StyleBox[", then  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_j - s\_i\)]],
+  "  is ",
+  StyleBox["an eigenvalue of the matrix  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{\(s\_i\), 
+            StyleBox["I",
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[". This idea is incorporated in the modified step  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], "i"], " ", "-", " ", 
+          RowBox[{\(s\_i\), 
+            StyleBox["I",
+              FontWeight->"Bold"]}]}], " ", "=", " ", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "i"], 
+          SubscriptBox[
+            StyleBox["U",
+              FontWeight->"Bold"], "i"]}]}]]],
+  " ",
+  StyleBox["\n",
+    FontFamily->"MTSYN"],
+  StyleBox["then form\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], \(i + 1\)], " ", "=", " ", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["U",
+              FontWeight->"Bold"], "i"], 
+          SubscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "i"]}]}]]],
+  "    for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(k\_j\),
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  ",  ",
+  StyleBox["\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["\n",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["where  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({s\_i}\)]],
+  StyleBox["  ",
+    FontFamily->"MTSYN"],
+  StyleBox["is a sequence whose sum is  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_j\)]],
+  StyleBox[";  that is, ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_j\), " ", "=", " ", 
+        RowBox[{\(\(\(\(s\_1\) s\_2\)\(+\)\) ... \), "+", 
+          SubscriptBox["s", 
+            StyleBox[\(k\_j\),
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}]]}]}]]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(QR method with shifts",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  real tri-diagonal matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " to diagonal form.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(QRshift[
+          A_, \[Epsilon]_] := \[IndentingNewLine]Module[\ {B = N[A], 
+            A1 = N[A], i, m = m0}, \[IndentingNewLine]B = 
+            A1; \ \[IndentingNewLine]n = 
+            Length[A1]; \ \ \[IndentingNewLine]\[Lambda] = 
+            Table[A1\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\), {i, n}]; \ \ \[IndentingNewLine]sum = 
+            0; \ \[IndentingNewLine]For[m = n, 
+            2 \[LessEqual] m, \(m--\), \ \[IndentingNewLine]B = 
+              A1\_\(\(\[LeftDoubleBracket]\)\(Range[1, m], Range[1, m]\)\(\
+\[RightDoubleBracket]\)\); \ \ \[IndentingNewLine]i = 
+              1; \ \ \[IndentingNewLine]While[\ 
+              And[i \[LessEqual] 10, Length[B] \[Equal] m, 
+                Abs[B\_\(\(\[LeftDoubleBracket]\)\(m, m - 1\)\(\
+\[RightDoubleBracket]\)\)] > \[Epsilon]], \[IndentingNewLine]M = 
+                B\_\(\(\[LeftDoubleBracket]\)\({m - 1, m}, {m - 1, m}\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]\[CapitalLambda] = 
+                Eigenvalues[
+                  M]; \ \[IndentingNewLine]j = \
+\(Position[Abs[\[CapitalLambda] - B\_\(\(\[LeftDoubleBracket]\)\(m, m\)\(\
+\[RightDoubleBracket]\)\)], Min[Abs[\[CapitalLambda] - B\_\(\(\
+\[LeftDoubleBracket]\)\(m, m\)\(\[RightDoubleBracket]\)\)]]]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]s = \[CapitalLambda]\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]sum = 
+                sum + s; \ \[IndentingNewLine]{Q1, R1}\  = \ 
+                QRDecomposition[
+                  B - s\ IdentityMatrix[
+                        m]]; \ \ \ \ \[IndentingNewLine]Print["\<\n\>", \
+"\<Shift  \>", "\<s\>"\_i, "\< = \>", 
+                s]; \ \[IndentingNewLine]Print["\<Q\>"\_i\%T, "\< = \>", 
+                MatrixForm[
+                  Transpose[
+                    Chop[Q1]]]]; \ \[IndentingNewLine]Print["\<R\>"\_i, "\< = \
+\>", MatrixForm[Chop[R1]]]; \ \[IndentingNewLine]B = 
+                R1 . Transpose[
+                    Q1]; \ \[IndentingNewLine]Print["\<R\>"\_i, \
+"\<Q\>"\_i\%T, "\< = \>", MatrixForm[Chop[B]]]; \ \[IndentingNewLine]i = 
+                i + 1;\ ]; \ \ \
+\[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(Range[1, m - 1], Range[1, \
+m - 1]\)\(\[RightDoubleBracket]\)\) = 
+              B\_\(\(\[LeftDoubleBracket]\)\(Range[1, m - 1], Range[1, m - 1]\
+\)\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]A1\_\(\(\
+\[LeftDoubleBracket]\)\(m, m - 1\)\(\[RightDoubleBracket]\)\) = \(A1\_\(\(\
+\[LeftDoubleBracket]\)\(m - 1, m\)\(\[RightDoubleBracket]\)\) = 
+                0\); \[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(m, \
+m\)\(\[RightDoubleBracket]\)\) = sum; \ \[IndentingNewLine]Print["\<A1 = \>", 
+              MatrixForm[
+                Chop[A1]]];\ ]; \ \[IndentingNewLine]A1\_\(\(\
+\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\) = 
+            sum - s + \[CapitalLambda]\_\(\(\[LeftDoubleBracket]\)\(3 - j\)\(\
+\[RightDoubleBracket]\)\); \[IndentingNewLine]Print["\<\n\>", "\<The final \
+answer is:\>"]; \ \[IndentingNewLine]Print["\<d = \>", 
+            MatrixForm[Chop[A1]]]; \ \[IndentingNewLine]Return[
+            A1];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Apply the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " method with shifts and find the eigenvalues of the following matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\
+\)\)},
+              {\(\(\ \)\(2\)\), \(-3\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\)},
+              {\(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \)\(1\
+\)\)},
+              {\(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(2\
+\)\)}
+              }], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, use the subroutine ",
+  StyleBox["Hessenberg",
+    FontWeight->"Bold"],
+  " and transform A into tri-diagonal matrix ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(2\)\), \(\(\ \
+\)\(1\)\)},
+                {\(\(\ \)\(2\)\), \(-3\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\)},
+                {\(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(3\)\), \(\(\ \
+\)\(1\)\)},
+                {\(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \)\(1\)\), \(\(\ \
+\)\(2\)\)}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\({Q, H} = \ Hessenberg[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Given the matrix\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Hessenberg matrix is\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<H = \>", 
+        MatrixForm[H]\ ];\)}], "Input"],
+
+Cell[TextData[{
+  "Second, use the subroutine ",
+  StyleBox["QRshift",
+    FontWeight->"Bold"],
+  " and transform tri-diagonal matrix ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  " into a diagonal form.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(d\  = QRshift[H, 0.00001];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can check our work with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure ",
+  StyleBox["Eigenvalues",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", MatrixForm[Chop[H]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[H]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<D = \>", MatrixForm[Chop[d]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        Eigenvalues[N[d]]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Application of the QR Factorization to \"least squares\"",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIs is common practice to use the  ",
+  StyleBox["A ",
+    FontWeight->"Bold"],
+  "=",
+  StyleBox[" QR",
+    FontWeight->"Bold"],
+  "  factorization for underdetermined system and get a \"least squares \
+solution.\"   We will illustrate the method for the problem of finding a \
+\"least squares parabola.\" \n\nAn overdetermined system of equations will \
+arise which ",
+  StyleBox["does not",
+    FontColor->RGBColor[1, 0, 1]],
+  " have a solution\n\n\t\t",
+  StyleBox["MX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "  \n\nThe ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " factorization of  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "  is obtained  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(Q\ R\),
+          FontWeight->"Bold"], "=", 
+        StyleBox["M",
+          FontWeight->"Bold"]}]]],
+  ",  and we \"wish\" to solve\n\t\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  \n\nMultiplication on the left by  ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["Q",
+          FontWeight->"Bold"], "T"]]],
+  "  produces the system  \n\n\t\t",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["Q",
+          FontWeight->"Bold"], "T"]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox[\(Q\^T\ B\),
+          FontWeight->"Bold"]}]]],
+  " \n\nwhich we will be able to solve in the form \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["Q",
+              FontWeight->"Bold"], "T"], " ", 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\nThe details in Example 7 will make clear what is happening."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the \"least squares parabola\" through the six points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "1"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "3"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"6", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}]}]]],
+  ".  \nUse ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["Fit",
+    FontWeight->"Bold"],
+  " to find the solution. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(P = {{1, 1}, {2, 2}, {3, 4}, {4, 4}, {5, 3}, {6, 
+            0}};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Fit[P, {1, x, x\^2}, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Is the least squares parabola for the points\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<P = \>", P];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[P, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+          PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(graph1 = 
+        Plot[f[x], {x, \(-1\), 7}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", P];\)\ \ \), "\n", 
+    \(\(Print["\<The `least squares` parabola is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the \"least squares parabola\" through the six points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "1"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "4"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "3"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"6", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}]}]]],
+  ".  Write down six equations in three unknowns that we \"wish\" could be \
+solved.  Observe that this is an underdetermined system and envision a \
+\"least squares solution.\"   \nUse the ",
+  StyleBox["A = QR",
+    FontWeight->"Bold"],
+  " factorization to get a \"least squares solution. \""
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["The equation we want to fit is a parabola.", "Text"],
+
+Cell[BoxData[{
+    \(Clear[c]; \ c = 0; \ Remove[c];\), "\[IndentingNewLine]", 
+    \(eqn = \(\(c\_1\  + \ c\_2\ x\  + 
+          c\_3\ x\^2\)\(\[Equal]\)\(\ \)\(y\)\(\ \)\)\)}], "Input"],
+
+Cell["\<\
+Use the six data points to create six equations that we \"wish\" \
+that we could be solve.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = Table[0, {6}];\)\ \), "\[IndentingNewLine]", 
+    \(\(P = {{1, 1}, {2, 2}, {3, 4}, {4, 4}, {5, 3}, {6, 
+            0}};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          6, \(i++\), \
+\[IndentingNewLine]\(eqns\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+            ReplaceAll[
+              eqn, {x \[Rule] 
+                  P\_\(\(\[LeftDoubleBracket]\)\(i, \
+1\)\(\[RightDoubleBracket]\)\), 
+                y \[Rule] 
+                  P\_\(\(\[LeftDoubleBracket]\)\(i, \
+2\)\(\[RightDoubleBracket]\)\)}];\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\t\t\>", TableForm[eqns]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["LinearEquationsToMatrices",
+    FontWeight->"Bold"],
+  " subroutine to formulate this as a matrix problem. \nFirst create the \
+matrices ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(vars = {c\_1, c\_2, c\_3};\)\ \), "\[IndentingNewLine]", 
+    \(\({M, B} = 
+        LinearEquationsToMatrices[eqns, vars];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<`Hope` to solve\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\t\t\>", TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Which can be converted to a linear system\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]\ , MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<We `wish` to solve  MC = B\>"];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We wish to find a set of coefficients  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["C",
+          FontWeight->"Bold"], " ", "=", " ", \({c\_1, c\_2, c\_3}\)}]]],
+  " which will solve the overdetermined system\n\n(1)\t",
+  StyleBox["MC",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " \n\nin some \"least squares\" sense.\n\nVerify that this ",
+  StyleBox["cannot",
+    FontColor->RGBColor[1, 0, 1]],
+  " be solved by elementary means by attempting to find a solution using the \
+built-in procedure ",
+  StyleBox["LinearSolve",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(LinearSolve[M, B]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " decomposition to solve the overdetermined linear system.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\({QT, R} = QRDecomposition[N[M]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Q = Conjugate[Transpose[QT]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  Q = \>", MatrixForm[Q]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<  R = \>", 
+        MatrixForm[R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The M = QR factorization is\>"];\)\), "\[IndentingNewLine]", \
+
+    \(\(Print["\<  M = \>", MatrixForm[M], "\< = \>", MatrixForm[Q], 
+        MatrixForm[R]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  M = \>", MatrixForm[M], "\< = \>", 
+        MatrixForm[Q . R]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "We have already seen that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["M",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  does ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 1]],
+  " have a solution.\n\n\tUse the ",
+  StyleBox["QR",
+    FontWeight->"Bold"],
+  " factorization to get a \"least squares answer.\"  Since  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(Q\ R\),
+          FontWeight->"Bold"], "=", 
+        StyleBox["M",
+          FontWeight->"Bold"]}]]],
+  ", and we wish to solve  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"], " "}]]],
+  "  \n\nMultiply on the left by ",
+  Cell[BoxData[
+      StyleBox[\(Q\^T\),
+        FontWeight->"Bold"]]],
+  " and get  \n\n\t\t",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["Q",
+          FontWeight->"Bold"], "T"]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["Q",
+            FontWeight->"Bold"], " ", 
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox[\(Q\^T\ B\),
+          FontWeight->"Bold"]}]]],
+  "  \n\t\t\nwhich reduces to\n\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["R",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        RowBox[{
+          StyleBox[\(Q\^T\),
+            FontWeight->"Bold"], " ", 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\t\nUse ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to solve this equation.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<We `wish` to solve  MC = QRC = B\>"];\)\), "\n", 
+    \(\(Print["\<We `wish` to solve       QRC = B\>"];\)\), "\n", 
+    \(\(Print[MatrixForm[Q]\ , MatrixForm[R]\ , MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\n", 
+    \(\(Print["\<\n\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<We `can` solve    \!\(Q\^T\)QRC = \
+\!\(Q\^T\)B\>\""];\)\), "\n", 
+    \(\(Print[MatrixForm[QT], MatrixForm[Q]\ , MatrixForm[R]\ , 
+        MatrixForm[vars], "\< = \>", MatrixForm[QT], 
+        MatrixForm[B]\ ];\)\ \), "\n", 
+    \(\(Print["\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Chop[QT . Q]]\ , MatrixForm[R]\ , 
+        MatrixForm[vars], "\< = \>", MatrixForm[QT], 
+        MatrixForm[B]\ ];\)\ \), "\n", 
+    \(\(Print["\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Chop[QT . Q]]\ , MatrixForm[R]\ , 
+        MatrixForm[vars], "\< = \>", MatrixForm[QT . B]\ ];\)\ \), "\n", 
+    \(\(Print["\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Chop[QT . Q . R]\ ], MatrixForm[vars], "\< = \>", 
+        MatrixForm[QT . B]\ ];\)\ \)}], "Input"],
+
+Cell["Solve the latter system.", "Text"],
+
+Cell[BoxData[{
+    \(\(X = LinearSolve[R, QT . B];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<We `can` solve    \!\(Q\^T\)QRC = \
+\!\(Q\^T\)B\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<             Solve   RC = \!\(Q\^T\)B\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[R], MatrixForm[vars], "\< = \>", 
+        MatrixForm[QT . B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<C = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "These are the coefficients that we obtained previously in Example 6 using \
+",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure ",
+  Cell[BoxData[
+      StyleBox[\(Fit[P, {1, x, x\^2}, x]\),
+        FontWeight->"Bold"]]],
+  " ?  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \(-2.8\) + 3.94286\ x - 
+          0.571429\ x\^2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Construct the polynomial  ",
+  StyleBox["p[x]",
+    FontFamily->"Courier New"],
+  ".  The coefficients are stored in the array  ",
+  StyleBox["c",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  and the elements are ",
+  Cell[BoxData[
+      \(c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(c = X;\)\), "\[IndentingNewLine]", 
+    \(\(p[
+          x_] = \ \[Sum]\+\(i = 1\)\%3\( 
+                c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+\) x\^\(i - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Clear[c];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " We can graph the polynomial ",
+  StyleBox["p[x]",
+    FontFamily->"Courier New"],
+  ", this is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[P, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+          PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(graph1 = 
+        Plot[p[x], {x, \(-1\), 7}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", P];\)\ \ \), "\n", 
+    \(\(Print["\<The `least squares` parabola is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = p[x] = \>", p[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " This is \"least squares solution\"   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["C",
+          FontWeight->"Bold"], " ", "=", " ", \({c\_1, c\_2, c\_3}\)}]]],
+  " for Equations  (1)  ",
+  StyleBox["MC",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " .  It is not exact, but it is \"as close as it gets.\""
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"eqns0", "=", 
+        RowBox[{"(", GridBox[{
+              {\(c\_1 + c\_2 + c\_3\), "\"\<=\>\"", "1"},
+              {\(c\_1 + 2\ c\_2 + 4\ c\_3\), "\"\<=\>\"", "2"},
+              {\(c\_1 + 3\ c\_2 + 9\ c\_3\), "\"\<=\>\"", "4"},
+              {\(c\_1 + 4\ c\_2 + 16\ c\_3\), "\"\<=\>\"", "4"},
+              {\(c\_1 + 5\ c\_2 + 25\ c\_3\), "\"\<=\>\"", "3"},
+              {\(c\_1 + 6\ c\_2 + 36\ c\_3\), "\"\<=\>\"", "0"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(eqns1 = 
+        ReplaceAll[
+          eqns0, {c\_1 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(eqns2 = 
+        ReplaceAll[
+          eqns1, {c\_2 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(eqns3 = 
+        ReplaceAll[
+          eqns2, {c\_3 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns1]];\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns2]];\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns3]];\)}], "Input"],
+
+Cell[TextData[{
+  "Notice that we do not have equality.  The errors in each equation are the \
+elements of the vector  ",
+  StyleBox["d",
+    FontWeight->"Bold"],
+  "  and ",
+  Cell[BoxData[
+      SqrtBox[
+        RowBox[{
+          StyleBox["d",
+            FontWeight->"Bold"], ".", 
+          StyleBox["d",
+            FontWeight->"Bold"]}]]]],
+  "  is a measure of the \"least squares\" criterion. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d = M . X - B;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<d = M.X-B = \>", d\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\@\(d . d\)\)  = \>\"", \@\(d . d\)\ \ ];\)\ \ \)}], \
+"Input"],
+
+Cell[TextData[{
+  "Try any arbitrary set of coefficients",
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["C",
+          FontWeight->"Bold"], " ", "=", " ", \({c\_1, c\_2, c\_3}\)}]]],
+  " ",
+  "in Equations  (1)  ",
+  StyleBox["MC",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ", and they won't be as good. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = {\(-2.8\), 4.0, \(-0.6\)\ \ };\)\), "\[IndentingNewLine]", 
+    \(\(c = X;\)\), "\[IndentingNewLine]", 
+    \(\(q[
+          x_] = \ \[Sum]\+\(i = 1\)\%3\( 
+                c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+\) x\^\(i - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[x] = \>", q[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Clear[c];\)\)}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"eqns0", "=", 
+        RowBox[{"(", GridBox[{
+              {\(c\_1 + c\_2 + c\_3\), "\"\<=\>\"", "1"},
+              {\(c\_1 + 2\ c\_2 + 4\ c\_3\), "\"\<=\>\"", "2"},
+              {\(c\_1 + 3\ c\_2 + 9\ c\_3\), "\"\<=\>\"", "4"},
+              {\(c\_1 + 4\ c\_2 + 16\ c\_3\), "\"\<=\>\"", "4"},
+              {\(c\_1 + 5\ c\_2 + 25\ c\_3\), "\"\<=\>\"", "3"},
+              {\(c\_1 + 6\ c\_2 + 36\ c\_3\), "\"\<=\>\"", "0"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(eqns1 = 
+        ReplaceAll[
+          eqns0, {c\_1 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(eqns2 = 
+        ReplaceAll[
+          eqns1, {c\_2 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(eqns3 = 
+        ReplaceAll[
+          eqns2, {c\_3 \[Rule] 
+              X\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}];\
+\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns1]];\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns2]];\), "\[IndentingNewLine]", \(Print["\<\t\t\>", 
+        TableForm[eqns3]];\)}], "Input"],
+
+Cell[TextData[{
+  "Again, we do not have equality.  However, the errors errors are larger \
+than before and ",
+  Cell[BoxData[
+      SqrtBox[
+        RowBox[{
+          StyleBox["e",
+            FontWeight->"Bold"], ".", 
+          StyleBox["e",
+            FontWeight->"Bold"]}]]]],
+  "  is a measure of the \"least squares\" criterion. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e = M . X - B;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e = M.X-B = \>", e\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\@\(e . e\)\)  = \>\"", \@\(e . e\)\ \ ];\)\ \ \)}], \
+"Input"],
+
+Cell[TextData[{
+  "Here we have ",
+  Cell[BoxData[
+      RowBox[{
+        SqrtBox[
+          RowBox[{
+            StyleBox["e",
+              FontWeight->"Bold"], ".", 
+            StyleBox["e",
+              FontWeight->"Bold"]}]], " ", "=", " ", 
+        "1.3416407864998732`"}]]],
+  "  which is larger that the minimum value  ",
+  Cell[BoxData[
+      RowBox[{
+        SqrtBox[
+          RowBox[{
+            StyleBox["d",
+              FontWeight->"Bold"], ".", 
+            StyleBox["d",
+              FontWeight->"Bold"]}]], " ", "=", " ", 
+        "1.0419761445034554`"}]]],
+  "\n\nA plot of the graphs will reveal what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[P, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+          PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(graph1 = 
+        Plot[{p[x], q[x]}, {x, \(-1\), 7}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{\(-1\), 6.2}, {0.0, 4.2}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", P];\)\ \ \), "\n", 
+    \(\(Print["\<The `least squares` parabola is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = p[x] = \>", p[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\@\(d . d\)\)  = \>\"", \@\(d . d\)\ \ ];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Some `other` parabola is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = q[x] = \>", q[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\@\(e . e\)\)  = \>\"", \@\(e . e\)\ \ ];\)\ \ \)}], \
+"Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/QRMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The QR Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PageHeaders->{{Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"], Inherited, Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"]}, {Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"], Inherited, Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"]}},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {36, 36}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->True,
+"PrintMultipleHorizontalPages"->False,
+"FirstPageHeader"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 182, 4, 35, "Text"],
+Cell[1961, 59, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3440, 111, 2205, 71, 108, "Text"],
+Cell[5648, 184, 3590, 133, 223, "Text"],
+Cell[9241, 319, 591, 21, 57, "Text"],
+
+Cell[CellGroupData[{
+Cell[9857, 344, 101, 2, 33, "Text"],
+Cell[9961, 348, 942, 22, 180, "Input"],
+Cell[10906, 372, 155, 5, 71, "Text"],
+Cell[11064, 379, 408, 8, 110, "Input"],
+Cell[11475, 389, 317, 12, 71, "Text"],
+Cell[11795, 403, 712, 13, 166, "Input"],
+Cell[12510, 418, 1573, 62, 71, "Text"]
+}, Closed]],
+Cell[14098, 483, 860, 28, 108, "Text"],
+
+Cell[CellGroupData[{
+Cell[14983, 515, 105, 2, 33, "Text"],
+Cell[15091, 519, 888, 19, 198, "Input"],
+Cell[15982, 540, 155, 5, 71, "Text"],
+Cell[16140, 547, 408, 8, 110, "Input"],
+Cell[16551, 557, 317, 12, 71, "Text"],
+Cell[16871, 571, 847, 16, 190, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[17755, 592, 105, 2, 30, "Text"],
+Cell[17863, 596, 856, 19, 198, "Input"],
+Cell[18722, 617, 155, 5, 71, "Text"],
+Cell[18880, 624, 520, 10, 130, "Input"],
+Cell[19403, 636, 317, 12, 71, "Text"],
+Cell[19723, 650, 855, 16, 190, "Input"]
+}, Closed]],
+Cell[20593, 669, 1131, 41, 106, "Text"],
+Cell[21727, 712, 513, 18, 33, "Text"],
+Cell[22243, 732, 4682, 154, 375, "Text"],
+Cell[26928, 888, 1515, 50, 185, "Text"],
+Cell[28446, 940, 599, 20, 33, "Text"],
+Cell[29048, 962, 585, 19, 33, "Text"],
+Cell[29636, 983, 552, 19, 33, "Text"],
+Cell[30191, 1004, 746, 14, 196, "Input"],
+Cell[30940, 1020, 825, 26, 73, "Text"],
+
+Cell[CellGroupData[{
+Cell[31790, 1050, 101, 2, 33, "Text"],
+Cell[31894, 1054, 540, 13, 98, "Input"],
+Cell[32437, 1069, 318, 5, 91, "Input"],
+Cell[32758, 1076, 401, 16, 91, "Text"],
+Cell[33162, 1094, 451, 8, 111, "Input"]
+}, Closed]],
+Cell[33628, 1105, 5570, 178, 277, "Text"],
+Cell[39201, 1285, 599, 20, 33, "Text"],
+Cell[39803, 1307, 585, 19, 33, "Text"],
+Cell[40391, 1328, 898, 26, 71, "Text"],
+Cell[41292, 1356, 2094, 37, 457, "Input"],
+Cell[43389, 1395, 725, 22, 73, "Text"],
+
+Cell[CellGroupData[{
+Cell[44139, 1421, 101, 2, 33, "Text"],
+Cell[44243, 1425, 252, 11, 33, "Text"],
+Cell[44498, 1438, 897, 19, 178, "Input"],
+Cell[45398, 1459, 222, 8, 33, "Text"],
+Cell[45623, 1469, 430, 7, 131, "Input"],
+Cell[46056, 1478, 401, 16, 91, "Text"],
+Cell[46460, 1496, 693, 12, 171, "Input"]
+}, Closed]],
+Cell[47168, 1511, 4163, 138, 205, "Text"],
+Cell[51334, 1651, 599, 20, 33, "Text"],
+Cell[51936, 1673, 585, 19, 33, "Text"],
+Cell[52524, 1694, 561, 19, 33, "Text"],
+Cell[53088, 1715, 3244, 55, 621, "Input"],
+Cell[56335, 1772, 737, 22, 73, "Text"],
+
+Cell[CellGroupData[{
+Cell[57097, 1798, 101, 2, 33, "Text"],
+Cell[57201, 1802, 206, 8, 33, "Text"],
+Cell[57410, 1812, 897, 19, 178, "Input"],
+Cell[58310, 1833, 218, 8, 33, "Text"],
+Cell[58531, 1843, 73, 1, 30, "Input"],
+Cell[58607, 1846, 401, 16, 91, "Text"],
+Cell[59011, 1864, 667, 11, 170, "Input"]
+}, Closed]],
+Cell[59693, 1878, 2477, 85, 429, "Text"],
+Cell[62173, 1965, 3860, 114, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[66058, 2083, 101, 2, 33, "Text"],
+Cell[66162, 2087, 419, 7, 111, "Input"],
+Cell[66584, 2096, 836, 16, 150, "Input"]
+}, Closed]],
+Cell[67435, 2115, 3998, 113, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[71458, 2232, 101, 2, 33, "Text"],
+Cell[71562, 2236, 58, 0, 33, "Text"],
+Cell[71623, 2238, 187, 3, 50, "Input"],
+Cell[71813, 2243, 114, 3, 33, "Text"],
+Cell[71930, 2248, 696, 16, 111, "Input"],
+Cell[72629, 2266, 349, 15, 52, "Text"],
+Cell[72981, 2283, 683, 12, 170, "Input"],
+Cell[73667, 2297, 660, 21, 148, "Text"],
+Cell[74330, 2320, 66, 1, 30, "Input"],
+Cell[74399, 2323, 147, 5, 33, "Text"],
+Cell[74549, 2330, 624, 11, 150, "Input"],
+Cell[75176, 2343, 2049, 75, 299, "Text"],
+Cell[77228, 2420, 1133, 20, 251, "Input"],
+Cell[78364, 2442, 40, 0, 33, "Text"],
+Cell[78407, 2444, 504, 9, 112, "Input"],
+Cell[78914, 2455, 280, 10, 33, "Text"],
+Cell[79197, 2467, 172, 3, 50, "Input"],
+Cell[79372, 2472, 360, 12, 34, "Text"],
+Cell[79735, 2486, 337, 7, 115, "Input"],
+Cell[80075, 2495, 319, 12, 71, "Text"],
+Cell[80397, 2509, 836, 16, 150, "Input"],
+Cell[81236, 2527, 561, 20, 71, "Text"],
+Cell[81800, 2549, 1251, 26, 234, "Input"],
+Cell[83054, 2577, 415, 14, 33, "Text"],
+Cell[83472, 2593, 230, 4, 73, "Input"],
+Cell[83705, 2599, 363, 15, 33, "Text"],
+Cell[84071, 2616, 409, 8, 135, "Input"],
+Cell[84483, 2626, 1251, 26, 234, "Input"],
+Cell[85737, 2654, 351, 11, 33, "Text"],
+Cell[86091, 2667, 230, 4, 73, "Input"],
+Cell[86324, 2673, 652, 22, 71, "Text"],
+Cell[86979, 2697, 1207, 22, 236, "Input"]
+}, Closed]],
+Cell[88201, 2722, 158, 3, 32, "Text"],
+Cell[88362, 2727, 574, 17, 33, "Text"],
+Cell[88939, 2746, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

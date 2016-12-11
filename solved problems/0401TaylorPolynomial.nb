@@ -1,0 +1,4977 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    147956,       4503]*)
+(*NotebookOutlinePosition[    148684,       4528]*)
+(*  CellTagsIndexPosition[    148640,       4524]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Maclaurin and Taylor Polynomials",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  "\tWhen a Taylor series is truncated to a finite number of terms the result \
+is a Taylor polynomial.  A Taylor series expanded about ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ", is called a Maclarin series.  These Taylor (and Maclaurin) polynomials \
+are used to numerically approximate functions.  We attribute much of the \
+founding theory to ",
+  StyleBox[ButtonBox["Brook Taylor",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Taylor.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1685-1731), ",
+  StyleBox[ButtonBox["Colin Maclaurin",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Maclaurin.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1698-1746) and ",
+  StyleBox[ButtonBox["Joseph-Louis Lagrange",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Lagrange.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1736-1813)."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Taylor Polynomial Approximation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TaylorSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^\(n + 1\)\),
+            FontWeight->"Bold"], "[", 
+          RowBox[{\(x\_0 - R\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_0 + R\)}], "]"}]}]]],
+  ",  then \n\n\t",
+  Cell[BoxData[
+      \(f \((x)\) = \(P\_n\) \((x)\) + \(R\_n\) \((x)\)\)]],
+  ",\n\t\nwhere ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " is a polynomial that can be used to approximate  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ", and we write  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(f \((x)\) \[TildeTilde] \(P\_n\) \((x)\)\), "=", 
+        RowBox[{\(\[Sum]\+\(k = 0\)\%n\), 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((k)\),
+                    Derivative],
+                  
+                  MultilineFunction->None], \((x\_0)\)}], \(k!\)], \(\((x - 
+                    x\_0)\)\^k\)}]}]}]]],
+  ".\n\nThe remainder term ",
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  "has the form\n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(R\_n\) \((x)\)\), "=", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((n + 1)\),
+                  Derivative],
+                
+                MultilineFunction->None], \((c)\)}], \(\((n + 
+                  1)\)!\)], \(\((x - x\_0)\)\^\(n + 1\)\)}]}]]],
+  ",\n\nfor some value ",
+  Cell[BoxData[
+      \(c = c \((x)\)\)]],
+  " that lies between ",
+  Cell[BoxData[
+      RowBox[{"c", " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(x\_0\)}]]],
+  ".  The formula ",
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  " is referred to as the Lagrange form of the remainder. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^\(n + 1\)\),
+            FontWeight->"Bold"], "[", 
+          RowBox[{\(x\_0 - R\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_0 + R\)}], "]"}]}]]],
+  ", and that the Taylor polynomial of degree ",
+  Cell[BoxData[
+      \(n\)]],
+  " for ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " is ",
+  Cell[BoxData[
+      RowBox[{\(P \((x)\)\), "=", 
+        RowBox[{\(\[Sum]\+\(k = 0\)\%n\), 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((k)\),
+                    Derivative],
+                  
+                  MultilineFunction->None], \((x\_0)\)}], \(k!\)], \(\((x - 
+                    x\_0)\)\^k\)}]}]}]]],
+  ", then \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["P", 
+            TagBox[\((k)\),
+              Derivative],
+            MultilineFunction->None], \((x\_0)\)}], " ", "=", " ", 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((k)\),
+              Derivative],
+            MultilineFunction->None], \((x\_0)\)}]}]]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^\(n + 1\)\),
+            FontWeight->"Bold"], "[", 
+          RowBox[{\(x\_0 - R\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_0 + R\)}], "]"}]}]]],
+  ", and that the Taylor polynomial of degree ",
+  Cell[BoxData[
+      \(n\)]],
+  " for ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " is ",
+  Cell[BoxData[
+      RowBox[{\(P \((x)\)\), "=", 
+        RowBox[{\(\[Sum]\+\(k = 0\)\%n\), 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((k)\),
+                    Derivative],
+                  
+                  MultilineFunction->None], \((x\_0)\)}], \(k!\)], \(\((x - 
+                    x\_0)\)\^k\)}]}]}]]],
+  ", then \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_n\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\(M\/\(\((n \
++ 1)\)!\)\) R\^\(n + 1\)\)\)\)\)]],
+  ",\n\nwhere  ",
+  Cell[BoxData[
+      RowBox[{"M", " ", "=", " ", 
+        RowBox[{"max", 
+          RowBox[{"{", 
+            RowBox[{
+              RowBox[{"|", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((n + 1)\),
+                      Derivative],
+                    MultilineFunction->None], \((x)\)}], "|"}], ":", 
+              "  ", \(x\_0 - R\  \[LessEqual] \ x\  \[LessEqual] \ 
+                x\_0 + R\)}], "}"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorPolyProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorPolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\(1\  + \ x\^2\)\)]],
+  ".  \n",
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. \n",
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error term ",
+  Cell[BoxData[
+      \(\(E\_n\) \((x)\)\)]],
+  "for the Maclaurin polynomial of degree n = 10 over the interval  [-0.5, \
+0.5].  \n",
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\(1 + x\^2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(T\  = \ Series[f[x], {x, 0, 10}];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = Normal[T];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you just find the \"Series\" it will include a \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term, which cannot be used in either evaluations or graphing, we \
+eliminate it with the command \"Normal.\"  The \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term lets us know the power of x in the \"remainder.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Series[f[x], {x, 0, 10}]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Of course the \"full\" Maclaurin series has an infinite number of terms. \
+ ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is capable of finding sums of infinite series.  \n\nThe following is just \
+for fun !\n\nThere are two ways to get infinite sums, the old way and the new \
+way.  First sum the series  ",
+  Cell[BoxData[
+      \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\((\(-1\))\)\^n\) \((1\/2)\)\^\(2  \
+n\)\)]],
+  ".  The \"telegraph\" command is:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(Sum[\(\((\(-1\))\)\^n\) \((1\/2)\)\^\(2  n\), {n, 0, 
+        Infinity}]\ \)}], "Input"],
+
+Cell["The \"symbolic\" command is:", "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\(\((\(-1\))\)\^n\) \(\((1\/2)\)\^\(2  
+              n\)\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Summation is located on the BasicInput ",
+  "palette",
+  ".\nNow sum the power series  ",
+  Cell[BoxData[
+      \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\((\(-1\))\)\^n\) x\^\(2  n\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\(\((\(-1\))\)\^n\) \(x\^\(2  
+              n\)\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Now graph f[x] and the Maclaurin polynomial s[x] over the interval [-1, 1].  \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-1\), 1}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Notice that there is a significant amount of error near  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]1\)\)]],
+  ".  Let's investigate a smaller interval.\nGraph  f[x]  and the Maclaurin \
+polynomial  s[x]  over the interval  [-0.5, 0.5].  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-0.5\), 0.5}, 
+        PlotRange \[Rule] {{\(-0.5\), 0.5}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Background for part 1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  "Use the fact that the series is \"alternating\" to investigate the error",
+  " for the Maclaurin polynomial of degree n = 10 over the interval  [-0.5, \
+0.5].  "
+}], "Text"],
+
+Cell["\<\
+Now look closely at the \"error\" when the series is used to approximate the \
+function.  It becomes infinite near x = 1.  For this reason we work on \
+smaller intervals, in this case we chose  [-0.5, 0.5].  How close are were \
+the two curves in part (a) ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(e[x_] = Simplify[f[x] - s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-0.5\), 0.5}, 
+        PlotRange \[Rule] {{\(-0.5\), 0.5}, {0, 0.0002}}, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = \>", e[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We used the \"Simplify\" command to form e[x], without this command it \
+would have looked different."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(f[x]\)\(-\)\(s[x]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+This series is \"very nice\" because it is alternating, and for that reason \
+the error bound is the magnitude of the \"next term\" in the series.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(errorbound\)\(\ \)\(=\)\(\ \)\(Abs[\ 
+        x\^12\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell["The error bound for the entire interval  [-0.5, 0.5] is ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Abs[\((0.5)\)\^12\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This estimate is \"conservative\" and is a little larger than the \"actual\
+\" maximum error which occurred at   ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]0.5\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[0.5] = \>", e[0.5], "\<\n\>", "\<e[-0.5] = \>", 
+        e[\(-0.5\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background. Lagrange form of the Remainder.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Lagrange form of the error is  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(11!\)], \(x\^11\)}]}]]],
+  "  where  c  is known to exist and lies somewhere between  0  and  x."
+}], "Text"],
+
+Cell[BoxData[{\(Clear[c];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(R[x_, c_]\), " ", "=", " ", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((11)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", 
+                "]"}], \(11!\)], \(x\^11\)}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Lagrange form of the remainder is\>", "\<\n\>"];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<R[x,c] = \!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\)\!\(x\^11\) where c lies somewhere \
+between 0 and x.\>\"", ",", "\"\<\\n\>\""}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<R[x,c] = \>", Together[R[x, c]]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "First we need to bound the size of the term  ",
+  Cell[BoxData[
+      FractionBox[
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((11)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], \(11!\)]]],
+  "  for values of  c  in the interval  ",
+  Cell[BoxData[
+      \(\(-0.5\) \[LessEqual] c \[LessEqual] 0.5\)]],
+  ".  This can easily be done graphically, but to do it ",
+  "analytically",
+  " with derivatives is quite messy.  We choose to look at the following \
+graph to see what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            RowBox[{"{", 
+              RowBox[{\(-0.909253\), ",", "0.909253", ",", 
+                FractionBox[
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((11)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "c", "]"}], \(11!\)]}], 
+              "}"}], ",", \({c, \(-0.5\), 0.5}\), 
+            ",", \(PlotRange \[Rule] {{\(-0.5\), 0.5}, {\(-1.0\), 1.0}}\), 
+            ",", \(PlotStyle \[Rule] {Cyan, Cyan, Blue}\)}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\) = \>\"", ",", 
+            RowBox[{"Together", "[", 
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((11)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+              "]"}]}], " ", "]"}], ";"}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "How big does  ",
+  Cell[BoxData[
+      \("\!\(f\^\((11)\)\)[c]"\/\(11!\)\)]],
+  "  get ?  Looking at the graph we can estimate it to be  ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(0.9092530243443296`\)\)}]]],
+  ".  \n\nThat's good enough.\n\nHow big does the error  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(11!\)], \(x\^11\)}]}]]],
+  "  get ?  Notice that ",
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(R[x, c]\)\(|\)\), " ", "=", " ", 
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+          "|"}]}]]],
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  ".  \nWe will use the bound the first portion",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(0.91\)\)}]]],
+  "  and  then bound the portion  ",
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  "  over the interval  [-0.5, 0.5]  by evaluating it at  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]0.5\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<|\!\(x\^11\)| \[LessEqual] \>\"", \((0.5)\)\^11];\)\(\ \
+\)\)\)], "Input"],
+
+Cell[TextData[{
+  " Now multiply the two numbers together to find the error bound for \
+Lagrange's remainder formula. \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(R[x, 
+            c]\)\(|\)\(\(\[LessEqual]\)\(\ \)\(0.0004881*0.909253\)\)\) = 
+        0.000443806\)]],
+  "  \n\nThis is a little larger than the actual maximum error we found. \
+Remember is an \"error bound.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[0.5] = \>", e[0.5], "\<\n\>", "\<e[-0.5] = \>", 
+        e[\(-0.5\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[TextData[{
+  "Go ahead \"enjoy\" and add terms in the series up to ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  ", then plot the functions over the interval [-0.8, 0.8]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 50}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-0.8\), 0.8}, 
+        PlotRange \[Rule] {{\(-0.8\), 0.8}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " actually computes the higher derivatives of f[x] when calculating the \
+Taylor series. Suppose you had to find the formula for the first 10 \
+derivatives of f[x].  Could \"you\" do it ?  Would you want to do it ?"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 0\), ",", \(i \[LessEqual] 10\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+              RowBox[{"Print", "[", 
+                RowBox[{
+                  SuperscriptBox["\"\<f\>\"", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], ",", "\"\<[x] = \>\"", ",", 
+                  RowBox[{"Together", "[", 
+                    RowBox[{
+                      SuperscriptBox["f", 
+                        TagBox[\((i)\),
+                          Derivative],
+                        MultilineFunction->None], "[", "x", "]"}], "]"}]}], 
+                "]"}], " ", ";"}]}], "]"}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The function  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\(1\  + \ x\^2\)\)]],
+  "  is \"infinitely differentiable\", that is it has a derivatives of all \
+orders.  And the graph looks really smooth and nice for \"all x.\""
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[f[x], {x, \(-4\), 4}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+So, why is the Maclaurin series severely restricted to the interval (-1,1).  \
+The answer lies in the study of complex numbers, we must  look at the \
+denominator and see where it vanishes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = Denominator[f[x]] \[Equal] 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqn, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[solset, "\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[\[ImaginaryI]] = \>", 
+        f[\[ImaginaryI]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[-\[ImaginaryI]] = \>", 
+        f[\(-\[ImaginaryI]\)]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The values ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]\[ImaginaryI]\)\)]],
+  "  are called singularities of  f[x]  and the radius of convergence is the \
+distance from the origin to the closest one.  But this topic must be left to \
+another course called \"complex analysis\" which is offered each spring.  All \
+computer algebra systems such as ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " or Maple or Derive do there underlying computations using complex \
+numbers.  It is the mathematicians way to do it, and it is really fun to work \
+with complex functions. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  ".  \n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. \n",
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error term ",
+  Cell[BoxData[
+      \(\(E\_n\) \((x)\)\)]],
+  "for the Maclaurin polynomial of degree n = 10 over the interval  [-2.0, \
+2.0].  \n",
+  StyleBox["2 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(T\  = \ Series[f[x], {x, 0, 10}];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = Normal[T];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you just find the \"Series\" it will include a \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term, which cannot be used in either evaluations or graphing, we \
+eliminate it with the command \"Normal.\"  The \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term lets us know the power of x in the \"remainder.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Series[f[x], {x, 0, 10}]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Of course the \"full\" Maclaurin series has an infinite number of terms. \
+ ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is capable of finding sums of infinite series.  \n\nThe following is just \
+for fun !\n\nThere are two ways to get infinite sums, the old way and the new \
+way. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(\(\(g[
+        x_]\)\(\ \)\(=\)\(\ \)\(Sum[\(\((\(-1\))\)\^n\) 
+          x\^\(2  n\)\/\(\((2  n)\)!\), {n, 0, 
+          Infinity}]\)\(\ \)\)\)}], "Input"],
+
+Cell[BoxData[
+    \(FullSimplify[g[x]]\)], "Input"],
+
+Cell["The \"symbolic\" command is:", "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\(\((\(-1\))\)\^n\) \(x\^\(2  \
+n\)\/\(\((2  n)\)!\)\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Now graph f[x] and the Maclaurin polynomial s[x] over the interval [-2, 2].  \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, All}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The curves are distinct, but this is only evident if we look at them over a \
+larger interval.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-\(3\/2\)\) \[Pi], \(3\/2\) \[Pi]}, 
+        PlotRange \[Rule] {{\(-\(3\/2\)\) \[Pi], \(3\/2\) \[Pi]}, All}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Background for part 2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the fact that the series is \"alternating\" to investigate the error \
+for the Maclaurin polynomial of degree n = 10 over the interval  [-2.0, 2.0]. \
+ "
+}], "Text"],
+
+Cell["\<\
+Now look closely at the \"error\" when the series is used to approximate the \
+function. How close are were the two curves in part (a) ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(e[x_] = Simplify[f[x] - s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-2.0\), 2.0}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = \>", e[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+This series is \"very nice\" because it is alternating, and for that reason \
+the error bound is the magnitude of the \"next non-zero term\" in the series.\
+\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 12}]\ ]\)\(\ \)\(-\)\(Normal[
+        Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(errorbound\)\(\ \)\(=\)\(\ \)\(Abs[\ \(-\(x\^12\/\(12!\)\)\)\ ]\)\(\
+\ \ \)\)\)], "Input"],
+
+Cell["The error bound for the entire interval  [-2.0, 2.0] is ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Abs[\ x\^12\/\(12!\)\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[Abs[\ x\^12\/\(12!\)\ ]]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[Abs[\ 2\^12\/\(12!\)\ ]]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This estimate is \"conservative\" and is a little larger than the \"actual\
+\" maximum error which occurred at   ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0], "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background. Lagrange form of the Remainder.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Lagrange form of the error is  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(21!\)], \(x\^21\)}]}]]],
+  "  where  c  is known to exist and lies somewhere between  0  and  x."
+}], "Text"],
+
+Cell[BoxData[{\(Clear[c];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(R[x_, c_]\), " ", "=", " ", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((11)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", 
+                "]"}], \(11!\)], \(x\^11\)}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Lagrange form of the remainder is\>", "\<\n\>"];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<R[x,c] = \!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\)\!\(x\^11\) where c lies somewhere \
+between 0 and x.\>\"", ",", "\"\<\\n\>\""}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<R[x,c] = \>", Together[R[x, c]]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "First we need to bound the size of the term  ",
+  Cell[BoxData[
+      FractionBox[
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((11)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], \(11!\)]]],
+  "  for values of  c  in the interval  ",
+  Cell[BoxData[
+      \(\(-2.0\) \[LessEqual] c \[LessEqual] 2.0\)]],
+  ".  This can easily be done graphically, but to do it ",
+  "analytically",
+  " with derivatives is quite messy.  We choose to look at the following \
+graph to see what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((11)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+            ",", \({c, \(-2.0\), 2.0}\), ",", \(PlotRange \[Rule] All\), 
+            ",", \(PlotStyle \[Rule] Blue\)}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\) = \>\"", ",", 
+            RowBox[{"Together", "[", 
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((11)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+              "]"}]}], " ", "]"}], ";"}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "How big does  ",
+  Cell[BoxData[
+      \("\!\(f\^\((21)\)\)[c]"\/\(11!\)\)]],
+  "  get ?  Looking at the graph we can estimate it to be  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+          "|", \(\(\[LessEqual]\)\(1\/\(11!\)\)\)}], "=", " ", 
+        "2.505210838544172`*^-8"}]]],
+  ".  \n\nThat's good enough.\n\nHow big does the error  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(11!\)], \(x\^11\)}]}]]],
+  "  get ?  Notice that ",
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(R[x, c]\)\(|\)\), " ", "=", " ", 
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+          "|"}]}]]],
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  ".  \nWe will use the bound the first portion",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(2.505210838544172`*^-8\)\)}]]],
+  "  and  then bound the portion  ",
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  "  over the interval  [-2.0, 2.0]  by evaluating it at  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<|\!\(x\^11\)| \[LessEqual] \>\"", \((2.0)\)\^11];\)\(\ \
+\)\)\)], "Input"],
+
+Cell[TextData[{
+  " Now multiply the two numbers together to find the error bound for \
+Lagrange's remainder formula. \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(R[x, 
+            c]\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(2.505210838544172`*^-8*2048\)\)\) = \(0.0000513067008`\  = \ 
+          5.13067\[Times]10\^\(-5\)\)\)]],
+  "  \n\nThis is a larger than the actual maximum error we found. Remember is \
+an \"error bound.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0], "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[TextData[{
+  "Go ahead \"enjoy\" and add terms in the series up to ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  ", then plot the functions over the interval ",
+  Cell[BoxData[
+      \(\(\([\)\(\(-\(\(5\ \[Pi]\)\/2\)\), \(5  \[Pi]\)\/2\)\(]\)\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 20}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-\(\(5\ \[Pi]\)\/2\)\), \(5\ \[Pi]\)\/2}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Do we have a \"good approximation\" on the interval   ",
+  Cell[BoxData[
+      \(\(\([\)\(\(-\(\(5\ \[Pi]\)\/2\)\), \(5  \[Pi]\)\/2\)\(]\)\)\)]],
+  "?"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(f[\(5\ \[Pi]\)\/2]\)\(-\)\(s[\(5\ \[Pi]\)\/2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[f[\(5\ \[Pi]\)\/2] - s[\(5  \[Pi]\)\/2]]\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Mathematical notation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " has adopted the notation  ",
+  Cell[BoxData[
+      \(Log[x]\)]],
+  "  for the natural logarithm.  This can be illustrated by using either \
+differentiation or integration.  Since  ",
+  Cell[BoxData[
+      \(Log[x]\)]],
+  "  starts with the upper case letter  L,  the word  ",
+  Cell[BoxData[
+      \(Log\)]],
+  "  is a \"reserved word.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(D[Log[x], \ x]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\(1\/x\) \(\(\[DifferentialD]x\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x] = \(-Log[1 - x]\)\)]],
+  ".  \n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error in the approximation over the interval [-0.5, \
+0.5]. \n",
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \(-\ Log[1 - x]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(T\  = \ Series[f[x], {x, 0, 10}];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = Normal[T];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you just find the \"Series\" it will include a \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term, which cannot be used in either evaluations or graphing, we \
+eliminate it with the command \"Normal.\"  The \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term lets us know the power of x in the \"remainder.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Series[f[x], {x, 0, 10}]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Of course the \"full\" Maclaurin series has an infinite number of terms. \
+ ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is capable of finding sums of infinite series.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(Sum[x\^n\/n, {n, 1, Infinity}]\ \)}], "Input"],
+
+Cell["The \"symbolic\" command is:", "Text"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(n = 1\)\%\[Infinity]\)\(x\^n\/n\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to sum the infinite series  ",
+  Cell[BoxData[
+      \(\[Sum]\+\(n = 1\)\%\[Infinity]\((1\/2)\)\^n\/n\)]],
+  ". \nCheck it out for  ",
+  Cell[BoxData[
+      \(x\  = \ 1\/2\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(n = 
+            1\)\%\[Infinity]\)\(\((1\/2)\)\^n\/n\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Check it out for  ",
+  Cell[BoxData[
+      \(x\  = \ 2\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(n = 1\)\%\[Infinity]\)\(2\^n\/n\)\(\ \)\)\)], "Input"],
+
+Cell["What is happening to the terms in the last series ?", "Text"],
+
+Cell[BoxData[
+    \(\(\(Limit[2\^n\/n, n \[Rule] \[Infinity]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The n-th term does not go to zero, therefore   ",
+  Cell[BoxData[
+      \(\[Sum]\+\(n = 1\)\%\[Infinity] 2\^n\/n\)]],
+  "  diverges."
+}], "Text"],
+
+Cell["\<\
+Do we really need to understand the \"interval of convergence\" ?  What is it \
+?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot[f[x], {x, \(-2\), 1}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        Plot[s[x], {x, \(-2\), 2}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The \"interval of convergence\" is [-1,1).  Look at what happens in this \
+interval ?  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{f[x], s[x]}, {x, \(-1\), 1}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The logarithm of negative numbers is allowed in the study of complex \
+analysis.  For example"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Log[-1] = \>", 
+        Log[\(-1\)]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[ExponentialE]\^Log[\(-1\)]\) = \>\"", \
+\[ExponentialE]\^Log[\(-1\)], "\<\n\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[ExponentialE]\^\[ImaginaryI]\[Pi]\) = \>\"", \
+\[ExponentialE]\^\[ImaginaryI]\[Pi]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[ExponentialE]\^\[ImaginaryI]\[Pi]\)+1 = \>\"", \
+\[ExponentialE]\^\[ImaginaryI]\[Pi]\  + 1];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "This leads to one of the most curious equations in mathematics  ",
+  Cell[BoxData[
+      \(\[ExponentialE]\^\(\(\[ImaginaryI]\)\(\ \)\(\[Pi]\)\(\ \)\) + 1 = 
+        0\)]],
+  ",  because it involves many of our basic numbers  ",
+  Cell[BoxData[
+      \(0, 1, \[ImaginaryI], e, \[Pi]\)]],
+  ".  You are welcome to experiment with complex numbers in this course.  For \
+example, Newton's method will converge to those \"complex roots\" if you give \
+it an initial starting value that is complex and reasonably close to the \
+desired root."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background for part 3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the fact that the series is \"alternating\" to investigate the error \
+for the Maclaurin polynomial of degree n = 10 over the interval  [-0.5, 0.5]. \
+ "
+}], "Text"],
+
+Cell["\<\
+Now look closely at the \"error\" when the series is used to approximate the \
+function.  It becomes infinite near x = 1.  For this reason we work on \
+smaller intervals, in this case we chose  [-0.5, 0.5].  How close are were \
+the two curves in part (a) ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(e[x_] = Simplify[f[x] - s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-0.5\), 0.5}, 
+        PlotRange \[Rule] {{\(-0.5\), 0.5}, {\(-0.00003\), 0.0001}}, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = \>", e[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The series is not alternating and we cannot use the magnitude of the \
+\"next term\" in the series to determine an error bound."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(errorbound\)\(\ \)\(=\)\(\ \)\(Abs[\(\(\ \)\(x\^11\)\)\/11\ ]\)\(\ \
+\ \)\)\)], "Input"],
+
+Cell["The error bound for the entire interval  [-0.5, 0.5] is ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Abs[\((0.5)\)\^11\/11\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "However, the estimate does not work on the interval  ",
+  Cell[BoxData[
+      \(\([0, 0.5]\)\)]],
+  "  where the series is not alternating."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[0.5] = \>", 
+        e[0.5], "\<\n\>", \*"\"\< e[0.5] \[LessEqual] \
+Abs[\!\(\((0.5)\)\^11\/11\) ] is \>\"", 
+        e[0.5] \[LessEqual] 
+          Abs[\((0.5)\)\^11\/11\ ]\ \ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "However, the estimate will work on the interval ",
+  " ",
+  Cell[BoxData[
+      \(\([\(-0.5\), 0]\)\)]],
+  "  where the series is alternating."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<e[-0.5] = \>", 
+        e[\(-0.5\)], "\<\n\>", \*"\"\< e[-0.5] \[LessEqual] Abs[\!\(\((0.5)\)\
+\^11\/11\) ] is \>\"", 
+        e[\(-0.5\)] \[LessEqual] 
+          Abs[\((0.5)\)\^11\/11\ ]\ \ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background. Lagrange form of the Remainder.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Lagrange form of the error is  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(21!\)], \(x\^21\)}]}]]],
+  "  where  c  is known to exist and lies somewhere between  0  and  x."
+}], "Text"],
+
+Cell[BoxData[{\(Clear[c];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(R[x_, c_]\), " ", "=", " ", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((11)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", 
+                "]"}], \(11!\)], \(x\^11\)}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Lagrange form of the remainder is\>", "\<\n\>"];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<R[x,c] = \!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\)\!\(x\^11\) where c lies somewhere \
+between 0 and x.\>\"", ",", "\"\<\\n\>\""}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<R[x,c] = \>", Together[R[x, c]]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "First we need to bound the size of the term  ",
+  Cell[BoxData[
+      FractionBox[
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((11)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], \(11!\)]]],
+  "  for values of  c  in the interval  ",
+  Cell[BoxData[
+      \(\(-0.5\) \[LessEqual] c \[LessEqual] 0.5\)]],
+  ".  This can easily be done graphically, but to do it ",
+  "analytically",
+  " with derivatives is quite messy.  We choose to look at the following \
+graph to see what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            RowBox[{"{", 
+              RowBox[{"0.001051", ",", "186.182", ",", 
+                FractionBox[
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((11)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "c", "]"}], \(11!\)]}], 
+              "}"}], ",", \({c, \(-0.5\), 0.5}\), 
+            ",", \(PlotRange \[Rule] All\), 
+            ",", \(PlotStyle \[Rule] {Cyan, Cyan, Blue}\)}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\) = \>\"", ",", 
+            RowBox[{"Together", "[", 
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((11)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+              "]"}]}], " ", "]"}], ";"}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "How big does  ",
+  Cell[BoxData[
+      \("\!\(f\^\((21)\)\)[c]"\/\(11!\)\)]],
+  "  get ?  Looking at the graph we can estimate it to be  ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(186.1818181818182`\)\)}]]],
+  ".  \n\nThat's good enough.\n\nHow big does the error  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(11!\)], \(x\^11\)}]}]]],
+  "  get ?  Notice that ",
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(R[x, c]\)\(|\)\), " ", "=", " ", 
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+          "|"}]}]]],
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  ".  \nWe will use the bound the first portion",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(186.1818181818182`\)\)}]]],
+  "  and  then bound the portion  ",
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  "  over the interval  [-",
+  "0.5",
+  ", 0.5]  by evaluating it at  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]0.5\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<|\!\(x\^11\)| \[LessEqual] \>\"", \((0.5)\)\^11];\)\(\ \
+\)\)\)], "Input"],
+
+Cell[TextData[{
+  " Now multiply the two numbers together to find the error bound for \
+Lagrange's remainder formula. \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(R[x, 
+            c]\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(4.88281\[Times]10\^\(-4\)*186.182\)\)\) = \(0.09090904436363637`\  = \ 
+          9.0909\[Times]10\^\(-2\)\)\)]],
+  "  \n\nThis is a quite a bit larger than the actual maximum error we found. \
+Remember is an \"error bound.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[0.5] = \>", e[0.5], "\<\n\>", "\<e[-0.5] = \>", 
+        e[\(-0.5\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[TextData[{
+  "Go ahead \"enjoy\" and add terms in the series up to ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  ", then plot the functions over the interval ",
+  Cell[BoxData[
+      \(\([\(-2\), 2]\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 20}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot[f[x], {x, \(-2\), 1}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        Plot[s[x], {x, \(-2\), 2}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, PlotRange \[Rule] {{\(-2\), 2}, {\(-2\), 20}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x] = BesselJ[0, x]\)]],
+  ".  \n",
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. \n",
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error term ",
+  Cell[BoxData[
+      \(\(E\_n\) \((x)\)\)]],
+  "for the Maclaurin polynomial of degree n = 10 over the interval  [-2.0, \
+2.0].  \n",
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^10\)]],
+  "  in the Maclaurin series for  f[x]. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(T\  = \ Series[f[x], {x, 0, 10}];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = Normal[T];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you just find the \"Series\" it will include a \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term, which cannot be used in either evaluations or graphing, we \
+eliminate it with the command \"Normal.\"  The \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term lets us know the power of x in the \"remainder.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Series[f[x], {x, 0, 10}]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Of course the \"full\" Maclaurin series has an infinite number of terms. \
+ ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is capable of finding sums of infinite series.  \n\nThe following is just \
+for fun !\n\nThere are two ways to get infinite sums, the old way and the new \
+way. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(Sum[\(\((\(-1\))\)\^n\/\((\(n!\))\)\^2\) \((x\/2)\)\^\(2  n\)\ , {n, 0, 
+        Infinity}]\ \)}], "Input"],
+
+Cell["The \"symbolic\" command is:", "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\(\((\(-1\))\)\^n\/\((\(n!\))\)\^2\) \(\
+\((x\/2)\)\^\(2  n\)\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Now graph f[x] and the Maclaurin polynomial s[x] over the interval [-2, 2].  \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The curves are distinct, but this is only evident if we look at them over a \
+larger interval.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-5\), 5}, 
+        PlotRange \[Rule] {{\(-5\), 5}, All}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Background for part 4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the fact that the series is \"alternating\" to investigate the error \
+for the Maclaurin polynomial of degree n = 10 over the interval  [-2.0, 2.0]. \
+ "
+}], "Text"],
+
+Cell["\<\
+Now look closely at the \"error\" when the series is used to approximate the \
+function. How close are were the two curves in part (a) ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(e[x_] = Simplify[f[x] - s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-2.0\), 2.0}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = \>", e[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+This series is \"very nice\" because it is alternating, and for that reason \
+the error bound is the magnitude of the \"next non-zero term\" in the series.\
+\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 12}]\ ]\)\(\ \)\(-\)\(Normal[
+        Series[f[x], {x, 0, 10}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(errorbound\)\(\ \)\(=\)\(\ \)\(Abs[\ \(-\(x\^12\/\(12!\)\)\)\ ]\)\(\
+\ \ \)\)\)], "Input"],
+
+Cell["The error bound for the entire interval  [-2.0, 2.0] is ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Abs[\ x\^12\/\(12!\)\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[Abs[\ x\^12\/\(12!\)\ ]]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[Abs[\ 2\^12\/\(12!\)\ ]]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This estimate is \"conservative\" and is a little larger than the \"actual\
+\" maximum error which occurred at   ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0]\ , "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background. Lagrange form of the Remainder.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Lagrange form of the error is  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(21!\)], \(x\^21\)}]}]]],
+  "  where  c  is known to exist and lies somewhere between  0  and  x."
+}], "Text"],
+
+Cell[BoxData[{\(Clear[c];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(R[x_, c_]\), " ", "=", " ", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((11)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", 
+                "]"}], \(11!\)], \(x\^11\)}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Lagrange form of the remainder is\>", "\<\n\>"];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<R[x,c] = \!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\)\!\(x\^11\) where c lies somewhere \
+between 0 and x.\>\"", ",", "\"\<\\n\>\""}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<R[x,c] = \>", Together[R[x, c]]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "First we need to bound the size of the term  ",
+  Cell[BoxData[
+      FractionBox[
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((11)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], \(11!\)]]],
+  "  for values of  c  in the interval  ",
+  Cell[BoxData[
+      \(\(-2.0\) \[LessEqual] c \[LessEqual] 2.0\)]],
+  ".  This can easily be done graphically, but to do it ",
+  "analytically",
+  " with derivatives is quite messy.  We choose to look at the following \
+graph to see what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            RowBox[{"{", 
+              
+              RowBox[{\(\(-5.86855\)\[Times]10\^\(-9\)\), 
+                ",", \(5.86855\[Times]10\^\(-9\)\), ",", 
+                FractionBox[
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((11)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "c", "]"}], \(11!\)]}], 
+              "}"}], ",", \({c, \(-2.0\), 2.0}\), 
+            ",", \(PlotRange \[Rule] All\), 
+            ",", \(PlotStyle \[Rule] {Cyan, Cyan, Blue}\)}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((11)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(11!\)\) = \>\"", ",", 
+            RowBox[{"Together", "[", 
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((11)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+              "]"}]}], " ", "]"}], ";"}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "How big does  ",
+  Cell[BoxData[
+      \("\!\(f\^\((21)\)\)[c]"\/\(11!\)\)]],
+  "  get ?  Looking at the graph we can estimate it to be  ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(5.868551375136101`*^-9\)\)}]]],
+  ".  \n\nThat's good enough.\n\nHow big does the error  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(11!\)], \(x\^11\)}]}]]],
+  "  get ?  Notice that ",
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(R[x, c]\)\(|\)\), " ", "=", " ", 
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((11)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+          "|"}]}]]],
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  ".  \nWe will use the bound the first portion",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((11)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(11!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(2.505210838544172`*^-8\)\)}]]],
+  "  and  then bound the portion  ",
+  Cell[BoxData[
+      \(\(\(|\)\(x\^11\)\(|\)\)\)]],
+  "  over the interval  [-2.0, 2.0]  by evaluating it at  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<|\!\(x\^11\)| \[LessEqual] \>\"", \((2.0)\)\^11];\)\(\ \
+\)\)\)], "Input"],
+
+Cell[TextData[{
+  " Now multiply the two numbers together to find the error bound for \
+Lagrange's remainder formula. \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(R[x, 
+            c]\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(5.868551375136101`*^-9*2048\)\)\) = \(0.0000513067008`\  = \ 
+          1.20188\[Times]10\^\(-5\)\)\)]],
+  "  \n\nThis is a larger than the actual maximum error we found. Remember is \
+an \"error bound.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0] "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[TextData[{
+  "Go ahead \"enjoy\" and add terms in the series up to ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  ", then plot the functions over the interval ",
+  Cell[BoxData[
+      \(\([\(-5\)\ , 5]\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 20}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-5\), 5\ }, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Do we have a \"good approximation\" on the interval   ",
+  Cell[BoxData[
+      \(\([\(-5\)\ , 5]\)\)]],
+  "?"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(f[5\ ]\)\(-\)\(s[5\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[f[5\ ] - s[5]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " actually computes the higher derivatives of f[x] up to the order 50 when \
+calculating the Taylor series. Suppose you had to find the formula for the \
+first 20 derivatives of f[x].  Could \"you\" do it ?  Would you want to do it \
+?"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Be sure that you leave the command \"Together\" in the print statement.  \
+Otherwise the size of the output for the derivatives is 79MB, which might \
+crash your computer."
+}], "Text",
+  FontWeight->"Plain"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 0\), ",", \(i \[LessEqual] 20\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+              RowBox[{"Print", "[", 
+                RowBox[{
+                  SuperscriptBox["\"\<f\>\"", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], ",", "\"\<[x] = \>\"", ",", 
+                  RowBox[{"Together", "[", 
+                    RowBox[{
+                      SuperscriptBox["f", 
+                        TagBox[\((i)\),
+                          Derivative],
+                        MultilineFunction->None], "[", "x", "]"}], "]"}]}], 
+                "]"}], " ", ";"}]}], "]"}], ";"}], " "}]], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 0\), ",", \(i \[LessEqual] 20\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+              RowBox[{"Print", "[", 
+                RowBox[{
+                  SuperscriptBox["\"\<f\>\"", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], ",", "\"\<[0] = \>\"", ",", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((i)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}]}], "]"}], " ",
+               ";"}]}], "]"}], ";"}], " "}]], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  ".  \n",
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series for  f[x]. \n",
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error term ",
+  Cell[BoxData[
+      \(\(E\_n\) \((x)\)\)]],
+  "for the Maclaurin polynomial of degree n = 20 over the interval  [-2.0, \
+2.0].  \n",
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. \n",
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The relationship to the standard normal distribution."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^20\)]],
+  "  in the Maclaurin series for  f[x]. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(T\  = \ Series[f[x], {x, 0, 20}];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = Normal[T];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you just find the \"Series\" it will include a \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term, which cannot be used in either evaluations or graphing, we \
+eliminate it with the command \"Normal.\"  The \"Big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\"  term lets us know the power of x in the \"remainder.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Series[f[x], {x, 0, 20}]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 20}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Of course the \"full\" Maclaurin series has an infinite number of terms. \
+ ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is capable of finding sums of infinite series.  \n\nThe following is just \
+for fun !\n\nThere are two ways to get infinite sums, the old way and the new \
+way. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(Sum[\(\((\(-1\))\)\^n\) x\^\(2  n\)\/\(\(2\^n\) \(n!\)\), {n, 0, 
+        Infinity}]\ \)}], "Input"],
+
+Cell["The \"symbolic\" command is:", "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(n = 0\)\%\[Infinity]\(\(\((\(-1\))\)\^n\) \(x\^\(2  \
+n\)\/\(\(2\^n\) \(n!\)\)\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Now graph f[x] and the Maclaurin polynomial s[x] over the interval [-3, 3].  \
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-3\), 3}, 
+        PlotRange \[Rule] {{\(-3\), 3}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The above approximation is not too good near the endpoints, this is why we \
+want to graph f[x] and the Maclaurin polynomial s[x] over the interval [-2, \
+2].  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Background for part 5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the fact that the series is \"alternating\" to investigate the error \
+for the Maclaurin polynomial of degree n = 20 over the interval  [-2.0, 2.0]. \
+ "
+}], "Text"],
+
+Cell["\<\
+Now look closely at the \"error\" when the series is used to approximate the \
+function.  How close are were the two curves in part (a) ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(e[x_] = Simplify[f[x] - s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-2.0\), 2.0}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = \>", e[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+This series is \"very nice\" because it is alternating, and for that reason \
+the error bound is the magnitude of the \"next non-zero term\" in the series.\
+\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Normal[Series[f[x], {x, 0, 22}]\ ]\)\(\ \)\(-\)\(Normal[
+        Series[f[x], {x, 0, 20}]\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(errorbound\)\(\ \)\(=\)\(\ \)\(Abs[\ \(-\(x\^22\/\(\(2\^11\) \
+\(11!\)\)\)\)\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell["The error bound for the entire interval  [-2.0, 2.0] is ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Abs[\ 2\^22\/\(\(2\^11\) \(11!\)\)\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[Abs[\ 2\^22\/\(\(2\^11\) \(11!\)\)\ ]]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This estimate is \"conservative\" and is a little larger than the \"actual\
+\" maximum error which occurred at   ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0], "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background. Lagrange form of the Remainder.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Lagrange form of the error is  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(21!\)], \(x\^21\)}]}]]],
+  "  where  c  is known to exist and lies somewhere between  0  and  x."
+}], "Text"],
+
+Cell[BoxData[{\(Clear[c];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(R[x_, c_]\), " ", "=", " ", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((21)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", 
+                "]"}], \(21!\)], \(x\^21\)}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The Lagrange form of the remainder is\>", "\<\n\>"];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<R[x,c] = \!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((21)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(21!\)\)\!\(x\^21\) where c lies somewhere \
+between 0 and x.\>\"", ",", "\"\<\\n\>\""}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<R[x,c] = \>", Together[R[x, c]]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "First we need to bound the size of the term  ",
+  Cell[BoxData[
+      FractionBox[
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((21)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], \(21!\)]]],
+  "  for values of  c  in the interval  ",
+  Cell[BoxData[
+      \(\(-2.0\) \[LessEqual] c \[LessEqual] 2.0\)]],
+  ".  This can easily be done graphically, but to do it ",
+  "analytically",
+  " with derivatives is quite messy.  We choose to look at the following \
+graph to see what is happening."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((21)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", "]"}], \(21!\)], 
+            ",", \({c, \(-2.0\), 2.0}\), ",", \(PlotRange \[Rule] All\), 
+            ",", \(PlotStyle \[Rule] Blue\)}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\(\*SuperscriptBox[\(f\), 
+TagBox[\((21)\),
+Derivative],
+MultilineFunction->None]\)[c]\/\(21!\)\) = \>\"", ",", 
+            RowBox[{"Together", "[", 
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((21)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}], \(21!\)], 
+              "]"}]}], " ", "]"}], ";"}], "  "}]}], "Input"],
+
+Cell[TextData[{
+  "How big does  ",
+  Cell[BoxData[
+      \("\!\(f\^\((21)\)\)[c]"\/\(21!\)\)]],
+  "  get ?  Looking at the graph we can estimate it to be  ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((21)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(21!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(5.64441\[Times]10\^\(-11\)\)\)}]]],
+  ".  \n\nThat's good enough.\n\nHow big does the error  ",
+  Cell[BoxData[
+      RowBox[{\(R[x, c]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", 
+              "]"}], \(21!\)], \(x\^21\)}]}]]],
+  "  get ?  Notice that ",
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(R[x, c]\)\(|\)\), " ", "=", " ", 
+        RowBox[{"|", 
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((21)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}], \(21!\)], 
+          "|"}]}]]],
+  Cell[BoxData[
+      \(\(\(|\)\(x\^21\)\(|\)\)\)]],
+  ".  \nWe will use the bound the first portion",
+  Cell[BoxData[
+      RowBox[{"|", 
+        FractionBox[
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((21)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(21!\)], 
+        "|", \(\(\[LessEqual]\)\(\ \)\(5.64441\[Times]10\^\(-11\)\)\)}]]],
+  "  and  then bound the portion  ",
+  Cell[BoxData[
+      \(\(\(|\)\(x\^21\)\(|\)\)\)]],
+  "  over the interval  [-2.0, 2.0]  by evaluating it at  ",
+  Cell[BoxData[
+      \(x = \(\[PlusMinus]2.0\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<|\!\(x\^21\)| \[LessEqual] \>\"", \((2.0)\)\^21];\)\(\ \
+\)\)\)], "Input"],
+
+Cell[TextData[{
+  " Now multiply the two numbers together to find the error bound for \
+Lagrange's remainder formula. \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(R[x, 
+            c]\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(5.64441\[Times]10\^\(-11\)*2.097152\[Times]10\^6\)\)\) = \
+\(0.00011837185720319999`\  = \ 1.18372\[Times]10\^\(-4\)\)\)]],
+  "  \n\nThis is a little larger than the actual maximum error we found. \
+Remember is an \"error bound.\""
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\< e[2.0] = \>", e[2.0], "\<\n\>", "\<e[-2.0] = \>", 
+        e[\(-2.0\)]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the terms up to  ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  "  in the Maclaurin series and see how close it approximates  f[x]. "
+}], "Text"],
+
+Cell[TextData[{
+  "Go ahead \"enjoy\" and add terms in the series up to ",
+  Cell[BoxData[
+      \(x\^50\)]],
+  ", then plot the functions over the interval [-3.0, 3.0]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 50}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \(-3.0\), 3.0}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<\n\>", "\<s[x] = \>", 
+        s[x]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Do we have a \"good approximation\" on the interval  [-3.0, 3.0] ?"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(f[3]\)\(-\)\(s[3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[f[3] - s[3]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " actually computes the higher derivatives of f[x] up to the order 50 when \
+calculating the Taylor series. Suppose you had to find the formula for the \
+first 20 derivatives of f[x].  Could \"you\" do it ?  Would you want to do it \
+?"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 0\), ",", \(i \[LessEqual] 20\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+              RowBox[{"Print", "[", 
+                RowBox[{
+                  SuperscriptBox["\"\<f\>\"", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], ",", "\"\<[x] = \>\"", ",", 
+                  RowBox[{"Together", "[", 
+                    RowBox[{
+                      SuperscriptBox["f", 
+                        TagBox[\((i)\),
+                          Derivative],
+                        MultilineFunction->None], "[", "x", "]"}], "]"}]}], 
+                "]"}], " ", ";"}]}], "]"}], ";"}], " "}]], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(i = 0\), ",", \(i \[LessEqual] 20\), ",", \(i++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{
+              RowBox[{"Print", "[", 
+                RowBox[{
+                  SuperscriptBox["\"\<f\>\"", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], ",", "\"\<[0] = \>\"", ",", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((i)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}]}], "]"}], " ",
+               ";"}]}], "]"}], ";"}], " "}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (d).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["Standard Normal Distribution",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/StandardNormalDistribution.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      \(\[CapitalPhi][x]\)]],
+  " is merely a multiple of ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi][
+          x_]\  = \ \(1\/\@\(2\ \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[\[CapitalPhi][x], {x, \(-4\), 4}, 
+        PlotRange \[Rule] {{\(-4\), 4}, {0, 0.4}}, 
+        PlotStyle \[Rule] {Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<     \[CapitalPhi][x] = \>", \[CapitalPhi][
+          x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(-\[Infinity]\)\%\[Infinity]\)\
+\[CapitalPhi][x]\[DifferentialD]x = \>\"", \[Integral]\_\(-\[Infinity]\)\%\
+\[Infinity] \[CapitalPhi][x] \[DifferentialD]x\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for the Taylor and \
+Maclaurin polynomials.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Taylor polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = \@x\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 1\)]],
+  ", ",
+  Cell[BoxData[
+      \(x\_0 = 4\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = 5\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \[IndentingNewLine]Print["\
+\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor01/Tayloraa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor01/Tayloraa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 8.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]P[x_]\  = \ \ Normal[
+          Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor02/Taylorbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor02/Taylorbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor03/Taylorcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor03/Taylorcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\@\(1 - x\)\)]],
+  "  expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\@\(1 - x\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 8.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[\ Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, \(-1.5\),  .9999}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 5, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin04/Maclaurindd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin04/Maclaurindd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\(1\  + \ x\^2\)\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\(1 + x\^2\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 4, 
+      n \[LessEqual] 7, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin05/Maclaurinee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin05/Maclaurinee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Taylor polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = Log[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 1\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = 2\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-5\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor04/Taylordd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor04/Taylordd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-6\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor05/Tayloree.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor05/Tayloree.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Taylor polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = Sin[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = \[Pi]\/4\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n + 1}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 7.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin07/Maclauringg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin07/Maclauringg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x];\)\ \ \), "\n", 
+    \(\(x0 = \[Pi]\/4;\)\ \ \), "\n", 
+    \(\(a = \[Pi]\/4 - 2  \[Pi];\)\ \), "\n", 
+    \(\(b = \[Pi]\/4 + 2  \[Pi];\)\ \), "\n", 
+    \(\(c = \(-1.3\);\)\ \), "\n", 
+    \(\(d = \ 1.3;\)\ \), "\n", 
+    \(\(a0 = \(-10\);\)\ \), "\n", 
+    \(\(b0 = 10;\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = 
+        Normal[Series[f[x], {x, x0, n}]]; \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]r = 
+        3.785; \ \[IndentingNewLine]If[
+        n > 1, \(r = b;\)]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]\/2], 
+            Range[\(-0.5\), 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor06/Taylorff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor06/Taylorff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Taylor polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = \[Pi]\/3\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 8.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin08/Maclaurinhh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin08/Maclaurinhh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = \[Pi]\/3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \[Pi]\/3 - 2  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi]\/3 + 2  \[Pi];\)\ \), "\n", 
+    \(\(c = \(-1.3\);\)\ \), "\n", 
+    \(\(d = \ 1.3;\)\ \), "\n", 
+    \(\(a0 = \(-10\);\)\ \), "\n", 
+    \(\(b0 = 10;\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]\/2], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 7.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Taylor07/Taylorgg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Taylor07/Taylorgg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = Tan[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Tan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-\[Pi]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-\[Pi]\)\/2;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = \[Pi]\/2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = 
+        Normal[Series[
+            f[x], {x, x0, 2  n + 1}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, a, \(-\[Pi]\)\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[f[x], {x, \(-\[Pi]\)\/2, \[Pi]\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph3 = 
+        Plot[f[x], {x, \[Pi]\/2, b}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph4 = 
+        Plot[P[x], {x, \(-\[Pi]\), \[Pi]}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, graph3, graph4, Cdot, Rends, 
+        PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]\/2], 
+            Range[\(-6\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 9.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin09/Maclaurinii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin09/Maclaurinii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 20.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-5.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-2\), 3, 1], Range[0, 20, 5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]figure = 
+        Show[graph1, Cdot, Rends, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 10.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin10/Maclaurinjj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin10/Maclaurinjj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x] \[ExponentialE]\^\(-x\)\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        Cos[x] \[ExponentialE]\^\(-x\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-3.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-2\), 4, 1], Range[\(-2\), 2, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 11.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin11/Maclaurinkk.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin11/Maclaurinkk.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 15.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = ArcTan[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 15.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.6\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.6;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[
+            f[x], {x, x0, 2  n + 1}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+              Range[\(-\[Pi]\)\/4, \[Pi]\/4, \[Pi]\/4]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 13.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin13/Maclaurinmm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin13/Maclaurinmm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 16.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = ArcSin[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 16.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcSin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-2.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 2.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = 
+        Normal[Series[
+            f[x], {x, x0, 2  n + 1}]]; \ \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, \(-0.9999\), 0.9999}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+            Range[\(-\[Pi]\)\/2, \[Pi]\/2, \[Pi]\/4]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 14.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin14/Maclaurinnn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin14/Maclaurinnn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 17.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = BesselJ[0, x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 17.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-10.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 10.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.8\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-11\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 11;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-10\), 10, 2], Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 15.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin15/Maclaurinoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin15/Maclaurinoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 18.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 18.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.15\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 0.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.4, 0.1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 17.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin17/Maclaurinqq.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin17/Maclaurinqq.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 19.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Maclaurin polynomial for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/2\  + 1\/2\ Erf[x\/\@2]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 19.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/2\  + 1\/2\ Erf[x\/\@2];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.25\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4. \);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Normal[Series[f[x], {x, x0, 2  n + 1}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.8, 0.25]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 18.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin18/Maclaurinrr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Maclaurin18/Maclaurinrr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor and Maclaurin Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor and Maclaurin Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Maclaurin Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/calculus/maclaurin/mpe.htm"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/calculus/maclaurin/mpe.htm"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/calculus/taylor/tpe.htm"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/calculus/taylor/tpe.htm"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/TaylorPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Maclaurin and Taylor Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TaylorPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 185, 4, 35, "Text"],
+Cell[1964, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3443, 111, 118, 5, 30, "Text"],
+Cell[3564, 118, 1126, 32, 71, "Text"],
+Cell[4693, 152, 2675, 83, 278, "Text"],
+Cell[7371, 237, 648, 21, 33, "Text"],
+Cell[8022, 260, 2713, 87, 81, "Text"],
+Cell[10738, 349, 648, 21, 33, "Text"],
+Cell[11389, 372, 1823, 57, 124, "Text"],
+Cell[13215, 431, 648, 21, 33, "Text"],
+Cell[13866, 454, 796, 24, 33, "Text"],
+Cell[14665, 480, 627, 19, 33, "Text"],
+Cell[15295, 501, 866, 30, 94, "Text"],
+
+Cell[CellGroupData[{
+Cell[16186, 535, 105, 2, 33, "Text"],
+Cell[16294, 539, 214, 8, 33, "Text"],
+Cell[16511, 549, 305, 5, 103, "Input"],
+Cell[16819, 556, 557, 16, 52, "Text"],
+Cell[17379, 574, 71, 1, 30, "Input"],
+Cell[17453, 577, 81, 1, 30, "Input"],
+Cell[17537, 580, 573, 15, 112, "Text"],
+Cell[18113, 597, 156, 3, 64, "Input"],
+Cell[18272, 602, 44, 0, 33, "Text"],
+Cell[18319, 604, 132, 2, 49, "Input"],
+Cell[18454, 608, 219, 7, 54, "Text"],
+Cell[18676, 617, 125, 2, 49, "Input"],
+Cell[18804, 621, 103, 3, 33, "Text"],
+Cell[18910, 626, 300, 5, 70, "Input"],
+Cell[19213, 633, 272, 6, 52, "Text"],
+Cell[19488, 641, 358, 6, 70, "Input"],
+Cell[19849, 649, 300, 8, 33, "Text"],
+Cell[20152, 659, 281, 5, 52, "Text"],
+Cell[20436, 666, 310, 5, 70, "Input"],
+Cell[20749, 673, 221, 6, 33, "Text"],
+Cell[20973, 681, 64, 1, 30, "Input"],
+Cell[21040, 684, 170, 3, 33, "Text"],
+Cell[21213, 689, 103, 2, 31, "Input"],
+Cell[21319, 693, 72, 0, 33, "Text"],
+Cell[21394, 695, 67, 1, 31, "Input"],
+Cell[21464, 698, 206, 6, 33, "Text"],
+Cell[21673, 706, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[21841, 713, 105, 2, 30, "Text"],
+Cell[21949, 717, 580, 16, 38, "Text"],
+Cell[22532, 735, 971, 25, 144, "Input"],
+Cell[23506, 762, 582, 16, 57, "Text"],
+Cell[24091, 780, 1204, 32, 82, "Input"],
+Cell[25298, 814, 1815, 55, 143, "Text"],
+Cell[27116, 871, 111, 2, 31, "Input"],
+Cell[27230, 875, 385, 9, 109, "Text"],
+Cell[27618, 886, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[27786, 893, 105, 2, 30, "Text"],
+Cell[27894, 897, 244, 8, 33, "Text"],
+Cell[28141, 907, 182, 5, 33, "Text"],
+Cell[28326, 914, 380, 7, 70, "Input"],
+Cell[28709, 923, 385, 10, 52, "Text"],
+Cell[29097, 935, 810, 20, 52, "Input"],
+Cell[29910, 957, 330, 9, 37, "Text"],
+Cell[30243, 968, 173, 3, 50, "Input"],
+Cell[30419, 973, 213, 4, 33, "Text"],
+Cell[30635, 979, 536, 9, 150, "Input"],
+Cell[31174, 990, 607, 13, 71, "Text"]
+}, Closed]],
+Cell[31796, 1006, 853, 30, 87, "Text"],
+
+Cell[CellGroupData[{
+Cell[32674, 1040, 105, 2, 33, "Text"],
+Cell[32782, 1044, 214, 8, 33, "Text"],
+Cell[32999, 1054, 296, 5, 90, "Input"],
+Cell[33298, 1061, 557, 16, 52, "Text"],
+Cell[33858, 1079, 71, 1, 30, "Input"],
+Cell[33932, 1082, 81, 1, 30, "Input"],
+Cell[34016, 1085, 410, 11, 109, "Text"],
+Cell[34429, 1098, 224, 5, 68, "Input"],
+Cell[34656, 1105, 51, 1, 30, "Input"],
+Cell[34710, 1108, 44, 0, 33, "Text"],
+Cell[34757, 1110, 127, 2, 59, "Input"],
+Cell[34887, 1114, 103, 3, 33, "Text"],
+Cell[34993, 1119, 347, 6, 70, "Input"],
+Cell[35343, 1127, 118, 3, 33, "Text"],
+Cell[35464, 1132, 399, 6, 84, "Input"],
+Cell[35866, 1140, 290, 7, 33, "Text"],
+Cell[36159, 1149, 160, 3, 33, "Text"],
+Cell[36322, 1154, 274, 4, 70, "Input"],
+Cell[36599, 1160, 181, 4, 33, "Text"],
+Cell[36783, 1166, 139, 2, 30, "Input"],
+Cell[36925, 1170, 114, 2, 45, "Input"],
+Cell[37042, 1174, 72, 0, 33, "Text"],
+Cell[37117, 1176, 72, 1, 45, "Input"],
+Cell[37192, 1179, 75, 1, 45, "Input"],
+Cell[37270, 1182, 75, 1, 45, "Input"],
+Cell[37348, 1185, 206, 6, 33, "Text"],
+Cell[37557, 1193, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[37725, 1200, 105, 2, 30, "Text"],
+Cell[37833, 1204, 580, 16, 38, "Text"],
+Cell[38416, 1222, 971, 25, 144, "Input"],
+Cell[39390, 1249, 582, 16, 57, "Text"],
+Cell[39975, 1267, 1025, 29, 82, "Input"],
+Cell[41003, 1298, 1896, 57, 143, "Text"],
+Cell[42902, 1357, 111, 2, 31, "Input"],
+Cell[43016, 1361, 432, 10, 109, "Text"],
+Cell[43451, 1373, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[43619, 1380, 105, 2, 30, "Text"],
+Cell[43727, 1384, 244, 8, 33, "Text"],
+Cell[43974, 1394, 266, 8, 36, "Text"],
+Cell[44243, 1404, 409, 7, 104, "Input"],
+Cell[44655, 1413, 267, 8, 36, "Text"],
+Cell[44925, 1423, 92, 1, 42, "Input"],
+Cell[45020, 1426, 89, 1, 42, "Input"]
+}, Closed]],
+Cell[45124, 1430, 540, 18, 49, "Text"],
+Cell[45667, 1450, 61, 1, 30, "Input"],
+Cell[45731, 1453, 84, 1, 42, "Input"],
+Cell[45818, 1456, 778, 27, 90, "Text"],
+
+Cell[CellGroupData[{
+Cell[46621, 1487, 105, 2, 33, "Text"],
+Cell[46729, 1491, 214, 8, 33, "Text"],
+Cell[46946, 1501, 307, 5, 90, "Input"],
+Cell[47256, 1508, 557, 16, 52, "Text"],
+Cell[47816, 1526, 71, 1, 30, "Input"],
+Cell[47890, 1529, 81, 1, 30, "Input"],
+Cell[47974, 1532, 297, 9, 33, "Text"],
+Cell[48274, 1543, 114, 2, 64, "Input"],
+Cell[48391, 1547, 44, 0, 33, "Text"],
+Cell[48438, 1549, 88, 1, 49, "Input"],
+Cell[48529, 1552, 277, 11, 68, "Text"],
+Cell[48809, 1565, 110, 2, 60, "Input"],
+Cell[48922, 1569, 96, 5, 33, "Text"],
+Cell[49021, 1576, 88, 1, 49, "Input"],
+Cell[49112, 1579, 67, 0, 33, "Text"],
+Cell[49182, 1581, 84, 1, 43, "Input"],
+Cell[49269, 1584, 164, 5, 36, "Text"],
+Cell[49436, 1591, 105, 3, 33, "Text"],
+Cell[49544, 1596, 594, 12, 110, "Input"],
+Cell[50141, 1610, 111, 3, 33, "Text"],
+Cell[50255, 1615, 230, 4, 50, "Input"],
+Cell[50488, 1621, 255, 8, 33, "Text",
+  Evaluatable->False],
+Cell[50746, 1631, 524, 8, 95, "Input"],
+Cell[51273, 1641, 568, 12, 52, "Text"],
+Cell[51844, 1655, 290, 7, 33, "Text"],
+Cell[52137, 1664, 281, 5, 52, "Text"],
+Cell[52421, 1671, 321, 5, 70, "Input"],
+Cell[52745, 1678, 241, 6, 33, "Text"],
+Cell[52989, 1686, 112, 2, 45, "Input"],
+Cell[53104, 1690, 72, 0, 33, "Text"],
+Cell[53179, 1692, 71, 1, 45, "Input"],
+Cell[53253, 1695, 171, 5, 33, "Text"],
+Cell[53427, 1702, 238, 5, 45, "Input"],
+Cell[53668, 1709, 174, 6, 33, "Text"],
+Cell[53845, 1717, 249, 5, 45, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[54131, 1727, 105, 2, 30, "Text"],
+Cell[54239, 1731, 580, 16, 38, "Text"],
+Cell[54822, 1749, 971, 25, 144, "Input"],
+Cell[55796, 1776, 582, 16, 57, "Text"],
+Cell[56381, 1794, 1169, 32, 82, "Input"],
+Cell[57553, 1828, 1840, 57, 143, "Text"],
+Cell[59396, 1887, 111, 2, 31, "Input"],
+Cell[59510, 1891, 453, 10, 109, "Text"],
+Cell[59966, 1903, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[60134, 1910, 105, 2, 30, "Text"],
+Cell[60242, 1914, 244, 8, 33, "Text"],
+Cell[60489, 1924, 222, 8, 33, "Text"],
+Cell[60714, 1934, 733, 14, 130, "Input"]
+}, Closed]],
+Cell[61462, 1951, 860, 30, 87, "Text"],
+
+Cell[CellGroupData[{
+Cell[62347, 1985, 105, 2, 33, "Text"],
+Cell[62455, 1989, 214, 8, 33, "Text"],
+Cell[62672, 1999, 303, 5, 90, "Input"],
+Cell[62978, 2006, 557, 16, 52, "Text"],
+Cell[63538, 2024, 71, 1, 30, "Input"],
+Cell[63612, 2027, 81, 1, 30, "Input"],
+Cell[63696, 2030, 410, 11, 109, "Text"],
+Cell[64109, 2043, 175, 3, 66, "Input"],
+Cell[64287, 2048, 44, 0, 33, "Text"],
+Cell[64334, 2050, 136, 2, 49, "Input"],
+Cell[64473, 2054, 103, 3, 33, "Text"],
+Cell[64579, 2059, 350, 6, 70, "Input"],
+Cell[64932, 2067, 118, 3, 33, "Text"],
+Cell[65053, 2072, 347, 6, 70, "Input"],
+Cell[65403, 2080, 290, 7, 33, "Text"],
+Cell[65696, 2089, 160, 3, 33, "Text"],
+Cell[65859, 2094, 274, 4, 70, "Input"],
+Cell[66136, 2100, 181, 4, 33, "Text"],
+Cell[66320, 2106, 139, 2, 30, "Input"],
+Cell[66462, 2110, 114, 2, 45, "Input"],
+Cell[66579, 2114, 72, 0, 33, "Text"],
+Cell[66654, 2116, 72, 1, 45, "Input"],
+Cell[66729, 2119, 75, 1, 45, "Input"],
+Cell[66807, 2122, 75, 1, 45, "Input"],
+Cell[66885, 2125, 206, 6, 33, "Text"],
+Cell[67094, 2133, 133, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[67264, 2140, 105, 2, 30, "Text"],
+Cell[67372, 2144, 580, 16, 38, "Text"],
+Cell[67955, 2162, 971, 25, 144, "Input"],
+Cell[68929, 2189, 582, 16, 57, "Text"],
+Cell[69514, 2207, 1245, 34, 82, "Input"],
+Cell[70762, 2243, 1836, 55, 143, "Text"],
+Cell[72601, 2300, 111, 2, 31, "Input"],
+Cell[72715, 2304, 432, 10, 109, "Text"],
+Cell[73150, 2316, 130, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[73317, 2323, 105, 2, 30, "Text"],
+Cell[73425, 2327, 244, 8, 33, "Text"],
+Cell[73672, 2337, 224, 8, 33, "Text"],
+Cell[73899, 2347, 456, 8, 110, "Input"],
+Cell[74358, 2357, 225, 8, 33, "Text"],
+Cell[74586, 2367, 68, 1, 30, "Input"],
+Cell[74657, 2370, 63, 1, 30, "Input"],
+Cell[74723, 2373, 406, 11, 52, "Text"],
+Cell[75132, 2386, 310, 8, 33, "Text"],
+Cell[75445, 2396, 810, 20, 52, "Input"],
+Cell[76258, 2418, 747, 19, 52, "Input"]
+}, Closed]],
+Cell[77020, 2440, 1022, 34, 106, "Text"],
+
+Cell[CellGroupData[{
+Cell[78067, 2478, 105, 2, 33, "Text"],
+Cell[78175, 2482, 214, 8, 33, "Text"],
+Cell[78392, 2492, 335, 7, 93, "Input"],
+Cell[78730, 2501, 557, 16, 52, "Text"],
+Cell[79290, 2519, 71, 1, 30, "Input"],
+Cell[79364, 2522, 81, 1, 30, "Input"],
+Cell[79448, 2525, 410, 11, 109, "Text"],
+Cell[79861, 2538, 168, 3, 66, "Input"],
+Cell[80032, 2543, 44, 0, 33, "Text"],
+Cell[80079, 2545, 131, 2, 59, "Input"],
+Cell[80213, 2549, 103, 3, 33, "Text"],
+Cell[80319, 2554, 350, 6, 70, "Input"],
+Cell[80672, 2562, 184, 4, 33, "Text"],
+Cell[80859, 2568, 350, 6, 70, "Input"],
+Cell[81212, 2576, 290, 7, 33, "Text"],
+Cell[81505, 2585, 161, 3, 33, "Text"],
+Cell[81669, 2590, 274, 4, 70, "Input"],
+Cell[81946, 2596, 181, 4, 33, "Text"],
+Cell[82130, 2602, 139, 2, 30, "Input"],
+Cell[82272, 2606, 128, 2, 45, "Input"],
+Cell[82403, 2610, 72, 0, 33, "Text"],
+Cell[82478, 2612, 86, 1, 45, "Input"],
+Cell[82567, 2615, 89, 1, 45, "Input"],
+Cell[82659, 2618, 206, 6, 33, "Text"],
+Cell[82868, 2626, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[83036, 2633, 105, 2, 30, "Text"],
+Cell[83144, 2637, 580, 16, 38, "Text"],
+Cell[83727, 2655, 971, 25, 144, "Input"],
+Cell[84701, 2682, 582, 16, 57, "Text"],
+Cell[85286, 2700, 1025, 29, 82, "Input"],
+Cell[86314, 2731, 1844, 55, 143, "Text"],
+Cell[88161, 2788, 111, 2, 31, "Input"],
+Cell[88275, 2792, 458, 10, 109, "Text"],
+Cell[88736, 2804, 131, 2, 30, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[88904, 2811, 105, 2, 30, "Text"],
+Cell[89012, 2815, 244, 8, 33, "Text"],
+Cell[89259, 2825, 182, 5, 33, "Text"],
+Cell[89444, 2832, 420, 9, 93, "Input"],
+Cell[89867, 2843, 183, 5, 33, "Text"],
+Cell[90053, 2850, 64, 1, 30, "Input"],
+Cell[90120, 2853, 61, 1, 30, "Input"],
+Cell[90184, 2856, 406, 11, 52, "Text"],
+Cell[90593, 2869, 810, 20, 52, "Input"],
+Cell[91406, 2891, 747, 19, 52, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[92190, 2915, 105, 2, 30, "Text"],
+Cell[92298, 2919, 384, 14, 33, "Text"],
+Cell[92685, 2935, 708, 12, 142, "Input"]
+}, Closed]],
+Cell[93408, 2950, 182, 4, 32, "Text"],
+Cell[93593, 2956, 356, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[93974, 2977, 105, 2, 33, "Text"],
+Cell[94082, 2981, 1396, 26, 352, "Input"],
+Cell[95481, 3009, 791, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[96309, 3040, 105, 2, 30, "Text"],
+Cell[96417, 3044, 1420, 28, 352, "Input"],
+Cell[97840, 3074, 791, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[98668, 3105, 105, 2, 30, "Text"],
+Cell[98776, 3109, 1410, 27, 352, "Input"],
+Cell[100189, 3138, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[100995, 3167, 275, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[101295, 3182, 101, 2, 33, "Text"],
+Cell[101399, 3186, 1572, 28, 370, "Input"],
+Cell[102974, 3216, 843, 27, 33, "Text"]
+}, Closed]],
+Cell[103832, 3246, 279, 11, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[104136, 3261, 101, 2, 33, "Text"],
+Cell[104240, 3265, 1453, 27, 343, "Input"],
+Cell[105696, 3294, 809, 26, 33, "Text"]
+}, Closed]],
+Cell[106520, 3323, 313, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[106858, 3341, 105, 2, 33, "Text"],
+Cell[106966, 3345, 1582, 28, 370, "Input"],
+Cell[108551, 3375, 791, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[109379, 3406, 105, 2, 30, "Text"],
+Cell[109487, 3410, 1582, 28, 370, "Input"],
+Cell[111072, 3440, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[111878, 3469, 321, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[112224, 3487, 106, 2, 33, "Text"],
+Cell[112333, 3491, 1481, 28, 350, "Input"],
+Cell[113817, 3521, 809, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[114663, 3552, 106, 2, 30, "Text"],
+Cell[114772, 3556, 1570, 31, 438, "Input"],
+Cell[116345, 3589, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[117151, 3618, 321, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[117497, 3636, 106, 2, 33, "Text"],
+Cell[117606, 3640, 1477, 28, 350, "Input"],
+Cell[119086, 3670, 809, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[119932, 3701, 106, 2, 30, "Text"],
+Cell[120041, 3705, 1421, 28, 399, "Input"],
+Cell[121465, 3735, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[122271, 3764, 267, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[122563, 3779, 102, 2, 33, "Text"],
+Cell[122668, 3783, 1954, 35, 482, "Input"],
+Cell[124625, 3820, 809, 26, 33, "Text"]
+}, Closed]],
+Cell[125449, 3849, 279, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[125753, 3864, 102, 2, 33, "Text"],
+Cell[125858, 3868, 1455, 27, 350, "Input"],
+Cell[127316, 3897, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[128141, 3926, 291, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[128457, 3941, 102, 2, 33, "Text"],
+Cell[128562, 3945, 1466, 28, 350, "Input"],
+Cell[130031, 3975, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[130856, 4004, 270, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[131151, 4019, 102, 2, 33, "Text"],
+Cell[131256, 4023, 1492, 29, 365, "Input"],
+Cell[132751, 4054, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[133576, 4083, 270, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[133871, 4098, 102, 2, 33, "Text"],
+Cell[133976, 4102, 1651, 31, 385, "Input"],
+Cell[135630, 4135, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[136455, 4164, 274, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[136754, 4179, 102, 2, 33, "Text"],
+Cell[136859, 4183, 1447, 27, 350, "Input"],
+Cell[138309, 4212, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[139134, 4241, 315, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[139474, 4256, 102, 2, 33, "Text"],
+Cell[139579, 4260, 1495, 29, 370, "Input"],
+Cell[141077, 4291, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[141902, 4320, 287, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[142214, 4335, 102, 2, 33, "Text"],
+Cell[142319, 4339, 1460, 27, 370, "Input"],
+Cell[143782, 4368, 810, 26, 33, "Text"]
+}, Closed]],
+Cell[144607, 4397, 822, 24, 30, "Text"],
+Cell[145432, 4423, 746, 23, 33, "Text"],
+Cell[146181, 4448, 727, 22, 33, "Text"],
+Cell[146911, 4472, 158, 3, 35, "Text"],
+Cell[147072, 4477, 584, 16, 33, "Text"],
+Cell[147659, 4495, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

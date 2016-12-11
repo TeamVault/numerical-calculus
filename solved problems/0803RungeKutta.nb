@@ -1,0 +1,1608 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     48938,       1449]*)
+(*NotebookOutlinePosition[     49632,       1473]*)
+(*  CellTagsIndexPosition[     49588,       1469]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Runge Kutta Method for O.D.E.'s",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Theorem  (",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Runge-Kutta Method of order 4",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Runge-KuttaMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["f(t,y)",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "is continuous and satisfies a ",
+  ButtonBox["Lipschits condition",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LipschitzCondition.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " in the variable  ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  ",  and consider the  I. V. P. (initial value problem)",
+  StyleBox[" \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox[" with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \(t\_0 = \[Alpha]\)\)]],
+  ",  over the interval  ",
+  Cell[BoxData[
+      \(a \[LessEqual] t \[LessEqual] b\)]],
+  ". \n\t\t\nThe Runge-Kutta method uses the formulas ",
+  Cell[BoxData[
+      \(t\_\(k + 1\)\  = \ t\_k + h\)]],
+  ",  and  \n\n\t\t",
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ 
+        y\_j + \(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + k\_4)\)\)]],
+  "     for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(m - 1\)}]]],
+  "  \nwhere\n\t\t",
+  Cell[BoxData[{
+      \(k\_1 = h\ f \((t\_j, y\_j)\)\), "\n", 
+      \(k\_2 = h\ f \((t\_j + h\/2, y\_j + k\_1\/2)\)\), "\n", 
+      \(k\_3 = h\ f \((t\_j + h\/2, y\_j + k\_2\/2)\)\), "\n", 
+      \(k\_4 = h\ f \((t\_j + h, y\_j + k\_3)\)\)}]],
+  "   \n\nas an approximate solution to the differential equation using the \
+discrete set of points",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\((t\_k, y\_k)\)}\_\(k = 0\)\%m\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/RungeKuttaProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RungeKuttaProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Precision  of the Runge-Kutta Method of Order 4)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(\ \)\(y = y \((t)\)\)\)\)]],
+  StyleBox["  is the solution to the I.V.P.  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((t\_0)\) = y\_0\)]],
+  StyleBox[".  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(y \((t)\)\), "\[Element]", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["C",
+              FontWeight->"Bold"], "2"], "[", \(t\_0, b\), "]"}]}]]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\((t\_k, y\_k)\)}\_\(k = 0\)\%m\)]],
+  StyleBox["  is the sequence of approximations generated by the Runge-Kutta \
+method of order 4, then at each step, the local truncation error ",
+    FontFamily->"Times New Roman"],
+  "is of the order  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], \((h\^5)\)}]]],
+  ",  and the overall ",
+  StyleBox["global truncation error  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(e\_k\)]],
+  " ",
+  StyleBox[" is of the order\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\(|\)\(e\_k\)\(|\)\), " ", "=", " ", 
+        RowBox[{\(\(|\)\(y \((t\_k)\)\  - \ y\_k\)\(|\)\), " ", "=", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}]}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman",
+    FontSize->4],
+  StyleBox["The error at the right end of the interval is called the final \
+global error  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(E \((y \((b)\), h)\)\), " ", "=", " ", 
+        RowBox[{\(\(|\)\(y \((b)\)\  - \ y\_m\)\(|\)\), " ", "=", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold",
+              FontSlant->"Italic"], \((h\^4)\)}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/RungeKuttaProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RungeKuttaProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKutta.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKutta.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (Runge-Kutta ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" To compute a numerical approximation for the solution of the \
+initial value problem  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ f \((t, y)\)\)]],
+  " ",
+  StyleBox[" with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((t\_0)\) = \(y\_0 = \[Alpha]\)\)]],
+  "  over ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([t\_0, b]\) = \([a, b]\)\)]],
+  "  at a discrete set of points using the formula  \n\n\t",
+  Cell[BoxData[
+      \(y\_\(j + 1\)\  = \ 
+        y\_j + \(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + k\_4)\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(m - 1\)}]]],
+  "  \nwhere \n\t",
+  Cell[BoxData[
+      \(k\_1 = h\ f \((t\_j, y\_j)\)\)]],
+  ", \n\t",
+  Cell[BoxData[
+      \(k\_2 = h\ f \((t\_j + h\/2, y\_j + k\_1\/2)\)\)]],
+  ", \n\t",
+  Cell[BoxData[
+      \(k\_3 = h\ f \((t\_j + h\/2, y\_j + k\_2\/2)\)\)]],
+  ", and \n\t",
+  Cell[BoxData[
+      \(k\_4 = h\ f \((t\_j + h, y\_j + k\_3)\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/RungeKuttaProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RungeKuttaProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Runge-Kutta Method of Order 4",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge[a0_, b0_, \[Alpha]_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{a = a0, b = b0, j, 
+          m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]Y\  = \ \(T\  = \ 
+            Table[0, {m + 
+                  1}]\); \ \
+\[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\  = \ a; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \[Alpha]; \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+            h\ \ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+            h\ \ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+            h\ \ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+            h\ \ f[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h, Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_3]; \ \
+\[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            Y\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                    k\_4)\); \ \[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\
+\)\(j + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            a + h\ \ j;\ ]; \ \[IndentingNewLine]Return[
+          Transpose[{T, Y}]]\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Compute the Runge-Kutta solution based on 25 subintervals and plot \
+the results.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 1\  - \ t\ \ y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the D.E.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          1 - \ t\ \ y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  \
+solset and put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(pts3 = Transpose[{T, f[T]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Runge-Kutta solution and the analytic \
+solution. Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the error for ",
+  "Runge-Kutta",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(pts4 = Transpose[{T, f[T] - Y1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph4 = 
+        ListPlot[pts4, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n, "\< subintervals,\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since we have the analytic or \"true solution\" at hand, we can run \
+experiments to verify that ",
+  "Runge-Kutta",
+  "'s method has order  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^4)\)}]]],
+  ".   Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error.\nRecalculate points for Runge-Kutta's \
+method, and the analytic solution using twice as many subintervals.\nThen \
+Plot the error for ",
+  "Runge-Kutta",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 50;\)\), "\[IndentingNewLine]", 
+    \(\(Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1 = Y;\)\ \)}], "Input"],
+
+Cell["The error for Runge-Kutta's method.", "Text"],
+
+Cell[BoxData[{
+    \(\(pts6 = Transpose[{T, f[T] - Y1}];\)\), "\[IndentingNewLine]", 
+    \(\(graph6 = 
+        ListPlot[pts6, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n, "\< subintervals,\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Compare the error for ",
+  "Runge-Kutta",
+  "'s method with 25 and 50 subintervals. \n",
+  StyleBox["Question 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " When the step size is reduced by ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/2\)]],
+  " estimate how much is the error reduced ?  (Theoretically is is ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/16\)]],
+  ".)  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph4, graph6, 
+        PlotRange \[Rule] All];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n/2, "\< and \>", n, "\< subintervals.\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Solve  ",
+  Cell[BoxData[
+      \(y' = \ 30 - 5  y\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(y \((0)\) = 1\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 5\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_] = 30 - 5\ y\ ;\)\ \), "\n", 
+    \(\(n = 50;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 5.0, 1, n];\)\ \), "\n", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {{0, 5.2}, {0, 7.4}}, 
+          PlotStyle \[Rule] Green];\)\ \), "\n", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", 
+            RowBox[{"t", " ", "y", "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          30 - 5  y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[MapAll[Expand, solset]];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  \
+solset and put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        MapAll[Expand, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(pts3 = Transpose[{T, f[T]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 5.2}, {0, 
+                7.4}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Runge-Kutta solution and the analytic \
+solution. Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the absolute value of the error for ",
+  "Runge-Kutta",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(pts4 = Transpose[{T, f[T] - Y1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph4 = 
+        ListPlot[Abs[pts4], PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n, "\< subintervals,\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Reduce the step size by  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " and see what happens to the error.\nRecalculate points for Runge-Kutta's \
+method, and the analytic solution using twice as many subintervals.\nThen \
+Plot the error for ",
+  "Runge-Kutta",
+  "'s method."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1 = Y;\)\ \)}], "Input"],
+
+Cell["The error for Runge-Kutta's method.", "Text"],
+
+Cell[BoxData[{
+    \(\(pts6 = Transpose[{T, f[T] - Y1}];\)\), "\[IndentingNewLine]", 
+    \(\(graph6 = 
+        ListPlot[Abs[pts6], PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n, "\< subintervals,\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<and the step size  h = \>", h];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Compare the error for ",
+  "Runge-Kutta",
+  "'s method with 50 and 100 subintervals. \n",
+  StyleBox["Question 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " When the step size is reduced by ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/2\)]],
+  " estimate how much is the error reduced ?  (Theoretically is is ",
+  Cell[BoxData[
+      \(TraditionalForm\`1\/16\)]],
+  ".)  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph4, graph6, 
+        PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error for Runge-Kutta's method using \>", 
+        n/2, "\< and \>", n, "\< subintervals.\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{\(t\^2\), " ", "+", 
+            RowBox[{\(y\^2\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "1"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Compute the Runge-Kutta solution based on 50 subintervals and plot \
+the results.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ t\^2\  + y\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the D.E.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 1.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution based on 100 subintervals and plot \
+the results.
+Observe that one fewer subinterval is computed for this case.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n = 99;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 0.99, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(\>", 
+        T\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\), \
+"\<) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution based on 200 subintervals and plot \
+the results.
+Observe that four fewer subintervals are computed for this case.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n = 196;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 0.98, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y1\  = \ Y;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] {{0, 1}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(\>", 
+        T\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\), \
+"\<) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution and graph for the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{\(t\^2\), " ", "+", 
+            RowBox[{\(y\^2\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", "1"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(de\  = \ \(y'\)[t] \[Equal] 
+          t\^2 + \ y[t]\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(ic\  = \ y[0] \[Equal] 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = DSolve[{de, ic}, y[t], t];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[t_] = 
+        MapAll[FullSimplify, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the differential equation\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with the initial condition\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[ic];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y[t] = \>", f[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Dig out the formula for the solution out of the data structure of  \
+solset and put it in  f[t].
+Plot the analytic solution at the same sample points that were used for the \
+numerical approximations.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(f[t_] = 
+        MapAll[FullSimplify, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph3 = 
+        Plot[f[t], {t, 0, 0.969}, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0.001, 0.98}, {0, 
+                30}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<f[t] = \>", f[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["\<\
+Just for fun, plot the Runge-Kutta solution and the analytic \
+solution. Notice that there is a difference. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3, 
+        PlotRange \[Rule] {{0.001, 0.98}, {0, 
+              100}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph3, 
+        PlotRange \[Rule] {{0.001, 0.98}, {0, 
+              1000}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta and analytic solutions for  y' = \>", 
+        f[t, y]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Something strange is happening, it appears that the solution to  ",
+  Cell[BoxData[
+      \(y' = \ \(\(t\^2\)\(+\)\(\ \)\(y\^2\)\(\ \)\)\)]],
+  "has a vertical asymptote, yet ",
+  "Runge-Kutta",
+  "'s method is able to move past this asymptote!  How can this happen?  If \
+the step size is chosen smaller, then these methods will not tend to \
+overshoot the asymptote. The location of the asymptote can be found using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s procedure FindRoot."
+}], "Text"],
+
+Cell[BoxData[
+    \(FindRoot[
+      16\ \((\(-32\)\ \[Pi]\ BesselJ[1\/4, 
+                t\^2\/2] + \@2\ BesselJ[\(-\(1\/4\)\), 
+                t\^2\/2]\ \((\(-4\)\ Gamma[\(-\(1\/4\)\)]\^2 + 
+                  30\ Gamma[\(-\(5\/4\)\)]\ Gamma[3\/4])\))\), {t, 
+        0.9}]\)], "Input"],
+
+Cell["\<\
+Numerical methods with a higher order of precision will not tend to \
+overshoot the asymptote. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Runge-Kutta Method for O.D.E's",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the I.V.P.  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", " ", 
+        RowBox[{
+          RowBox[{"1", "-", " ", 
+            RowBox[{"t", " ", \(\@y\%3\), "  ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman"], "   ", "y", \((0)\)}]}], " ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"1", "  ", 
+              StyleBox["over",
+                FontFamily->"Times New Roman"], "  ", "0"}], "\[LessEqual]", 
+            "t", "\[LessEqual]", "5"}]}]}]]],
+  ".    Compute the Runge-Kutta solution to the I.V.P."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 
+        1 - \ t\ Sign[y] \@\(Abs[y]\)\%3;\)\), "\[IndentingNewLine]", 
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 
+        1 - \ t\ Sign[y] \@\(Abs[y]\)\%3;\)\), "\[IndentingNewLine]", 
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[t_, y_]\  = \ 
+        1 - \ t\ Sign[y] \@\(Abs[y]\)\%3;\)\), "\[IndentingNewLine]", 
+    \(\(f1[t_, y_]\  = \ 1 - \ t\ \@y\%3;\)\), "\[IndentingNewLine]", 
+    \(\(n = 150;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge[0.0, 5.0, 1.0, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] {{0, 5}, {0, 
+                1.55}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution for  y' = \>", 
+        f1[t, y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n = \>", 
+        n + 1, "\<  points.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The final value is  y(5) = \>", y\_\(n + 1\), "\< = \>", 
+        Y\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKuttaaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKuttaaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKutta.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge-Kutta Method of Order 4",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/OrdinaryDE/\
+RungeKutta1/RungeKutta.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Runge Kutta Method of order 4",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/rk.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Runge Kutta Method of order 4",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/rk.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/RungeKuttaBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Runge-Kutta Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RungeKuttaBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 188, 4, 35, "Text"],
+Cell[1967, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3446, 111, 3734, 112, 292, "Text"],
+Cell[7183, 225, 628, 21, 33, "Text"],
+Cell[7814, 248, 3736, 113, 184, "Text"],
+Cell[11553, 363, 628, 21, 33, "Text"],
+Cell[12184, 386, 802, 24, 33, "Text"],
+Cell[12989, 412, 3037, 95, 194, "Text"],
+Cell[16029, 509, 607, 19, 33, "Text"],
+Cell[16639, 530, 380, 11, 33, "Text"],
+Cell[17022, 543, 1828, 30, 350, "Input"],
+Cell[18853, 575, 619, 19, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[19497, 598, 101, 2, 33, "Text"],
+Cell[19601, 602, 105, 3, 33, "Text"],
+Cell[19709, 607, 234, 4, 70, "Input"],
+Cell[19946, 613, 914, 17, 210, "Input"]
+}, Closed]],
+Cell[20875, 633, 720, 22, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[21620, 659, 101, 2, 33, "Text"],
+Cell[21724, 663, 559, 11, 170, "Input"],
+Cell[22286, 676, 224, 5, 52, "Text"],
+Cell[22513, 683, 598, 12, 150, "Input"],
+Cell[23114, 697, 132, 3, 33, "Text"],
+Cell[23249, 702, 185, 3, 50, "Input"]
+}, Closed]],
+Cell[23449, 708, 170, 7, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[23644, 719, 101, 2, 33, "Text"],
+Cell[23748, 723, 421, 7, 90, "Input"],
+Cell[24172, 732, 383, 13, 36, "Text"]
+}, Closed]],
+Cell[24570, 748, 387, 12, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[24982, 764, 101, 2, 33, "Text"],
+Cell[25086, 768, 157, 3, 70, "Input"],
+Cell[25246, 773, 51, 0, 33, "Text"],
+Cell[25300, 775, 413, 7, 90, "Input"],
+Cell[25716, 784, 426, 14, 55, "Text"],
+Cell[26145, 800, 239, 4, 50, "Input"]
+}, Closed]],
+Cell[26399, 807, 359, 16, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[26783, 827, 101, 2, 33, "Text"],
+Cell[26887, 831, 894, 18, 210, "Input"]
+}, Closed]],
+Cell[27796, 852, 808, 26, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[28629, 882, 101, 2, 33, "Text"],
+Cell[28733, 886, 572, 11, 170, "Input"],
+Cell[29308, 899, 224, 5, 52, "Text"],
+Cell[29535, 906, 626, 13, 150, "Input"],
+Cell[30164, 921, 132, 3, 33, "Text"],
+Cell[30299, 926, 185, 3, 50, "Input"]
+}, Closed]],
+Cell[30499, 932, 192, 7, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[30716, 943, 101, 2, 33, "Text"],
+Cell[30820, 947, 460, 8, 90, "Input"]
+}, Closed]],
+Cell[31295, 958, 387, 12, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[31707, 974, 101, 2, 33, "Text"],
+Cell[31811, 978, 160, 3, 70, "Input"],
+Cell[31974, 983, 51, 0, 33, "Text"],
+Cell[32028, 985, 441, 7, 90, "Input"],
+Cell[32472, 994, 427, 14, 55, "Text"],
+Cell[32902, 1010, 241, 4, 50, "Input"]
+}, Closed]],
+Cell[33158, 1017, 624, 19, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[33807, 1040, 101, 2, 33, "Text"],
+Cell[33911, 1044, 105, 3, 33, "Text"],
+Cell[34019, 1049, 233, 4, 70, "Input"],
+Cell[34255, 1055, 912, 17, 210, "Input"],
+Cell[35170, 1074, 168, 4, 52, "Text"],
+Cell[35341, 1080, 998, 19, 210, "Input"],
+Cell[36342, 1101, 171, 4, 52, "Text"],
+Cell[36516, 1107, 999, 19, 210, "Input"]
+}, Closed]],
+Cell[37530, 1129, 529, 17, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[38084, 1150, 102, 2, 33, "Text"],
+Cell[38189, 1154, 740, 15, 190, "Input"],
+Cell[38932, 1171, 224, 5, 52, "Text"],
+Cell[39159, 1178, 554, 12, 130, "Input"],
+Cell[39716, 1192, 132, 3, 33, "Text"],
+Cell[39851, 1197, 254, 5, 50, "Input"],
+Cell[40108, 1204, 255, 5, 50, "Input"],
+Cell[40366, 1211, 530, 12, 52, "Text"],
+Cell[40899, 1225, 288, 6, 45, "Input"],
+Cell[41190, 1233, 119, 3, 33, "Text"]
+}, Closed]],
+Cell[41324, 1239, 319, 10, 32, "Text"],
+Cell[41646, 1251, 680, 19, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[42351, 1274, 102, 2, 33, "Text"],
+Cell[42456, 1278, 1031, 19, 238, "Input"],
+Cell[43490, 1299, 1032, 19, 238, "Input"],
+Cell[44525, 1320, 1032, 19, 238, "Input"],
+Cell[45560, 1341, 809, 26, 33, "Text"]
+}, Closed]],
+Cell[46384, 1370, 802, 24, 30, "Text"],
+Cell[47189, 1396, 721, 20, 33, "Text"],
+Cell[47913, 1418, 158, 3, 35, "Text"],
+Cell[48074, 1423, 564, 16, 33, "Text"],
+Cell[48641, 1441, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

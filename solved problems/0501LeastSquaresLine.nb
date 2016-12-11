@@ -1,0 +1,1611 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     49902,       1450]*)
+(*NotebookOutlinePosition[     50760,       1479]*)
+(*  CellTagsIndexPosition[     50716,       1475]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Least Squares Lines",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe formulas for linear least squares fitting were independently \
+derived by German mathematician ",
+  StyleBox[ButtonBox["Johann Carl Friedrich Gauss",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Gauss.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  "  (1777-1855) and the French mathematician ",
+  StyleBox[ButtonBox["Adrien-Marie Legendre",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Legendre.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  "  (1752-1833). "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Least Squares Line",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearRegression.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Fitting",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LeastSquaresFitting.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Given the  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_1\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(x\_n\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_n\)}], ")"}]}]]],
+  ",  the least squares line  ",
+  Cell[BoxData[
+      \(y = a\ x + b\)]],
+  "  that fits the points has coefficients a and b given by:\n\n\t",
+  Cell[BoxData[
+      \(a = \(\((\[Sum]\+\(k = 1\)\%n x\_k)\)\ \(\[Sum]\+\(k = 1\)\%n y\_k\) \
+- n\ \(\[Sum]\+\(k = 1\)\%n x\_k\ y\_k\)\)\/\(\((\[Sum]\+\(k = 1\)\%n x\_k)\)\
+\^2 - n\ \(\[Sum]\+\(k = 1\)\%n x\_k\%2\)\)\)]],
+  " \nand\n\t",
+  Cell[BoxData[
+      \(b = \(\((\[Sum]\+\(k = 1\)\%n x\_k)\)\ \(\[Sum]\+\(k = 1\)\%n x\_k\ y\
+\_k\) - \(\[Sum]\+\(k = 1\)\%n x\_k\%2\)\ \(\[Sum]\+\(k = 1\)\%n y\_k\)\)\/\(\
+\((\[Sum]\+\(k = 1\)\%n x\_k)\)\^2 - n\ \(\[Sum]\+\(k = 1\)\%n \
+x\_k\%2\)\)\)]],
+  " ."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LeastSqLineProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/LeastSqLineProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The least squares line is often times called the line of regression."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LeastSqLineProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/LeastSqLineProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Least Squares Line).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Regression[XY0_]\), ":=", 
+          RowBox[{"Module", "[", " ", 
+            RowBox[{\({k, n, XY = XY0\ }\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(n = Length[XY]\), ";", 
+                "\[IndentingNewLine]", \(X = \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                "\[IndentingNewLine]", \(Y = \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"A", "=", 
+                  RowBox[{"(", GridBox[{
+                        {\(\[Sum]\+\(k = 1\)\%n X\_\(\(\[LeftDoubleBracket]\)\
+\(k\)\(\[RightDoubleBracket]\)\)\^2\), \(\[Sum]\+\(k = 1\)\%n X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)},
+                        {\(\[Sum]\+\(k = 1\)\%n X\_\(\(\[LeftDoubleBracket]\)\
+\(k\)\(\[RightDoubleBracket]\)\)\), "n"}
+                        }], ")"}]}], ";", " ", "\[IndentingNewLine]", 
+                RowBox[{"B", "=", 
+                  RowBox[{"(", GridBox[{
+                        {\(\[Sum]\+\(k = 1\)\%n\( 
+                                  X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\) 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)},
+                        {\(\[Sum]\+\(k = 1\)\%n Y\_\(\(\[LeftDoubleBracket]\)\
+\(k\)\(\[RightDoubleBracket]\)\)\)}
+                        }], ")"}]}], ";", " ", 
+                "\[IndentingNewLine]", \(c = LinearSolve[A, B]\), ";", " ", 
+                "\[IndentingNewLine]", \(a = 
+                  c\_\(\(\[LeftDoubleBracket]\)\(1, \
+1\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                "\[IndentingNewLine]", \(b = 
+                  c\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                "\[IndentingNewLine]", \(E2 = \[Sum]\+\(k = 1\)\%n\((Y\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - a\ X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - b)\)\^2\), ";", " ", 
+                "\[IndentingNewLine]", \(Return[\ a\ x + b\ ]\), ";"}]}], " ",
+             "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the standard \"least squares line\"  ",
+  Cell[BoxData[
+      \(y = a\ x\  + \ b\)]],
+  "  for the data points \n",
+  Cell[BoxData[
+      \(\((\(-1\), 10)\), \((0, 9)\), \((1, 7)\), \((2, 5)\), \((3, 
+        4)\), \((4, 3)\), \((5, 0)\), \((6, \(-1\))\)\)],
+    AspectRatioFixed->False],
+  ".  \nUse the subroutine ",
+  StyleBox["Regression",
+    FontWeight->"Bold"],
+  " to find the line.  Compare with the line obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["Fit",
+    FontWeight->"Bold"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+First, enter the data points.  This can be done as a list of lists \
+or by using the Input menu and the Create Table submenu.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(XY\)\(=\)\({{\(-1\), 10}, {0, 9}, {1, 7}, {2, 5}, {3, 4}, {4, 
+          3}, {5, 0}, {6, \(-1\)}}\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Using the Create Table submenu, we can get the following display to \
+fill in the numbers.\
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{"XY", " ", "=", " ", GridBox[{
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"},
+          {"\[Placeholder]", "\[Placeholder]"}
+          }], "  "}]], "Input"],
+
+Cell["When we fill in the numbers it will look like", "Text"],
+
+Cell[BoxData[
+    RowBox[{"XY", " ", "=", " ", GridBox[{
+          {\(-1\), "10"},
+          {"0", "9"},
+          {"1", "7"},
+          {"2", "5"},
+          {"3", "4"},
+          {"4", "3"},
+          {"5", "0"},
+          {"6", \(-1\)}
+          }], " "}]], "Input"],
+
+Cell["\<\
+After the data has been entered, compute the formulas for the least \
+squares line.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(XY = {{\(-1\), 10}, {0, 9}, {1, 7}, {2, 5}, {3, 4}, {4, 3}, {5, 
+            0}, {6, \(-1\)}};\)\ \), "\n", 
+    \(\(f[x_] = Regression[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(F[x_] = Fit[XY, {1, x}, x];\)\ \), "\n", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine `Regression`\>"];\)\ \), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", N[f[x]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Using Mathematica's `Fit`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = F[x] = \>", F[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Let's see how the subroutine ",
+  StyleBox["Regression",
+    FontWeight->"Bold"],
+  "  works.  The command for determining the abscissas is"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(XY\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Transpose[XY]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(X = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", X];\)\ \)}], "Input"],
+
+Cell["The command for determining the ordinates is", "Text"],
+
+Cell[BoxData[{
+    \(\(Y = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", Y];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We can add them up by using the selection operation  ",
+  Cell[BoxData[
+      \(X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)]],
+  "  and the summation found in the \"BasisInput Palette\" ."
+}], "Text"],
+
+Cell[BoxData[
+    \(n = Length[XY]\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(k = 
+            1\)\%n\)\(X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(k = 
+            1\)\%n\)\(Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+If you want to add up their squares then be careful using the \
+power.  Sometimes extra parenthesis helps.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(k = 1\)\%n\((X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\))\)\^2\)], "Input"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(k = 1\)\%n\(\( 
+            X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\) \
+\(Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)\(\ \)\)\)], \
+"Input"],
+
+Cell["Let's peek at the linear system that was solved.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print["\<y = b + a x\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The normal equations for finding the coefficients a \
+and b are:\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{\(MatrixForm[A]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {"\"\<a\>\""},
+                    {"\"\<b\>\""}
+                    }], ")"}], "]"}], ",", "\"\< = \>\"", 
+            ",", \(MatrixForm[B]\)}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The solution is\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {"\"\<a\>\""},
+                    {"\"\<b\>\""}
+                    }], ")"}], "]"}], ",", "\"\< = \>\"", 
+            ",", \(MatrixForm[c]\)}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<a = \>", a];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<b = \>", b];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The least squares line is\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<y = \>", \ a\ x\  + \ b, "\< = \>", \ 
+          N[a\ x\  + \ b]\ ];\), " "}]}], "Input"],
+
+Cell["Of course we want a graph. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(graph1 = 
+        Plot[f[x], {x, \(-2\), 7}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{\(-2\), 7}, {\(-2.2\), 11.3}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\n", 
+    \(\(Print["\<The `least squares line` is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", \ a\ x\  + \ b, "\< = \>", \ 
+        N[a\ x\  + \ b]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["The sum of the residual's squared for this example is:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(error1 = E2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Sum]\+\(k = 1\)\%n\)\!\(\((Y\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - a\\\ X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - b)\)\^2\) = \>\"", 
+        error1, "\< = \>", N[error1]];\)\ \)}], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the other \"Least Squares Lines\"  ",
+  Cell[BoxData[
+      \(x\  = \ c\ y\  + \ d\)]],
+  "  for the data points \n",
+  Cell[BoxData[
+      \(\((\(-1\), 10)\), \((0, 9)\), \((1, 7)\), \((2, 5)\), \((3, 
+        4)\), \((4, 3)\), \((5, 0)\), \((6, \(-1\))\)\)],
+    AspectRatioFixed->False],
+  ".  \nUse the subroutine ",
+  StyleBox["Regression",
+    FontWeight->"Bold"],
+  " to find the line. \n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the computer to find the least squares lines  ",
+  Cell[BoxData[
+      \(x\  = \ c\ y\  + \ d\)]],
+  ".   \n",
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Is it the same as the line we found in Example 1 ?   Why? "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["First, enter the data points.", "Text"],
+
+Cell[BoxData[
+    \(\(\(XY = {{\(-1\), 10}, {0, 9}, {1, 7}, {2, 5}, {3, 4}, {4, 3}, {5, 
+            0}, {6, \(-1\)}};\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Reverse the order of the coordinates of the points from  ",
+  Cell[BoxData[
+      \(\((x\_k, y\_k)\)\)]],
+  "  to  ",
+  Cell[BoxData[
+      \(\((y\_k, x\_k)\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(tr\  = \ Transpose[XY];\)\ \), "\n", 
+    \(\(YX\  = \ 
+        Transpose[{tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\
+\)\), tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)}];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(y\_k\),\!\(x\_k\))} = \>\"", YX];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the \"Least Squares Line\"  ",
+  Cell[BoxData[
+      \(x\  = \ c\ y\  + \ d\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_]\  = \ Regression[YX];\)\ \), "\[IndentingNewLine]", 
+    \(\(G[y_] = Fit[YX, {1, y}, y];\)\ \), "\n", 
+    \(\(Print[\*"\"\<{(\!\(y\_k\),\!\(x\_k\))} = \>\"", 
+        YX];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine `Regression`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x = g[y] = \>", g[y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x = g[y] = \>", N[g[y]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Using Mathematica's `Fit`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x = G[y] = \>", G[y]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Plot the \"Least Squares Line\"  ",
+  Cell[BoxData[
+      \(x\  = \ c\ y\  + \ d\)]],
+  "  using the  ",
+  StyleBox["ParametricPlot",
+    FontWeight->"Bold"],
+  "  procedure."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph2\  = \ 
+        ParametricPlot[{g[t], t}, {t, \(-2\), 11.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[graph2, dots, PlotRange \[Rule] {{\(-2\), 7}, {\(-2.2\), 11.3}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The `other least squares line` is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x = \>", \ g[y], "\< = \>", \ N[g[y]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Compare the two \"Least Squares Lines\"",
+  "  ",
+  Cell[BoxData[
+      RowBox[{"y", "=", 
+        RowBox[{
+          RowBox[{\(a\ x\), " ", "+", " ", 
+            RowBox[{"b", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", "x"}]}], " ", "=", 
+          " ", \(c\ y\  + \ d\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph2, dots, 
+        PlotRange \[Rule] {{\(-2\), 7}, {\(-2.2\), 11.3}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \), "\n", 
+    \(\(Print["\<x = g[y] = \>", g[y]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Are the two lines the same ? Solve the second formula for x in \
+terms of y. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[x \[Equal] g[y], y];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = MapAll[Expand, solset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve \>", 
+        x \[Equal] g[y], "\< for y\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[N[solset]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\), "\< = \>", 
+        N[solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Compare this with the first line we found.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", N[f[x]]\ ];\)\ \)}], "Input"],
+
+Cell["The two formulas are not the same. ", "Text"],
+
+Cell["The sum of the residual's squared for this example is:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(error2 = E2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Sum]\+\(k = 1\)\%n\)(\!\(X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)-d \!\(Y\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)-c\!\(\()\^2\)\) = \>\
+\"", \ error2, "\< = \>", N[error2]];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell["Which can be compared with example 1.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\[Sum]\+\(k = 1\)\%n\)\!\(\((Y\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - a\\\ X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) - b)\)\^2\) = \>\"", 
+        error1, "\< = \>", N[error1]];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell["Which \"least squares fit\" do you think is best ?", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Question.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Are we comparing the \"same thing\" or is it apple's verses oranges?"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the point of intersection of the two lines."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Be careful, to prevent a fatal error you must use \"==\" .", "Text"],
+
+Cell[BoxData[{
+    \(\(solset = 
+        Solve[{y \[Equal] f[x], x \[Equal] g[y]}, {x, 
+            y}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \), "\n", 
+    \(\(Print["\<x = g[y] = \>", g[y]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The point of intersection is:\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(5\/2\)] = \>\"", f[5\/2]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<g[\!\(37\/8\)] = \>\"", g[37\/8]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Compare this with the following point obtained by averaging each \
+coordinate of the data. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Y = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(n = Length[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Apoint\  = \ {1\/n\ \ \(\[Sum]\+\(k = 1\)\%n X\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\), 
+          1\/n\ \ \(\[Sum]\+\(k = 1\)\%n Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)};\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\&__\),\!\(y\&__\)} = \>\"", 
+        Apoint];\)\)}], "Input"],
+
+Cell[TextData[{
+  "What do you conjecture about the point of intersection of the two lines ",
+  Cell[BoxData[
+      RowBox[{"y", "=", 
+        RowBox[{
+          RowBox[{\(a\ x\), " ", "+", " ", 
+            RowBox[{"b", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", "x"}]}], " ", "=", 
+          " ", \(c\ y\  + \ d\)}]}]]],
+  ".  Can you prove it ?"
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Philosophy.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  What comes first the chicken or the egg ?  Which coordinate is more \
+sacred, the abscissas or the ordinates.  We are always free to choose which \
+variable is independent when we graph a line;  ",
+  Cell[BoxData[
+      \(y\  = \ a\ x\  + \ b\)]],
+  "  or   ",
+  Cell[BoxData[
+      \(x\  = \ c\ y\  + \ d\)]],
+  ".  When you realize that two different \"least squares lines\" can be \
+produced we are amazed.  What should we do ?  Which line should we use ?  You \
+must decide a priori which variable is independent and which is dependent and \
+then proceed. Exercise 3 asked you to think about the mathematics that is \
+involved with this \"paradox.\""
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Another \"Fit\"\n\nTheorem (Power Fit).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Given the  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_1\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(x\_n\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_n\)}], ")"}]}]]],
+  ",  the power curve  ",
+  Cell[BoxData[
+      \(y\  = \ a\ x\^m\)]],
+  "  that fits the points has coefficients a given by:\n\n\t",
+  Cell[BoxData[
+      \(a = \ \ \[Sum]\+\(k = 1\)\%n x\_k\%m\ y\_k/\ \(\[Sum]\+\(k = 1\)\%n x\
+\_k\%\(2  m\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The case m = 1 is a line that passes through the origin."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LeastSqLineProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/LeastSqLineProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Power Curve).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PowerCurve[XY0_, m_] := 
+        Module[\ {k, n, XY = XY0\ }, \[IndentingNewLine]n = 
+            Length[XY]; \[IndentingNewLine]X = \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]Y = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]a = \[Sum]\+\(k = \
+1\)\%n\(\((X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\))\)\^\
+m\) Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ \
+/\(\[Sum]\+\(k = 1\)\%n\((X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\))\)\^\(2  m\)\); \[IndentingNewLine]Return[\ 
+            a\ x\^m];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find \"modified least squares line\" of the form   ",
+  Cell[BoxData[
+      \(y\  = \ a\ x\)]],
+  "  for the data points ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "3"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "5"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "6"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "8"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"6", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "9"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"7", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "11"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"8", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "12"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+First, enter the data points.  Then form the lists of abscissa's, \
+and ordinates.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(XY = {{1, 2}, {2, 3}, {3, 5}, {4, 6}, {5, 8}, {6, 9}, {7, 11}, {8, 
+            12}};\)\), "\[IndentingNewLine]", 
+    \(\(X = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Y = \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(n = Length[XY];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\),\!\(y\_k\)\!\(\(}\_\(k = 1\)\%n\)\) =  \
+\>\"", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   {\!\(x\_k\)\!\(\(}\_\(k = 1\)\%n\)\) = \>\"", 
+        X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   {\!\(y\_k\)\!\(\(}\_\(k = 1\)\%n\)\) = \>\"", 
+        Y];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<        n = \>", n];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(k = 1\)\%n\((X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\))\)\^2\)], "Input"],
+
+Cell[BoxData[
+    \(\[Sum]\+\(k = 1\)\%n\(\( 
+            X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\) \
+\(Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\)\(\ \)\)\)], \
+"Input"],
+
+Cell[BoxData[
+    \(a = \[Sum]\+\(k = 1\)\%n\( 
+              X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\) 
+          Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ /\(\
+\[Sum]\+\(k = 1\)\%n\((X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\))\)\^2\)\)], "Input"],
+
+Cell["The \"modified least squares line\" is", "Text"],
+
+Cell[BoxData[{
+    \(\(XY = {{1, 2}, {2, 3}, {3, 5}, {4, 6}, {5, 8}, {6, 9}, {7, 11}, {8, 
+            12}};\)\), "\n", 
+    \(\(f[x_] = a\ x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The `modified least squares line` is\>"];\)\ \), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", N[f[x]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(graph1 = 
+        Plot[f[x], {x, \(-1\), 9}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{\(-1\), 9}, {\(-2.2\), 13.3}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\n", 
+    \(\(Print["\<The `modified least squares line` is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", \ f[x]\ , "\< = \>", \ N[f[x]]\ ];\)\ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "We can compare this with the result obtained from our subroutine ",
+  StyleBox["PowerCurve[XY,m]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<y = \>", \ PowerCurve[XY, 1], "\< = \>", \ 
+        N[PowerCurve[XY, 1]]\ ];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Application to Astronomy",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIn 1601 the German astronomer ",
+  StyleBox[ButtonBox["Johannes Kepler",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Kepler.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  "  (1571-1630) formulated the third law of planetary motion  ",
+  Cell[BoxData[
+      \(T = C\ x\^\(3/2\)\)]],
+  ", where  ",
+  Cell[BoxData[
+      \(x\)]],
+  "  is the distance to the sun measured in millions of kilometers, ",
+  Cell[BoxData[
+      \(T\)]],
+  " is the orbital period measured in days, and  ",
+  Cell[BoxData[
+      \(C\)]],
+  " is a constant.  The observed data pairs for the first four planets: \
+Mercury, Venus, Earth, and Mars are ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"57.59", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "87.99"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"108.11", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "224.70"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"149.57", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "365.26"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"227.84", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "686.98"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the power curve  ",
+  Cell[BoxData[
+      \(y\  = \ a\ x\^\(3/2\)\)]],
+  "  for the data points ",
+  Cell[BoxData[
+      RowBox[{\((57.59, 87.99)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"108.11", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "224.70"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"149.57", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "365.26"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"227.84", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "686.98"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(XY = {{57.59, 87.99}, {108.11, 224.70}, {149.57, 365.26}, {227.84, 
+            686.98}};\)\), "\n", 
+    \(\(f[x_] = N[PowerCurve[XY, 3\/2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The power curve `Fit` using the formula y = a \
+\!\(x\^\(3/2\)\)\>\""];\)\ \), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(graph1 = 
+        Plot[f[x], {x, 0, 230}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, PlotRange \[Rule] {{0, 230}, {0, 700}}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XY];\)\ \), "\n", 
+    \(\(Print[\*"\"\<The power curve `Fit` using the formula y = a \
+\!\(x\^\(3/2\)\)\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = \>", \ N[f[x]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/lp.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/lp.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/LeastSqLineBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Least Squares Lines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/LeastSqLineBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, 128}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 172, 4, 35, "Text"],
+Cell[1951, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3430, 111, 762, 22, 87, "Text"],
+Cell[4195, 135, 3426, 100, 155, "Text"],
+Cell[7624, 237, 624, 21, 33, "Text"],
+Cell[8251, 260, 183, 5, 33, "Text"],
+Cell[8437, 267, 610, 20, 33, "Text"],
+Cell[9050, 289, 148, 2, 33, "Text"],
+Cell[9201, 293, 2262, 42, 305, "Input"],
+Cell[11466, 337, 721, 24, 71, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[12212, 365, 101, 2, 33, "Text"],
+Cell[12316, 369, 149, 3, 33, "Text"],
+Cell[12468, 374, 144, 2, 30, "Input"],
+Cell[12615, 378, 114, 3, 33, "Text"],
+Cell[12732, 383, 471, 10, 137, "Input"],
+Cell[13206, 395, 61, 0, 33, "Text"],
+Cell[13270, 397, 269, 10, 137, "Input"],
+Cell[13542, 409, 107, 3, 33, "Text"],
+Cell[13652, 414, 708, 12, 190, "Input"],
+Cell[14363, 428, 171, 5, 33, "Text"],
+Cell[14537, 435, 49, 1, 30, "Input"],
+Cell[14589, 438, 60, 1, 30, "Input"],
+Cell[14652, 441, 203, 3, 51, "Input"],
+Cell[14858, 446, 60, 0, 33, "Text"],
+Cell[14921, 448, 203, 3, 51, "Input"],
+Cell[15127, 453, 239, 5, 33, "Text"],
+Cell[15369, 460, 47, 1, 30, "Input"],
+Cell[15419, 463, 147, 3, 49, "Input"],
+Cell[15569, 468, 147, 3, 49, "Input"],
+Cell[15719, 473, 130, 3, 33, "Text"],
+Cell[15852, 478, 125, 2, 49, "Input"],
+Cell[15980, 482, 212, 4, 49, "Input"],
+Cell[16195, 488, 64, 0, 33, "Text"],
+Cell[16262, 490, 1484, 33, 236, "Input"],
+Cell[17749, 525, 43, 0, 33, "Text"],
+Cell[17795, 527, 835, 17, 150, "Input"],
+Cell[18633, 546, 118, 2, 33, "Text",
+  Evaluatable->False],
+Cell[18754, 550, 360, 6, 71, "Input"]
+}, Closed]],
+Cell[19129, 559, 913, 29, 106, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[20067, 592, 101, 2, 33, "Text"],
+Cell[20171, 596, 45, 0, 33, "Text"],
+Cell[20219, 598, 168, 3, 30, "Input"],
+Cell[20390, 603, 200, 8, 33, "Text"],
+Cell[20593, 613, 442, 8, 90, "Input"],
+Cell[21038, 623, 190, 8, 33, "Text"],
+Cell[21231, 633, 648, 12, 170, "Input"],
+Cell[21882, 647, 206, 8, 33, "Text"],
+Cell[22091, 657, 602, 11, 110, "Input"],
+Cell[22696, 670, 365, 12, 33, "Text"],
+Cell[23064, 684, 320, 6, 70, "Input"],
+Cell[23387, 692, 101, 3, 33, "Text"],
+Cell[23491, 697, 844, 15, 190, "Input"],
+Cell[24338, 714, 51, 0, 33, "Text"],
+Cell[24392, 716, 118, 2, 33, "Text",
+  Evaluatable->False],
+Cell[24513, 720, 360, 6, 71, "Input"],
+Cell[24876, 728, 101, 2, 33, "Text",
+  Evaluatable->False],
+Cell[24980, 732, 314, 5, 49, "Input"],
+Cell[25297, 739, 114, 2, 33, "Text",
+  Evaluatable->False],
+Cell[25414, 743, 233, 7, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[25662, 753, 215, 7, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[25902, 764, 101, 2, 33, "Text"],
+Cell[26006, 768, 74, 0, 33, "Text"],
+Cell[26083, 770, 549, 10, 177, "Input"],
+Cell[26635, 782, 115, 3, 33, "Text"],
+Cell[26753, 787, 666, 11, 135, "Input"],
+Cell[27422, 800, 408, 11, 33, "Text"]
+}, Closed]],
+Cell[27845, 814, 772, 17, 68, "Text"],
+Cell[28620, 833, 2457, 74, 111, "Text"],
+Cell[31080, 909, 171, 5, 33, "Text"],
+Cell[31254, 916, 624, 21, 33, "Text"],
+Cell[31881, 939, 141, 2, 33, "Text"],
+Cell[32025, 943, 718, 11, 169, "Input"],
+Cell[32746, 956, 5103, 150, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[37874, 1110, 101, 2, 33, "Text"],
+Cell[37978, 1114, 106, 3, 33, "Text"],
+Cell[38087, 1119, 837, 14, 172, "Input"],
+Cell[38927, 1135, 125, 2, 49, "Input"],
+Cell[39055, 1139, 212, 4, 49, "Input"],
+Cell[39270, 1145, 312, 5, 59, "Input"],
+Cell[39585, 1152, 54, 0, 33, "Text"],
+Cell[39642, 1154, 476, 8, 130, "Input"],
+Cell[40121, 1164, 823, 17, 150, "Input"],
+Cell[40947, 1183, 191, 6, 34, "Text"],
+Cell[41141, 1191, 132, 2, 30, "Input"]
+}, Closed]],
+Cell[41288, 1196, 3196, 94, 106, "Text"],
+Cell[44487, 1292, 2268, 68, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[46780, 1364, 101, 2, 33, "Text"],
+Cell[46884, 1368, 457, 8, 125, "Input"],
+Cell[47344, 1378, 818, 16, 151, "Input"]
+}, Closed]],
+Cell[48177, 1397, 701, 20, 30, "Text"],
+Cell[48881, 1419, 158, 3, 35, "Text"],
+Cell[49042, 1424, 560, 16, 33, "Text"],
+Cell[49605, 1442, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

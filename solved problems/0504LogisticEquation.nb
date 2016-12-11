@@ -1,0 +1,991 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     27409,        869]*)
+(*NotebookOutlinePosition[     28266,        898]*)
+(*  CellTagsIndexPosition[     28222,        894]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Logistic Curve Fitting",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for the ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Logistic Curve",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LogisticGrowthCurve.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Fitting",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LeastSquaresFitting.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  "\tFit the curve",
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(y = \(f\_1[x] = L\/\(1 + c\ \[ExponentialE]\^\(a\ x\)\)\)\)]],
+  StyleBox["  to the data points  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(\((x\_1, y\_1)\), \ \((x\_1, y\_1)\), \  ... , \((x\_n, y\_n)\)\)]],
+  StyleBox[".  \n\nRearrange the terms  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      StyleBox[\(L\/y - \ 1\  = \ c\ \[ExponentialE]\^\(a\ x\)\),
+        Evaluatable->False,
+        AspectRatioFixed->False]]],
+  ".  ",
+  StyleBox["Then take the logarithm of both sides:  \n\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      StyleBox[\(ln \((L\/y - 
+                1)\) = \(ln \((c\ \[ExponentialE]\^\(a\ x\))\)\  = \ 
+            ln \((c)\) + a\ x\)\),
+        Evaluatable->False,
+        AspectRatioFixed->False]]],
+  StyleBox[".  \n\nIntroduce the change of variables: ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        RowBox[{
+          RowBox[{
+            StyleBox["x",
+              FontWeight->"Plain"], 
+            StyleBox[
+              RowBox[{
+                StyleBox["  ",
+                  FontWeight->"Bold"], 
+                StyleBox[" ",
+                  FontWeight->"Plain"]}]], 
+            StyleBox["and",
+              FontWeight->"Plain"], 
+            StyleBox["   ",
+              FontWeight->"Plain"], 
+            StyleBox["Y",
+              FontWeight->"Plain"]}], 
+          StyleBox["=",
+            FontWeight->"Plain"], 
+          StyleBox[\(ln \((L\/y\  - \ 1)\)\),
+            Evaluatable->False,
+            AspectRatioFixed->False,
+            FontWeight->"Plain"]}]}]],
+    FontWeight->"Bold"],
+  StyleBox[".  ",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  StyleBox["The previous equation becomes  \n\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(Y\  = \ ln \((c)\)\  + \ a\ X\)]],
+  "     ",
+  StyleBox["which is now \"linearized.\"\n\nUse this change of variables on \
+the data points  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      RowBox[{\(X\_k\), "=", 
+        RowBox[{\(x\_k\ \ \ and\ \ \ Y\_k\), "=", " ", 
+          StyleBox[\(ln \((L\/y\_k\  - \ 1)\)\),
+            Evaluatable->False,
+            AspectRatioFixed->False,
+            FontWeight->"Plain"]}]}]]],
+  ", ",
+  StyleBox["i.e. same abscissa's but transformed ordinates.\n\nNow you have \
+transformed data points:  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(\((X\_1, Y\_1)\), \ \((X\_1, Y\_1)\), \  ... , \((X\_n, Y\_n)\)\)]],
+  StyleBox[".  \n\nUse the \"Fit\" procedure get  Y = A X + B, which must \
+match the form  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(Y\  = \ ln \((c)\) + \ a\ X\)]],
+  ",  hence we must have",
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(c = \[ExponentialE]\^B\)]],
+  StyleBox["  and  a = A.  ",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LogisticEquationProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LogisticEquationProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  For the method of \"data linearization\" we must know the \
+constant  L in advance.  Since  L  is the \"limiting population\" for the  \
+\"S\"  shaped logistic curve, a value of  L  that is appropriate to the \
+problem at hand can usually be obtained by guessing.   ",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LogisticEquationProg.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LogisticEquationProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use the method of \"data linearization\" to find the logistic \
+curve that fits the data for the population of the U.S. for the years \
+1900-1990.  Fit the curve  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(y = \ \(f\_1[x] = L\/\(1\  + \ c\ \[ExponentialE]\^\(a\ x\)\)\)\)]],
+  StyleBox["  to the census data for the population of the U.S.\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[GridBox[{
+          {"Date", "Populatlion"},
+          {\(1900\ July\), "76094000"},
+          {\(1910\ July\), "92407000"},
+          {\(1920\ July\), "106461000"},
+          {\(1930\ July\), "123076741"},
+          {\(1940\ July\), "132122446"},
+          {\(1950\ July\), "152271417"},
+          {\(1960\ July\), "180671158"},
+          {\(1970\ July\), "205052174"},
+          {\(1980\ July\), "227224681"},
+          {\(1990\ July\), "249464396"}
+          },
+        ColumnLines->True]]]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[StyleBox["Enter the data points into a two dimensional array \
+using millions.  Be careful with your typing !",
+  Evaluatable->False,
+  AspectRatioFixed->False]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    RowBox[{"xys", " ", "=", 
+      RowBox[{"(", GridBox[{
+            {"1900", "76.094000"},
+            {"1910", "92.407000"},
+            {"1920", "106.461000"},
+            {"1930", "123.076741"},
+            {"1940", "132.122446"},
+            {"1950", "152.271417"},
+            {"1960", "180.671158"},
+            {"1970", "205.052174"},
+            {"1980", "227.224681"},
+            {"1990", "249.464396"}
+            }], ")"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Next, a limiting population L, or \"carrying capacity\" must be \
+estimated.  For this data the number L is not too sensitive, but must be \
+larger than the largest ordinate so that the values  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(ln \((L\/y\_k - 1)\)\)]],
+  StyleBox["  are not complex numbers. For illustration, we choose  L = 800  \
+million.",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(L\)\(\ \)\(=\)\(\ \)\(800\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Do a series of intermediate computations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(tr\  = \ Transpose[xys];\)\ \), "\n", 
+    \(\(xs\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\n", 
+    \(\(ys\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\n", 
+    \(\(Xs\  = \ xs\  - \ 1900;\)\ \), "\n", 
+    \(\(Ys\  = \ Log[L\/ys - 1];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", 
+        xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", 
+        ys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_k\) = \!\(x\_k\) - 1900\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<L = \>", L];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_k\) = Log[\!\(L\/y\_k\) - 1]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{\!\(X\_k\)} = \>\"", 
+        Xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(Y\_k\)} = \>\"", Ys];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Now glue together the transformed parts to form the pairs  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \({\((X\_k, Y\_k)\)}\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(XYs\  = \ Transpose[{Xs, Ys}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", 
+        XYs];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Now use the ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox["Mathematica",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontSlant->"Italic"],
+  StyleBox[" procedure  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox["Fit",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  StyleBox["  to get the least squares line in XY-space.  Then we shall graph \
+this line in the transformed XY-plane.  ",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(g[X_]\  = \ Fit[\ XYs, {1, X}, X\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Plot the ",
+  StyleBox["least squares line in XY-space. ",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot[g[X], {X, 0, 90}, PlotRange \[Rule] {0, 2.3}, 
+          PlotStyle \[Rule] Orange, AxesLabel \[Rule] {"\<X\>", "\<Y\>"}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[XYs, PlotStyle \[Rule] {Brown, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", XYs];\)\ \), "\n", 
+    \(\(Print["\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+So the coefficients  A  and  B  are located at nodes  (2,1)  and  \
+(1), respectively:\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(A\  = \ \(g[x]\)\_\(\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\
+\[RightDoubleBracket]\)\)\(\ \ \)\)\), "\n", 
+    \(B\  = \ \(g[x]\)\_\(\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\(\ \ \)\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Use  ",
+  Cell[BoxData[
+      \(c = \[ExponentialE]\^B\)]],
+  "  and  a = A  to get the coefficients of  ",
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(y = \ \(f\_1[x] = L\/\(1 + c\ \[ExponentialE]\^\(a\ x\)\)\)\)]],
+  "  back in the original  xy-plane."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(c = \[ExponentialE]\^\(\(B\)\(\ \ \)\)\), "\n", 
+    \(a\  = \ A\ \ \)}], "Input"],
+
+Cell["\<\
+When we form the function, we must adjust \"x\" because we shifted \
+the abscissas to the left.  The actual form of the answer is a little \
+different than what we original planned.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f\_1[x_]\  = 
+        L\/\(1 + c\ \[ExponentialE]\^\(\(\ \)\(a\ \((x - 1900)\)\)\)\)\ ;\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<Points = \>", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", f\_1[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now graph the function  ",
+  Cell[BoxData[
+      \(y\  = \ f\_1[x]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        Plot[f\_1[x], {x, 1890, 2010}, PlotRange \[Rule] {0, 300}, 
+          PlotStyle \[Rule] Blue, AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", f\_1[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  The data for this example can be obtained from the  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox[ButtonBox["U.S. Census Bureau",
+    ButtonData:>{
+      URL[ "http://www.census.gov/cgi-bin/popclock"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  ", ",
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox[ButtonBox["Historical National Population Estimates",
+    ButtonData:>{
+      URL[ 
+      "http://www.census.gov/population/estimates/nation/popclockest.txt"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  ":  July 1, 1900 to July 1, 1999.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use the mathematical model  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(y = f\_1[x]\)]],
+  "  in Example 1 to estimate the population in 2000."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph1\  = \ 
+        Plot[f\_1[x], {x, 1890, 2010}, PlotRange \[Rule] {0, 300}, 
+          PlotStyle \[Rule] Blue, AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Pink, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dot = 
+        Graphics[{Red, PointSize[0.025], 
+            Point[{2000, 284.796887}]}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph1, dots, dot, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", 
+        f\_1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[2000] = \>\"", 
+        f\_1[2000]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  "Follow one of the hyperlinks to a U.S.government computer database of \
+population census values.\n\t\t",
+  ButtonBox["Your Gateway to Census 2000",
+    ButtonData:>{
+      URL[ "http://www.census.gov/main/www/cen2000.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "   or   ",
+  ButtonBox["Introduction to Census 2000 Data Products",
+    ButtonData:>{
+      URL[ "http://www.census.gov/prod/2001pubs/mso-01icdp.pdf"], None},
+    ButtonStyle->"Hyperlink"],
+  " "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+If you are having difficulty connecting to the internet, then click \
+to the right on this cell to obtain the desired data.\
+\>", "Text"],
+
+Cell[BoxData[
+    StyleBox[GridBox[{
+          {"Date", "Populatlion"},
+          {\(1900\ July\), "76094000"},
+          {\(1910\ July\), "92407000"},
+          {\(1920\ July\), "106461000"},
+          {\(1930\ July\), "123076741"},
+          {\(1940\ July\), "132122446"},
+          {\(1950\ July\), "152271417"},
+          {\(1960\ July\), "180671158"},
+          {\(1970\ July\), "205052174"},
+          {\(1980\ July\), "227224681"},
+          {\(1990\ July\), "249438712"},
+          {\(2000\ April\), "281421906"}
+          },
+        ColumnLines->True],
+      FontWeight->"Plain"]], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+If you are curious to know today's estimate of the population click \
+to the right of this cell.\
+\>", "Text"],
+
+Cell[TextData[{
+  "Follow this hyperlink to obtain the current estimates of the U.S. and \
+world population.\n",
+  StyleBox["\n",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Your Gateway to the Census 2000",
+    ButtonData:>{
+      URL[ "http://www.census.gov/main/www/cen2000.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox[ButtonBox["U.S. Census Bureau, Population Division",
+    ButtonData:>{
+      URL[ "http://www.census.gov/main/www/popclock.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"]
+}, Closed]]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use the data in Example 3 for the 2000 census value. \n",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox["4 (a).",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  How close is the predicted value  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(f\_1[2000]\)]],
+  StyleBox[" in Example 2 ? \n",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  StyleBox["4 (b).",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  What is the percentage error for the predicted value  ",
+    Evaluatable->False,
+    AspectRatioFixed->False],
+  Cell[BoxData[
+      \(f\_1[2000]\)]],
+  "?",
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(P00\  = \ 281.421906;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   Census data  P[2000] = \>", 
+        P00\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The prediction \!\(f\_1\)[2000] = \>\"", 
+        f\_1[2000]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P[2000] - \!\(f\_1\)[2000] = \>\"", 
+        P00\  - \ f\_1[2000]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The percentage error\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<100\!\(\(P[2000] - f\_1[2000]\)\/P[2000]\) = \>\"", 
+        100 \( P00 - f\_1[2000]\)\/P00\ , "\< %\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    Evaluatable->False,
+    AspectRatioFixed->False,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Various curves can be fit, but they all depend on the value of  \
+L.  No one knows this value in advance and it must be estimated.",
+    Evaluatable->False,
+    AspectRatioFixed->False]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/po.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Logistic Curve Fitting",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/po.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Reference",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nThis module is based on the following article.\n\n",
+  ButtonBox["Bounded Population Growth: a Curve Fitting Lesson",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/articles/1992BoundedPopulationGrowth.\
+pdf"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", J. Mathews, Math. and Computer Education J., Vol. 26, No. 2, \
+Spring 1992, pp. 169-176.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Logistic Curve",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LogisticEquationBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Logistic Curve",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LogisticEquationBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, -1}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 200, 5, 35, "Text"],
+Cell[1979, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3127, 101, 4498, 144, 359, "Text",
+  Evaluatable->False],
+Cell[7628, 247, 642, 22, 33, "Text"],
+Cell[8273, 271, 546, 14, 52, "Text",
+  Evaluatable->False],
+Cell[8822, 287, 628, 21, 33, "Text"],
+Cell[9453, 310, 1175, 32, 227, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[10653, 346, 101, 2, 33, "Text"],
+Cell[10757, 350, 233, 5, 33, "Text",
+  Evaluatable->False],
+Cell[10993, 357, 469, 13, 169, "Input"],
+Cell[11465, 372, 532, 14, 58, "Text",
+  Evaluatable->False],
+Cell[12000, 388, 101, 2, 30, "Input"],
+Cell[12104, 392, 106, 2, 33, "Text",
+  Evaluatable->False],
+Cell[12213, 396, 1112, 24, 302, "Input"],
+Cell[13328, 422, 260, 9, 33, "Text",
+  Evaluatable->False],
+Cell[13591, 433, 210, 4, 50, "Input"],
+Cell[13804, 439, 615, 21, 33, "Text",
+  Evaluatable->False],
+Cell[14422, 462, 189, 3, 50, "Input"],
+Cell[14614, 467, 142, 5, 33, "Text"],
+Cell[14759, 474, 694, 14, 130, "Input"],
+Cell[15456, 490, 159, 5, 33, "Text",
+  Evaluatable->False],
+Cell[15618, 497, 262, 5, 52, "Input"],
+Cell[15883, 504, 384, 13, 37, "Text",
+  Evaluatable->False],
+Cell[16270, 519, 103, 2, 50, "Input"],
+Cell[16376, 523, 254, 6, 33, "Text",
+  Evaluatable->False],
+Cell[16633, 531, 272, 5, 83, "Input"],
+Cell[16908, 538, 110, 5, 33, "Text"],
+Cell[17021, 545, 762, 15, 130, "Input"],
+Cell[17786, 562, 889, 28, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[18690, 593, 408, 14, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[19123, 611, 101, 2, 33, "Text"],
+Cell[19227, 615, 1010, 21, 170, "Input"]
+}, Closed]],
+Cell[20252, 639, 701, 21, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[20978, 664, 101, 2, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[21104, 670, 147, 3, 33, "Text"],
+Cell[21254, 675, 599, 16, 201, "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[21890, 696, 120, 3, 33, "Text"],
+Cell[22013, 701, 614, 17, 109, "Text"]
+}, Closed]]
+}, Closed]],
+Cell[22654, 722, 1079, 38, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[23758, 764, 101, 2, 33, "Text"],
+Cell[23862, 768, 800, 13, 205, "Input"]
+}, Closed]],
+Cell[24677, 784, 361, 10, 30, "Text"],
+Cell[25041, 796, 789, 22, 33, "Text"],
+Cell[25833, 820, 530, 14, 109, "Text"],
+Cell[26366, 836, 158, 3, 35, "Text"],
+Cell[26527, 841, 582, 18, 33, "Text"],
+Cell[27112, 861, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

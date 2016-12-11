@@ -1,0 +1,1622 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     46613,       1463]*)
+(*NotebookOutlinePosition[     47307,       1487]*)
+(*  CellTagsIndexPosition[     47263,       1483]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Shooting Method for Boundary Value \
+Problems",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for Boundary Value Problems",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Another type of differential equation has the form  \n\n(1)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = f \((t, x, x')\)\)]],
+  "     for   ",
+  Cell[BoxData[
+      \(a \[LessEqual] t \[LessEqual] b\)]],
+  "  ",
+  StyleBox["\n\nwith the boundary conditions  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  " with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["This is called a boundary value problem.  The conditions that \
+guarantee that a solution to (1) exists should be checked before any \
+numerical scheme is applied; otherwise, a list of meaningless output may be \
+generated. The general conditions are stated in the following theorem.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Boundary Value Problem).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((t, x, y)\)\)]],
+  StyleBox["  is continuous on the region  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        StyleBox[" ",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((t, x, y)\) : 
+            a \[LessEqual] t \[LessEqual] b, \(-\[Infinity]\) < 
+            x < \[Infinity], \(-\[Infinity]\) < y < \[Infinity]}\)}]]],
+  "  and  that  ",
+  Cell[BoxData[
+      \(\[PartialD]f\/\[PartialD]x\  = \ \(f\_x\) \((t, x, y)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\[PartialD]f\/\[PartialD]y\  = \ \(f\_y\) \((t, x, y)\)\)]],
+  "  are continuous on  ",
+  Cell[BoxData[
+      StyleBox["R",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  ".  ",
+  StyleBox["If there exists a constant  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(M > 0\)]],
+  "  for which  ",
+  Cell[BoxData[
+      RowBox[{\(f\_x\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(f\_y\)}]]],
+  "  satisfy\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(f\_x\) \((t, x, y)\)\), ">", 
+          RowBox[{"0", "   ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman"], 
+            StyleBox["all",
+              FontFamily->"Times New Roman"], "  ", \((t, x, y)\)}]}], 
+        "\[Element]", 
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"]}]]],
+  "  ",
+  StyleBox["\nand\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"|", \(\(f\_y\) \((t, x, y)\)\), "|", 
+        RowBox[{
+          RowBox[{"<", " ", 
+            RowBox[{"M", "   ", 
+              StyleBox["for",
+                FontFamily->"Times New Roman"], 
+              StyleBox[" ",
+                FontFamily->"Times New Roman"], 
+              StyleBox["all",
+                FontFamily->"Times New Roman"], "  ", \((t, x, y)\)}]}], 
+          "\[Element]", 
+          StyleBox["R",
+            FontWeight->"Bold",
+            FontSlant->"Italic"]}]}]]],
+  ",  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["then the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["boundary value problem",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = f \((t, x, x')\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["has a unique solution   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"x", "=", 
+        RowBox[{
+          RowBox[{"x", \((t)\), "   ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], "   ", "a"}], "\[LessEqual]", 
+          "t", "\[LessEqual]", "b"}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe notation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y = x' \((t)\)\)]],
+  StyleBox["  has been used to distinguish the third variable of the function\
+\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((t, x, x')\)\)]],
+  StyleBox[".   Finally, the special case of linear differential equations is \
+worthy of mention.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary (Linear Boundary Value Problem).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((t, x, y)\)\)]],
+  StyleBox["  in the theorem has the form  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((t, x, y)\)\  = \ p \((t)\) y + q \((t)\) x\  + \ r \((t)\)\)]],
+  StyleBox["  and that  f  and its partial derivatives",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(\[PartialD]f\/\[PartialD]x\  = \ q \((t)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\[PartialD]f\/\[PartialD]y\  = \ p \((t)\)\)]],
+  " ",
+  StyleBox[" are continuous on",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      StyleBox["R",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  ".  ",
+  StyleBox["If there exists a constant  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(M > 0\)]],
+  StyleBox["  for which  p(t)  and   q(t)  satisfy\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  "\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(q \((t)\)\), ">", 
+          RowBox[{"0", "   ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman"], 
+            StyleBox["all",
+              FontFamily->"Times New Roman"], "  ", "t"}]}], 
+        "\[Element]", \([a, b]\)}]]],
+  "  ",
+  StyleBox["\nand\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(p \((t)\)\)\(|\)\(\(<\)\(\ \)\(M\)\)\)\ \  = \ \ max\+\(a\  \
+\[LessEqual] \ t\  \[LessEqual] \ b\){\(|\)\(p \((t)\)\)\(|\)}\)]],
+  ",  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["then the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["linear boundary value problem",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = p \((t)\) x' \((t)\) + q \((t)\) x \((t)\) + r \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["has a unique solution   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"x", "=", 
+        RowBox[{
+          RowBox[{"x", \((t)\), "   ", 
+            StyleBox["over",
+              FontFamily->"Times New Roman"], "   ", "a"}], "\[LessEqual]", 
+          "t", "\[LessEqual]", "b"}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/ShootingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ShootingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Footnote. The significance of the theory.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0, 0.996109]],
+  StyleBox["  \n\n\tWe are all familiar with the differential equation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = \(-\ x\) \((t)\)\)]],
+  " and its general solution  ",
+  Cell[BoxData[
+      \(x \((t)\) = c\_1\ cos \((t)\) + c\_2\ sin \((t)\)\)]],
+  ".  The boundary conditions with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((0)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((\[Pi])\)}], "=", 
+          "\[Beta]"}]}]]],
+  "  can only be solved if  ",
+  Cell[BoxData[
+      \(\[Alpha] = \[Beta]\)]],
+  ".  Unfortunately, because of this counter example, the \"theory\" which \
+\"guarantees\" a solution must be phrased with ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(q \((t)\)\), ">", 
+          RowBox[{"0", "   ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman"], 
+            StyleBox["all",
+              FontFamily->"Times New Roman"], "  ", "t"}]}], 
+        "\[Element]", \([a, b]\)}]]],
+  ".  A careful reading of the \"theory\" reveals that this is a sufficient \
+condition and not a necessary condition.  Indeed there are many problems that \
+can be solved with the \"shooting method\" , all we ask is to be cautious \
+with its implementation and take note that it might not apply sometimes.    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Reduction to Two I.V.P.s: Linear Shooting Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Finding the solution of a linear boundary problem is assisted by \
+the linear structure of the equation and the use of two special initial value \
+problems. Suppose that  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u(t)",
+    FontFamily->"Courier New"],
+  StyleBox["  is the unique solution to the I.V.P.\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(u'' \((t)\)\  = \ 
+        p \((t)\) u' \((t)\) + q \((t)\) u \((t)\) + r \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(u \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(u'\), \((a)\)}], "=", 
+          "0"}]}]]],
+  ".  ",
+  StyleBox["\n\nFurthermore, suppose that  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["v(t)",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is the unique solution to the I.V.P.\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(v'' \((t)\)\  = \ p \((t)\) v' \((t)\) + q \((t)\) v \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(v \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(v'\), \((a)\)}], "=", 
+          "1"}]}]]],
+  ".  ",
+  StyleBox["\n\nThen the linear combination \n\n",
+    FontFamily->"Times New Roman"],
+  "\t ",
+  Cell[BoxData[
+      RowBox[{\(x \((t)\)\), " ", "=", " ", 
+        RowBox[{\(u \((t)\)\), " ", "+", " ", 
+          RowBox[{
+            FractionBox[
+              StyleBox[\(\[Beta]\  - \ u \((b)\)\),
+                FontSize->12], 
+              StyleBox[\(v \((b)\)\),
+                FontSize->12]], "v", \((t)\)}]}]}]]],
+  ".   ",
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is a solution to  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = p \((t)\) x' \((t)\) + q \((t)\) x \((t)\) + r \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/ShootingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ShootingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/ShootingProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Shooting Methods for O.D.E.'s",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ShootingProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Linear Shooting Method).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To approximate the solution of the boundary value problem  \n\n\
+\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = p \((t)\) x' \((t)\) + q \((t)\) x \((t)\) + r \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  "  ",
+  StyleBox["\n\nover the interval  [a,b]  by using the Runge-Kutta method of \
+order n=4.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  "The method involves solving a two systems of equations over  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ".  First solve     \n\n\t",
+  Cell[BoxData[
+      \(u' = \ y \((t)\)\)]],
+  "\t\t\t\t\t\twith\t",
+  Cell[BoxData[
+      \(u \((a)\) = \[Alpha]\)]],
+  ",  \n\t",
+  Cell[BoxData[
+      \(y' = \ p \((t)\) y \((t)\) + q \((t)\) u \((t)\) + r \((t)\)\)]],
+  "\tand\t",
+  Cell[BoxData[
+      \(y \((a)\) = \(u' \((a)\) = 0\)\)]],
+  ".  \n\t\nThen solve  \n\n\t",
+  Cell[BoxData[
+      \(v' = \ z \((t)\)\)]],
+  "\t\t\t\t\t\twith\t",
+  Cell[BoxData[
+      \(v \((a)\) = 0\)]],
+  ",   \n\t",
+  Cell[BoxData[
+      \(z' = \ 
+        p \((t)\) 
+            z \((t)\) + \(\(q\) \((t)\) \(v\) \((t)\)\(\ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \)\)\)]],
+  "\tand\t",
+  Cell[BoxData[
+      \(z \((a)\) = \(v' \((a)\) = 1\)\)]],
+  ".  \n\t\nFinally, the desired solution x(t) is the linear combination  \n\n\
+\t ",
+  Cell[BoxData[
+      RowBox[{\(x \((t)\)\), " ", "=", " ", 
+        RowBox[{\(u \((t)\)\), " ", "+", " ", 
+          RowBox[{
+            FractionBox[
+              StyleBox[\(\[Beta]\  - \ u \((b)\)\),
+                FontSize->12], 
+              StyleBox[\(v \((b)\)\),
+                FontSize->12]], "v", \((t)\)}]}]}]]],
+  ".   \n\nThe subroutine ",
+  StyleBox["Runge2D",
+    FontWeight->"Bold"],
+  " will be used to construct the two solutions  ",
+  Cell[BoxData[
+      \(u \((t)\)\)]],
+  ",  and  ",
+  Cell[BoxData[
+      \(v \((t)\)\)]],
+  ".     "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Theory of computation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  \n\n\t",
+    FontFamily->"Times New Roman"],
+  "What should the \"theory\" really say?  \"Existence theory\" needs for \
+numerical analysis needs to be \"computational theory.\"  We really need to \
+be guaranteed that two \"linearly independent\" solutions ",
+  StyleBox["u(t)",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["v(t)",
+    FontFamily->"Courier New"],
+  " given above can be computed.  In practice, if  ",
+  Cell[BoxData[
+      \(\[Alpha] \[NotEqual] \[Beta]\)]],
+  " then we need to compute ",
+  Cell[BoxData[
+      \(v \((b)\) \[NotEqual] 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge2D[a0_, b0_, \[Alpha]0_, \[Beta]0_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{a = a0, 
+          b = b0, \[Alpha] = \[Alpha]0, \[Beta] = \[Beta]0, j, 
+          m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]T\  = \ 
+          Table[\ a + \((j - 1)\) h, {j, 1, 
+              m + 1}]; \ \[IndentingNewLine]Z = \ 
+          Table[\ {\[Alpha], \[Beta]}, {j, 1, 
+              m + 1}]; \ \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_3]; \ \
+\[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                    k\_4)\);\ \ ]; \ \[IndentingNewLine]Return[
+          Z];\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the D. E.  ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{\(x''\), "+", 
+            RowBox[{
+              FractionBox[
+                StyleBox["1",
+                  FontSize->12], 
+                StyleBox["t",
+                  FontSize->12]], " ", \(x'\)}], " ", "+", 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{"1", "-", 
+                  FractionBox[
+                    StyleBox["1",
+                      FontSize->12], 
+                    StyleBox[\(4  t\^2\),
+                      FontSize->12]]}], ")"}], "x"}]}], " ", "=", 
+          " ", \(\@t\ cos \((t)\)\)}]}]]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([1, 6]\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(x \((1)\) = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x \((6)\) = \(-0.5\)\)]],
+  ". \nIs this a \"linear differential equation\" ?  Why ? \nIdentify the \
+functions p(t), q(t) and r(t).  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Look at the given D.E. and see how it is related to the form given in the \
+theorem.\n\n",
+  StyleBox["\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'' = p \((t)\) x' \((t)\) + q \((t)\) x \((t)\) + r \((t)\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(x \((a)\)\), "=", 
+        RowBox[{
+          RowBox[{"\[Alpha]", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "x", \((b)\)}], "=", 
+          "\[Beta]"}]}]]],
+  "    \n\nOur problem is seen to be \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(x''\), "=", " ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{"-", " ", 
+              FractionBox[
+                StyleBox["1",
+                  FontSize->12], 
+                StyleBox["t",
+                  FontSize->12]]}], "  ", \(x'\), \((t)\)}], " ", "-", 
+          RowBox[{
+            RowBox[{"(", 
+              RowBox[{"1", "-", 
+                FractionBox[
+                  StyleBox["1",
+                    FontSize->12], 
+                  StyleBox[\(4  t\^2\),
+                    FontSize->12]]}], ")"}], "x", \((t)\)}], " ", "+", 
+          " ", \(\@t\ cos \((t)\)\)}]}]]],
+  " with  ",
+  Cell[BoxData[
+      \(x \((1)\) = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x \((6)\) = \(-0.5\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Enter the function  p(t), q(t) and r(t) into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(p[t_] = \(-\ \(1\/t\)\);\)\ \), "\n", 
+    \(\(q[t_] = \(-\ \((1\  - \ 1\/\(4\ t\^2\))\)\);\)\ \), "\n", 
+    \(\(r[t_] = \@t\ Cos[t];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Notice that q(t) is negative over the interval. Don't worry, the solution  \
+",
+  Cell[BoxData[
+      \(v \((t)\)\)]],
+  "  can be computed with  ",
+  Cell[BoxData[
+      \(v \((6)\) \[NotEqual] 0\)]],
+  ".  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  "Consider the D. E.  ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{\(x''\), "+", 
+            RowBox[{
+              FractionBox[
+                StyleBox["1",
+                  FontSize->12], 
+                StyleBox["t",
+                  FontSize->12]], " ", \(x'\)}], " ", "+", 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{"1", "-", 
+                  FractionBox[
+                    StyleBox["1",
+                      FontSize->12], 
+                    StyleBox[\(4  t\^2\),
+                      FontSize->12]]}], ")"}], "x"}]}], " ", "=", 
+          " ", \(\@t\ cos \((t)\)\)}]}]]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([1, 6]\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(x \((1)\) = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x \((6)\) = \(-0.5\)\)]],
+  ". ",
+  "\nUse the \"linear shooting\" method and solve for the first function \
+u(t).  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the function  p(t), q(t) and r(t) into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(p[t_] = \(-\ \(1\/t\)\);\)\ \), "\n", 
+    \(\(q[t_] = \(-\ \((1\  - \ 1\/\(4\ t\^2\))\)\);\)\ \), "\n", 
+    \(\(r[t_] = \@t\ Cos[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 6.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha]\ \  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Beta]\ \  = \ \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The D. E. we wish to solve is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x'' + (\>", \(-p[t]\), "\<)x' + (\>", \(-q[
+            t]\), "\<)x = \>", r[t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with x(\>", 
+        a, "\<) = \[Alpha] = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< and x(\>", 
+        b, "\<) = \[Beta] = \>", \[Beta]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over the interval [\>", a, "\<, \>", 
+        b, "\<]\>"];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "The method involves solving a two systems of equations over  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ",  "
+}], "Text"],
+
+Cell[TextData[{
+  "First solve     \n\t",
+  Cell[BoxData[
+      \(u' = \ y \((t)\)\)]],
+  "\t\t\t\t\t\twith\t",
+  Cell[BoxData[
+      \(u \((1)\) = 1\)]],
+  ",  \n\t",
+  Cell[BoxData[
+      \(y' = \ p \((t)\) y \((t)\) + q \((t)\) u \((t)\) + r \((t)\)\)]],
+  "\tand\t",
+  Cell[BoxData[
+      \(y \((1)\) = \(u' \((1)\) = 0\)\)]],
+  ".  \nFor the latter equation use the function "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f1[t_, x_, y_] = 
+        p[t]\ y + q[t]\ x + r[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u' = y\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f1[t, x, y]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Send this to the ",
+  StyleBox["Runge2D",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " subroutine."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a\  = \ 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b\  = \ 6.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(\[Alpha]\ \  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n\  = \ 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {y, 
+          f1[t, x, y]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Runge2D[a, b, \[Alpha], 0.0, n];\)\ \ \)}], "Input"],
+
+Cell["The first solution we obtain is u.", "Text"],
+
+Cell[BoxData[{
+    \(\(U = \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ptsU = Transpose[{T, U}];\)\ \)}], "Input"],
+
+Cell["Now we can plot the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = 
+        ListPlot[ptsU, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Green, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<First solution, graph of  u(t)\>"];\)\ \), "\n", 
+    \(\(Print["\<u'(t) = y(t)\>"];\)\ \), "\n", 
+    \(\(Print["\<y'(t) = p(t)y(t) + q(t)u(t) + r(t)\>"];\)\ \), "\n", 
+    \(\(Print["\<u(\>", a, "\<) = \>", \[Alpha]];\)\ \), "\n", 
+    \(\(Print["\<y(\>", a, "\<) = u'(\>", 
+        a, "\<) = 0\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u(\>", b, "\<) = \>", 
+        U\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the \"linear shooting\" method and solve for the second function \
+v(t).  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Next, solve  \n\t",
+  Cell[BoxData[
+      \(v' = \ z \((t)\)\)]],
+  "\t\t\t\t\t\twith\t",
+  Cell[BoxData[
+      \(v \((1)\) = 0\)]],
+  ",   \n\t",
+  Cell[BoxData[
+      \(z' = \ 
+        p \((t)\) 
+            z \((t)\) + \(\(q\) \((t)\) \(v\) \((t)\)\(\ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \)\)\)]],
+  "\tand\t",
+  Cell[BoxData[
+      \(z \((1)\) = \(v' \((1)\) = 1\)\)]],
+  ".  \nFor the latter equation use the function "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f2[t_, x_, y_] = p[t]\ y + q[t]\ x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<v' = z\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", f2[t, x, y]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Send this to the ",
+  StyleBox["Runge2D",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " subroutine."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = 1.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {y, 
+          f2[t, x, y]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Runge2D[a, b, 0.0, 1.0, n];\)\ \ \)}], "Input"],
+
+Cell["The second solution we obtain is v.", "Text"],
+
+Cell[BoxData[{
+    \(\(V = \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(ptsV = Transpose[{T, V}];\)\ \)}], "Input"],
+
+Cell["Now we can plot the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph2 = 
+        ListPlot[ptsV, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Second solution, graph of  v(t)\>"];\)\ \), "\n", 
+    \(\(Print["\<v'(t) = z(t)\>"];\)\ \), "\n", 
+    \(\(Print["\<z'(t) = p(t)z(t) + q(t)v(t) + 0\>"];\)\ \ \ \ \ \ \ \), "\n\
+", 
+    \(\(Print["\<v(\>", a, "\<) = \>", 
+        V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \
+\), "\n", 
+    \(\(Print["\<z(\>", a, "\<) = v'(\>", 
+        a, "\<) = 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<v(\>", b, "\<) = \>", 
+        V\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Notice we are in luck, since  ",
+  Cell[BoxData[
+      \(v \((6)\) \[NotEqual] 0\)]],
+  ".  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Neither of the solutions in 2 and 3 solve the given boundary values.  \
+Graph them to verify this.\nHowever, you should be able to \"see the initial \
+conditions\"  u(1) = 1, u'(1) = 0  and  v(1) = 0, v'(1) = 1. for u and v, \
+respectively. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Show[graph1, graph2, \ 
+        AspectRatio \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u(\>", a, "\<) = \>", 
+        U\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \
+\), "\n", 
+    \(\(Print["\<u(\>", b, "\<) = \>", 
+        U\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<v(\>", a, "\<) = \>", 
+        V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \
+\), "\n", 
+    \(\(Print["\<v(\>", b, "\<) = \>", 
+        V\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<But we need the solution  x(t)  with\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x(\>", 
+        a, "\<) = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x(\>", b, "\<) = \>", \[Beta]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Form the desired solution to example 1."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Finally, the desired solution x(t) is the linear combination  \n\n\t ",
+  Cell[BoxData[
+      RowBox[{\(x \((t)\)\), " ", "=", " ", 
+        RowBox[{\(u \((t)\)\), " ", "+", " ", 
+          RowBox[{
+            FractionBox[
+              StyleBox[\(\[Beta]\  - \ u \((b)\)\),
+                FontSize->12], 
+              StyleBox[\(v \((b)\)\),
+                FontSize->12]], "v", \((t)\)}]}]}]]],
+  ".   \n\nFor this example we have  ",
+  Cell[BoxData[
+      RowBox[{"\[Beta]", "=", 
+        StyleBox[\(-\ 0.5\),
+          FontSize->12]}]]],
+  "  and we can locate  ",
+  Cell[BoxData[
+      \(u \((b)\)\)]],
+  " in  ",
+  Cell[BoxData[
+      \(U\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(v \((b)\)\)]],
+  " in  ",
+  Cell[BoxData[
+      \(V\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  \nSince the desired solution is  ",
+  Cell[BoxData[
+      \(x \((t)\)\)]],
+  ",  these ordinates are a linear combination of the two previously computed \
+solutions. "
+}], "Text"],
+
+Cell["The points (t, x(t)) are now formed.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"\[Beta]", " ", "=", " ", 
+          StyleBox[\(-\ 0.5\),
+            FontSize->12]}], 
+        StyleBox[";",
+          FontSize->12]}], 
+      StyleBox[" ",
+        FontSize->12]}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"X", "=", 
+          RowBox[{"U", " ", "+", " ", 
+            RowBox[{
+              FractionBox[
+                
+                StyleBox[\(\[Beta] - 
+                    U\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\
+\[RightDoubleBracket]\)\)\),
+                  FontSize->12], 
+                
+                StyleBox[\(V\_\(\(\[LeftDoubleBracket]\)\(n + 
+                        1\)\(\[RightDoubleBracket]\)\)\),
+                  FontSize->12]], "V"}]}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(pts = Transpose[{T, X}];\), " "}]}], "Input"],
+
+Cell["Now we can plot the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph2 = 
+        ListPlot[pts, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution to\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' + (\>", \(-p[t]\), "\<)x' + (\>", \(-q[
+            t]\), "\<)x = \>", r[t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x(\>", 
+        a, "\<) = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x(\>", b, "\<) = \>", \[Beta]];\)\ \)}], "Input"],
+
+Cell["The first point is", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<x(\>", 
+        a, "\<) = \>", \[Alpha]];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<x(\>", a, "\<) = \>", 
+      X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\)}], \
+"Input"],
+
+Cell["The last point is", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<x(\>", 
+        b, "\<) = \>", \[Beta]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x(\>", b, "\<) = \>", 
+        X\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the analytic solution to  ",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{\(x''\), " ", "+", 
+            RowBox[{
+              FractionBox[
+                StyleBox["1",
+                  FontSize->12], 
+                StyleBox["t",
+                  FontSize->12]], " ", \(x'\)}], " ", "+", 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{"1", "-", 
+                  FractionBox[
+                    StyleBox["1",
+                      FontSize->12], 
+                    StyleBox[\(4  t\^2\),
+                      FontSize->12]]}], ")"}], "x"}]}], " ", "=", 
+          " ", \(\@t\ cos \((t)\)\)}]}]]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([1, 6]\)\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(x \((1)\) = 1.0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x \((6)\) = \(-0.5\)\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Now let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " construct the analytic solution to the differential equation.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(de = \(x''\)[
+            t] == \@t\ Cos[t] + \((\(-1\) + 1\/\(4\ t\^2\))\)\ x[
+                t] - \(x'\)[t]\/t;\)\ \), "\n", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(solset = DSolve[de, x[t], t]\ \ \)}], "Input"],
+
+Cell["\<\
+Notice that this \"real number\" D. E. has a solution involving \"complex \
+numbers.\" 
+Ever wonder if we could \"pull it off\" ?
+
+Onward to the boundary values.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(bdd = {x[1] \[Equal] 1, 
+          x[6] \[Equal] \(-1\)\/2};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[bdd];\)\ \), "\[IndentingNewLine]", 
+    \(solbdd = DSolve[{de, bdd}, x[t], t]\ \ \)}], "Input"],
+
+Cell["Now dig out the formula and store it in the function z[t].", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(z[t_] = 
+        solbdd\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z[t] = \>", z[t]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z[t] = \>", MapAll[FullSimplify, z[t]]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+How could this ever be the solution ?  Dare we try to plot it ?\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[z[t], {t, 1, 6}, 
+        PlotStyle \[Rule] Blue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solution to\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[bdd];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now that wasn't so bad was it. \n\nHey!  Where's the numerical analysis. \n\
+If we wanted some sense out of that complex formula we can get it with \
+\"decimal\" numbers. \nFirst get rid of ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s notation for the arbitrary constants, and simplify.\nThis takes ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " a very long time to think it out.  You must wait a minute while it \
+thinks. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<z[t] = \>", z[t]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ReplaceAll[
+          solset, {C[1] \[Rule] c\_1, 
+            C[2] \[Rule] c\_2}];\)\ \), "\[IndentingNewLine]", 
+    \(\(z[t_] = 
+        MapAll[FullSimplify, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z[t] = \>", z[t]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Numerically solve a system of equations for the constants ",
+  Cell[BoxData[
+      \(c\_1, c\_2\)]]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equations\>"];\)\ \), "\[IndentingNewLine]", 
+    \(eqns = {z[1] \[Equal] 1, z[6] \[Equal] \(-1\)\/2}\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[eqns];\)\ \), "\[IndentingNewLine]", 
+    \(coeff = 
+      NSolve[{z[1] \[Equal] 1, z[6] \[Equal] \(-1\)\/2}, {c\_1, 
+          c\_2}]\ \)}], "Input"],
+
+Cell["Now form the function ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<z[t] = \>", 
+        ReplaceAll[z[t], 
+          coeff\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell["Get rid of that complex number stuff.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<z[t] = \>", 
+        Chop[ExpToTrig[
+            ReplaceAll[z[t], 
+              coeff\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)]]]\ \ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Looks like a good old fashioned function composed of \"well known\" \
+functions.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[t_] = 
+        Chop[ExpToTrig[
+            ReplaceAll[z[t], 
+              coeff\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The differential equation is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x[t] = \>", z[t]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The boundary values are:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[bdd];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[coeff];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x[t] = \>", f[t]];\)\ \)}], "Input"],
+
+Cell["\<\
+Now plot the analytic solution to the differential equation.  \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The differential equation and boundary values are\>"];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[de];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[bdd];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[t], {t, 1, 6}, 
+        PlotRange \[Rule] {{1.0, 6.2}, {\(-3.2\), 1.2}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[1, 6, 1], Range[\(-3\), 2, 1]}, 
+        AxesLabel \[Rule] {"\<t\>", "\<x\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x[t] = \>", f[t]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Shooting Methods for ODE's",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/ShootingBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Shooting Methods for ODE's",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ShootingBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 202, 5, 35, "Text"],
+Cell[1981, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3460, 112, 1319, 37, 239, "Text"],
+Cell[4782, 151, 3584, 116, 241, "Text"],
+Cell[8369, 269, 440, 13, 52, "Text"],
+Cell[8812, 284, 3007, 97, 238, "Text"],
+Cell[11822, 383, 631, 20, 33, "Text"],
+Cell[12456, 405, 1636, 40, 128, "Text"],
+Cell[14095, 447, 2568, 77, 324, "Text"],
+Cell[16666, 526, 631, 20, 33, "Text"],
+Cell[17300, 548, 617, 19, 33, "Text"],
+Cell[17920, 569, 864, 25, 109, "Text"],
+Cell[18787, 596, 1533, 54, 305, "Text",
+  Evaluatable->False],
+Cell[20323, 652, 851, 25, 90, "Text"],
+Cell[21177, 679, 1671, 28, 309, "Input"],
+Cell[22851, 709, 1100, 37, 76, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[23976, 750, 101, 2, 33, "Text"],
+Cell[24080, 754, 1327, 42, 151, "Text"],
+Cell[25410, 798, 138, 5, 33, "Text"],
+Cell[25551, 805, 175, 3, 99, "Input"],
+Cell[25729, 810, 240, 9, 33, "Text"]
+}, Closed]],
+Cell[25984, 822, 1088, 39, 54, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[27097, 865, 101, 2, 33, "Text"],
+Cell[27201, 869, 138, 5, 33, "Text"],
+Cell[27342, 876, 929, 17, 279, "Input"],
+Cell[28274, 895, 142, 5, 33, "Text"],
+Cell[28419, 902, 393, 14, 90, "Text"],
+Cell[28815, 918, 224, 4, 70, "Input"],
+Cell[29042, 924, 145, 6, 34, "Text"],
+Cell[29190, 932, 396, 7, 130, "Input"],
+Cell[29589, 941, 50, 0, 33, "Text"],
+Cell[29642, 943, 189, 3, 51, "Input"],
+Cell[29834, 948, 46, 0, 33, "Text"],
+Cell[29883, 950, 716, 13, 170, "Input"]
+}, Closed]],
+Cell[30614, 966, 244, 8, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[30883, 978, 101, 2, 33, "Text"],
+Cell[30987, 982, 447, 17, 90, "Text"],
+Cell[31437, 1001, 210, 3, 70, "Input"],
+Cell[31650, 1006, 145, 6, 34, "Text"],
+Cell[31798, 1014, 318, 6, 110, "Input"],
+Cell[32119, 1022, 51, 0, 33, "Text"],
+Cell[32173, 1024, 189, 3, 51, "Input"],
+Cell[32365, 1029, 46, 0, 33, "Text"],
+Cell[32414, 1031, 795, 16, 170, "Input"],
+Cell[33212, 1049, 124, 5, 33, "Text"]
+}, Closed]],
+Cell[33351, 1057, 407, 10, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[33783, 1071, 101, 2, 33, "Text"],
+Cell[33887, 1075, 912, 19, 170, "Input"]
+}, Closed]],
+Cell[34814, 1097, 205, 7, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[35044, 1108, 101, 2, 33, "Text"],
+Cell[35148, 1112, 1083, 35, 134, "Text"],
+Cell[36234, 1149, 52, 0, 33, "Text"],
+Cell[36289, 1151, 876, 26, 91, "Input"],
+Cell[37168, 1179, 46, 0, 33, "Text"],
+Cell[37217, 1181, 585, 10, 130, "Input"],
+Cell[37805, 1193, 34, 0, 33, "Text"],
+Cell[37842, 1195, 227, 5, 50, "Input"],
+Cell[38072, 1202, 33, 0, 33, "Text"],
+Cell[38108, 1204, 239, 5, 50, "Input"]
+}, Closed]],
+Cell[38362, 1212, 1012, 36, 35, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[39399, 1252, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[39552, 1258, 210, 7, 33, "Text",
+  Evaluatable->False],
+Cell[39765, 1267, 254, 5, 83, "Input"],
+Cell[40022, 1274, 233, 8, 90, "Text",
+  Evaluatable->False],
+Cell[40258, 1284, 275, 5, 103, "Input"],
+Cell[40536, 1291, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[40661, 1295, 295, 5, 70, "Input"],
+Cell[40959, 1302, 135, 4, 33, "Text",
+  Evaluatable->False],
+Cell[41097, 1308, 336, 6, 110, "Input"],
+Cell[41436, 1316, 531, 13, 128, "Text",
+  Evaluatable->False],
+Cell[41970, 1331, 505, 11, 110, "Input"],
+Cell[42478, 1344, 178, 6, 33, "Text",
+  Evaluatable->False],
+Cell[42659, 1352, 159, 2, 63, "Input"],
+Cell[42821, 1356, 179, 4, 63, "Input"],
+Cell[43003, 1362, 86, 2, 33, "Text",
+  Evaluatable->False],
+Cell[43092, 1366, 181, 4, 30, "Input"],
+Cell[43276, 1372, 101, 2, 33, "Text",
+  Evaluatable->False],
+Cell[43380, 1376, 215, 5, 30, "Input"],
+Cell[43598, 1383, 152, 5, 33, "Text",
+  Evaluatable->False],
+Cell[43753, 1390, 987, 19, 290, "Input"],
+Cell[44743, 1411, 134, 4, 33, "Text",
+  Evaluatable->False],
+Cell[44880, 1417, 691, 12, 150, "Input"]
+}, Closed]],
+Cell[45586, 1432, 158, 3, 32, "Text"],
+Cell[45747, 1437, 566, 16, 33, "Text"],
+Cell[46316, 1455, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

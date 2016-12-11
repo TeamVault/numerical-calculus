@@ -1,0 +1,3003 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    102584,       2850]*)
+(*NotebookOutlinePosition[    103277,       2874]*)
+(*  CellTagsIndexPosition[    103233,       2870]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Nelder-Mead Search for a Minimum",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Nelder-Mead Method",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold"],
+  StyleBox["  \n\tThe ",
+    FontFamily->"Times-Roman"],
+  ButtonBox["Nelder-Mead method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Nelder-MeadMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" is a simplex method for finding a local minimum of a function of \
+several variables.  It's discovery is attributed to J. A. Nelder and ",
+    FontFamily->"Times-Roman"],
+  "R. ",
+  StyleBox["Mead.  For two variables, a simplex is a triangle, and the method \
+is a pattern search that compares function values at the three vertices of a \
+triangle.  The worst vertex, where ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  StyleBox[" is largest, is rejected and replaced with a new vertex.  A new \
+triangle is formed and the search is continued.  The process generates a \
+sequence of triangles (which might have different shapes), for which the \
+function values at the vertices get smaller and smaller.  The size of the \
+triangles is reduced and the coordinates of the minimum point are found.  \n\t\
+The algorithm is stated using the term ",
+    FontFamily->"Times-Roman"],
+  ButtonBox["simplex",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Simplex.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" (a generalized triangle in",
+    FontFamily->"Times-Roman"],
+  " ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " ",
+  StyleBox["dimensions) and will find the minimum of a function of",
+    FontFamily->"Times-Roman"],
+  " ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " ",
+  StyleBox["variables.  It is effective and computationally compact. ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Initial Triangle  ",
+    FontFamily->"Times-Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      \(TraditionalForm\`BGW\&\[OverParenthesis]\)],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tLet ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  StyleBox[" ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["be the function that is to be minimized.  To start, we are given \
+three vertices of a triangle:  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox[\(V\&\[RightVector]\),
+            FontWeight->"Bold"], "k"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(x\_k\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_k\)}], ")"}]}]]],
+  StyleBox[",  for  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3"}]]],
+  StyleBox[".  The function ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  StyleBox[" ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["is then evaluated at each of the three points:  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(z\_k\), " ", "=", " ", 
+        RowBox[{"f", 
+          RowBox[{"(", 
+            RowBox[{\(x\_k\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(y\_k\)}], ")"}]}]}]]],
+  StyleBox[",  for  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3"}]]],
+  StyleBox[".  The subscripts are then reordered so that  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(z\_1 \[LessEqual] z\_2 \[LessEqual] z\_3\)]],
+  StyleBox[".  We use the notation  \n\n(1)\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(B\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_1\)}], ")"}]}]]],
+  StyleBox[",  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["  ",
+          FontFamily->"Times-Roman"], 
+        RowBox[{
+          StyleBox[\(G\&\[RightVector]\),
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"(", 
+            RowBox[{\(x\_2\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(y\_2\)}], ")"}]}]}]]],
+  StyleBox[",  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(x\_3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_3\)}], ")"}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["\n\n",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["to help remember that",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["is the best vertex, ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is good (next to best), and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is the worst vertex.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Midpoint of the Good Side",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThe construction process uses the midpoint ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["of the line segment joining",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  It is found by averaging the coordinates:  \n",
+    FontFamily->"Times-Roman"],
+  "\n(2)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{\(1\/2\), 
+            RowBox[{"(", 
+              RowBox[{
+                StyleBox[\(B\&\[RightVector]\),
+                  FontWeight->"Bold"], "+", " ", 
+                StyleBox[\(G\&\[RightVector]\),
+                  FontWeight->"Bold"]}], ")"}]}], " ", "=", 
+          " ", \((\(x\_1 + x\_2\)\/2, \(y\_1 + y\_2\)\/2)\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Reflection Using the Point  ",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThe function decreases as we move along the side of the \
+triangle from ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["to",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[", and it decreases as we move along the side from ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["to",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          RowBox[{
+            StyleBox[" ",
+              FontFamily->"Times-Roman"], " "}]], 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  Hence it is feasible that ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  StyleBox[" ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["takes on smaller values at points that lie away from ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["on the opposite side of the line between",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(B\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          RowBox[{
+            StyleBox[" ",
+              FontFamily->"Times-Roman"], " "}]], 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  We choose a test point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["that is obtained by \[OpenCurlyDoubleQuote]reflecting\
+\[CloseCurlyDoubleQuote] the triangle through the side ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      FormBox[
+        StyleBox[\(BG\&\[OverParenthesis]\),
+          FontWeight->"Bold"], TraditionalForm]]],
+  StyleBox[". To determine ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[", we first find the midpoint ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["of the side ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      FormBox[
+        StyleBox[\(BG\&\[OverParenthesis]\),
+          FontWeight->"Bold"], TraditionalForm]]],
+  StyleBox[".  Then draw the line segment from ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["to ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and call its length ",
+    FontFamily->"Times-Roman"],
+  StyleBox["d",
+    FontFamily->"Courier New"],
+  StyleBox[".  This last segment is extended a distance ",
+    FontFamily->"Times-Roman"],
+  StyleBox["d",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times-Italic",
+    FontSlant->"Italic"],
+  StyleBox["through ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["to locate the point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  The vector formula for ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is  \n\n(3)\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"], " ", "+", 
+            RowBox[{"(", 
+              RowBox[{
+                StyleBox[\(M\&\[RightVector]\),
+                  FontWeight->"Bold"], "-", 
+                StyleBox[\(W\&\[RightVector]\),
+                  FontWeight->"Bold"]}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{"2", 
+              StyleBox[\(M\&\[RightVector]\),
+                FontWeight->"Bold"]}], "-", " ", 
+            StyleBox[\(W\&\[RightVector]\),
+              FontWeight->"Bold"]}]}]}]]],
+  ".  \n"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Expansion Using the Point  ",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(E\&\[RightVector]\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tIf the function value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is smaller than the function value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" then we have moved in the correct direction toward the minimum.  \
+Perhaps the minimum is just a bit farther than the point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " .",
+  StyleBox["  So we extend the line segment through ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["to the point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  This forms an expanded triangle ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(TraditionalForm\`BGE\&\[OverParenthesis]\)],
+    FontWeight->"Bold"],
+  StyleBox[".  The point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is found by moving an additional distance ",
+    FontFamily->"Times-Roman"],
+  StyleBox["d",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times-Italic",
+    FontSlant->"Italic"],
+  StyleBox["along the line joining ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If the function value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is less than the function value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[", then we have found a better vertex than ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ".",
+  StyleBox["  The vector formula for ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is  \n\t\n(4)\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(R\&\[RightVector]\),
+              FontWeight->"Bold"], "+", 
+            RowBox[{"(", 
+              RowBox[{
+                StyleBox[\(R\&\[RightVector]\),
+                  FontWeight->"Bold"], "-", 
+                StyleBox[\(M\&\[RightVector]\),
+                  FontWeight->"Bold"]}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{"2", 
+              StyleBox[\(R\&\[RightVector]\),
+                FontWeight->"Bold"]}], " ", "-", 
+            StyleBox[" ",
+              FontFamily->"Times-Roman"], 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"]}]}]}]]],
+  ".",
+  StyleBox["\t",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Contraction Using the Point ",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(C\&\[RightVector]\),
+          FontWeight->"Bold"]}]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tIf the function values at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(W\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["are the same, another point must be tested.  Perhaps the function \
+is smaller at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" but we cannot replace ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["with ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["because we must have a triangle.  Consider the two midpoints ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(\(C\_1\)\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(\(C\_2\)\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[" of the line segments ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      FormBox[
+        StyleBox[\(WM\&\[OverParenthesis]\),
+          FontWeight->"Bold"], TraditionalForm]]],
+  StyleBox[" ",
+    FontFamily->"Times-BoldItalic",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      FormBox[
+        StyleBox[\(MR\&\[OverParenthesis]\),
+          FontWeight->"Bold"], TraditionalForm]]],
+  StyleBox[", respectively.  The point with the smaller function value is \
+called ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(C\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" and the new triangle is ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(TraditionalForm\`BGC\&\[OverParenthesis]\)],
+    FontWeight->"Bold"],
+  StyleBox[".  \nNote:  The choice between ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(\(C\_1\)\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(\(C\_2\)\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[" might seem inappropriate for the two-dimensional case, but it is \
+important in higher dimensions.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Shrink Toward  ",
+    FontFamily->"Times-Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tIf the function value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(C\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[" is not less than the value at ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" the points ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["must be shrunk toward ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        StyleBox[\(B\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  The point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is replaced with ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  " ",
+  StyleBox["is replaced with ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(S\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ",",
+  StyleBox[" which is the midpoint of the line segment joining ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["with ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Logical Decisions for Each Step",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\nA computationally efficient algorithm should perform function \
+evaluations only if needed.  In each step, a new vertex is found, which \
+replaces ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  ".",
+  StyleBox[" As soon as it is",
+    FontFamily->"Times-Roman"],
+  StyleBox[" ",
+    FontFamily->"Times-Bold"],
+  StyleBox["found, further investigation is not needed, and the iteration \
+step is completed.  The logical details for two-dimensional cases are given \
+in the proof.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/NelderMeadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NelderMeadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Nelder-Mead Search for a Minimum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "To approximate a local minimum of  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]]],
+  ",  where  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  "  is a continuous function of  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  real variables, and given the  ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  "  initial starting points  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(V\&\[RightVector]\_k\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", 
+          RowBox[{\(v\_\(k, 1\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(v\_\(k, 2\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(v\_\(k, n\)\)}], ")"}]}]]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n + 1\)}]]],
+  ".  \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  This is also known as the polytope method.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/NelderMeadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NelderMeadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Nelder-Mead Search for a Minimum).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "To approximate a local minimum of  ",
+  Cell[BoxData[
+      \(f \((x\_1, x\_2)\)\)]],
+  ",  where  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  "  is a continuous function of  ",
+  StyleBox["2",
+    FontFamily->"Courier New"],
+  "  real variables, and given the ",
+  Cell[BoxData[
+      \(3\)]],
+  " initial starting points  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(V\&\[RightVector]\_k\),
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", 
+          RowBox[{\(v\_\(k, 1\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(v\_\(k, 2\)\)}], ")"}]}]]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3"}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Nelder2D[V0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{"k", ",", 
+                  StyleBox["Improve",
+                    FontColor->RGBColor[0, 0, 1]]}], "}"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+                RowBox[{
+                  RowBox[{
+                    StyleBox["Improve",
+                      FontColor->RGBColor[0, 0, 1]], ":=", 
+                    RowBox[{"Module", "[", 
+                      RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                        RowBox[{
+                          RowBox[{
+                            StyleBox[\(M\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                
+                                StyleBox[\(B\&\[RightVector] + 
+                                    G\&\[RightVector]\),
+                                  FontWeight->"Bold"], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          StyleBox[" ",
+                            FontWeight->"Bold"], 
+                          "\[IndentingNewLine]", \(R\&\[RightVector] = 
+                            M\&\[RightVector] + \((M\&\[RightVector] - 
+                                  W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(E\&\[RightVector] = 
+                            R\&\[RightVector] + \((R\&\[RightVector] - 
+                                  M\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[E\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              E\&\[RightVector]; \ Goto[end];]\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[R\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              R\&\[RightVector]; \ Goto[end];]\), ";", " ", 
+                          
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_1 = \(1\
+\/2\) \((M\&\[RightVector] + W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_2 = \(1\
+\/2\) \((M\&\[RightVector] + R\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_1] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_1; \ Goto[end];]\), ";", " ",
+                           "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_2] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_2; \ Goto[end];]\), ";", 
+                          "  ", "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(W\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(W\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], " ", "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(G\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(G\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          "\[IndentingNewLine]", \(Label[end]\), ";"}]}], 
+                      "]"}]}], ";"}], "  ", "\[IndentingNewLine]", 
+                
+                StyleBox[\( (*The\ main\ part\ of\ the\ subroutine\ is\ \
+\(\(here\)\(.\)\)*) \),
+                  FontColor->RGBColor[1, 0, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[1, 0, 0]], "  ", 
+                "\[IndentingNewLine]", \({B\&\[RightVector], 
+                    G\&\[RightVector], W\&\[RightVector]}\  = \ N[V0]\), ";", 
+                " ", "\[IndentingNewLine]", \({Fb, Fg, Fw}\  = \ 
+                  Thread[f[{B\&\[RightVector], G\&\[RightVector], 
+                        W\&\[RightVector]}]]\), ";", " ", 
+                "\[IndentingNewLine]", \({{Fb, Fg, Fw}, {B\&\[RightVector], 
+                      G\&\[RightVector], W\&\[RightVector]}} = 
+                  Transpose[
+                    Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                            G\&\[RightVector], W\&\[RightVector]}}]]]\), ";", 
+                " ", "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                  PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                  PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                "\[IndentingNewLine]", \(k\  = \ 1\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  
+                  RowBox[{\(k \[LessEqual] max\), " ", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                      StyleBox["Improve",
+                        FontColor->RGBColor[0, 0, 1]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 0, 1]], " ", 
+                      "\[IndentingNewLine]", \({Fb, Fg, Fw}\  = \ 
+                        Thread[
+                          f[{B\&\[RightVector], G\&\[RightVector], 
+                              W\&\[RightVector]}]]\), ";", " ", 
+                      "\[IndentingNewLine]", \({{Fb, Fg, 
+                            Fw}, {B\&\[RightVector], G\&\[RightVector], 
+                            W\&\[RightVector]}} = 
+                        Transpose[
+                          Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                                  G\&\[RightVector], W\&\[RightVector]}}]]]\),
+                       ";", " ", 
+                      "\[IndentingNewLine]", \(Print["\<f[\>", 
+                        PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                        PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                        PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                      "\[IndentingNewLine]", \(k\  = \ k + 1\), ";"}]}], " ", 
+                  "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Return[{Fb, B\&\[RightVector]}]\), 
+                ";"}]}], " ", "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Nelder-Mead method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, x, y];\)\), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[TextData[StyleBox["Start with the three vertices  ",
+  FontFamily->"Times-Roman"]], "Text"],
+
+Cell[BoxData[{
+    \(\(V\&\[RightVector]\_1\  = \ {0.0, 0.0};\)\ \), "\[IndentingNewLine]", 
+    \(\(V\&\[RightVector]\_2\  = \ {1.2, 0.0};\)\ \), "\[IndentingNewLine]", 
+    \(\(V\&\[RightVector]\_3\  = \ {0.0, 0.8};\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The function",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(f \((x, y)\)\)]],
+  " ",
+  StyleBox["takes on the values  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<f[\!\(V\&\[RightVector]\_1\)] = f[\>\"", 
+        PaddedForm[V\&\[RightVector]\_1, {2, 2}], "\<] = \>", 
+        PaddedForm[
+          f[V\&\[RightVector]\_1], {7, 6}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(V\&\[RightVector]\_2\)] = f[\>\"", 
+        PaddedForm[V\&\[RightVector]\_2, {2, 2}], "\<] = \>", 
+        PaddedForm[
+          f[V\&\[RightVector]\_2], {7, 6}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(V\&\[RightVector]\_3\)] = f[\>\"", 
+        PaddedForm[V\&\[RightVector]\_3, {2, 2}], "\<] = \>", 
+        PaddedForm[f[V\&\[RightVector]\_3], {7, 6}]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The function values must be compared to determine ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(B\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[", ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[\(W\&\[RightVector]\),
+        FontWeight->"Bold"]]],
+  StyleBox[";  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        StyleBox[\(B\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", \({1.2, 0.0}\)}], ";", 
+      StyleBox[
+        RowBox[{" ", 
+          StyleBox["  ",
+            FontFamily->"Times-Roman"]}]], 
+      RowBox[{
+        StyleBox[\(G\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", \({0.0, 0.8}\)}], ";", "  ", 
+      RowBox[{
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", \({0.0, 0.0}\)}], ";", 
+      "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["The vertex",
+    FontFamily->"Times-Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", \((0.0, 0.0)\)}]]],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["will be replaced.  The points ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(M\&\[RightVector]\), " ", "=", " ", 
+          RowBox[{\(1\/2\), 
+            RowBox[{"(", 
+              RowBox[{
+                StyleBox[\(B\&\[RightVector]\),
+                  FontWeight->"Bold"], " ", "+", " ", 
+                StyleBox[\(G\&\[RightVector]\),
+                  FontWeight->"Bold"]}], ")"}]}]}],
+        FontWeight->"Bold"]]],
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(R\&\[RightVector]\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"2", 
+              StyleBox[\(M\&\[RightVector]\),
+                FontWeight->"Bold"]}], " ", "-", 
+            " ", \(W\&\[RightVector]\)}]}],
+        FontWeight->"Bold"]]],
+  StyleBox[" are constructed.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<f[B] = f[\>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                StyleBox[\(B\&\[RightVector]\),
+                  FontWeight->"Bold"], 
+                StyleBox[" ",
+                  FontWeight->"Bold"], ",", \({2, 2}\)}], "]"}], ",", 
+            "\"\<] = \>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                RowBox[{"f", "[", 
+                  StyleBox[\(B\&\[RightVector]\),
+                    FontWeight->"Bold"], 
+                  StyleBox[" ",
+                    FontWeight->"Bold"], "]"}], ",", \({7, 6}\)}], "]"}]}], 
+          "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<f[G] = f[\>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                StyleBox[\(G\&\[RightVector]\),
+                  FontWeight->"Bold"], ",", \({2, 2}\)}], "]"}], ",", 
+            "\"\<] = \>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                RowBox[{"f", "[", 
+                  StyleBox[\(G\&\[RightVector]\),
+                    FontWeight->"Bold"], "]"}], ",", \({7, 6}\)}], "]"}]}], 
+          "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<f[W] = f[\>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                StyleBox[\(W\&\[RightVector]\),
+                  FontWeight->"Bold"], ",", \({2, 2}\)}], "]"}], ",", 
+            "\"\<] = \>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                RowBox[{"f", "[", 
+                  StyleBox[\(W\&\[RightVector]\),
+                    FontWeight->"Bold"], "]"}], ",", \({7, 6}\)}], "]"}]}], 
+          "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        StyleBox[\(M\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{\(1\/2\), 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox[\(B\&\[RightVector]\),
+                FontWeight->"Bold"], " ", "+", " ", 
+              StyleBox[\(G\&\[RightVector]\),
+                FontWeight->"Bold"]}], 
+            StyleBox[")",
+              FontWeight->"Bold"]}]}]}], 
+      StyleBox[";",
+        FontWeight->"Bold"]}], "\n", 
+    RowBox[{
+      RowBox[{
+        StyleBox[\(R\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"2", 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"]}], " ", "-", " ", 
+          StyleBox[\(W\&\[RightVector]\),
+            FontWeight->"Bold"]}]}], 
+      StyleBox[";",
+        FontWeight->"Bold"]}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<  M = \!\(1\/2\)(B + G) = \!\(1\/2\)(\>\"", ",", 
+            StyleBox[\(B\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox["\"\< + \>\"",
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox[\(G\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], "\"\<) = \>\"", ",", 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<  R =  2 M - W  = 2(\>\"", ",", 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox["\"\< - \>\"",
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox[\(W\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox["\"\<) = \>\"",
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(R\&\[RightVector]\),
+              FontWeight->"Bold"]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<f[R] = f[\>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                StyleBox[\(R\&\[RightVector]\),
+                  FontWeight->"Bold"], ",", \({2, 2}\)}], "]"}], ",", 
+            "\"\<] = \>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                RowBox[{"f", "[", 
+                  StyleBox[\(R\&\[RightVector]\),
+                    FontWeight->"Bold"], "]"}], ",", \({7, 6}\)}], "]"}]}], 
+          "]"}], ";"}], " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The function value  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(R\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", "[", 
+            StyleBox[\({1.2, 0.8}\),
+              FontWeight->"Bold"], "]"}], " ", "=", " ", \(-4.480000\)}]}]]],
+  StyleBox["  is less than  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(G\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", "[", 
+            StyleBox[\({0.0, 0.8}\),
+              FontWeight->"Bold"], "]"}], " ", "=", " ", \(-0.160000\)}]}]]],
+  StyleBox[",  so the situation is Case (i).  \nSince  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(R\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}], "\[LessEqual]", 
+        RowBox[{"f", "[", 
+          StyleBox[\(B\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox[",  we have moved in the right direction, and the vertex ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        RowBox[{
+          StyleBox[\(E\&\[RightVector]\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["=",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{
+            StyleBox[\(2  R\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["-",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontFamily->"Times-Roman",
+              FontWeight->"Bold"], 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[" must be constructed:",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"2", 
+            StyleBox[\(R\&\[RightVector]\),
+              FontWeight->"Bold"]}], " ", "-", " ", 
+          StyleBox[\(M\&\[RightVector]\),
+            FontWeight->"Bold"]}]}], 
+      StyleBox[";",
+        FontWeight->"Bold"]}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<  E  =  2 R - M  = 2\>\"", ",", 
+            StyleBox[\(R\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox["\"\< - \>\"",
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox[\(M\&\[RightVector]\),
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], 
+            StyleBox["\"\<) = \>\"",
+              FontWeight->"Bold"], 
+            StyleBox[",",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(E\&\[RightVector]\),
+              FontWeight->"Bold"]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<f[E] = f[\>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                StyleBox[\(E\&\[RightVector]\),
+                  FontWeight->"Bold"], ",", \({2, 2}\)}], "]"}], ",", 
+            "\"\<] = \>\"", ",", 
+            RowBox[{"PaddedForm", "[", 
+              RowBox[{
+                RowBox[{"f", "[", 
+                  StyleBox[\(E\&\[RightVector]\),
+                    FontWeight->"Bold"], "]"}], ",", \({7, 6}\)}], "]"}]}], 
+          "]"}], ";"}], " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The function value  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(E\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", "[", 
+            StyleBox[\({1.8, 1.2}\),
+              FontWeight->"Bold"], "]"}], " ", "=", " ", \(-5.880000\)}]}]]],
+  StyleBox["  is less than  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(B\&\[RightVector]\),
+            FontWeight->"Bold"], "]"}], " ", "=", 
+        " ", \(f[{1.2, 0.0}]\  = \ \(-3.360000\)\)}]]],
+  StyleBox[",  and we replace",
+    FontFamily->"Times-Roman"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(W\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[" with ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[" ",
+          FontFamily->"Times-Roman"], 
+        StyleBox[\(E\&\[RightVector]\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  StyleBox["and the new triangle has vertices ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V\&\[RightVector]\_1\  = \ {1.8, 1.2};\)\ \), "\[IndentingNewLine]", 
+    \(\(V\&\[RightVector]\_2\  = \ {1.2, 0.0};\)\ \), "\[IndentingNewLine]", 
+    \(\(V\&\[RightVector]\_3\  = \ {0.0, 0.8};\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The process continues and generates a sequence of triangles that \
+converges down on the solution point  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({0.0, 0.8}\)]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"],
+  "The",
+  StyleBox[" computer implementation of ",
+    FontFamily->"Times-Roman"],
+  "the Nelder-Mead ",
+  StyleBox["algorithm is given below ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{0.0, 0.0}, {1.2, 0.0}, {0.0, 0.8}};\)\ \ \), "\n", 
+    \(\(Nelder2D[V, 50];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+        NumberForm[Fb, 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 1.8}, {y, 1.2}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 15], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["A more efficient subroutine",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\nThe following subroutine stores the function values in the \
+variables  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(Fb, Fg, Fw\)]],
+  "  and the convergence criterion ",
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  " is used to terminate the algorithm when \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          StyleBox[\(B\&\[RightVector]\),
+            FontWeight->"Bold"], " ", "]"}], "<", 
+        RowBox[{"f", "[", 
+          StyleBox[\(W\&\[RightVector]\),
+            FontWeight->"Bold"], " ", "]"}], "\[LessEqual]", " ", 
+        RowBox[{
+          StyleBox[\(f[B\&\[RightVector]\ ]\),
+            FontWeight->"Bold"], "+", "\[Epsilon]"}]}]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Nelder2D[V0_, \[Epsilon]_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{"k", ",", 
+                  StyleBox["Improve",
+                    FontColor->RGBColor[0, 0, 1]], ",", "Y", ",", "V"}], 
+                "}"}], ",", "\[IndentingNewLine]", 
+              RowBox[{
+                RowBox[{
+                  RowBox[{
+                    StyleBox["Improve",
+                      FontColor->RGBColor[0, 0, 1]], ":=", 
+                    RowBox[{"Module", "[", 
+                      RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                        RowBox[{
+                          RowBox[{
+                            StyleBox[\(M\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                
+                                StyleBox[\(B\&\[RightVector] + 
+                                    G\&\[RightVector]\),
+                                  FontWeight->"Bold"], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          StyleBox[" ",
+                            FontWeight->"Bold"], 
+                          "\[IndentingNewLine]", \(R\&\[RightVector] = 
+                            M\&\[RightVector] + \((M\&\[RightVector] - 
+                                  W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(E\&\[RightVector] = 
+                            R\&\[RightVector] + \((R\&\[RightVector] - 
+                                  M\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[E\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              E\&\[RightVector]; Fw = f[E\&\[RightVector]]; \ 
+                            Goto[end];]\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[R\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              R\&\[RightVector]; Fw = f[R\&\[RightVector]]; \ 
+                            Goto[end];]\), ";", " ", 
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_1 = \(1\
+\/2\) \((M\&\[RightVector] + W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_2 = \(1\
+\/2\) \((M\&\[RightVector] + R\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_1] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_1; 
+                            Fw = f[C\&\[RightVector]\_1]; \ Goto[end];]\), 
+                          ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_2] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_2; 
+                            Fw = f[C\&\[RightVector]\_2]; \ Goto[end];]\), 
+                          ";", "  ", "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(W\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(W\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          RowBox[{
+                            StyleBox[
+                              RowBox[{
+                                StyleBox["F",
+                                  FontWeight->"Bold"], "w"}]], "=", 
+                            RowBox[{"f", "[", 
+                              StyleBox[\(W\&\[RightVector]\),
+                                FontWeight->"Bold"], "]"}]}], ";", " ", 
+                          "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(G\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(G\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          RowBox[{
+                            StyleBox[
+                              RowBox[{
+                                StyleBox["F",
+                                  FontWeight->"Bold"], "g"}]], "=", 
+                            RowBox[{"f", "[", 
+                              StyleBox[\(G\&\[RightVector]\),
+                                FontWeight->"Bold"], "]"}]}], ";", " ", 
+                          "\[IndentingNewLine]", \(Label[end]\), ";"}]}], 
+                      "]"}]}], ";"}], "  ", "\[IndentingNewLine]", 
+                
+                StyleBox[\( (*The\ main\ part\ of\ the\ subroutine\ is\ \
+\(\(here\)\(.\)\)*) \),
+                  FontColor->RGBColor[1, 0, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[1, 0, 0]], "  ", 
+                "\[IndentingNewLine]", \({B\&\[RightVector], 
+                    G\&\[RightVector], W\&\[RightVector]}\  = \ N[V0]\), ";", 
+                " ", "\[IndentingNewLine]", \({Fb, Fg, Fw}\  = \ 
+                  Thread[f[{B\&\[RightVector], G\&\[RightVector], 
+                        W\&\[RightVector]}]]\), ";", " ", 
+                "\[IndentingNewLine]", \({{Fb, Fg, Fw}, {B\&\[RightVector], 
+                      G\&\[RightVector], W\&\[RightVector]}} = 
+                  Transpose[
+                    Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                            G\&\[RightVector], W\&\[RightVector]}}]]]\), ";", 
+                " ", "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                  PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                  PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                "\[IndentingNewLine]", \(k\  = \ 1\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  
+                  RowBox[{\(Or[\ And[Fw > Fb + \[Epsilon], k < 100], k < 2]\),
+                     ",", "\[IndentingNewLine]", 
+                    RowBox[{
+                      StyleBox["Improve",
+                        FontColor->RGBColor[0, 0, 1]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 0, 1]], " ", 
+                      "\[IndentingNewLine]", \({{Fb, Fg, 
+                            Fw}, {B\&\[RightVector], G\&\[RightVector], 
+                            W\&\[RightVector]}} = 
+                        Transpose[
+                          Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                                  G\&\[RightVector], W\&\[RightVector]}}]]]\),
+                       ";", " ", 
+                      "\[IndentingNewLine]", \(Print["\<f[\>", 
+                        PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                        PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                        PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                      "\[IndentingNewLine]", \(k\  = \ k + 1\), ";"}]}], " ", 
+                  "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Return[{Fb, B\&\[RightVector]}]\), 
+                ";"}]}], " ", "]"}]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Nelder-Mead method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  ", \nThis example is referred to as Rosenbrock's parabolic valley, circa \
+1960. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2;\)\ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {1, 3, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, 0.5, 1.5}, {y, 0.5, 1.5}, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell["Perform the Nelder-Mead search for the minimum.", "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{0.9, 0.9}, {0.9, 1.1}, {1.1, 0.9}};\)\ \ \), "\n", 
+    \(\(Nelder2D[V, 10\^\(-8\)];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", NumberForm[B\&\[RightVector], 8], "\<] = \>", 
+        NumberForm[Fb, 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 1.8}, {y, 1.2}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 10], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Even ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is having a hard time finding the minimum of  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ 100\ \((y - x\^2)\)\^2 + \((1 - x)\)\^2\)]],
+  ".\nSince the function is \"flat\" near the minimum, the best way to \
+achieve better accuracy is to increase the  ",
+  StyleBox["WorkingPrecision",
+    FontFamily->"Courier New"],
+  ",  i.e. use extended precision in the numerical computations."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, 1.8}, {y, 1.2}, 
+          WorkingPrecision \[Rule] 25];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 10], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Graph the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = 
+        5  x\^2 + x\^4 - 9\ x\^2\ y + 3\ y\^2 + 2\ y\^4 + \(1\/4\) x\)]],
+  ".  \nLooking at your graphs, estimate the location of the local minima.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 
+        5  x\^2 + x\^4 - 9\ x\^2\ y + 3\ y\^2 + 
+          2\ y\^4 + \(1\/4\) x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ParametricPlot3D[{x, y, f[{x, y}]}, {x, \(-3.0\), 3.0}, {y, \(-0.5\), 
+          2.0}, PlotPoints \[Rule] {35, 35}, 
+        PlotRange \[Rule] {{\(-3.0\), 3.0}, {\(-0.5\), 2.0}, {\(-2.0\), 
+              2.0}}, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \ \), "\n", 
+    \(\(ShadowPlot3D[f[{x, y}], {x, \(-3.0\), 3.0}, {y, \(-0.5\), 2.0}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-2\), 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(ContourPlot[f[{x, y}], {x, \(-3.0\), 3.0}, {y, \(-0.5\), 2.0}, 
+        Contours \[Rule] 21, PlotPoints \[Rule] 32, 
+        ColorFunction \[Rule] Hue];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Looking at your graphs, estimate the location of the local minima.  
+Hint. The contour plot should be most useful.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Case (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({0.0, 0.0}\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{0.0, \(-0.2\)}, {0.1, 0.1}, {\(-0.1\), 0.1}};\)\ \ \), "\n", 
+    \(\(Nelder2D[V, 10\^\(-5\)];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+        NumberForm[Fb, 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, 0.0}, {y, \(-0.2\)}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 15], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({2, 1.5}\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{1.9, 1.5}, {2.0, 1.4}, {2.0, 1.6}};\)\ \ \), "\n", 
+    \(\(Nelder2D[V, 10\^\(-5\)];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+        NumberForm[Fb, 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = FindMinimum[f[{x, y}], {x, 2.0}, {y, 1.4}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 15], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Go for the minimum near ",
+  Cell[BoxData[
+      \({\(-2\), 1.5}\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{\(-1.9\), 1.5}, {\(-2.0\), 1.4}, {\(-2.0\), 
+            1.6}};\)\ \ \), "\n", 
+    \(\(Nelder2D[V, 10\^\(-5\)];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+        NumberForm[Fb, 15]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compare this answer with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure ",
+  StyleBox["FindMinimum",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = 
+        FindMinimum[f[{x, y}], {x, \(-2.0\)}, {y, 1.4}];\)\ \ \), "\n", 
+    \(\(Print["\<A local minimum of f[{x,y}] = \>", 
+        f[{x, y}], "\< is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P = 
+        ReplaceAll[{x, y}, 
+          sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", NumberForm[P, 15], "\<] = \>", 
+        NumberForm[f[P], 15]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Nelder-Mead Method.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program (Nelder-Mead's minimization method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "Including graphics commands to draw the vertices and triangles used in \
+finding the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Nelder2D[V0_, max_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{"k", ",", 
+                  StyleBox["Improve",
+                    FontColor->RGBColor[0, 0, 1]]}], "}"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{
+                RowBox[{
+                  RowBox[{
+                    StyleBox["Improve",
+                      FontColor->RGBColor[0, 0, 1]], ":=", 
+                    RowBox[{"Module", "[", 
+                      RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                        RowBox[{
+                          RowBox[{
+                            StyleBox[\(M\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                
+                                StyleBox[\(B\&\[RightVector] + 
+                                    G\&\[RightVector]\),
+                                  FontWeight->"Bold"], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          StyleBox[" ",
+                            FontWeight->"Bold"], 
+                          "\[IndentingNewLine]", \(R\&\[RightVector] = 
+                            M\&\[RightVector] + \((M\&\[RightVector] - 
+                                  W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(E\&\[RightVector] = 
+                            R\&\[RightVector] + \((R\&\[RightVector] - 
+                                  M\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[E\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              E\&\[RightVector]; \ Goto[end];]\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[R\&\[RightVector]] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              R\&\[RightVector]; \ Goto[end];]\), ";", " ", 
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_1 = \(1\
+\/2\) \((M\&\[RightVector] + W\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(C\&\[RightVector]\_2 = \(1\
+\/2\) \((M\&\[RightVector] + R\&\[RightVector])\)\), ";", " ", 
+                          "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_1] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_1; \ Goto[end];]\), ";", " ",
+                           "\[IndentingNewLine]", \(If[\ 
+                            f[C\&\[RightVector]\_2] < 
+                              f[W\&\[RightVector]], \ \ W\&\[RightVector] = 
+                              C\&\[RightVector]\_2; \ Goto[end];]\), ";", 
+                          "  ", "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(W\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(W\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], " ", "\[IndentingNewLine]", 
+                          RowBox[{
+                            StyleBox[\(G\&\[RightVector]\),
+                              FontWeight->"Bold"], " ", "=", " ", 
+                            RowBox[{\(1\/2\), 
+                              RowBox[{"(", 
+                                RowBox[{
+                                  StyleBox[\(B\&\[RightVector]\),
+                                    FontWeight->"Bold"], " ", "+", " ", 
+                                  StyleBox[\(G\&\[RightVector]\),
+                                    FontWeight->"Bold"]}], 
+                                StyleBox[")",
+                                  FontWeight->"Bold"]}]}]}], 
+                          StyleBox[";",
+                            FontWeight->"Bold"], 
+                          "\[IndentingNewLine]", \(Label[end]\), ";"}]}], 
+                      "]"}]}], ";"}], "  ", "\[IndentingNewLine]", 
+                
+                StyleBox[\( (*The\ main\ part\ of\ the\ subroutine\ is\ \
+\(\(here\)\(.\)\)*) \),
+                  FontColor->RGBColor[1, 0, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[1, 0, 0]], "  ", 
+                "\[IndentingNewLine]", \({B\&\[RightVector], 
+                    G\&\[RightVector], W\&\[RightVector]}\  = \ N[V0]\), ";", 
+                " ", "\[IndentingNewLine]", \({Fb, Fg, Fw}\  = \ 
+                  Thread[f[{B\&\[RightVector], G\&\[RightVector], 
+                        W\&\[RightVector]}]]\), ";", " ", 
+                "\[IndentingNewLine]", \({{Fb, Fg, Fw}, {B\&\[RightVector], 
+                      G\&\[RightVector], W\&\[RightVector]}} = 
+                  Transpose[
+                    Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                            G\&\[RightVector], W\&\[RightVector]}}]]]\), ";", 
+                
+                StyleBox[
+                  RowBox[{" ", 
+                    StyleBox[" ",
+                      FontColor->RGBColor[0, 1, 0]]}]], 
+                StyleBox["\[IndentingNewLine]",
+                  FontColor->RGBColor[0, 1, 0]], 
+                
+                StyleBox[\(Verts = {B\&\[RightVector], G\&\[RightVector], 
+                      W\&\[RightVector]}\),
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[" ",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox["\[IndentingNewLine]",
+                  FontColor->RGBColor[0, 1, 0]], 
+                
+                StyleBox[\(Edges = {{Blue, 
+                        Line[
+                          Join[{B\&\[RightVector], G\&\[RightVector], 
+                              W\&\[RightVector]}, {B\&\[RightVector]}]]}}\),
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[" ",
+                  FontColor->RGBColor[0, 1, 0]], "\[IndentingNewLine]", 
+                
+                StyleBox[\(Poly = 
+                    Graphics[{{Cyan, 
+                          Polygon[
+                            Join[{B\&\[RightVector], G\&\[RightVector], 
+                                W\&\[RightVector]}, \
+{B\&\[RightVector]}]]}}]\),
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 1, 0]], "\[IndentingNewLine]", 
+                
+                StyleBox[\(dots = 
+                    ListPlot[Verts, 
+                      PlotStyle \[Rule] {Red, PointSize[0.015]}, 
+                      DisplayFunction \[Rule] Identity]\),
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 1, 0]], 
+                StyleBox[" ",
+                  FontColor->RGBColor[0, 1, 0]], 
+                "\[IndentingNewLine]", \(Show[Poly, Graphics[Edges], dots, 
+                  PlotRange \[Rule] {{0, 5}, {0, 3}}, Axes \[Rule] True, 
+                  DisplayFunction \[Rule] $DisplayFunction]\), ";", "  ", 
+                "\[IndentingNewLine]", \(Print["\<f[\>", 
+                  PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                  PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                  PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                  PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                "\[IndentingNewLine]", \(k\  = \ 1\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  
+                  RowBox[{\(k \[LessEqual] max\), " ", ",", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{
+                      StyleBox["Improve",
+                        FontColor->RGBColor[0, 0, 1]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 0, 1]], " ", 
+                      "\[IndentingNewLine]", \({Fb, Fg, Fw}\  = \ 
+                        Thread[
+                          f[{B\&\[RightVector], G\&\[RightVector], 
+                              W\&\[RightVector]}]]\), ";", " ", 
+                      "\[IndentingNewLine]", \({{Fb, Fg, 
+                            Fw}, {B\&\[RightVector], G\&\[RightVector], 
+                            W\&\[RightVector]}} = 
+                        Transpose[
+                          Sort[Transpose[{{Fb, Fg, Fw}, {B\&\[RightVector], 
+                                  G\&\[RightVector], W\&\[RightVector]}}]]]\),
+                       ";", " ", 
+                      StyleBox["\[IndentingNewLine]",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      
+                      StyleBox[\(Verts = 
+                          Join[Verts, {B\&\[RightVector], G\&\[RightVector], 
+                              W\&\[RightVector]}]\),
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[" ",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox["\[IndentingNewLine]",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      
+                      StyleBox[\(Edges = 
+                          Append[
+                            Edges, {Blue, 
+                              Line[Join[{B\&\[RightVector], 
+                                    G\&\[RightVector], 
+                                    W\&\[RightVector]}, \
+{B\&\[RightVector]}]]}]\),
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[" ",
+                        FontColor->RGBColor[0, 1, 0]], "\[IndentingNewLine]", 
+                      
+                      
+                      StyleBox[\(Poly = 
+                          Graphics[{{Cyan, 
+                                Polygon[
+                                  Join[{B\&\[RightVector], G\&\[RightVector], 
+                                      W\&\[RightVector]}, \
+{B\&\[RightVector]}]]}}]\),
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 1, 0]], "\[IndentingNewLine]", 
+                      
+                      
+                      StyleBox[\(dots = 
+                          ListPlot[Verts, 
+                            PlotStyle \[Rule] {Red, PointSize[0.015]}, 
+                            DisplayFunction \[Rule] Identity]\),
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[";",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      StyleBox[" ",
+                        FontColor->RGBColor[0, 1, 0]], 
+                      "\[IndentingNewLine]", \(Show[Poly, Graphics[Edges], 
+                        dots, PlotRange \[Rule] {{0, 5}, {0, 3}}, 
+                        Axes \[Rule] True, 
+                        DisplayFunction \[Rule] $DisplayFunction]\), ";", 
+                      "  ", "\[IndentingNewLine]", \(Print["\<f[\>", 
+                        PaddedForm[B\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fb, {7, 6}], "\<, f[\>", 
+                        PaddedForm[G\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fg, {7, 6}], "\<, f[\>", 
+                        PaddedForm[W\&\[RightVector], {7, 6}], "\<] = \>", 
+                        PaddedForm[Fw, {7, 6}]]\), ";", " ", 
+                      "\[IndentingNewLine]", \(k\  = \ k + 1\), ";"}]}], " ", 
+                  "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Return[{Fb, B\&\[RightVector]}]\), 
+                ";"}]}], " ", "]"}]}], ";"}], " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Nelder-Mead method to find the minimum of   ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  ".  \nUse the modified program listed above that includes graphics commands \
+to draw the vertices and triangles used in finding the solution. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\  = \ x\^2 - 4  x + y\^2 - y - x\ y\)]],
+  " and graph the surface ",
+  Cell[BoxData[
+      \(z\  = f \((x, y)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = x\^2 - 4  x + y\^2 - y - x\ y;\)\ \ \), "\n", 
+    \(\(Plot3D[f[{x, y}], {x, 2.5, 3.5}, {y, 1.5, 2.5}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {8, 5, 2}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[x,y] = \>", f[{x, y}]];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Perform the Nelder-Mead search for the minimum.", "Text"],
+
+Cell[BoxData[{
+    \(\(V = {{0.0, 0.0}, {1.2, 0.0}, {0.0, 
+            0.8}};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Nelder2D[V, 15];\)\ \ \)}], "Input",
+  AspectRatioFixed->False,
+  AnimationDisplayTime->0.482681],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/Nelder1/\
+Nelderaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Nelder1/Nelderaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" (",
+    FontWeight->"Bold"],
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/Nelder1/\
+Nelder.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Nelder1/Nelder.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/NelderMeadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nelder-Mead Search",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NelderMeadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1025, 649},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+CellLabelAutoDelete->True
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 189, 4, 35, "Text"],
+Cell[1968, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3447, 111, 2251, 59, 163, "Text"],
+Cell[5701, 172, 6539, 200, 166, "Text"],
+Cell[12243, 374, 1366, 44, 112, "Text"],
+Cell[13612, 420, 6144, 207, 185, "Text"],
+Cell[19759, 629, 4849, 163, 147, "Text"],
+Cell[24611, 794, 3350, 112, 109, "Text"],
+Cell[27964, 908, 2727, 100, 90, "Text"],
+Cell[30694, 1010, 848, 24, 90, "Text"],
+Cell[31545, 1036, 614, 21, 33, "Text"],
+Cell[32162, 1059, 4433, 130, 71, "Text"],
+Cell[36598, 1191, 600, 20, 33, "Text"],
+Cell[37201, 1213, 1767, 56, 52, "Text"],
+Cell[38971, 1271, 8191, 147, 728, "Input"],
+Cell[47165, 1420, 305, 10, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[47495, 1434, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[47648, 1440, 215, 8, 33, "Text"],
+Cell[47866, 1450, 452, 8, 90, "Input"],
+Cell[48321, 1460, 392, 6, 90, "Input"],
+Cell[48716, 1468, 204, 3, 50, "Input"],
+Cell[48923, 1473, 96, 1, 33, "Text"],
+Cell[49022, 1476, 235, 3, 73, "Input"],
+Cell[49260, 1481, 209, 9, 33, "Text"],
+Cell[49472, 1492, 656, 11, 78, "Input"],
+Cell[50131, 1505, 611, 21, 33, "Text"],
+Cell[50745, 1528, 538, 15, 31, "Input"],
+Cell[51286, 1545, 1215, 37, 36, "Text"],
+Cell[52504, 1584, 4961, 133, 212, "Input"],
+Cell[57468, 1719, 2096, 62, 52, "Text"],
+Cell[59567, 1783, 1815, 50, 76, "Input"],
+Cell[61385, 1835, 1308, 42, 33, "Text"],
+Cell[62696, 1879, 235, 3, 73, "Input"],
+Cell[62934, 1884, 446, 14, 33, "Text"],
+Cell[63383, 1900, 125, 2, 50, "Input"],
+Cell[63511, 1904, 258, 4, 52, "Input"],
+Cell[63772, 1910, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[64025, 1922, 464, 9, 90, "Input"]
+}, Closed]],
+Cell[64504, 1934, 869, 26, 106, "Text"],
+Cell[65376, 1962, 9082, 164, 705, "Input"],
+Cell[74461, 2128, 392, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[74878, 2143, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[75031, 2149, 225, 8, 33, "Text"],
+Cell[75259, 2159, 367, 6, 72, "Input"],
+Cell[75629, 2167, 392, 6, 90, "Input"],
+Cell[76024, 2175, 204, 3, 50, "Input"],
+Cell[76231, 2180, 63, 0, 33, "Text"],
+Cell[76297, 2182, 158, 3, 51, "Input"],
+Cell[76458, 2187, 253, 4, 52, "Input"],
+Cell[76714, 2193, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[76967, 2205, 464, 9, 90, "Input"],
+Cell[77434, 2216, 616, 17, 52, "Text",
+  Evaluatable->False],
+Cell[78053, 2235, 513, 11, 90, "Input"]
+}, Closed]],
+Cell[78581, 2249, 382, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[78988, 2264, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[79141, 2270, 218, 4, 63, "Input"],
+Cell[79362, 2276, 489, 8, 70, "Input"],
+Cell[79854, 2286, 402, 6, 90, "Input"],
+Cell[80259, 2294, 267, 4, 50, "Input"],
+Cell[80529, 2300, 138, 3, 52, "Text"],
+Cell[80670, 2305, 180, 7, 33, "Text"],
+Cell[80853, 2314, 141, 2, 51, "Input"],
+Cell[80997, 2318, 258, 4, 52, "Input"],
+Cell[81258, 2324, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[81511, 2336, 478, 10, 90, "Input"],
+Cell[81992, 2348, 179, 7, 33, "Text"],
+Cell[82174, 2357, 131, 2, 51, "Input"],
+Cell[82308, 2361, 258, 4, 52, "Input"],
+Cell[82569, 2367, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[82822, 2379, 464, 9, 90, "Input"],
+Cell[83289, 2390, 185, 7, 33, "Text"],
+Cell[83477, 2399, 159, 3, 51, "Input"],
+Cell[83639, 2404, 258, 4, 52, "Input"],
+Cell[83900, 2410, 250, 10, 33, "Text",
+  Evaluatable->False],
+Cell[84153, 2422, 478, 10, 90, "Input"]
+}, Closed]],
+Cell[84646, 2435, 308, 10, 32, "Text"],
+Cell[84957, 2447, 435, 12, 33, "Text"],
+Cell[85395, 2461, 13054, 250, 964, "Input"],
+Cell[98452, 2713, 444, 11, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[98921, 2728, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[99074, 2734, 215, 8, 33, "Text"],
+Cell[99292, 2744, 399, 7, 70, "Input"],
+Cell[99694, 2753, 63, 0, 33, "Text"],
+Cell[99760, 2755, 216, 5, 50, "Input"],
+Cell[99979, 2762, 770, 26, 33, "Text"]
+}, Closed]],
+Cell[100764, 2791, 805, 26, 30, "Text"],
+Cell[101572, 2819, 158, 3, 35, "Text"],
+Cell[101733, 2824, 551, 16, 33, "Text"],
+Cell[102287, 2842, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

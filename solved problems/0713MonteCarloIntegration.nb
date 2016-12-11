@@ -1,0 +1,3780 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    135405,       3493]*)
+(*NotebookOutlinePosition[    136267,       3522]*)
+(*  CellTagsIndexPosition[    136167,       3516]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Monte Carlo Integration",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe will be discussing how to approximate the value of an integral \
+based on the average of function values.  The following concept is useful. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Mean Value Theorem for Integrals).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is continuous over  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  ",  then there exists a number  ",
+  Cell[BoxData[
+      \(c\)]],
+  ",  with  ",
+  Cell[BoxData[
+      \(a < c < b\)]],
+  ",  such that  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          FractionBox[
+            StyleBox["1",
+              FontSize->12], 
+            StyleBox[\(b\  - \ a\),
+              FontSize->12]], 
+          RowBox[{
+            StyleBox[
+              SubsuperscriptBox["\[Integral]", 
+                StyleBox["a",
+                  FontSize->10], 
+                StyleBox["b",
+                  FontSize->10]],
+              FontSize->18], 
+            StyleBox[" ",
+              FontSize->18], \(f \((x)\) \[DifferentialD]x\)}]}], "  ", "=", 
+        "  ", \(f \((c)\)\)}]]],
+  ". \n\nThis can be written in the equivalent form:\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], 
+          StyleBox[" ",
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", "=", 
+        " ", \(\((b - a)\)*\ f \((c)\)\)}]]],
+  ".  \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  This computation shows that the area under the curve is the base width  \
+",
+  Cell[BoxData[
+      \(\((b - a)\)\)]],
+  "  times the \"average height\"  ",
+  Cell[BoxData[
+      \(f \((c)\)\)]],
+  ".  "
+}], "Text",
+  CellTags->"Mean Value Theorem for Integrals"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      RowBox[{\(f \((x)\)\), "=", 
+        RowBox[{\(sin \((x)\)\), "+", 
+          RowBox[{
+            FractionBox[
+              StyleBox["1",
+                FontSize->12], 
+              StyleBox["3",
+                FontSize->12]], " ", "sin", \((3\ x)\)}]}]}]]],
+  ".  Find  ",
+  Cell[BoxData[
+      \(c\)]],
+  "  so that  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["0",
+                FontSize->10], "\[Pi]"],
+            
+            FontSize->
+              18], \(\((sin \((x)\) + 
+                1\/3\ sin \((3\ x)\))\) \[DifferentialD]x\)}], "  ", "=", 
+        "  ", \(\((\[Pi] - 0)\)*f \((c)\)\)}]]],
+  ". "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x] + 1\/3\ Sin[3\ x];\)\ \ \), "\n", 
+    \(\(g[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \ \), "\n", 
+    \(\(b = \[Pi];\)\ \ \), "\n", 
+    \(\(val = \[Integral]\_a\%b f[x] \[DifferentialD]x;\)\ \ \), "\n", 
+    \(\(ave = \(\[Integral]\_a\%b f[x] \[DifferentialD]x\)\/\(b - a\);\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<     f[x]  =  \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  \[Integral]f[x]\[DifferentialD]x  =  \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  \>", "\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \
+\>", "\<\[Integral]\>"\+a\%b, "\<(\>", f[x], "\<)\[DifferentialD]x = \>", 
+        val\ ];\)\), "\n", 
+    \(\(Print[
+        1\/\(b - a\), "\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \
+\>", "\<\[Integral]\>"\+a\%b, "\<(\>", f[x], "\<)\[DifferentialD]x = \>", 
+        ave\ ];\)\), "\n", 
+    \(\(Print["\<Solve  f[c] = \>", 
+        1\/\(b - a\), "\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x\>", "\
+\<  for c\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[c] = \>", ave];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Clear[c];\)\), "\[IndentingNewLine]", 
+    \(\(eqn\  = \ f[c] \[Equal] ave;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ eqn\ ];\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqn, c];\)\), "\[IndentingNewLine]", 
+    \(\(c = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(c = N[Re[c]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr1\  = \ 
+        FilledPlot[{f[c]}, {x, a, b}, Fills \[Rule] {{{1, Axis}, Honeydew}}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(grf = 
+        Plot[f[x], {x, a, b}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(dots = 
+        Graphics[{Green, PointSize[0.025], Point[{0, f[c]}], Red, 
+            PointSize[0.025], Point[{c, 0}], 
+            Point[{c, f[c]}]}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(line1 = 
+        Graphics[{Red, Thickness[0.007], 
+            Line[{{c, 0}, {c, f[c]}}]}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(line2 = 
+        Graphics[{Green, Thickness[0.008], Line[{{a, 0}, {a, f[c]}}], 
+            Line[{{a, f[c]}, {b, f[c]}}], 
+            Line[{{b, f[c]}, {b, 0}}]}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, grf, line1, line2, dots, 
+        PlotRange \[Rule] {{0, \[Pi]}, {0, 1}}, 
+        Ticks \[Rule] {{0, {c, "\<c\>"}, \[Pi]\/2, \[Pi]}, {0.5, {f[
+                  c], "\<f(c)\>"}, 1.0}}, AxesLabel \[Rule] {x, y}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<The value of the integral is over [\>", a, "\<,\>", 
+        b, "\<] is\>"\ ];\)\ \ \), "\n", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \>", 
+        val, "\<  =  \>", 
+        NumberForm[N[val], 17]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The average height of the function is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\&\[And]\)\>\"", "\< = f[c] = \>", 
+        1\/\(b - a\), "\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x = \
+\>", 1\/\(b - a\), "\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x\>", "\< = \>", 
+        N[ave]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      c  =  \>", c\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\&\[And]\)\>\"", "\< = f[c] = f[\>", 
+        c, "\<]  =  \>", f[c]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The area under the curve is the same as\>"];\)\ \ \), "\n", 
+    \(\(Print["\<the area of the rectangle of height  f[c] = \>", 
+        f[c]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \>", \
+"\<(b - a)*\>", \*"\"\<\!\(f\&\[And]\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \>", \
+"\<(b - a)*f[c]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  (\>", 
+        b, "\< - \>", a, "\<)*f[\>", 
+        c, "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  (\>", 
+        b - a, "\<)*\>", NumberForm[f[c], 17]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<f[x]\[DifferentialD]x  =  \>", 
+        NumberForm[\((b - a)\) f[c], 17]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Composite Midpoint Rule",
+  FontFamily->"Times New Roman",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tAn intuitive method of finding the area under a curve  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y = f \((x)\)\)]],
+  "  ",
+  StyleBox["is to approximate that area with a series of rectangles that lie \
+above the intervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(x\_\(k - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(x\_k\)}], "]"}], "}"}], \(k = 1\),
+         "n"]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Composite Midpoint Rule).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Consider  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y = f \((x)\)\)]],
+  "  over ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  StyleBox[".  Let the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "b"}], "]"}]]],
+  " ",
+  StyleBox[" be subdivided into  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\)]],
+  StyleBox["  subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"[", 
+            RowBox[{\(x\_\(k - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(x\_k\)}], "]"}], "}"}], \(k = 1\),
+         "n"]]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/n\)]],
+  ".",
+  StyleBox["  Form the equally spaced nodes  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\_k = a + \((k - 1\/2)\)\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  StyleBox[".  The ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite midpoint rule for  n  subintervals",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" is  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], 
+          StyleBox[" ",
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", 
+        "\[TildeTilde]", 
+        "  ", \(h \(\[Sum]\+\(k = 1\)\%n f \((c\_k)\)\)\)}]]],
+  ".  \n\n",
+  StyleBox["This can be written in the equivalent form  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], 
+          StyleBox[" ",
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", 
+        "\[TildeTilde]", "  ", \(\((b - a)\)*\ f\&\[And]\)}]]],
+  ",     where     ",
+  Cell[BoxData[
+      \(f\&\[And]\ \ \  = \ 1\/n\ \(\[Sum]\+\(k = 1\)\%n f \((c\_k)\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Module",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MidpointRuleMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary (Remainder term for the Midpoint Rule)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  The ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite midpoint rule",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"M", 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h"}], ")"}]}], 
+        "=", \(\((b - a)\) 1\/n\ \(\[Sum]\+\(k = 1\)\%n f \((c\_k)\)\)\)}]]],
+  "  ",
+  StyleBox["is an numerical approximation to the integral, and  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], 
+          StyleBox[" ",
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", "=", "  ",
+         
+        RowBox[{
+          RowBox[{"M", 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h"}], ")"}]}], "  ", "+", "  ", 
+          RowBox[{\(E\_M\), 
+            RowBox[{"(", 
+              RowBox[{"f", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "h"}], ")"}]}]}]}]]],
+  ".   \n\nFurthermore, if ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(f \((x)\)\), "\[Element]", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["C",
+              FontWeight->"Bold"], "2"], "[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "b"}], "]"}]}]]],
+  ",  then there exists a value  ",
+  Cell[BoxData[
+      \(c\)]],
+  "  with  ",
+  Cell[BoxData[
+      \(a < c < b\)]],
+  "  so that the error term  ",
+  Cell[BoxData[
+      RowBox[{\(E\_M\), 
+        RowBox[{"(", 
+          RowBox[{"f", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "h"}], ")"}]}]]],
+  "  has the form  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_M\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h"}], ")"}]}], "  ", "=", 
+        "  ", \(\(\(\((b\  - \ a)\) \(f\^2\) \((c)\)\)\/24\) h\^2\)}]]],
+  ".  \n\nThis is expressed using the \"big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\" notation  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(E\_M\), 
+          RowBox[{"(", 
+            RowBox[{"f", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "h"}], ")"}]}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold",
+            FontSlant->"Italic"], \((h\^2)\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Module",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MidpointRuleMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Midpoint/Midpoint.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm Composite Midpoint Rule.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To approximate the integral  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", 
+        "\[TildeTilde]", 
+        " ", \(\((b - a)\) 1\/n\ \(\[Sum]\+\(k = 1\)\%n f \((c\_k)\)\)\)}]]],
+  ",  \n\nby sampling  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  at the  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  equally spaced points  ",
+  Cell[BoxData[
+      \(c\_k = a + \((k - 1\/2)\)\ h\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ",  where  ",
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/n\)],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MidpointRuleProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Midpoint Rule).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MidpointRule[
+          n0_] := \[IndentingNewLine]Module[{h, i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]h\  = \ \(b - a\)\/n; \[IndentingNewLine]X \
+= Table[a + \((i - 0.5)\)\ h, {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]approx = \((b - a)\)*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x)\) = \@x\)]],
+  ".  Use the midpoint rule to calculate approximations to the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%4\ \(\@x\) \[DifferentialD]x\)]],
+  ". "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[0, 4, 1], 
+          Range[0, 2, 1]};\)\ \), "\[IndentingNewLine]", 
+    \(\(gtick[
+          h_] := {gticks\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), 
+          Append[gticks\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\), {h, \*"\"\<\!\(f\&\[And]\)\>\""}]};\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] gticks];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(MidpointRuleResults[n0_] := 
+        Module[{n = n0}, \[IndentingNewLine]MidpointRule[
+            n]; \ \[IndentingNewLine]Y = f[X]; \ \[IndentingNewLine]P = 
+            Map[Point, Transpose[{X, Y}]]; \ \[IndentingNewLine]dots = 
+            Graphics[{Red, PointSize[0.01], P}\ ]; \ \[IndentingNewLine]L = 
+            Map[Line, 
+              Transpose[{Transpose[{X, 0  Y}], 
+                  Transpose[{X, Y}]}]]; \ \[IndentingNewLine]lines = 
+            Graphics[{Red, Thickness[0.005], 
+                L}\ ]; \ \[IndentingNewLine]dots1 = 
+            Graphics[{Green, PointSize[0.025], 
+                Point[{0, f\&^}]}\ ]; \ \[IndentingNewLine]line1 = 
+            Graphics[{Green, Thickness[0.007], Line[{{a, 0}, {a, f\&^}}], 
+                Line[{{a, f\&^}, {b, f\&^}}], 
+                Line[{{b, f\&^}, {b, 0}}]}]; \ \ \[IndentingNewLine]Show[
+            graph, dots, lines, dots1, line1, 
+            Ticks \[Rule] 
+              gtick[f\&^]]; \ \[IndentingNewLine]Print["\<Points Generated  n \
+ =  \>", \ 
+            n]; \ \[IndentingNewLine]Print[\*"\"\<The average of \
+{f[\!\(x\_i\)]\>\"", "\<}\>"\+\("\<i=1\>"\)\%n\ , "\<  is\>"]; \ \
+\[IndentingNewLine]Print[\*"\"\<\!\(f\&\[And]\)\>\"", "\< = \>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\"", \
+"\< =  \>", 
+            f\&^\ \ ]; \ \[IndentingNewLine]Print["\<Approximation for the \
+integral\>"]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", \*"\"\<  \[TildeTilde]  (b-a)*(\!\
+\(1\/n\)\!\(\[Sum]\+\(i = 1\)\%n\) f[\!\(x\_i\)])\>\""]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (b-a)*\>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\""]; \
+\ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (b-a)*\>", \
+\*"\"\<\!\(f\&\[And]\)\>\""]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\
+\%b, "\<(\>", f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (\>", 
+            b, "\< - \>", a, "\<)*(\>", 
+            f\&^, "\<)\>"]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (\>", 
+            b - a, "\<)*(\>", 
+            f\&^, "\<)\>"]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  \>", 
+            N[approx]\ ]; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ \ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MidpointRuleResults[10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MidpointRuleResults[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MidpointRuleResults[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4 = MidpointRuleResults[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done.  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_]\  = \ \[Integral]f[
+              x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Fa = 
+        Limit[F[x], x \[Rule] a, 
+          Direction \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        Fills \[Rule] \ Cyan, PlotRange \[Rule] {{a, b}, {0, 2}}, 
+        Ticks \[Rule] {Range[0, 4, 1], 
+            Range[0, 2, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \[Integral](\>", 
+        f[x], "\<)\[DifferentialD]x\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = F[\>", b, "\<] - F[\>", 
+        a, "\<]\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = (\>", F[b]\ , "\<) - (\>", 
+        F[a]\ , "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Final answer\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        F[b]\  - \ F[a]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        NumberForm[N[F[b]\  - \ F[a]], 
+          10]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with the midpoint rule:\>"];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Monte Carlo Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tMonte Carlo methods can be thought of as statistical simulation \
+methods that utilize a sequences of random numbers to perform the simulation. \
+The name \"Monte Carlo'' was coined by ",
+  ButtonBox["Nicholas Constantine Metropolis",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/biography/Metropolis.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  " (1915-1999) and inspired by ",
+  ButtonBox["Stanslaw Ulam",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Ulam.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+  " (1909-1986), because of the similarity of statistical simulation to games \
+of chance, and because Monte Carlo is a center for gambling and games of \
+chance.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Approximation for an Integral",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe Monte Carlo method can be used to numerically approximate the \
+value of an integral.  For a function of one variable the steps are:  \n\n",
+  StyleBox["(i)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tPick ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " randomly distributed points  ",
+  Cell[BoxData[
+      RowBox[{\(x\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_n\)}]]],
+  " in the interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ".    \n\n",
+  StyleBox["(ii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tDetermine the average value of the function  \n\n\t\t ",
+  Cell[BoxData[
+      \(f\&^\ \  = \ \ \(1\/n\) \(\[Sum]\+\(i = 1\)\%n\ f \((x\_i)\)\)\)],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tCompute the approximation to the integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          f \((x)\)\ \[DifferentialD]x\ \  \[TildeTilde] \ \ \((b - a)\)*
+          f\&^\)]],
+  ". \n\n",
+  StyleBox["(iv)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tAn estimate for the error is \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Error",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "\[TildeTilde]", 
+        " ", \(\((b - a)\) \@\(\(\(f\^2\)\&^ - \((f\&^)\)\^2\)\/n\)\)}]]],
+  ",     where     ",
+  Cell[BoxData[
+      \(\(f\^2\)\&^\  = \ 
+        1\/n\ \(\[Sum]\+\(i = 1\)\%n\ \(f\^2\) \((x\_i)\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tEvery time a Monte Carlo simulation is made using the same sample size \
+it will come up with a slightly different value.  Larger values of  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  will produce more accurate approximations.  The values converge very \
+slowly of the order  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((n\^\(\(-1\)/2\))\)}]]],
+  ".  This property is a consequence of the ",
+  ButtonBox["Central Limit Theorem",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/CentralLimitTheorem.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Monte Carlo Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MonteCarloProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Monte Carlo Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MonteCarloProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Monte Carlo for 1 Dimensional \
+Integrals).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MonteCarloIntegral1D[
+          n0_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]X = 
+            Table[Random[Real, {a, b}], {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]v = \((b - a)\); \[IndentingNewLine]approx = 
+            v*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+The above subroutine is all we need to \"do the math.\"  The following \
+subroutine presents the results in a nice format. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(MonteCarloResults1D[n0_] := 
+        Module[{n = n0}, \[IndentingNewLine]MonteCarloIntegral1D[
+            n]; \ \[IndentingNewLine]Y = f[X]; \ \[IndentingNewLine]P = 
+            Map[Point, Transpose[{X, Y}]]; \ \[IndentingNewLine]dots = 
+            Graphics[{Red, PointSize[0.01], P}\ ]; \ \[IndentingNewLine]L = 
+            Map[Line, 
+              Transpose[{Transpose[{X, 0  Y}], 
+                  Transpose[{X, Y}]}]]; \ \[IndentingNewLine]lines = 
+            Graphics[{Red, Thickness[0.005], 
+                L}\ ]; \ \[IndentingNewLine]dots1 = 
+            Graphics[{Green, PointSize[0.025], 
+                Point[{0, f\&^}]}\ ]; \ \[IndentingNewLine]line1 = 
+            Graphics[{Green, Thickness[0.007], Line[{{a, 0}, {a, f\&^}}], 
+                Line[{{a, f\&^}, {b, f\&^}}], 
+                Line[{{b, f\&^}, {b, 0}}]}]; \ \ \[IndentingNewLine]Show[
+            graph, dots, lines, dots1, line1, 
+            Ticks \[Rule] 
+              gtick[f\&^]]; \ \[IndentingNewLine]Print["\<Points Generated  n \
+ =  \>", \ 
+            n]; \ \[IndentingNewLine]Print[\*"\"\<The average of \
+{f[\!\(x\_i\)]\>\"", "\<}\>"\+\("\<i=1\>"\)\%n\ , "\<  is\>"]; \ \
+\[IndentingNewLine]Print[\*"\"\<\!\(f\&\[And]\)\>\"", "\< = \>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\"", \
+"\< =  \>", 
+            f\&^\ ]; \ \[IndentingNewLine]Print["\<Approximation for the \
+integral\>"]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", \*"\"\<  \[TildeTilde]  (b-a)*(\!\
+\(1\/n\)\!\(\[Sum]\+\(i = 1\)\%n\) f[\!\(x\_i\)])\>\""]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (b-a)*\>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\""]; \
+\ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (b-a)*\>", \
+\*"\"\<\!\(f\&\[And]\)\>\""]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\
+\%b, "\<(\>", f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (\>", 
+            b, "\< - \>", a, "\<)*(\>", 
+            f\&^, "\<)\>"]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  (\>", 
+            b - a, "\<)*(\>", 
+            f\&^, "\<)\>"]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+            f[x], "\<)\[DifferentialD]x\>", "\<  \[TildeTilde]  \>", 
+            N[approx]\ ]; \[IndentingNewLine]Print["\<\>"]; \ \
+\[IndentingNewLine]F2 = 
+            Y\^2; \ \[IndentingNewLine]\(f\^2\)\&^\  = \ \(1\/n\) 
+              ReplaceAll[F2, 
+                List \[Rule] Plus]; \ \[IndentingNewLine]error\  = \ \((b - 
+                  a)\) \@\(\(\(f\^2\)\&^ - \((f\&^)\)\^2\)\/n\); \ \
+\[IndentingNewLine]Print["\<The 'error estimate'  \[TildeTilde]  \>", \ 
+            error]; \ \[IndentingNewLine]Print["\<Actual |Area-approx|  \
+\[TildeTilde]  \>", 
+            Abs[N[\[Integral]\_a\%b f[x] \[DifferentialD]x] - 
+                approx]\ ]; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x)\) = \@x\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+",
+  Cell[BoxData[
+      \(\[Integral]\_0\%4\ \(\@x\) \[DifferentialD]x\)]],
+  ". "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[0, 4, 1], 
+          Range[0, 2, 1]};\)\ \), "\[IndentingNewLine]", 
+    \(\(gtick[
+          h_] := {gticks\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), 
+          Append[gticks\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\), {h, \*"\"\<\!\(f\&\[And]\)\>\""}]};\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] gticks];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MonteCarloResults1D[10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MonteCarloResults1D[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MonteCarloResults1D[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4 = MonteCarloResults1D[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral1D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tWe will need to seed the random number generator with the same integer so \
+that we get the same sequence of random numbers. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral1D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2 = 
+        NIntegrate[f[x], {x, a, b}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_]\  = \ \[Integral]f[
+              x] \[DifferentialD]x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Fa = 
+        Limit[F[x], x \[Rule] a, 
+          Direction \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        Fills \[Rule] \ Cyan, PlotRange \[Rule] {{a, b}, {0, 2}}, 
+        Ticks \[Rule] {Range[0, 4, 1], 
+            Range[0, 2, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \[Integral](\>", 
+        f[x], "\<)\[DifferentialD]x\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = F[\>", b, "\<] - F[\>", 
+        a, "\<]\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = (\>", F[b]\ , "\<) - (\>", 
+        F[a]\ , "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Final answer\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        F[b]\  - \ F[a]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        NumberForm[N[F[b]\  - \ F[a]], 
+          10]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x)\) = 4\/\(1 + x\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\ \ \(4\/\(1 + x\^2\)\) \[DifferentialD]x\)]],
+  ". "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 4\/\(1 + x\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[0, 1, 0.25], 
+          Range[0, 4, 1]};\)\ \), "\[IndentingNewLine]", 
+    \(\(gtick[
+          h_] := {gticks\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), {1, 2, {h, \*"\"\<\!\(f\&\[And]\)\>\""}, 
+            4}};\)\ \), "\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, a, b}, PlotRange \[Rule] {{0, 1}, {0, 4}}, 
+          PlotStyle \[Rule] Magenta, 
+          Ticks \[Rule] gticks];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MonteCarloResults1D[10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MonteCarloResults1D[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MonteCarloResults1D[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4 = MonteCarloResults1D[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral1D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tWe will need to seed the random number generator with the same integer so \
+that we get the same sequence of random numbers. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral1D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2 = 
+        NIntegrate[f[x], {x, a, b}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 4\/\(1 + x\^2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_]\  = \ \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        Fills \[Rule] \ Cyan, PlotRange \[Rule] {{a, b}, {0, 4}}, 
+        Ticks \[Rule] {Range[0, 1, 0.25], 
+            Range[0, 4, 1]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \[Integral](\>", 
+        f[x], "\<)\[DifferentialD]x\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = F[\>", b, "\<] - F[\>", 
+        a, "\<]\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = (\>", F[b]\ , "\<) - (\>", 
+        F[a]\ , "\<)\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Final answer\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        F[b]\  - \ F[a]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        NumberForm[N[F[b]\  - \ F[a]], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x)\) = \@\(x + \@x\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+",
+  Cell[BoxData[
+      \(\[Integral]\_0\%1\ \(\@\(x + \@x\)\) \[DifferentialD]x\)]],
+  ". "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@\(x + \@x\);\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[0, 1, 0.25], 
+          Range[0, 1.25, 0.25]};\)\ \), "\[IndentingNewLine]", 
+    \(\(gtick[
+          h_] := {gticks\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), {0.25, 0.5, 
+            0.75, {h, \*"\"\<\!\(f\&\[And]\)\>\""}, 
+            1.25}};\)\ \), "\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, a, b}, PlotStyle \[Rule] Magenta, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] gticks];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MonteCarloResults1D[10];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MonteCarloResults1D[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MonteCarloResults1D[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4 = MonteCarloResults1D[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral1D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tWe will need to seed the random number generator with the same integer so \
+that we get the same sequence of random numbers. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral1D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2 = 
+        NIntegrate[f[x], {x, a, b}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Area  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@\(x + \@x\);\)\), "\[IndentingNewLine]", 
+    \(\(F[
+          x_]\  = \ \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Fa = Limit[F[x], x \[Rule] a];\)\), "\[IndentingNewLine]", 
+    \(\(Fa = 
+        Limit[F[x], x \[Rule] a, 
+          Direction \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, a, b}, PlotStyle \[Rule] Blue, 
+        Fills \[Rule] \ Cyan, PlotRange \[Rule] {{a, b}, {0, f[b]}}, 
+        Ticks \[Rule] {Range[0, 1, 0.25], 
+            Range[0, 2, 0.25]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \[Integral](\>", 
+        f[x], "\<)\[DifferentialD]x\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = F[\>", b, "\<] - F[\>", 
+        a, "\<]\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = (\>", F[b]\ , "\<) - (\>", 
+        Fa\ , "\<)\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Final answer\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        F[b]\  - \ Fa\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+        f[x], "\<)\[DifferentialD]x = \>", 
+        NumberForm[N[F[b]\  - \ Fa], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    area \[TildeTilde] \>", 
+        NumberForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Approximation for a Double Integral",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe Monte Carlo method can be used to numerically approximate the \
+value of a ",
+  ButtonBox["double integral",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/DoubleIntegral.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  For a function of two variables the steps are:  \n\n",
+  StyleBox["(i)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tPick ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " randomly distributed points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_1\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["(",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          RowBox[{\(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["(",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          RowBox[{\(x\_3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          StyleBox["(",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], 
+          RowBox[{\(x\_n\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_n\)}], ")"}]}]]],
+  " in the rectangle  ",
+  Cell[BoxData[
+      \(\([a, b]\)\[Times]\([c, d]\)\)]],
+  ".    \n\n",
+  StyleBox["(ii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tDetermine the average value of the function  \n\n\t\t ",
+  Cell[BoxData[
+      RowBox[{\(f\&^\), "  ", "=", "  ", 
+        RowBox[{\(1\/n\), 
+          RowBox[{\(\[Sum]\+\(i = 1\)\%n\), " ", 
+            RowBox[{"f", 
+              RowBox[{"(", 
+                RowBox[{\(x\_i\), 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], \(y\_i\)}], ")"}]}]}]}]}]],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tCompute the approximation to the integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\((\ \[Integral]\_c\%d\ \ f \((x, 
+                    y)\) \[DifferentialD]y\ )\) \[DifferentialD]x\ \  \
+\[TildeTilde] \ \ \((b - a)\)*\((d - c)\)*f\&^\)]],
+  ". \n\n",
+  StyleBox["(iv)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tAn estimate for the error is\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Error",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "\[TildeTilde]", 
+        " ", \(\((b - a)\)*\((d - 
+              c)\) \@\(\(\(f\^2\)\&^ - \((f\&^)\)\^2\)\/n\)\)}]]],
+  ",     where     ",
+  Cell[BoxData[
+      RowBox[{\(\(f\^2\)\&^\), " ", "=", " ", 
+        RowBox[{\(1\/n\), " ", 
+          RowBox[{\(\[Sum]\+\(i = 1\)\%n\), " ", 
+            RowBox[{\(f\^2\), 
+              RowBox[{"(", 
+                RowBox[{\(x\_i\), 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], \(y\_i\)}], ")"}]}]}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Monte Carlo for 2 Dimensional \
+Integrals).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MonteCarloIntegral2D[
+          n0_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]X = 
+            Table[{Random[Real, {a, b}], Random[Real, {c, d}]}, {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]v = \((b - a)\) \((d - c)\); \[IndentingNewLine]approx = 
+            v*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+The above subroutine is all we need to \"do the math.\"  The following \
+subroutine presents the results in a nice format. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(MonteCarloResults2D[n0_] := 
+        Module[{n = n0}, \[IndentingNewLine]MonteCarloIntegral2D[
+            n]; \ \[IndentingNewLine]Z = Map[f, X]; \ \[IndentingNewLine]P = 
+            Map[Point, 
+              Transpose[{X\_\(\(\[LeftDoubleBracket]\)\(All, 1\)\(\
+\[RightDoubleBracket]\)\), 
+                  X\_\(\(\[LeftDoubleBracket]\)\(All, 2\)\(\
+\[RightDoubleBracket]\)\), Z}]]; \ \[IndentingNewLine]Q = 
+            Map[Point, 
+              Transpose[{X\_\(\(\[LeftDoubleBracket]\)\(All, 1\)\(\
+\[RightDoubleBracket]\)\), 
+                  X\_\(\(\[LeftDoubleBracket]\)\(All, 2\)\(\
+\[RightDoubleBracket]\)\), 0*Z}]]; \ \[IndentingNewLine]dots = 
+            Graphics3D[{Red, PointSize[0.01], P}\ ]; \ \[IndentingNewLine]L = 
+            Map[Line, 
+              Transpose[{Transpose[{X\_\(\(\[LeftDoubleBracket]\)\(All, 1\)\(\
+\[RightDoubleBracket]\)\), 
+                      X\_\(\(\[LeftDoubleBracket]\)\(All, 2\)\(\
+\[RightDoubleBracket]\)\), Z}], 
+                  Transpose[{X\_\(\(\[LeftDoubleBracket]\)\(All, 1\)\(\
+\[RightDoubleBracket]\)\), 
+                      X\_\(\(\[LeftDoubleBracket]\)\(All, 2\)\(\
+\[RightDoubleBracket]\)\), 0*Z}]}]]; \ \[IndentingNewLine]lines = 
+            Graphics3D[{Red, Thickness[0.005], 
+                L}\ ]; \ \[IndentingNewLine]Show[dots, 
+            PlotRange \[Rule] grange, BoxRatios \[Rule] gratio, 
+            Ticks \[Rule] gticks, 
+            AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+            AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+            ViewPoint \[Rule] 
+              gview]; \[IndentingNewLine]Print["\<Points Generated  n  =  \
+\>", \ n]; \ \[IndentingNewLine]Print[\*"\"\<The average of \
+{f[\!\(x\_i\)]\>\"", "\<}\>"\+\("\<i=1\>"\)\%n\ , "\<  is\>"]; \ \
+\[IndentingNewLine]Print[\*"\"\<\!\(f\&\[And]\)\>\"", "\< = \>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\"", \
+"\< =  \>", 
+            f\&^\ ]; \ \[IndentingNewLine]Print["\<Approximation for the \
+integral\>"]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+            f[{x, y}], "\<)\[DifferentialD]y\>", "\<)\[DifferentialD]x\>", \
+\*"\"\<  \[TildeTilde]  (b-a)*(d-c)*(\!\(1\/n\)\!\(\[Sum]\+\(i = 1\)\%n\) \
+f[\!\(x\_i\),\!\(y\_i\)])\>\""]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\
+\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\>", 
+            f[{x, y}], "\<)\[DifferentialD]y\>", "\<)\[DifferentialD]x\>", \
+"\<  \[TildeTilde]  (b-a)*(d-c)*\>", \ 
+            1\/n, "\<\[Sum]\>"\+\("\<i=1\>"\)\%n, \*"\"\<f[\!\(x\_i\)]\>\""]; \
+\ \[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+            f[{x, y}], "\<)\[DifferentialD]y\>", "\<)\[DifferentialD]x\>", \
+"\<  \[TildeTilde]  (b-a)*(d-c)*\>", \*"\"\<\!\(f\&\[And]\)\>\""]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+            f[{x, y}], "\<)\[DifferentialD]y\>", "\<)\[DifferentialD]x\>", \
+"\<  \[TildeTilde]  (\>", \((b - a)\)*\((d - c)\), "\<)*(\>", 
+            f\&^, "\<)\>"]; \ \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+            f[{x, y}], "\<)\[DifferentialD]y\>", "\<)\[DifferentialD]x\>", \
+"\<  \[TildeTilde]  \>", 
+            N[approx]\ ]; \[IndentingNewLine]Print["\<\>"]; \ \
+\[IndentingNewLine]F2 = 
+            Z\^2; \ \[IndentingNewLine]\(f\^2\)\&^\  = \ \(1\/n\) 
+              ReplaceAll[F2, 
+                List \[Rule] Plus]; \ \[IndentingNewLine]error\  = \ \((b - 
+                  a)\) \((d - 
+                  c)\) \@\(\(\(f\^2\)\&^ - \((f\&^)\)\^2\)\/n\); \ \
+\[IndentingNewLine]Print["\<The   'error estimate'  \[TildeTilde]  \>", \ 
+            error]; \ \[IndentingNewLine]Print["\<Actual |Volume-approx|  \
+\[TildeTilde]  \>", 
+            Abs[N[\[Integral]\_a\%b\((\[Integral]\_c\%d 
+                              f[{x, y}] \[DifferentialD]y)\) \
+\[DifferentialD]x] - approx]\ ]; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y)\) = 4 - x\^2 - y\^2\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the double \
+integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(5/4\)\((\[Integral]\_0\%\(5/4\)\ \((4 - x\^2 - 
+                    y\^2)\) \[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 4 - x\^2 - y\^2;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(c = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(d = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(e = 4;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(grange = {{a, b}, {c, d}, {0, e}};\)\), "\[IndentingNewLine]", 
+    \(\(gratio = {1, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[a, b, 0.5], Range[c, d, 0.5], 
+          Range[0, 10, 2]};\)\), "\[IndentingNewLine]", 
+    \(\(gview\  = {2, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot3D[f[{x, y}], {x, a, b}, {y, c, d}, PlotRange \[Rule] grange, 
+          BoxRatios \[Rule] gratio, Ticks \[Rule] gticks, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          ViewPoint \[Rule] gview];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[{x,y}] = \>", f[{x, y}]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MonteCarloResults2D[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MonteCarloResults2D[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MonteCarloResults2D[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral2D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tWe will need to seed the random number generator with the same integer so \
+that we get the same sequence of random numbers. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral2D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Volume  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2 = 
+        NIntegrate[Evaluate[f[{x, y}]], {x, a, b}, {y, c, d}, 
+          Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Volume  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the double integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 4 - x\^2 - y\^2;\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(c = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(d = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(e = 4;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(grange = {{a, b}, {c, d}, {0, e}};\)\), "\[IndentingNewLine]", 
+    \(\(gratio = {1, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[a, b, 0.5], Range[c, d, 0.5], 
+          Range[0, 10, 2]};\)\), "\[IndentingNewLine]", 
+    \(\(gview\  = {2, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot3D[f[{x, y}], {x, a, b}, {y, c, d}, PlotRange \[Rule] grange, 
+          BoxRatios \[Rule] gratio, Ticks \[Rule] gticks, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          ViewPoint \[Rule] gview];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<     z = f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<     \>", "\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+        f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", "\< (\>", \[Integral]f[{x, 
+                y}] \[DifferentialD]y, "\<)\>", "\<|\>"\+\(y == c\)\%\(y == d\
+\), "\< )\[DifferentialD]x\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<     \>", "\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+        f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", \[Integral]\_c\%d 
+              f[{x, y}] \[DifferentialD]y, "\<)\[DifferentialD]x\>"\ ];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<     \>", "\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+        f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x = \>", "\<(\>", \
+\[Integral]\((\[Integral]\_c\%d 
+                    f[{x, y}] \[DifferentialD]y)\) \[DifferentialD]x, \
+"\<)\>", "\<|\>"\+\(x == a\)\%\(x == b\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<     \>", "\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+        f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x = \>", \ \
+\[Integral]\_a\%b\((\[Integral]\_c\%d 
+                    f[{x, y}] \[DifferentialD]y)\) \[DifferentialD]x\ ];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<     \>", "\<\[Integral]\>"\+a\%b, "\<(\>", \
+"\<\[Integral]\>"\+c\%d, "\<(\>", 
+        f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x = \>", \ 
+        NumberForm[
+          N[\[Integral]\_a\%b\((\[Integral]\_c\%d 
+                        f[{x, y}] \[DifferentialD]y)\) \[DifferentialD]x\ ], 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    volume \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    volume \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    volume \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y)\) = \@\(4 - x\^2 - y\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the double \
+integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(5/4\)\((\[Integral]\_0\%\(5/4\)\ \(\@\(4 - x\^2 - 
+                      y\^2\)\) \[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = \@\(4 - x\^2 - y\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(c = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(d = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(e = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(grange = {{a, b}, {c, d}, {0, e}};\)\), "\[IndentingNewLine]", 
+    \(\(gratio = {1, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[a, b, 0.5], Range[c, d, 0.5], 
+          Range[0, 3, 1]};\)\), "\[IndentingNewLine]", 
+    \(\(gview\  = {2, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot3D[f[{x, y}], {x, a, b}, {y, c, d}, PlotRange \[Rule] grange, 
+          BoxRatios \[Rule] gratio, Ticks \[Rule] gticks, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          ViewPoint \[Rule] gview];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[{x,y}] = \>", f[{x, y}]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val1 = MonteCarloResults2D[100];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val2 = MonteCarloResults2D[1000];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val3 = MonteCarloResults2D[10000];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral2D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tWe will need to seed the random number generator with the same integer so \
+that we get the same sequence of random numbers. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral2D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Volume  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2 = 
+        NIntegrate[Evaluate[f[{x, y}]], {x, a, b}, {y, c, d}, 
+          Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Volume  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the double integral can be found."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = \@\(4 - x\^2 - y\^2\);\)\), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(c = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(d = 5\/4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(e = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(grange = {{a, b}, {c, d}, {0, e}};\)\), "\[IndentingNewLine]", 
+    \(\(gratio = {1, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(gticks = {Range[a, b, 0.5], Range[c, d, 0.5], 
+          Range[0, 10, 2]};\)\), "\[IndentingNewLine]", 
+    \(\(gview\  = {2, 1, 1};\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot3D[f[{x, y}], {x, a, b}, {y, c, d}, PlotRange \[Rule] grange, 
+          BoxRatios \[Rule] gratio, Ticks \[Rule] gticks, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {1, \(-1\)}}, 
+          ViewPoint \[Rule] gview];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\
+\>", f[{x, 
+            y}], "\<)\[DifferentialD]y)\[DifferentialD]x  = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", "\< (\>", \[Integral]f[{x, 
+                y}] \[DifferentialD]y, "\<)\>", "\<|\>"\+\(y == c\)\%\(y == d\
+\), "\< )\[DifferentialD]x\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\
+\>", f[{x, 
+            y}], "\<)\[DifferentialD]y)\[DifferentialD]x  = \>", "\<\
+\[Integral]\>"\+a\%b, "\<(\>", \[Integral]\_c\%d 
+              f[{x, y}] \[DifferentialD]y, "\<)\[DifferentialD]x\>"\ ];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\
+\>", f[{x, 
+            y}], "\<)\[DifferentialD]y)\[DifferentialD]x  = \>", "\<(\>", \
+\[Integral]\((\[Integral]\_c\%d 
+                    f[{x, 
+                      y}] \[DifferentialD]y)\) \[DifferentialD]x, "\<)\>", \
+"\<|\>"\+\(x == a\)\%\(x == b\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\
+\>", f[{x, 
+            y}], "\<)\[DifferentialD]y)\[DifferentialD]x  = \>", \ \
+\[Integral]\_a\%b\((\[Integral]\_c\%d 
+                    f[{x, y}] \[DifferentialD]y)\) \[DifferentialD]x\ ];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, "\<(\>", "\<\[Integral]\>"\+c\%d, "\<(\
+\>", f[{x, y}], "\<)\[DifferentialD]y)\[DifferentialD]x  =  \>", \ 
+        NumberForm[
+          N[\[Integral]\_a\%b\((\[Integral]\_c\%d 
+                        f[{x, y}] \[DifferentialD]y)\) \[DifferentialD]x\ ], 
+          10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<   volume \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<   volume \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<   volume \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Iterated Integrals in Higher Dimensions",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSometimes we are given integrals which cannot be done analytically, \
+especially in higher dimensions where the standard  methods of discretization \
+can become computationally expensive.  For example, the error in the \
+composite midpoint rule (and the composite trapezoidal rule) of an ",
+  StyleBox["d",
+    FontFamily->"Courier New"],
+  "-dimensional integral has the order of convergence   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((n\^\(\(-2\)/d\))\)}]]],
+  ".  We can apply the inequality  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((n\^\(\(-1\)/2\))\)}], "<", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((n\^\(\(-2\)/d\))\)}]}]]],
+  "  when  ",
+  Cell[BoxData[
+      \(d > 4\)]],
+  "  \n\nto see that  ",
+  ButtonBox["Monte-Carlo integration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MonteCarloIntegration.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " will usually converge faster for ",
+  ButtonBox["quintuple",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Quintuple.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " ",
+  ButtonBox["multiple integrals",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MultipleIntegral.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " and higher, i.e. ",
+  Cell[BoxData[
+      \(\(\[Integral]\(\[Integral]\(\[Integral]\(\[Integral]\[Integral]\)\)\)\
+\)\+V\ \ f\ \ \[DifferentialD]w\ \[DifferentialD]u\ \[DifferentialD]z\ \
+\[DifferentialD]y\ \[DifferentialD]x\)]],
+  ", etc.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Approximation for a Multiple Integral",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe ",
+  ButtonBox["Monte Carlo method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MonteCarloIntegration.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " can be used to numerically approximate the value of a ",
+  ButtonBox["multiple integrals",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MultipleIntegral.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  For a function of ",
+  StyleBox["d",
+    FontFamily->"Courier New"],
+  " variables the steps are:  \n\n",
+  StyleBox["(i)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tPick ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " randomly distributed points  ",
+  Cell[BoxData[
+      RowBox[{\(\(X\& \[RightVector] \)\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\(X\& \[RightVector] \)\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\(X\& \[RightVector] \)\_n\)}]]],
+  "  in the \"volume\"   ",
+  Cell[BoxData[
+      \(V = \(\([a\_1, b\_1]\)\[Times]\([a\_2, 
+                b\_2]\)\[Times] ... \)\[Times]\([a\_d, b\_d]\)\)]],
+  ".    \n\n",
+  StyleBox["(ii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tDetermine the average value of the function  \n\n\t\t ",
+  Cell[BoxData[
+      \(f\&^\ \  = \ \ \(1\/n\) \(\[Sum]\+\(i = 1\)\%n\ 
+            f \((\(X\& \[RightVector] \)\_i)\)\)\)],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tCompute the approximation to the integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(\(\[Integral]\[Integral] ... \) \[Integral]\)\+V\ \ f \((\(X\& \
+\[RightVector] \))\)\ \ \[DifferentialD]V\ \  \[TildeTilde] \ \ \((b\_1 - 
+                  a\_1)\) \((b\_2 - a\_2)\) ... \) \((b\_d - a\_d)\)*
+        f\&^\)]],
+  ". \n\n",
+  StyleBox["(iv)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tAn estimate for the error is \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["Error",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", "\[TildeTilde]", 
+            " ", \(\((b\_1 - a\_1)\) \((b\_2 - a\_2)\)\)}], 
+          "..."}], \((b\_d - 
+            a\_d)\), \(\@\(\(\(f\^2\)\&^ - \((f\&^)\)\^2\)\/n\)\)}]]],
+  ",     where     ",
+  Cell[BoxData[
+      \(\(f\^2\)\&^\  = \ 
+        1\/n\ \(\[Sum]\+\(i = 1\)\%n\ \(f\^2\) \((\(X\& \[RightVector] \)\_i)\
+\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Monte Carlo for 3 Dimensional \
+Integrals).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MonteCarloIntegral3D[
+          n0_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]X = 
+            Table[{Random[Real, {a1, b1}], Random[Real, {a2, b2}], 
+                Random[Real, {a3, b3}]}, {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]v = \((b1 - a1)\) \((b2 - a2)\) \((b3 - 
+                  a3)\); \[IndentingNewLine]approx = 
+            v*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z)\)\  = \ 4 - x\^2 - y\^2 - z\^2\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the triple \
+integral  \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/\
+10\)\ \ \((4 - x\^2 - y\^2 - 
+                          z\^2)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_}]\  = \ 
+        4 - x\^2 - y\^2 - z\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(int = \
+\*"\"\<\!\(\[Integral]\_0\%\(9/10\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\
+\_0\%\(11/10\)\) (4-\!\(x\^2\)-\!\(y\^2\)-\!\(z\^2\))\[DifferentialD]z)\
+\[DifferentialD]y)\[DifferentialD]x\>\"";\)\ \), "\[IndentingNewLine]", 
+    \(\(val\  = \ \
+\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ 
+                      f[{x, y, 
+                            z}] \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z}], {x, 0, 9\/10}, {y, 0, 1}, {z, 0, 
+            1  11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val, "\< = \>", \ 
+        NumberForm[N[val], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = 0\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b1 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral3D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral3D[1000];\)\ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral3D[10000];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral3D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral3D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z}]], {x, 0, 9\/10}, {y, 0, 1}, {z, 0, 
+            1  11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell["Observe that the results are the same. ", "Text"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found and involves the \
+following steps. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\[Integral]\ \((4 - x\^2 - y\^2 - z\^2)\) \[DifferentialD]z\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%\(11/10\)\ \((4 - x\^2 - y\^2 - 
+            z\^2)\) \[DifferentialD]z\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\((\[Integral]\_0\%\(11/10\)\ \((4 - x\^2 - y\^2 - 
+                  z\^2)\) \[DifferentialD]z)\) \[DifferentialD]y\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \((4 - x\^2 - y\^2 - 
+                  z\^2)\) \[DifferentialD]z)\) \[DifferentialD]y\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \((4 - 
+                        x\^2 - y\^2 - 
+                        z\^2)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\
+\ \((4 - x\^2 - y\^2 - 
+                        z\^2)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Monte Carlo for 4 Dimensional \
+Integrals).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MonteCarloIntegral4D[
+          n0_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]X = 
+            Table[{Random[Real, {a1, b1}], Random[Real, {a2, b2}], 
+                Random[Real, {a3, b3}], Random[Real, {a4, b4}]}, {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]v = \((b1 - a1)\) \((b2 - a2)\) \((b3 - a3)\) \((b4 - 
+                  a4)\); \[IndentingNewLine]approx = 
+            v*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z, u)\)\  = \ 5 - x\^2 - y\^2 - z\^2 - u\^2\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%\
+1\((\[Integral]\_0\%\(11/10\)\ \ \((5 - x\^2 - y\^2 - z\^2 - 
+                                u\^2\ )\) \[DifferentialD]u)\) \
+\[DifferentialD]z)\) \[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_, u_}] = 
+        5 - x\^2 - y\^2 - z\^2 - u\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(int = \*"\"\<\!\(\[Integral]\_0\%\(4/5\)\)(\!\(\[Integral]\_0\%\(9/10\
+\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_0\%\(11/10\)\) (5-\!\(x\^2\)-\!\
+\(y\^2\)-\!\(z\^2\)-\!\(u\^2\))\[DifferentialD]u)\[DifferentialD]z)\
+\[DifferentialD]y)\[DifferentialD]x\>\"";\)\ \), "\[IndentingNewLine]", 
+    \(\(val\  = \ \[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\(9/10\)\((\
+\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ 
+                            f[{x, y, z, 
+                                  u}] \[DifferentialD]u)\) \[DifferentialD]z)\
+\) \[DifferentialD]y)\) \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z, u}], {x, 0, 4\/5}, {y, 0, 9\/10}, {z, 0, 1}, {u, 0, 
+            11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u}] = \>", 
+        f[{x, y, z, u}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val, "\< = \>", \ 
+        NumberForm[N[val], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = \(a4 = 0\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b1 = 4\/5;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral4D[100];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral4D[1000];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral4D[10000];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u}] = \>", 
+        f[{x, y, z, u}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral4D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral4D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z, u}]], {x, 0, 4\/5}, {y, 0, 9\/10}, {z, 0, 
+            1}, {u, 0, 11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Monte Carlo for 5 Dimensional \
+Integrals).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MonteCarloIntegral5D[
+          n0_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]n = 
+            n0; \[IndentingNewLine]X = 
+            Table[{Random[Real, {a1, b1}], Random[Real, {a2, b2}], 
+                Random[Real, {a3, b3}], Random[Real, {a4, b4}], 
+                Random[Real, {a5, b5}]}, {i, 1, 
+                n}]; \ \[IndentingNewLine]f\&^\  = \ \(1\/n\) \(\[Sum]\+\(i = \
+1\)\%n f[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\); \
+\[IndentingNewLine]v = \((b1 - a1)\) \((b2 - a2)\) \((b3 - a3)\) \((b4 - 
+                  a4)\) \((b5 - a5)\); \[IndentingNewLine]approx = 
+            v*f\&^; \ \[IndentingNewLine]Return[{n, 
+              approx}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z, u, w)\)\  = \ 6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(7/10\)\((\[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\
+\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \ \((6 - x\^2 - 
+                                      y\^2 - z\^2 - u\^2 - 
+                                      w\^2)\) \[DifferentialD]w)\) \
+\[DifferentialD]u)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_, u_, w_}] = 
+        6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(int = \*"\"\<\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_0\%1\)(\!\(\
+\[Integral]\_0\%1\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_0\%1\) \
+(6-\!\(x\^2\)-\!\(y\^2\)-\!\(z\^2\)-\!\(u\^2\)-\!\(w\^2\))\[DifferentialD]w)\
+\[DifferentialD]u)\[DifferentialD]z)\[DifferentialD]y)\[DifferentialD]x\>\"";\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(val\  = \ \[Integral]\_0\%\(7/10\)\((\[Integral]\_0\%\(4/5\)\((\
+\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ 
+                                  f[{x, y, z, u, 
+                                        w}] \[DifferentialD]w)\) \
+\[DifferentialD]u)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z, u, w}], {x, 0, 7\/10}, {y, 0, 4\/5}, {z, 0, 9\/10}, {u, 
+            0, 1}, {w, 0, 11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val, "\< = \>", \ 
+        NumberForm[N[val], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = \(a4 = \(a5 = 
+                0\)\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(b1 = 7\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 4\/5;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b5 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral5D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral5D[1000];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral5D[10000];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< = \>", val\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral5D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral5D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z, u, w}]], {x, 0, 7\/10}, {y, 0, 4\/5}, {z, 0, 
+            9\/10}, {u, 0, 1}, {w, 0, 11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z)\)\  = \ \@\(4 - x\^2 - y\^2 - z\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/\
+10\)\ \ \(\@\(4 - x\^2 - y\^2 - 
+                            z\^2\)\) \[DifferentialD]z)\) \
+\[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, 
+            z_}]\  = \ \@\(4 - x\^2 - y\^2 - z\^2\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(int = \
+\*"\"\<\!\(\[Integral]\_0\%\(9/10\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\
+\_0\%\(11/10\)\) \!\(\@\(4 - x\^2 - y\^2 - z\^2\)\) \[DifferentialD]z)\
+\[DifferentialD]y)\[DifferentialD]x\>\"";\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z}], {x, 0, 9\/10}, {y, 0, 1}, {z, 0, 
+            1  11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = 0\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b1 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral3D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral3D[1000];\)\ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral3D[10000];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral3D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1 = MonteCarloIntegral3D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z}]], {x, 0, 9\/10}, {y, 0, 1}, {z, 0, 
+            1  11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We are really done!  \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The analytic value of the integral can be found and involves the \
+following steps. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\[Integral]\ \(\@\(4 - x\^2 - y\^2 - 
+              z\^2\)\) \(\(\[DifferentialD]\)\(z\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%\(11/10\)\ \(\@\(4 - x\^2 - y\^2 - 
+              z\^2\)\) \(\(\[DifferentialD]\)\(z\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\((\[Integral]\_0\%\(11/10\)\ \(\@\(4 - x\^2 - y\^2 - 
+                    z\^2\)\) \[DifferentialD]z)\) \(\(\[DifferentialD]\)\(y\)\
+\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \(\@\(4 - x\^2 - y\^2 - 
+                    z\^2\)\) \[DifferentialD]z)\) \(\(\[DifferentialD]\)\(y\)\
+\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Integral]\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \(\@\(4 - 
+                          x\^2 - y\^2 - 
+                          z\^2\)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\(\(\[DifferentialD]\)\(x\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(todo\  = \ \
+\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \
+\(\@\(4 - x\^2 - y\^2 - 
+                            z\^2\)\) \[DifferentialD]z)\) \
+\[DifferentialD]y)\) \(\(\[DifferentialD]\)\(x\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(todo\)\(=\)\(NumberForm[N[todo], 10]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(todo = Chop[todo]\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z, u)\)\  = \ \@\(5 - x\^2 - y\^2 - z\^2 - u\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\(9/10\)\((\[Integral]\_0\%\
+1\((\[Integral]\_0\%\(11/10\)\ \ \(\@\(5 - x\^2 - y\^2 - z\^2 - 
+                                  u\^2\)\) \[DifferentialD]u)\) \
+\[DifferentialD]z)\) \[DifferentialD]y)\) \[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_, 
+            u_}] = \@\(5 - x\^2 - y\^2 - z\^2 - u\^2\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(int = \*"\"\<\!\(\[Integral]\_0\%\(4/5\)\)(\!\(\[Integral]\_0\%\(9/10\
+\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_0\%\(11/10\)\) \!\(\@\(5 - x\^2 \
+- y\^2 - z\^2 - u\^2\)\) \
+\[DifferentialD]u)\[DifferentialD]z)\[DifferentialD]y)\[DifferentialD]x\>\"";\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z, u}], {x, 0, 4\/5}, {y, 0, 9\/10}, {z, 0, 1}, {u, 0, 
+            11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u}] = \>", 
+        f[{x, y, z, u}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = \(a4 = 0\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b1 = 4\/5;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral4D[100];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral4D[1000];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral4D[10000];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u}] = \>", 
+        f[{x, y, z, u}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral4D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1\  = \ 
+        MonteCarloIntegral4D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z, u}]], {x, 0, 4\/5}, {y, 0, 9\/10}, {z, 0, 
+            1}, {u, 0, 11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z, u, 
+            w)\)\  = \ \@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(7/10\)\((\[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\
+\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \ \(\@\(6 - x\^2 - 
+                                        y\^2 - z\^2 - u\^2 - 
+                                        w\^2\)\) \[DifferentialD]w)\) \
+\[DifferentialD]u)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_, u_, 
+            w_}] = \@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(int = \*"\"\<\!\(\[Integral]\_0\%\(7/10\)\)(\!\(\[Integral]\_0\%\(4/5\
+\)\)(\!\(\[Integral]\_0\%\(9/10\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_\
+0\%\(11/10\)\) \!\(\@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\)\) \
+\[DifferentialD]w)\[DifferentialD]u)\[DifferentialD]z)\[DifferentialD]y)\
+\[DifferentialD]x\>\"";\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z, u, w}], {x, 0, 7\/10}, {y, 0, 4\/5}, {z, 0, 9\/10}, {u, 
+            0, 1}, {w, 0, 11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a1 = \(a2 = \(a3 = \(a4 = \(a5 = 
+                0\)\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(b1 = 7\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 4\/5;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 9\/10;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(b5 = 11\/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(val1 = MonteCarloIntegral5D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(val2 = MonteCarloIntegral5D[1000];\)\ \), "\[IndentingNewLine]", 
+    \(\(val3 = MonteCarloIntegral5D[10000];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The approximations obtained with Monte Carlo \
+simulation:\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val2\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using n =\>", 
+        PaddedForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<    integral \[TildeTilde] \>", 
+        NumberForm[
+          val3\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["NIntegrate",
+    FontFamily->"Courier New"],
+  " to perform Monte Carlo integration, and we can verify that it is \
+computing the same results as our subroutine ",
+  StyleBox["MonteCarloIntegral5D",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(SeedRandom[5];\)\), "\[IndentingNewLine]", 
+    \(\(approx1\  = \ 
+        MonteCarloIntegral5D[100];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ 
+        approx1\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(approx2\  = \ 
+        NIntegrate[
+          Evaluate[f[{x, y, z, u, w}]], {x, 0, 7\/10}, {y, 0, 4\/5}, {z, 0, 
+            9\/10}, {u, 0, 1}, {w, 0, 11\/10}, Method \[Rule] MonteCarlo[5], 
+          MaxPoints \[Rule] 100\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Integral  \[TildeTilde]  \>", \ approx2];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f \((x, y, z, u, 
+            w)\)\  = \ \@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\)\)]],
+  ".  Use the Monte Carlo method to calculate approximations to the integral  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_0\%\(7/10\)\((\[Integral]\_0\%\(4/5\)\((\[Integral]\_0\%\
+\(9/10\)\((\[Integral]\_0\%1\((\[Integral]\_0\%\(11/10\)\ \ \(\@\(6 - x\^2 - 
+                                        y\^2 - z\^2 - u\^2 - 
+                                        w\^2\)\) \[DifferentialD]w)\) \
+\[DifferentialD]u)\) \[DifferentialD]z)\) \[DifferentialD]y)\) \
+\[DifferentialD]x\)]],
+  ".  \n\t\t\nCompare the Monte Carlo method with the midpoint rule. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_, u_, 
+            w_}] = \@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(int = \*"\"\<\!\(\[Integral]\_0\%\(7/10\)\)(\!\(\[Integral]\_0\%\(4/5\
+\)\)(\!\(\[Integral]\_0\%\(9/10\)\)(\!\(\[Integral]\_0\%1\)(\!\(\[Integral]\_\
+0\%\(11/10\)\) \!\(\@\(6 - x\^2 - y\^2 - z\^2 - u\^2 - w\^2\)\) \
+\[DifferentialD]w)\[DifferentialD]u)\[DifferentialD]z)\[DifferentialD]y)\
+\[DifferentialD]x\>\"";\)\ \), "\[IndentingNewLine]", 
+    \(\(app\  = \ 
+        NIntegrate[
+          f[{x, y, z, u, w}], {x, 0, 7\/10}, {y, 0, 4\/5}, {z, 0, 9\/10}, {u, 
+            0, 1}, {w, 0, 11\/10}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(m = 6;\)\), "\[IndentingNewLine]", 
+    \(\(a1 = \(a2 = \(a3 = \(a4 = \(a5 = 
+                0\)\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(b1 = 7. \/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 4. \/5;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 9. \/10;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(b5 = 11. \/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(xx = 
+        Table[b1 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(yy = 
+        Table[b2 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(zz = 
+        Table[b3 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(uu = 
+        Table[b4 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(ww = 
+        Table[b5 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(f\&^\  = \ \(1\/m\^5\) \(\[Sum]\+\(i = 1\)\%m\(\[Sum]\+\(ii = \
+1\)\%m\(\[Sum]\+\(iii = 1\)\%m\(\[Sum]\+\(iiii = 1\)\%m\(\[Sum]\+\(iiiii = \
+1\)\%m f[{xx\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+                        yy\_\(\(\[LeftDoubleBracket]\)\(ii\)\(\
+\[RightDoubleBracket]\)\), 
+                        zz\_\(\(\[LeftDoubleBracket]\)\(iii\)\(\
+\[RightDoubleBracket]\)\), 
+                        uu\_\(\(\[LeftDoubleBracket]\)\(iiii\)\(\
+\[RightDoubleBracket]\)\), 
+                        ww\_\(\(\[LeftDoubleBracket]\)\(iiiii\)\(\
+\[RightDoubleBracket]\)\)}]\)\)\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(v = b1\ b2\ b3\ b4\ b5;\)\ \), "\[IndentingNewLine]", 
+    \(\(midpoint = v*f\&^;\)\ \), "\[IndentingNewLine]", 
+    \(\(val4 = MonteCarloIntegral5D[7776];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Using  \!\(m\^5\) = \>\"", 
+        m\^5, "\<  function evaluations for the midpoint rule\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[midpoint, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n =\>", 
+        PaddedForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<  function evaluations for the Monte Carlo method\>"\ \
+];\)\), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[
+          val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The midpoint error = \>", 
+        PaddedForm[app - midpoint]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Monte Carlo  error = \>", 
+        PaddedForm[
+          app - val4\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\), 8]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(m = 7;\)\), "\[IndentingNewLine]", 
+    \(\(b1 = 7. \/10;\)\), "\[IndentingNewLine]", 
+    \(\(b2 = 4. \/5;\)\), "\[IndentingNewLine]", 
+    \(\(b3 = 9. \/10;\)\), "\[IndentingNewLine]", 
+    \(\(b4 = 1.0;\)\), "\[IndentingNewLine]", 
+    \(\(b5 = 11. \/10;\)\ \), "\[IndentingNewLine]", 
+    \(\(xx = 
+        Table[b1 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(yy = 
+        Table[b2 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(zz = 
+        Table[b3 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(uu = 
+        Table[b4 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(ww = 
+        Table[b5 \((i - 0.5)\)\/m, {i, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(f\&^\  = \ \(1\/m\^5\) \(\[Sum]\+\(i = 1\)\%m\(\[Sum]\+\(ii = \
+1\)\%m\(\[Sum]\+\(iii = 1\)\%m\(\[Sum]\+\(iiii = 1\)\%m\(\[Sum]\+\(iiiii = \
+1\)\%m f[{xx\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+                        yy\_\(\(\[LeftDoubleBracket]\)\(ii\)\(\
+\[RightDoubleBracket]\)\), 
+                        zz\_\(\(\[LeftDoubleBracket]\)\(iii\)\(\
+\[RightDoubleBracket]\)\), 
+                        uu\_\(\(\[LeftDoubleBracket]\)\(iiii\)\(\
+\[RightDoubleBracket]\)\), 
+                        ww\_\(\(\[LeftDoubleBracket]\)\(iiiii\)\(\
+\[RightDoubleBracket]\)\)}]\)\)\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(v = b1\ b2\ b3\ b4\ b5;\)\ \), "\[IndentingNewLine]", 
+    \(\(midpoint = v*f\&^;\)\ \), "\[IndentingNewLine]", 
+    \(\(val5 = MonteCarloIntegral5D[16807];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z,u,w}] = \>", 
+        f[{x, y, z, u, w}]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica's approximation using 'NIntegrate' is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[app, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Using \!\(m\^5\) = \>\"", 
+        m\^5, "\<  function evaluations for the midpoint rule\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[midpoint, 10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  n =\>", 
+        PaddedForm[
+          val5\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          5], "\<  function evaluations for the Monte Carlo method\>"\ \
+];\)\), "\[IndentingNewLine]", 
+    \(\(Print[int, "\< \[TildeTilde] \>", 
+        NumberForm[
+          val5\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The midpoint error = \>", 
+        PaddedForm[app - midpoint]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Monte Carlo  error = \>", 
+        PaddedForm[
+          app - val5\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\), 8]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  For this quintuple multiple integral,  most of the time the Monte Carlo \
+simulation has less error than the midpoint rule.  This is what we expect to \
+happen.  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Monte Carlo Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/MonteCarloBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{952, 635},
+WindowMargins->{{30, Automatic}, {Automatic, -3}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{
+  "Mean Value Theorem for Integrals"->{
+    Cell[3396, 109, 1913, 66, 200, "Text",
+      CellTags->"Mean Value Theorem for Integrals"]}
+  }
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{
+  {"Mean Value Theorem for Integrals", 136045, 3509}
+  }
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 201, 5, 35, "Text"],
+Cell[1980, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3128, 101, 265, 6, 68, "Text"],
+Cell[3396, 109, 1913, 66, 200, "Text",
+  CellTags->"Mean Value Theorem for Integrals"],
+Cell[5312, 177, 892, 32, 82, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[6229, 213, 101, 2, 33, "Text"],
+Cell[6333, 217, 1742, 33, 538, "Input"],
+Cell[8078, 252, 3273, 57, 682, "Input"]
+}, Closed]],
+Cell[11366, 312, 162, 4, 32, "Text"],
+Cell[11531, 318, 872, 25, 33, "Text"],
+Cell[12406, 345, 4344, 136, 183, "Text"],
+Cell[16753, 483, 338, 12, 33, "Text"],
+Cell[17094, 497, 4757, 141, 200, "Text"],
+Cell[21854, 640, 338, 12, 33, "Text"],
+Cell[22195, 654, 372, 13, 33, "Text"],
+Cell[22570, 669, 1781, 58, 119, "Text"],
+Cell[24354, 729, 350, 12, 33, "Text"],
+Cell[24707, 743, 143, 2, 33, "Text"],
+Cell[24853, 747, 545, 9, 209, "Input"],
+Cell[25401, 758, 348, 12, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[25774, 774, 101, 2, 33, "Text"],
+Cell[25878, 778, 808, 17, 179, "Input"],
+Cell[26689, 797, 2717, 46, 617, "Input"],
+Cell[29409, 845, 78, 1, 30, "Input"],
+Cell[29490, 848, 79, 1, 30, "Input"],
+Cell[29572, 851, 80, 1, 30, "Input"],
+Cell[29655, 854, 81, 1, 30, "Input"],
+Cell[29739, 857, 186, 6, 71, "Text"],
+Cell[29928, 865, 2976, 60, 492, "Input"]
+}, Closed]],
+Cell[32919, 928, 883, 22, 106, "Text"],
+Cell[33805, 952, 2813, 84, 359, "Text"],
+Cell[36621, 1038, 634, 17, 52, "Text"],
+Cell[37258, 1057, 371, 13, 33, "Text"],
+Cell[37632, 1072, 358, 12, 33, "Text"],
+Cell[37993, 1086, 171, 3, 33, "Text"],
+Cell[38167, 1091, 559, 10, 195, "Input"],
+Cell[38729, 1103, 147, 3, 33, "Text"],
+Cell[38879, 1108, 3286, 56, 805, "Input"],
+Cell[42168, 1166, 355, 13, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[42548, 1183, 101, 2, 33, "Text"],
+Cell[42652, 1187, 808, 17, 179, "Input"],
+Cell[43463, 1206, 78, 1, 30, "Input"],
+Cell[43544, 1209, 79, 1, 30, "Input"],
+Cell[43626, 1212, 80, 1, 30, "Input"],
+Cell[43709, 1215, 81, 1, 30, "Input"],
+Cell[43793, 1218, 470, 16, 90, "Text"],
+Cell[44266, 1236, 151, 3, 33, "Text"],
+Cell[44420, 1241, 286, 5, 71, "Input"],
+Cell[44709, 1248, 238, 4, 50, "Input"],
+Cell[44950, 1254, 55, 0, 33, "Text"],
+Cell[45008, 1256, 193, 6, 71, "Text"],
+Cell[45204, 1264, 2981, 60, 492, "Input"]
+}, Closed]],
+Cell[48200, 1327, 381, 13, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[48606, 1344, 101, 2, 33, "Text"],
+Cell[48710, 1348, 769, 15, 190, "Input"],
+Cell[49482, 1365, 78, 1, 30, "Input"],
+Cell[49563, 1368, 79, 1, 30, "Input"],
+Cell[49645, 1371, 80, 1, 30, "Input"],
+Cell[49728, 1374, 81, 1, 30, "Input"],
+Cell[49812, 1377, 470, 16, 90, "Text"],
+Cell[50285, 1395, 151, 3, 33, "Text"],
+Cell[50439, 1400, 286, 5, 71, "Input"],
+Cell[50728, 1407, 238, 4, 50, "Input"],
+Cell[50969, 1413, 55, 0, 33, "Text"],
+Cell[51027, 1415, 193, 6, 71, "Text"],
+Cell[51223, 1423, 2844, 56, 483, "Input"]
+}, Closed]],
+Cell[54082, 1482, 375, 13, 41, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[54482, 1499, 101, 2, 33, "Text"],
+Cell[54586, 1503, 787, 16, 185, "Input"],
+Cell[55376, 1521, 78, 1, 30, "Input"],
+Cell[55457, 1524, 79, 1, 30, "Input"],
+Cell[55539, 1527, 80, 1, 30, "Input"],
+Cell[55622, 1530, 81, 1, 30, "Input"],
+Cell[55706, 1533, 470, 16, 90, "Text"],
+Cell[56179, 1551, 151, 3, 33, "Text"],
+Cell[56333, 1556, 286, 5, 71, "Input"],
+Cell[56622, 1563, 238, 4, 50, "Input"],
+Cell[56863, 1569, 55, 0, 33, "Text"],
+Cell[56921, 1571, 193, 6, 71, "Text"],
+Cell[57117, 1579, 3019, 60, 518, "Input"]
+}, Closed]],
+Cell[60151, 1642, 6358, 179, 356, "Text"],
+Cell[66512, 1823, 171, 3, 33, "Text"],
+Cell[66686, 1828, 595, 10, 195, "Input"],
+Cell[67284, 1840, 147, 3, 33, "Text"],
+Cell[67434, 1845, 4166, 74, 760, "Input"],
+Cell[71603, 1921, 474, 14, 72, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[72102, 1939, 101, 2, 33, "Text"],
+Cell[72206, 1943, 1105, 19, 318, "Input"],
+Cell[73314, 1964, 79, 1, 30, "Input"],
+Cell[73396, 1967, 80, 1, 30, "Input"],
+Cell[73479, 1970, 81, 1, 30, "Input"],
+Cell[73563, 1973, 470, 16, 90, "Text"],
+Cell[74036, 1991, 151, 3, 33, "Text"],
+Cell[74190, 1996, 288, 5, 71, "Input"],
+Cell[74481, 2003, 277, 5, 50, "Input"],
+Cell[74761, 2010, 55, 0, 33, "Text"],
+Cell[74819, 2012, 200, 6, 71, "Text"],
+Cell[75022, 2020, 3922, 74, 607, "Input"]
+}, Closed]],
+Cell[78959, 2097, 486, 14, 69, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[79470, 2115, 101, 2, 33, "Text"],
+Cell[79574, 2119, 1110, 19, 321, "Input"],
+Cell[80687, 2140, 79, 1, 30, "Input"],
+Cell[80769, 2143, 80, 1, 30, "Input"],
+Cell[80852, 2146, 81, 1, 30, "Input"],
+Cell[80936, 2149, 470, 16, 90, "Text"],
+Cell[81409, 2167, 151, 3, 33, "Text"],
+Cell[81563, 2172, 288, 5, 71, "Input"],
+Cell[81854, 2179, 277, 5, 50, "Input"],
+Cell[82134, 2186, 55, 0, 33, "Text"],
+Cell[82192, 2188, 200, 6, 71, "Text"],
+Cell[82395, 2196, 3891, 74, 610, "Input"]
+}, Closed]],
+Cell[86301, 2273, 1778, 48, 192, "Text"],
+Cell[88082, 2323, 3390, 96, 368, "Text"],
+Cell[91475, 2421, 171, 3, 33, "Text"],
+Cell[91649, 2426, 677, 12, 195, "Input"],
+Cell[92329, 2440, 551, 16, 72, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[92905, 2460, 101, 2, 33, "Text"],
+Cell[93009, 2464, 1158, 23, 212, "Input"],
+Cell[94170, 2489, 1877, 37, 338, "Input"],
+Cell[96050, 2528, 470, 16, 90, "Text"],
+Cell[96523, 2546, 290, 5, 71, "Input"],
+Cell[96816, 2553, 322, 6, 63, "Input"],
+Cell[97141, 2561, 55, 0, 33, "Text"],
+Cell[97199, 2563, 229, 7, 71, "Text"],
+Cell[97431, 2572, 92, 1, 41, "Input"],
+Cell[97526, 2575, 119, 2, 42, "Input"],
+Cell[97648, 2579, 160, 2, 42, "Input"],
+Cell[97811, 2583, 166, 2, 42, "Input"],
+Cell[97980, 2587, 234, 4, 42, "Input"],
+Cell[98217, 2593, 224, 4, 42, "Input"]
+}, Closed]],
+Cell[98456, 2600, 171, 3, 30, "Text"],
+Cell[98630, 2605, 715, 12, 195, "Input"],
+Cell[99348, 2619, 616, 16, 72, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[99989, 2639, 101, 2, 33, "Text"],
+Cell[100093, 2643, 1305, 23, 212, "Input"],
+Cell[101401, 2668, 1953, 38, 372, "Input"],
+Cell[103357, 2708, 470, 16, 90, "Text"],
+Cell[103830, 2726, 290, 5, 71, "Input"],
+Cell[104123, 2733, 336, 6, 84, "Input"]
+}, Closed]],
+Cell[104474, 2742, 171, 3, 30, "Text"],
+Cell[104648, 2747, 770, 13, 215, "Input"],
+Cell[105421, 2762, 727, 18, 72, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[106173, 2784, 102, 2, 33, "Text"],
+Cell[106278, 2788, 1438, 25, 212, "Input"],
+Cell[107719, 2815, 2021, 40, 406, "Input"],
+Cell[109743, 2857, 470, 16, 90, "Text"],
+Cell[110216, 2875, 290, 5, 71, "Input"],
+Cell[110509, 2882, 354, 6, 84, "Input"]
+}, Closed]],
+Cell[110878, 2891, 557, 16, 69, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[111460, 2911, 102, 2, 33, "Text"],
+Cell[111565, 2915, 801, 17, 161, "Input"],
+Cell[112369, 2934, 1810, 36, 318, "Input"],
+Cell[114182, 2972, 470, 16, 90, "Text"],
+Cell[114655, 2990, 290, 5, 71, "Input"],
+Cell[114948, 2997, 322, 6, 63, "Input"],
+Cell[115273, 3005, 229, 7, 71, "Text"],
+Cell[115505, 3014, 129, 2, 41, "Input"],
+Cell[115637, 3018, 143, 2, 42, "Input"],
+Cell[115783, 3022, 186, 3, 42, "Input"],
+Cell[115972, 3027, 192, 3, 42, "Input"],
+Cell[116167, 3032, 260, 4, 42, "Input"],
+Cell[116430, 3038, 263, 5, 42, "Input"],
+Cell[116696, 3045, 83, 1, 30, "Input"],
+Cell[116782, 3048, 50, 1, 30, "Input"]
+}, Closed]],
+Cell[116847, 3052, 627, 16, 69, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[117499, 3072, 102, 2, 33, "Text"],
+Cell[117604, 3076, 884, 18, 161, "Input"],
+Cell[118491, 3096, 1886, 37, 352, "Input"],
+Cell[120380, 3135, 470, 16, 90, "Text"],
+Cell[120853, 3153, 303, 6, 71, "Input"],
+Cell[121159, 3161, 336, 6, 84, "Input"]
+}, Closed]],
+Cell[121510, 3170, 754, 19, 69, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[122289, 3193, 102, 2, 33, "Text"],
+Cell[122394, 3197, 974, 18, 161, "Input"],
+Cell[123371, 3217, 1952, 39, 386, "Input"],
+Cell[125326, 3258, 470, 16, 90, "Text"],
+Cell[125799, 3276, 303, 6, 71, "Input"],
+Cell[126105, 3284, 354, 6, 84, "Input"]
+}, Closed]],
+Cell[126474, 3293, 817, 19, 107, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[127316, 3316, 102, 2, 33, "Text"],
+Cell[127421, 3320, 974, 18, 161, "Input"],
+Cell[128398, 3340, 3018, 59, 680, "Input"],
+Cell[131419, 3401, 2920, 57, 660, "Input"],
+Cell[134342, 3460, 277, 7, 33, "Text"]
+}, Closed]],
+Cell[134634, 3470, 158, 3, 32, "Text"],
+Cell[134795, 3475, 310, 8, 33, "Text"],
+Cell[135108, 3485, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

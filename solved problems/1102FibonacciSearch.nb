@@ -1,0 +1,3791 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    122599,       3655]*)
+(*NotebookOutlinePosition[    123292,       3679]*)
+(*  CellTagsIndexPosition[    123248,       3675]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Fibonacci Search",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Bracketing Search Methods",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold"],
+  StyleBox["An approach for finding the minimum of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["in a given interval is to evaluate the function many times and \
+search for a local minimum.  To reduce the number of function evaluations it \
+is important to have a good strategy for determining where",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["is to be evaluated.  Two efficient bracketing methods are the ",
+    FontFamily->"Times-Roman"],
+  StyleBox["golden ratio",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" and ",
+    FontFamily->"Times-Roman"],
+  StyleBox["Fibonacci",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" searches.  To use either bracketing method for finding the \
+minimum of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox[",  a special condition must be met to ensure that there is a \
+proper minimum in the given interval.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Unimodal Function)",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  The function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["is unimodal on",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(I = \([a, b]\)\)]],
+  StyleBox[",  if there exists a unique number ",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(p \[Element] I\)]],
+  "  ",
+  StyleBox["such that  \n\t\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["is decreasing on",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(\([a, p]\)\)]],
+  StyleBox[",  \n\tand\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["is increasing on",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(\([p, b]\)\)]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Fibonacci Search",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold"],
+  StyleBox["\n\tIn the golden ratio search two function evaluations are made \
+at the first iteration and then only one function evaluation is made for each \
+subsequent iteration.  The value of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(r\)]],
+  StyleBox["  remains constant on each subinterval and the search is \
+terminated at the ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(k\^th\)]],
+  StyleBox[" subinterval, provided that  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(b\_k - a\_k\)\(|\)\(\(<\)\(\[Delta]\)\)\)\)]],
+  StyleBox["  or",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((b\_k)\) - 
+          f \((a\_k)\)\)\(|\)\(\(<\)\(\[Epsilon]\)\)\)\)]],
+  StyleBox["  where ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"\[Delta]", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "\[Epsilon]"}]]],
+  " ",
+  StyleBox[" are the predefined tolerances.  The  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["Fibonacci",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" search method differs from the golden ratio method in that the \
+value of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(r\)]],
+  StyleBox["  is not constant on each subinterval.  Additionally, the number \
+of subintervals (iterations) is predetermined and based on the specified \
+tolerances.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe Fibonacci search is based on the sequence of ",
+    FontFamily->"Times-Roman"],
+  ButtonBox["Fibonacci numbers",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/FibonacciNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" which are defined by the equations \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[{
+      \(F\_0 = 0\), "\n", 
+      \(F\_1 = 1\)}]],
+  StyleBox["\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(F\_n = F\_\(n - 1\) + F\_\(n - 2\)\)]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(n = 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  "  \n\n",
+  StyleBox["Thus the Fibonacci numbers are  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"0", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "5", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "8", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "13", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "21", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "34", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "55", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration for Fibonacci Numbers",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tIn ",
+    FontFamily->"Times-Roman"],
+  StyleBox["Mathematica",
+    FontFamily->"Times-Roman",
+    FontSlant->"Italic"],
+  StyleBox[", the Fibonacci numbers can be defined recursively as follows:",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[F];\)\), "\[IndentingNewLine]", 
+    \(\(F[0] = 0;\)\), "\n", 
+    \(\(F[1] = 1;\)\), "\n", 
+    \(\(F[n_] := F[n - 1] + F[n - 2];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(For[i = 0, 
+        i \[LessEqual] 
+          21, \(i++\), \[IndentingNewLine]\(If[i < 2, 
+            Print["\<F\>"\_i, "\< = \>", 
+              F[i]], \[IndentingNewLine]Print["\<F\>"\_i, "\< = \>", 
+              F[i - 1], "\< + \>", F[i - 2], "\< = \>", 
+              F[i]]];\)\ ];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<{\!\(F\_n\)} = \>\"", 
+        Append[Table[F[n], {n, 0, 21}], "\<...\>"]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  When using a recursion, a function call usually computes the value \
+making all of the necessary previous recursive steps.  Sometimes it is faster \
+to store all the previous values so that a second function call can use \
+information previously calculated.  If the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " function is written in the following way, it includes this \"remember\" \
+feature.  \n\nWithout the \"remember\" feature the function is:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(?F\)\)], "Input"],
+
+Cell[TextData[{
+  "Let us compute the Fibonacci number  ",
+  Cell[BoxData[
+      \(F\_20\  = \ f[20]\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(F[20]\)], "Input"],
+
+Cell["The function can be viewed with the command:", "Text"],
+
+Cell[BoxData[
+    \(\(?F\)\)], "Input"],
+
+Cell["Now let us add the \"remember\" feature to the function:", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[F];\)\), "\[IndentingNewLine]", 
+    \(\(F[0] = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(F[1] = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(F[n_] := \(F[n] = F[n - 1] + F[n - 2]\);\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Let us compute the Fibonacci number  ",
+  Cell[BoxData[
+      \(F\_20\  = \ f[20]\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(F[20]\)], "Input"],
+
+Cell["The function can be viewed with the command:", "Text"],
+
+Cell[BoxData[
+    \(\(?F\)\)], "Input"],
+
+Cell[TextData[{
+  "We see that all of the Fibonacci numbers  ",
+  Cell[BoxData[
+      \(F[2]\)]],
+  " through ",
+  Cell[BoxData[
+      \(F[20]\)]],
+  " are actually saved in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " and if a second call to them is made then the value will be retrieved \
+from memory.\n\nAnother nice way to define the Fibonacci numbers is using a \
+function defined on subscripts."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F\_0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_1 = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_n_ := F\_\(n - 1\) + F\_\(n - 2\);\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(F\_20\) = \>\"", 
+        F\_20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(F\_21\) = \>\"", F\_21];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Closed form formula for Fibonacci numbers",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nUsing the standard technique for solving a difference equation, it is \
+easy to show that ",
+  Cell[BoxData[
+      \(F\_n\)]],
+  " can be computed with the formula \n\n\t\t",
+  Cell[BoxData[
+      \(F\_n\  = \ \((\((1 + \@5)\)\^n - \((1 - \@5)\)\^n)\)/\((\(2\^n\) \@5)\
+\)\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<{\!\(F\_n\)} = \>\"", 
+        Append[Table[\ 
+            Simplify[\((\((1 + \@5)\)\^n - \((1 - \@5)\)\^n)\)/\((\(2\^n\) \
+\@5)\)], {n, 0, 21}], "\<...\>"]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Limit of the ratio of  Fibonacci numbers",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nThe ratio of consecutive Fibonacci numbers is \n\n\t\t",
+  Cell[BoxData[
+      \(F\_\(n - 1\)\/F\_n\ \  = \ \ \(\((\((1 + \@5)\)\^\(n - 1\) - \((1 - \
+\@5)\)\^\(n - 1\))\)/\((\(2\^\(n - 1\)\) \@5)\)\)\/\(\((\((1 + \@5)\)\^n - \
+\((1 - \@5)\)\^n)\)/\((\(2\^n\) \@5)\)\)\)]],
+  " \n\nThe limit of this ratio is  ",
+  Cell[BoxData[
+      \(2\/\(1 + \@5\)\)]],
+  "  as shown by the computation  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(Limit[\(\((\((1 + \@5)\)\^\(n - 1\) - \((1 - \@5)\)\^\(n - \
+1\))\)/\((\(2\^\(n - 1\)\) \@5)\)\)\/\(\((\((1 + \@5)\)\^n - \((1 - \
+\@5)\)\^n)\)/\((\(2\^n\) \@5)\)\), n \[Rule] \[Infinity]]\)}], "Input"],
+
+Cell[TextData[{
+  "But this is just a disguised way of writing the value  ",
+  Cell[BoxData[
+      \(r\  = \ \(\@5 - 1\)\/2\)]],
+  "  for the \"golden ratio.\" "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<r = \>", \(\@5 - 1\)\/2, "\< = \>", 
+        N[\(\@5 - 1\)\/2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<s = \>", 2\/\(1 + \@5\), "\< = \>", 
+        N[2\/\(1 + \@5\)]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since the Fibonacci search uses the ratios ",
+  Cell[BoxData[
+      \({r\_k = F\_\(n - 1 - k\)\/F\_\(n - k\)}\_\(k = 0\)\%\(k = n - \
+3\)\)]],
+  "  when",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  large the two methods are almost identical.  \n\nEven for the \
+small value  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(n = 21\)]],
+  "  the first six values of  ",
+  Cell[BoxData[
+      \(r\_k = F\_\(n - 1 - k\)\/F\_\(n - k\)\)]],
+  "  are very close to the golden ratio ",
+  Cell[BoxData[
+      \(r\  = \ \(\(\@5 - 1\)\/2\  = \ 0.618033985017358\)\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 21;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(r\_k\)=\!\(F\_\(n - 1 - k\)\/F\_\(n - k\)\)} = \
+\>\"", Table[\ 
+          F\_\(n - 1 - k\)\/F\_\(n - k\), {k, 0, 
+            n - 3}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(r\_k\)=\!\(F\_\(n - 1 - k\)\/F\_\(n - k\)\)} = \
+\>\"", Table[
+          N[\ F\_\(n - 1 - k\)\/F\_\(n - k\)], {k, 0, 
+            n - 3}]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tAssume we are given a function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  ",
+  StyleBox["that is unimodal on the interval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([a\_0, b\_0]\)\)]],
+  StyleBox[".  As in the golden ratio search a value ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(r\_0\)]],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\((1\/2 < r\_0 < 1)\)\)]],
+  StyleBox[" is selected so that both of the interior points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(c\_0\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", \(d\_0\)}]]],
+  " ",
+  StyleBox["will be used in the next subinterval and there will be only one \
+new function evaluation.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tIf  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((c\_0)\) \[LessEqual] f \((d\_0)\)\)]],
+  StyleBox[",  then the minimum must occur in the subinterval ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([a\_0, d\_0]\)\)]],
+  StyleBox[", and we replace  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(a\_1 = a\_0\)]],
+  StyleBox[" and ",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(b\_1 = d\_0\)]],
+  StyleBox["  and continue the search in the new subinterval",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\) = \([a\_0, d\_0]\)\)]],
+  StyleBox[".   If  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((c\_0)\) > f \((d\_0)\)\)]],
+  ",",
+  StyleBox[" then the minimum must occur in the subinterval",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(\([c\_0, b\_0]\)\)]],
+  StyleBox[", and we replace  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(a\_1 = c\_0\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(b\_1 = b\_0\)]],
+  StyleBox["  and continue the search in the new subinterval",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\) = \([c\_0, b\_0]\)\)]],
+  ".  These choices are shown in Figure 1 below.  \n\n",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0454545 0.909091 0 0.824045 [
+[.04546 -0.0125 -5 -12.5625 ]
+[.04546 -0.0125 5 0 ]
+[.3927 -0.0125 -5 -12.5625 ]
+[.3927 -0.0125 5 0 ]
+[.6073 -0.0125 -5 -12.5625 ]
+[.6073 -0.0125 5 0 ]
+[.26006 -0.0125 -5 -12.5625 ]
+[.26006 -0.0125 5 0 ]
+[.95455 -0.0125 -5 -12.5625 ]
+[.95455 -0.0125 5 0 ]
+[.03295 .0824 -18 -4.5 ]
+[.03295 .0824 0 4.5 ]
+[.03295 .16481 -18 -4.5 ]
+[.03295 .16481 0 4.5 ]
+[.03295 .24721 -18 -4.5 ]
+[.03295 .24721 0 4.5 ]
+[.03295 .32962 -18 -4.5 ]
+[.03295 .32962 0 4.5 ]
+[.03295 .41202 -18 -4.5 ]
+[.03295 .41202 0 4.5 ]
+[.03295 .49443 -18 -4.5 ]
+[.03295 .49443 0 4.5 ]
+[.03295 .57683 -18 -4.5 ]
+[.03295 .57683 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.04546 0 m
+.04546 .00625 L
+s
+gsave
+.04546 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.3927 0 m
+.3927 .00625 L
+s
+gsave
+.3927 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.6073 0 m
+.6073 .00625 L
+s
+gsave
+.6073 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.26006 0 m
+.26006 .00625 L
+s
+gsave
+.26006 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.95455 0 m
+.95455 .00625 L
+s
+gsave
+.95455 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+s
+.04545 .0824 m
+.0517 .0824 L
+s
+[(0.1)] .03295 .0824 1 0 Mshowa
+.04545 .16481 m
+.0517 .16481 L
+s
+[(0.2)] .03295 .16481 1 0 Mshowa
+.04545 .24721 m
+.0517 .24721 L
+s
+[(0.3)] .03295 .24721 1 0 Mshowa
+.04545 .32962 m
+.0517 .32962 L
+s
+[(0.4)] .03295 .32962 1 0 Mshowa
+.04545 .41202 m
+.0517 .41202 L
+s
+[(0.5)] .03295 .41202 1 0 Mshowa
+.04545 .49443 m
+.0517 .49443 L
+s
+[(0.6)] .03295 .49443 1 0 Mshowa
+.04545 .57683 m
+.0517 .57683 L
+s
+[(0.7)] .03295 .57683 1 0 Mshowa
+.04545 0 m
+.04545 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+1 0 1 r
+.5 Mabswid
+.04545 .57683 m
+.08233 .44945 L
+.12255 .33776 L
+.16033 .25547 L
+.19665 .19429 L
+.2169 .16695 L
+.23532 .14588 L
+.27254 .11328 L
+.29082 .10166 L
+.31066 .09198 L
+.32959 .08535 L
+.33914 .0829 L
+.34454 .08177 L
+.34966 .08085 L
+.35429 .08016 L
+.35934 .07954 L
+.36393 .07911 L
+.36819 .07881 L
+.3708 .07867 L
+.37207 .07862 L
+.37325 .07857 L
+.3743 .07854 L
+.37545 .07852 L
+.37661 .07849 L
+.37784 .07848 L
+.37853 .07848 L
+.37918 .07847 L
+.3804 .07847 L
+.38109 .07848 L
+.38172 .07848 L
+.38242 .07849 L
+.38316 .0785 L
+.38437 .07853 L
+.38552 .07856 L
+.38812 .07865 L
+.39044 .07876 L
+.3926 .07889 L
+.39751 .07926 L
+.40228 .07972 L
+.40739 .08033 L
+.42505 .08329 L
+.43483 .08547 L
+.44543 .08823 L
+.46466 .09422 L
+.50372 .10982 L
+.54133 .12836 L
+.5775 .14872 L
+.616 .17243 L
+.65306 .19671 L
+.69246 .22361 L
+Mistroke
+.73042 .25024 L
+.76692 .27628 L
+.80577 .30423 L
+.84317 .33128 L
+.88291 .36008 L
+.92121 .38785 L
+.95455 .41202 L
+Mfstroke
+1 .8 .85 r
+.05091 .55636 m
+.07348 .47773 L
+.0981 .4025 L
+.12121 .34106 L
+.14345 .28973 L
+.16711 .24278 L
+.18989 .20445 L
+.21411 .17045 L
+.23743 .14368 L
+.25988 .12296 L
+.28375 .10583 L
+.29562 .09905 L
+.30674 .09366 L
+.31807 .08909 L
+.32884 .08557 L
+.34067 .08256 L
+.3515 .08056 L
+.3571 .0798 L
+.36017 .07946 L
+.36307 .07918 L
+.36577 .07897 L
+.3687 .07878 L
+.37136 .07865 L
+.37381 .07856 L
+.37524 .07852 L
+.37655 .0785 L
+.37728 .07849 L
+.37766 .07848 L
+.37806 .07848 L
+.37881 .07847 L
+.3795 .07847 L
+.38012 .07847 L
+.3808 .07848 L
+.38144 .07848 L
+.38202 .07849 L
+.38267 .0785 L
+.38338 .07851 L
+.38481 .07854 L
+.38639 .07859 L
+.38783 .07864 L
+.39106 .0788 L
+.39405 .07899 L
+.39688 .0792 L
+.40256 .07975 L
+.40857 .08049 L
+.41935 .08219 L
+.44148 .08715 L
+.46505 .09436 L
+.48773 .10293 L
+.51185 .11356 L
+.53508 .12508 L
+.55742 .13715 L
+.5812 .15091 L
+.60409 .1649 L
+.6073 .16692 L
+.6073 0 L
+.05091 0 L
+F
+1 0 0 r
+.05091 .55636 m
+.07348 .47773 L
+.0981 .4025 L
+.12121 .34106 L
+.14345 .28973 L
+.16711 .24278 L
+.18989 .20445 L
+.21411 .17045 L
+.23743 .14368 L
+.25988 .12296 L
+.28375 .10583 L
+.29562 .09905 L
+.30674 .09366 L
+.31807 .08909 L
+.32884 .08557 L
+.34067 .08256 L
+.3515 .08056 L
+.3571 .0798 L
+.36017 .07946 L
+.36307 .07918 L
+.36577 .07897 L
+.3687 .07878 L
+.37136 .07865 L
+.37381 .07856 L
+.37524 .07852 L
+.37655 .0785 L
+.37728 .07849 L
+.37766 .07848 L
+.37806 .07848 L
+.37881 .07847 L
+.3795 .07847 L
+.38012 .07847 L
+.3808 .07848 L
+.38144 .07848 L
+.38202 .07849 L
+.38267 .0785 L
+.38338 .07851 L
+.38481 .07854 L
+.38639 .07859 L
+.38783 .07864 L
+.39106 .0788 L
+.39405 .07899 L
+.39688 .0792 L
+.40256 .07975 L
+.40857 .08049 L
+.41935 .08219 L
+.44148 .08715 L
+.46505 .09436 L
+.48773 .10293 L
+.51185 .11356 L
+Mistroke
+.53508 .12508 L
+.55742 .13715 L
+.5812 .15091 L
+.60409 .1649 L
+.6073 .16692 L
+Mfstroke
+.02 w
+.04545 .57683 Mdot
+.95455 .41202 Mdot
+0 0 1 r
+.3927 .0789 Mdot
+.6073 .16692 Mdot
+0 1 0 r
+.26006 .12281 Mdot
+0 g
+gsave
+.02545 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(a) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.24006 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(e) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.3727 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(c) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.5873 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(d) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.93455 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(b) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.02545 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.24006 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.3727 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.5873 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.93455 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 177.938},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/B000`400?l00000o`00003o8P3oool2
+000003H0oooo0P00000Q0?ooo`800000=@3oool2000005T0oooo0P00000?0?ooo`008@3oool01000
+0000oooo0?ooo`00000d0?ooo`040000003oool0oooo000001l0oooo00@000000?ooo`3oool00000
+<`3oool010000000oooo0?ooo`00001G0?ooo`040000003oool0oooo000000h0oooo000Q0?ooo`04
+0000003oool0oooo000003@0oooo00@000000?ooo`3oool000007`3oool010000000oooo0?ooo`00
+000c0?ooo`040000003oool0oooo000005L0oooo00@000000?ooo`3oool000003P3oool00240oooo
+00@000000?ooo`3oool00000=03oool010000000oooo0?ooo`00000O0?ooo`040000003oool0oooo
+000003<0oooo00@000000?ooo`3oool00000E`3oool010000000oooo0?ooo`00000>0?ooo`006`3o
+ool700000080oooo00<000000?ooo`3oool0;@3oool4000000050?ooo`000000oooo0?ooo`000000
+6P3oool4000000050?ooo`000000oooo0?ooo`000000;P3oool600000080oooo00<000000?ooo`3o
+ool0CP3oool500000080oooo00@000000?ooo`3oool000003P3oool001/0oooo00D000000?ooo`3o
+ool0oooo000000020?ooo`800000;`3oool00`000000oooo0?ooo`040?ooo`8000006P3oool00`00
+0000oooo0?ooo`040?ooo`800000;P3oool01@000000oooo0?ooo`3oool000000080oooo0P00001B
+0?ooo`050000003oool0oooo0?ooo`0000000P3oool2000000l0oooo000L0?ooo`@00000<`3oool5
+000001h0oooo00<000000?ooo`3oool0=03oool01@000000oooo0?ooo`3oool0000005H0oooo00D0
+00000?ooo`3oool0oooo0000000C0?ooo`006`3oool01@000000oooo0?ooo`3oool0000003<0oooo
+00D000000?ooo`3oool0oooo0000000N0?ooo`050000003oool0oooo0?ooo`000000<P3oool00`00
+0000oooo0?ooo`02000005H0oooo0P0000020?ooo`030000003oool0oooo0140oooo000L0?ooo`<0
+0000=@3oool300000200oooo1000000c0?ooo`80000000<0oooo0000003oool0E@3oool010000000
+oooo00000000000D0?ooo`00/@3oool00`000000oooo0?ooo`1D0?ooo`030000003oool0oooo01D0
+oooo002`0?ooo`800000E@3oool2000001L0oooo003o0?ooob40oooo003o0?ooob40oooo003o0?oo
+ob40oooo003o0?ooob40oooo000A0?ooool000001`0000090?ooo`007@3oool00`000000oooo0?o<
+f@2@0?o<f@030000003oool0oooo05L0oooo00<000000?ooo`3oool04`3oool001d0oooo00<00000
+0?ooo`3oc=T0T03oc=T00`000000oooo0?ooo`1G0?ooo`030000003oool0oooo01<0oooo000M0?oo
+o`030000003oool0olcI0900olcIL03oool001d0oooo00<000000?ooo`3oc=T0T03oc=U`0?ooo`00
+7@3oool00`000000oooo0?o<f@2@0?o<fG00oooo000M0?ooo`030000003oool0olcI0900olcIL03o
+ool001d0oooo00<000000?ooo`3oc=T0T03oc=U`0?ooo`007@3oool00`000000oooo0?o<f@2@0?o<
+fG00oooo000M0?ooo`030000003oool0olcI0900olcIL03oool001d0oooo00<000000?ooo`3oc=T0
+T03oc=U`0?ooo`007@3oool00`000000oooo0?o<f@2@0?o<fG00oooo000M0?ooo`030000003oool0
+olcI0900olcIL03oool001d0oooo00<000000?ooo`3oc=T0T03oc=U`0?ooo`007@3oool00`000000
+oooo0?o<f@2@0?o<fG00oooo000M0?ooo`030000003oool0olcI0900olcIL03oool001d0oooo00<0
+00000?ooo`3oc=T0T03oc=U`0?ooo`007@3oool00`000000oooo0?o<f@2@0?o<fG00oooo000M0?oo
+o`030000003oool0olcI0900olcIL03oool001d0oooo00<000000?ooo`3oc=T0E`3oc=T30000ocH0
+olcIL03oool000X0oooo0P0000040?ooo`8000000`3oool5000000<0oooo00<000000?ooo`3oc=T0
+EP3oc=T50000ocD0olcIL03oool000T0oooo00@000000?ooo`3oool000002P3oool00`000000oooo
+0?ooo`030?ooo`030000003oool0olcI04`0olcI2P3o00050000o`<0o`00<P3oc=U`0?ooo`002@3o
+ool010000000oooo0?ooo`00000:0?ooo`030000003oool0oooo00<0oooo0P00001:0?o<f@<0o`00
+00<0o`3o0?ooo`3oool01`3oool50000o`<0oooo103o000^0?o<fG00oooo00090?ooo`040000003o
+ool0oooo000000X0oooo00<000000?ooo`3oool00`3oool00`000000oooo0?o<f@160?o<f@<0o`00
+3P3oool30000o`P0oooo103o000Z0?o<fG00oooo00090?ooo`040000003oool0oooo000000X0oooo
+00<000000?ooo`3oool00`3oool00`000000oooo0?o<f@130?o<f@<0o`00803oool40?l002H0olcI
+L03oool000X0oooo0P00000:0?ooo`8000001@3oool00`000000oooo0?o<f@100?o<f@<0o`009P3o
+ool0103o0?l0o`000?l0003o000S0?o<fG00oooo000M0?ooo`030000003oool0olcI03h0olcI0P3o
+000/0?ooo`040?l0o`3o0000o`000?l00200olcIL03oool001d0oooo00<000000?ooo`3oc=T0?03o
+c=T20?l00340oooo00<0o`3o0?l0003o00007P3oc=U`0?ooo`007@3oool00`000000oooo0?o<f@0k
+0?o<f@030?l0003o0?l0oooo03<0oooo00<0o`3o0?l0003o0000703oc=U`0?ooo`007@3oool00`00
+0000oooo0?o<f@0i0?o<f@80o`00>@3oool20?l001X0olcIL03oool001d0oooo00<000000?ooo`3o
+c=T0=03oc=T3003o00030?o<f@3o0000oooo03`0oooo0P3o000H0?o<fG00oooo000M0?ooo`030000
+003oool0olcI03<0olcI1@00o`100?ooo`80o`005P3oc=U`0?ooo`007@3oool00`000000oooo0?o<
+f@0c0?o<f@D00?l0@P3oool20?l001@0olcIL03oool001d0oooo00<000000?ooo`3oc=T0<`3oc=T5
+003o04@0oooo0P3o000B0?o<fG00oooo000M0?ooo`030000003oool0olcI03<0olcI00@0o`00003o
+0000o`000?l0A`3oool20?l00100olcIL03oool001d0oooo00<000000?ooo`3oc=T0<P3oc=T00`3o
+0000oooo0?ooo`1:0?ooo`030?l0o`3o0000o`0000h0olcIL03oool001d0oooo00<000000?ooo`3o
+c=T0<@3oc=T00`3o0000oooo0?ooo`1=0?ooo`030?l0o`3o0000o`0000`0olcIL03oool001d0oooo
+00<000000?ooo`3oc=T0<03oc=T00`3o0000oooo0?ooo`1@0?ooo`030?l0o`3o0000o`0000X0olcI
+L03oool001d0oooo00<000000?ooo`3oc=T0;`3oc=T00`3o0000oooo0?ooo`1C0?ooo`030?l0o`3o
+0000olcI00P0olcIL03oool001d0oooo00<000000?ooo`3oc=T0;P3oc=T00`3o0000oooo0?ooo`1F
+0?ooo`80o`001`3oc=U`0?ooo`007@3oool00`000000oooo0?o<f@0]0?o<f@030?l0003oool0oooo
+05T0oooo00<0o`000?o<f@3oc=T0103oc=U`0?ooo`002P3oool2000000@0oooo0P0000030?ooo`@0
+0000103oool00`000000oooo0?o<f@0/0?o<f@030?l0003oool0oooo05/0oooo0P3o00040?o<fG00
+oooo00090?ooo`040000003oool0oooo000000P0oooo00<000000?ooo`3oool01@3oool00`000000
+oooo0?o<f@0/0?o<f@030?l0003oool0oooo05d0oooo0P3o0000103oc=T0003o0000o`000?m^0?oo
+o`002@3oool010000000oooo0?ooo`0000090?ooo`030000003oool0oooo00@0oooo0P00000/0?o<
+f@030?l0003oool0oooo0600oooo1@000?m]0?ooo`002@3oool010000000oooo0?ooo`00000:0?oo
+o`030000003oool0oooo00<0oooo00<000000?ooo`3oc=T0:P3oc=T00`3o0000oooo0?ooo`1Q0?oo
+o`D0003oK@3oool000T0oooo00@000000?ooo`3oool00000203oool010000000oooo0?ooo`000004
+0?ooo`030000003oool0olcI02T0olcI00<0o`000?ooo`3oool0HP3oool50000ofd0oooo000:0?oo
+o`8000002P3oool2000000D0oooo00<000000?ooo`3oc=T0:03oc=T00`3o0000o`3o0?ooo`1T0?oo
+o`<0003o00<0oooo0?l0o`3o0?l0J`3oool001d0oooo00<000000?ooo`3oc=T0:03oc=T00`3o0000
+oooo0?ooo`1Z0?ooo`030?l0o`3oool0oooo06P0oooo000M0?ooo`030000003oool0olcI02L0olcI
+00<0o`000?ooo`3oool0K03oool00`3o0?l0oooo0?ooo`1W0?ooo`007@3oool00`000000oooo0?o<
+f@0V0?o<f@030?l0003oool0oooo06h0oooo0P3o0?mW0?ooo`007@3oool00`000000oooo0?o<f@0V
+0?o<f@030?l0003oool0oooo0700oooo00<0o`3o0?ooo`3oool0I03oool001d0oooo00<000000?oo
+o`3oc=T09@3oc=T00`3o0000oooo0?ooo`1b0?ooo`80o`3oI03oool001d0oooo00<000000?ooo`3o
+c=T0903oc=T00`3o0000oooo0?ooo`1e0?ooo`030?l0o`3oool0oooo0640oooo000M0?ooo`030000
+003oool0olcI02@0olcI00<0o`000?ooo`3oool0MP3oool20?l0of40oooo000M0?ooo`030000003o
+ool0olcI02<0olcI00<0o`000?ooo`3oool0N@3oool00`3o0?l0oooo0?ooo`1N0?ooo`007@3oool0
+0`000000oooo0?o<f@0R0?o<f@030?l0003oool0oooo07/0oooo00<0o`3o0?ooo`3oool0G@3oool0
+01d0oooo00<000000?ooo`3oc=T08P3oc=T00`3o0000oooo0?ooo`1l0?ooo`80o`3oG@3oool001d0
+oooo00<000000?ooo`3oc=T08@3oc=T00`3o0000oooo0?ooo`1o0?ooo`030?l0o`3oool0oooo05X0
+oooo000M0?ooo`030000003oool0olcI0240olcI00<0o`000?ooo`3oool0P03oool20?l0oeX0oooo
+000M0?ooo`030000003oool0olcI0200olcI00<0o`000?ooo`3oool0P`3oool00`3o0?l0oooo0?oo
+o`1G0?ooo`007@3oool00`000000oooo0?o<f@0O0?o<f@030?l0003oool0oooo08D0oooo0P3o0?mG
+0?ooo`007@3oool00`000000oooo0?o<f@0O0?o<f@030?l0003oool0oooo08L0oooo00<0o`3o0?oo
+o`3oool0E03oool001d0oooo00<000000?ooo`3oc=T07P3oc=T00`3o0000oooo0?ooo`290?ooo`03
+0?l0o`3oool0oooo05<0oooo000:0?ooo`800000103oool2000000@0oooo0P0000050?ooo`030000
+003oool0olcI01h0olcI00<0o`000?ooo`3oool0RP3oool20?l0oe<0oooo00090?ooo`040000003o
+ool0oooo000000P0oooo00@000000?ooo`3oool00000103oool00`000000oooo0?o<f@0M0?o<f@03
+0?l0003oool0oooo08d0oooo00<0o`3o0?ooo`3oool0D03oool000T0oooo00@000000?ooo`3oool0
+00002P3oool00`000000oooo0?ooo`030?ooo`8000007@3oc=T00`3o0000oooo0?ooo`2?0?ooo`80
+o`3oD03oool000T0oooo00@000000?ooo`3oool000002`3oool00`000000oooo0?ooo`020?ooo`03
+0000003oool0olcI01`0olcI00<0o`000?ooo`3oool0T@3oool00`3o0?l0oooo0?ooo`1=0?ooo`00
+2@3oool010000000oooo0?ooo`0000080?ooo`040000003oool0oooo000000@0oooo00<000000?oo
+o`3oc=T06`3oc=T00`3o0000oooo0?ooo`2C0?ooo`80o`3oC@3oool000X0oooo0P00000:0?ooo`80
+00001@3oool00`000000oooo0?o<f@0K0?o<f@030?l0003oool0oooo09D0oooo00<0o`3o0?ooo`3o
+ool0BP3oool001d0oooo00<000000?ooo`3oc=T06P3oc=T00`3o0000oooo0?ooo`2G0?ooo`80o`3o
+BP3oool001d0oooo00<000000?ooo`3oc=T06P3oc=T00`3o0000oooo0?ooo`2I0?ooo`030?l0o`3o
+ool0oooo04L0oooo000M0?ooo`030000003oool0olcI01T0olcI00<0o`000?ooo`3oool0V`3oool2
+0?l0odL0oooo000M0?ooo`030000003oool0olcI01T0olcI00<0o`000?ooo`3oool0W@3oool00`3o
+0?l0oooo0?ooo`140?ooo`007@3oool00`000000oooo0?o<f@0H0?o<f@030?l0003oool0oooo09l0
+oooo00<0o`3o0?ooo`3oool0@`3oool001d0oooo00<000000?ooo`3oc=T0603oc=T00`3o0000oooo
+0?ooo`2P0?ooo`80o`3o@`3oool001d0oooo00<000000?ooo`3oc=T05`3oc=T00`3o0000oooo0?oo
+o`2S0?ooo`030?l0o`3oool0oooo0400oooo000M0?ooo`030000003oool0olcI01L0olcI00<0o`00
+0?ooo`3oool0Y03oool00`3o0?l0oooo0?ooo`0o0?ooo`007@3oool00`000000oooo0?o<f@0G0?o<
+f@030?l0003oool0oooo0:D0oooo00<0o`3o0?ooo`3oool0?P3oool001d0oooo00<000000?ooo`3o
+c=T05P3oc=T00`3o0000oooo0?ooo`2W0?ooo`80o`3o?P3oool001d0oooo00<000000?ooo`3oc=T0
+5P3oc=T00`3o0000oooo0?ooo`2Y0?ooo`030?l0o`3oool0oooo03/0oooo000M0?ooo`030000003o
+ool0olcI01D0olcI00<0o`000?ooo`3oool0Z`3oool00`3o0?l0oooo0?ooo`0j0?ooo`007@3oool0
+0`000000oooo0?o<f@0E0?o<f@030?l0003oool0oooo0:`0oooo0P3o0?lj0?ooo`007@3oool00`00
+0000oooo0?o<f@0D0?o<f@030?l0003oool0oooo0:l0oooo00<0o`3o0?ooo`3oool0=`3oool001d0
+oooo00<000000?ooo`3oc=T0503oc=T00`3o0000oooo0?ooo`2`0?ooo`030?l0o`3oool0oooo03H0
+oooo000:0?ooo`800000103oool2000000D0oooo0`0000030?ooo`030000003oool0olcI01<0olcI
+00<0o`000?ooo`3oool0/P3oool20?l0ocH0oooo00090?ooo`040000003oool0oooo000000/0oooo
+00<000000?ooo`3oool00P3oool00`000000oooo0?o<f@0C0?o<f@030?l0003oool0oooo0;@0oooo
+00<0o`3o0?ooo`3oool0<`3oool000T0oooo00@000000?ooo`3oool00000203oool5000000<0oooo
+0P00000C0?o<f@030?l0003oool0oooo0;H0oooo0P3o0?lc0?ooo`002@3oool010000000oooo0?oo
+o`0000080?ooo`040000003oool0oooo000000@0oooo00<000000?ooo`3oc=T04P3oc=T00`3o0000
+oooo0?ooo`2h0?ooo`030?l0o`3oool0oooo0300oooo00090?ooo`040000003oool0oooo000000T0
+oooo00<000000?ooo`000000103oool00`000000oooo0?o<f@0A0?o<f@030?l0003oool0oooo0;X0
+oooo0P3o0?l`0?ooo`002P3oool2000000/0oooo0P0000040?ooo`030000003oool0olcI0140olcI
+00<0o`000?ooo`3oool0_03oool00`3o0?l0oooo0?ooo`0]0?ooo`007@3oool00`000000oooo0?o<
+f@0A0?o<f@030?l0003oool0oooo0;d0oooo0P3o0?l]0?ooo`007@3oool00`000000oooo0?o<f@0@
+0?o<f@030?l0003oool0oooo0<00oooo0P3o0?l[0?ooo`007@3oool00`000000oooo0?o<f@0@0?o<
+f@030?l0003oool0oooo0<80oooo00<0o`3o0?ooo`3oool0:03oool001d0oooo00<000000?ooo`3o
+c=T03`3oc=T00`3o0000oooo0?ooo`340?ooo`80o`3o:03oool001d0oooo00<000000?ooo`3oc=T0
+3`3oc=T00`3o0000oooo0?ooo`360?ooo`030?l0o`3oool0oooo02D0oooo000M0?ooo`030000003o
+ool0olcI00l0olcI00<0o`000?ooo`3oool0a`3oool20?l0obD0oooo000M0?ooo`030000003oool0
+olcI00h0olcI00<0o`000?ooo`3oool0bP3oool00`3o0?l0oooo0?ooo`0R0?ooo`007@3oool00`00
+0000oooo0?o<f@0>0?o<f@030?l0003oool0oooo0</0oooo00<0o`3o0?ooo`3oool08@3oool001d0
+oooo00<000000?ooo`3oc=T03P3oc=T00`3o0000oooo0?ooo`3<0?ooo`80o`3o8@3oool001d0oooo
+00<000000?ooo`3oc=T03@3oc=T00`3o0000oooo0?ooo`3?0?ooo`030?l0o`3oool0oooo01h0oooo
+000M0?ooo`030000003oool0olcI00d0olcI00<0o`000?ooo`3oool0d03oool20?l0oah0oooo000M
+0?ooo`030000003oool0olcI00`0olcI00<0o`000?l0o`3oool0d`3oool00`3o0?l0oooo0?ooo`0K
+0?ooo`007@3oool00`000000oooo0?o<f@0<0?o<f@030?l0003oool0oooo0=@0oooo00<0o`3o0?oo
+o`3oool06P3oool001d0oooo00<000000?ooo`3oc=T0303oc=T00`3o0000oooo0?ooo`3E0?ooo`03
+0?l0o`3oool0oooo01T0oooo000M0?ooo`030000003oool0olcI00/0olcI00<0o`000?l0o`3oool0
+e`3oool00`3o0?l0oooo0?ooo`0H0?ooo`007@3oool00`000000oooo0?o<f@0;0?o<f@030?l0003o
+ool0oooo0=P0oooo0P3o0?lH0?ooo`002P3oool2000000@0oooo0P0000040?ooo`8000001@3oool0
+0`000000oooo0?o<f@0;0?o<f@030?l0003oool0oooo0=X0oooo00@0o`3o0?l0003o0000o`00503o
+ool000T0oooo00@000000?ooo`3oool00000203oool010000000oooo0?ooo`0000040?ooo`030000
+003oool0olcI00X0olcI00<0o`000?l0o`3oool0f`3oool50?l001<0oooo00090?ooo`040000003o
+ool0oooo000000/0oooo00<000000?ooo`3oool00P3oool2000000/0olcI00<0o`000?ooo`3oool0
+f`3oool50?l001<0oooo00090?ooo`040000003oool0oooo000000T0oooo0P0000050?ooo`030000
+003oool0olcI00X0olcI00<0o`000?ooo`3oool0f`3oool50?l001<0oooo00090?ooo`040000003o
+ool0oooo000000T0oooo00<000000?ooo`3oool0103oool00`000000oooo0?o<f@090?o<f@030?l0
+003o0?l0oooo0=d0oooo0`3o000D0?ooo`002P3oool2000000X0oooo0`0000040?ooo`030000003o
+ool0olcI00T0olcI00<0o`000?ooo`3oool0m03oool001d0oooo00<000000?ooo`3oc=T02@3oc=T0
+0`3o0000oooo0?ooo`3d0?ooo`007@3oool00`000000oooo0?o<f@090?o<f@030?l0003oool0oooo
+0?@0oooo000M0?ooo`030000003oool0olcI00P0olcI00<0o`000?ooo`3oool0m@3oool001d0oooo
+00<000000?ooo`3oc=T0203oc=T00`3o0000oooo0?ooo`3e0?ooo`007@3oool00`000000oooo0?o<
+f@080?o<f@030?l0003oool0oooo0?D0oooo000M0?ooo`030000003oool0olcI00L0olcI00<0o`00
+0?ooo`3oool0mP3oool001d0oooo00<000000?ooo`3oc=T01`3oc=T00`3o0000oooo0?ooo`3f0?oo
+o`007@3oool00`000000oooo0?o<f@070?o<f@030?l0003oool0oooo0?H0oooo000M0?ooo`030000
+003oool0olcI00H0olcI00<0o`000?ooo`3oool0m`3oool001d0oooo00<000000?ooo`3oc=T01P3o
+c=T00`3o0000oooo0?ooo`3g0?ooo`007@3oool00`000000oooo0?o<f@060?o<f@030?l0003oool0
+oooo0?L0oooo000M0?ooo`030000003oool0olcI00H0olcI00<0o`000?ooo`3oool0m`3oool001d0
+oooo00<000000?ooo`3oc=T01@3oc=T00`3o0000oooo0?ooo`3h0?ooo`007@3oool00`000000oooo
+0?o<f@050?o<f@030?l0003oool0oooo0?P0oooo000M0?ooo`030000003oool0olcI00D0olcI00<0
+o`000?ooo`3oool0n03oool000X0oooo0P0000040?ooo`8000000`3oool3000000D0oooo00<00000
+0?ooo`3oc=T0103oc=T00`3o0000oooo0?ooo`3i0?ooo`002@3oool010000000oooo0?ooo`000008
+0?ooo`040000003oool0oooo000000@0oooo00<000000?ooo`3oc=T0103oc=T00`3o0000oooo0?oo
+o`3i0?ooo`002@3oool010000000oooo0?ooo`0000080?ooo`040000003oool0oooo000000@0oooo
+0P0000050?o<f@030?l0003oool0oooo0?T0oooo00090?ooo`040000003oool0oooo000000P0oooo
+0`0000050?ooo`030000003oool0olcI00<0olcI00<0o`000?ooo`3oool0nP3oool000T0oooo00@0
+00000?ooo`3oool000002@3oool00`000000oooo0?ooo`040?ooo`030000003oool0olcI00<0olcI
+00<0o`000?ooo`3oool0nP3oool000X0oooo0P00000:0?ooo`<00000103oool00`000000oooo0?o<
+f@030?o<f@030?l0003oool0oooo0?X0oooo000M0?ooo`030000003oool0olcI00<0olcI00<0o`00
+0?ooo`3oool0nP3oool001d0oooo00<000000?ooo`3oc=T00P3oc=T00`3o0000oooo0?ooo`3k0?oo
+o`007@3oool00`000000oooo0?o<f@020?o<f@030?l0003oool0oooo0?/0oooo000M0?ooo`030000
+003oool0olcI0080olcI00<0o`000?ooo`3oool0n`3oool001d0oooo00D000000?ooo`3oc=T0olcI
+0?l0003n0?ooo`007@3oool01@000000oooo0?o<f@3oc=T0o`000?h0oooo000M0?ooo`050000003o
+ool0olcI0?o<f@3o0000oP3oool001d0oooo00@000000?ooo`3oc=T0o`00o`3oool001d0oooo00@0
+00000?ooo`3oc=T0o`00o`3oool001d0oooo00@000000?ooo`3oc=T0o`00o`3oool001d0oooo00@0
+00000?ooo`3oc=T0o`00o`3oool001d0oooo00<000000?ooo`3o0000o`3oool10?ooo`007@3oool0
+0`000000oooo0?l0003o0?ooo`40oooo000M0?ooo`030000003oool0o`3o0?l0oooo0@3oool001d0
+oooo00<000000?l0o`3oool0o`3oool10?ooo`007@3oool00`000000o`3o0?ooo`3o0?ooo`40oooo
+000:0?ooo`800000103oool2000000D0oooo00<000000?ooo`3oool00P3oool30?l00?l0oooo0P3o
+ool000T0oooo00@000000?ooo`3oool000002P3oool010000000oooo0?ooo`3oool50?l00?l0oooo
+0@3oool000T0oooo00@000000?ooo`3oool000002P3oool010000000oooo0?ooo`3oool50?l00?l0
+oooo0@3oool000T0oooo00@000000?ooo`3oool000002`3oool00`000000oooo0?ooo`050?l00?l0
+oooo0@3oool000T0oooo00@000000?ooo`3oool00000203oool010000000oooo0?ooo`0000030?oo
+o`<0o`00o`3oool20?ooo`002P3oool2000000T0oooo100000040?ooo`030000003oool0oooo0?l0
+oooo0@3oool001d0oooo00<000000?ooo`3oool0o`3oool10?ooo`007@3oool00`000000oooo0?oo
+o`3o0?ooo`40oooo000M0?ooo`030000003oool0oooo0?l0oooo0@3oool001d0oooo00<000000?oo
+o`3oool0o`3oool10?ooo`007@3oool00`000000oooo0?ooo`3o0?ooo`40oooo000M0?ooo`030000
+003oool0oooo0?l0oooo0@3oool001d0oooo00<000000?ooo`3oool0o`3oool10?ooo`00\
+\>"],
+    ImageRangeCache->{{{0, 287}, {176.938, 0}} -> {0, 0, 0, 0}}],
+  "               ",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0454545 0.909091 0 0.824045 [
+[.04546 -0.0125 -5 -12.5625 ]
+[.04546 -0.0125 5 0 ]
+[.3927 -0.0125 -5 -12.5625 ]
+[.3927 -0.0125 5 0 ]
+[.6073 -0.0125 -5 -12.5625 ]
+[.6073 -0.0125 5 0 ]
+[.73994 -0.0125 -5 -12.5625 ]
+[.73994 -0.0125 5 0 ]
+[.95455 -0.0125 -5 -12.5625 ]
+[.95455 -0.0125 5 0 ]
+[.03295 .0824 -18 -4.5 ]
+[.03295 .0824 0 4.5 ]
+[.03295 .16481 -18 -4.5 ]
+[.03295 .16481 0 4.5 ]
+[.03295 .24721 -18 -4.5 ]
+[.03295 .24721 0 4.5 ]
+[.03295 .32962 -18 -4.5 ]
+[.03295 .32962 0 4.5 ]
+[.03295 .41202 -18 -4.5 ]
+[.03295 .41202 0 4.5 ]
+[.03295 .49443 -18 -4.5 ]
+[.03295 .49443 0 4.5 ]
+[.03295 .57683 -18 -4.5 ]
+[.03295 .57683 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.04546 0 m
+.04546 .00625 L
+s
+gsave
+.04546 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.3927 0 m
+.3927 .00625 L
+s
+gsave
+.3927 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.6073 0 m
+.6073 .00625 L
+s
+gsave
+.6073 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.73994 0 m
+.73994 .00625 L
+s
+gsave
+.73994 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.95455 0 m
+.95455 .00625 L
+s
+gsave
+.95455 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+s
+.04545 .0824 m
+.0517 .0824 L
+s
+[(0.1)] .03295 .0824 1 0 Mshowa
+.04545 .16481 m
+.0517 .16481 L
+s
+[(0.2)] .03295 .16481 1 0 Mshowa
+.04545 .24721 m
+.0517 .24721 L
+s
+[(0.3)] .03295 .24721 1 0 Mshowa
+.04545 .32962 m
+.0517 .32962 L
+s
+[(0.4)] .03295 .32962 1 0 Mshowa
+.04545 .41202 m
+.0517 .41202 L
+s
+[(0.5)] .03295 .41202 1 0 Mshowa
+.04545 .49443 m
+.0517 .49443 L
+s
+[(0.6)] .03295 .49443 1 0 Mshowa
+.04545 .57683 m
+.0517 .57683 L
+s
+[(0.7)] .03295 .57683 1 0 Mshowa
+.04545 0 m
+.04545 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+1 0 1 r
+.5 Mabswid
+.04545 .41202 m
+.08233 .38528 L
+.12255 .35612 L
+.16033 .32875 L
+.19665 .30248 L
+.23532 .27467 L
+.27254 .24815 L
+.3121 .22045 L
+.35022 .19451 L
+.38689 .17059 L
+.42589 .14672 L
+.46346 .12584 L
+.49957 .10835 L
+.51965 .09997 L
+.53803 .09331 L
+.55722 .0875 L
+.57504 .08327 L
+.58381 .08164 L
+.59316 .08026 L
+.5985 .07964 L
+.60353 .07917 L
+.60805 .07885 L
+.6106 .07871 L
+.61294 .07861 L
+.61415 .07857 L
+.61529 .07854 L
+.61632 .07851 L
+.61743 .07849 L
+.61862 .07848 L
+.61973 .07847 L
+.62092 .07847 L
+.6216 .07848 L
+.62223 .07848 L
+.6233 .07849 L
+.62441 .07851 L
+.62537 .07853 L
+.62641 .07856 L
+.62874 .07865 L
+.63091 .07876 L
+.63591 .07909 L
+.64045 .07952 L
+.64569 .08016 L
+.65063 .0809 L
+.65991 .08269 L
+.66974 .08516 L
+.68735 .09117 L
+.70604 .09993 L
+.72352 .11054 L
+.76058 .14165 L
+.78079 .16411 L
+Mistroke
+.79998 .18942 L
+.83648 .24943 L
+.87533 .3326 L
+.91273 .43429 L
+.95247 .56899 L
+.95455 .57683 L
+Mfstroke
+1 .8 .85 r
+.3927 .16692 m
+.41549 .1529 L
+.44035 .13841 L
+.46369 .12572 L
+.48614 .11451 L
+.51004 .10385 L
+.53304 .09502 L
+.55749 .08742 L
+.56974 .0844 L
+.58105 .08212 L
+.59205 .0804 L
+.5976 .07973 L
+.60371 .07916 L
+.60678 .07893 L
+.60969 .07876 L
+.61231 .07864 L
+.61378 .07858 L
+.61516 .07854 L
+.61594 .07852 L
+.61678 .07851 L
+.61748 .07849 L
+.61825 .07848 L
+.61869 .07848 L
+.61909 .07848 L
+.61951 .07847 L
+.61997 .07847 L
+.62039 .07847 L
+.6208 .07847 L
+.62155 .07848 L
+.62227 .07848 L
+.62303 .07849 L
+.62367 .0785 L
+.62439 .07851 L
+.62598 .07855 L
+.62748 .0786 L
+.63025 .07872 L
+.63328 .0789 L
+.63939 .07941 L
+.64504 .08007 L
+.6503 .08085 L
+.66237 .08325 L
+.67334 .08622 L
+.68466 .09011 L
+.69692 .09534 L
+.72106 .1089 L
+.74431 .12647 L
+.76666 .14798 L
+.79046 .17636 L
+.81336 .20954 L
+.83771 .25175 L
+.86117 .2998 L
+.88373 .35349 L
+.90774 .41939 L
+.93086 .4921 L
+.95455 .57683 L
+.95455 0 L
+.3927 0 L
+F
+1 0 0 r
+.3927 .16692 m
+.41549 .1529 L
+.44035 .13841 L
+.46369 .12572 L
+.48614 .11451 L
+.51004 .10385 L
+.53304 .09502 L
+.55749 .08742 L
+.56974 .0844 L
+.58105 .08212 L
+.59205 .0804 L
+.5976 .07973 L
+.60371 .07916 L
+.60678 .07893 L
+.60969 .07876 L
+.61231 .07864 L
+.61378 .07858 L
+.61516 .07854 L
+.61594 .07852 L
+.61678 .07851 L
+.61748 .07849 L
+.61825 .07848 L
+.61869 .07848 L
+.61909 .07848 L
+.61951 .07847 L
+.61997 .07847 L
+.62039 .07847 L
+.6208 .07847 L
+.62155 .07848 L
+.62227 .07848 L
+.62303 .07849 L
+.62367 .0785 L
+.62439 .07851 L
+.62598 .07855 L
+.62748 .0786 L
+.63025 .07872 L
+.63328 .0789 L
+.63939 .07941 L
+.64504 .08007 L
+.6503 .08085 L
+.66237 .08325 L
+.67334 .08622 L
+.68466 .09011 L
+.69692 .09534 L
+.72106 .1089 L
+.74431 .12647 L
+.76666 .14798 L
+.79046 .17636 L
+.81336 .20954 L
+.83771 .25175 L
+Mistroke
+.86117 .2998 L
+.88373 .35349 L
+.90774 .41939 L
+.93086 .4921 L
+.95455 .57683 L
+Mfstroke
+.02 w
+.04545 .41202 Mdot
+.95455 .57683 Mdot
+0 0 1 r
+.3927 .16692 Mdot
+.6073 .0789 Mdot
+0 1 0 r
+.73994 .12281 Mdot
+0 g
+gsave
+.02545 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(a) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.71994 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(e) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.3727 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(c) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.5873 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(d) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.93455 -0.03708 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(b) show
+69.563 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 11.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.02545 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.71994 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.3727 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.5873 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.93455 -0.05356 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 177.938},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/B000`400?l00000o`00003o8P3oool2
+000005T0oooo0P00000e0?ooo`8000008@3oool2000003H0oooo0P00000?0?ooo`008@3oool01000
+0000oooo0?ooo`00001G0?ooo`040000003oool0oooo000003<0oooo00@000000?ooo`3oool00000
+7`3oool010000000oooo0?ooo`00000d0?ooo`040000003oool0oooo000000h0oooo000Q0?ooo`04
+0000003oool0oooo000005L0oooo00@000000?ooo`3oool00000<`3oool010000000oooo0?ooo`00
+000O0?ooo`040000003oool0oooo000003@0oooo00@000000?ooo`3oool000003P3oool00240oooo
+00@000000?ooo`3oool00000E`3oool010000000oooo0?ooo`00000c0?ooo`040000003oool0oooo
+000001l0oooo00@000000?ooo`3oool00000=03oool010000000oooo0?ooo`00000>0?ooo`006`3o
+ool700000080oooo00<000000?ooo`3oool0D03oool4000000050?ooo`000000oooo0?ooo`000000
+;P3oool600000080oooo00<000000?ooo`3oool0603oool4000000050?ooo`000000oooo0?ooo`00
+0000;@3oool500000080oooo00@000000?ooo`3oool000003P3oool001/0oooo00D000000?ooo`3o
+ool0oooo000000020?ooo`800000DP3oool00`000000oooo0?ooo`040?ooo`800000;P3oool01@00
+0000oooo0?ooo`3oool000000080oooo0P00000J0?ooo`030000003oool0oooo00@0oooo0P00000_
+0?ooo`050000003oool0oooo0?ooo`0000000P3oool2000000l0oooo000L0?ooo`@00000EP3oool0
+0`000000oooo0?ooo`0d0?ooo`050000003oool0oooo0?ooo`0000007P3oool5000003<0oooo00D0
+00000?ooo`3oool0oooo0000000C0?ooo`006`3oool01@000000oooo0?ooo`3oool0000005H0oooo
+00D000000?ooo`3oool0oooo0000000b0?ooo`030000003oool0oooo008000007P3oool01@000000
+oooo0?ooo`3oool0000003<0oooo0P0000020?ooo`030000003oool0oooo0140oooo000L0?ooo`<0
+0000F03oool4000003<0oooo0P0000000`3oool000000?ooo`0N0?ooo`<00000=03oool010000000
+oooo00000000000D0?ooo`00/@3oool00`000000oooo0?ooo`1D0?ooo`030000003oool0oooo01D0
+oooo002`0?ooo`800000E@3oool2000001L0oooo003o0?ooob40oooo003o0?ooob40oooo003o0?oo
+ob40oooo003o0?ooob40oooo000A0?ooool000001`0000090?ooo`007@3oool00`000000oooo0?oo
+o`1H0?oooi80olcI00<000000?ooo`3oool04`3oool001d0oooo00<000000?ooo`3oool0F03ooonB
+0?o<f@030000003oool0oooo01<0oooo000M0?ooo`030000003oool0oooo05P0ooooTP3oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`1H0?oooi80olcI5P3oool001d0oooo00<000000?ooo`3oool0
+F03ooonB0?o<fAH0oooo000M0?ooo`030000003oool0oooo05P0ooooTP3oc=TF0?ooo`007@3oool0
+0`000000oooo0?ooo`1H0?oooi80olcI5P3oool001d0oooo00<000000?ooo`3oool0F03ooonB0?o<
+fAH0oooo000M0?ooo`030000003oool0oooo05P0ooooTP3oc=TF0?ooo`007@3oool00`000000oooo
+0?ooo`1H0?oooi80olcI5P3oool001d0oooo00<000000?ooo`3oool0F03ooonB0?o<fAH0oooo000M
+0?ooo`030000003oool0oooo05P0ooooTP3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oo
+oi80olcI5P3oool001d0oooo00<000000?ooo`3oool0F03ooonB0?o<fAH0oooo000M0?ooo`030000
+003oool0oooo05P0ooooTP3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oooi80olcI5P3o
+ool001d0oooo00<000000?ooo`3oool0F03ooonB0?o<fAH0oooo000M0?ooo`030000003oool0oooo
+05P0ooooTP3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?ooocL0olcI0`000?mH0?o<fAH0
+oooo000:0?ooo`800000103oool2000000<0oooo1@0000030?ooo`030000003oool0oooo05P0oooo
+=P3oc=T50000oeL0olcI5P3oool000T0oooo00@000000?ooo`3oool000002P3oool00`000000oooo
+0?ooo`030?ooo`030000003oool0oooo05P0oooo<`3oc=T30?l000D0003o2P3o001=0?o<fAH0oooo
+00090?ooo`040000003oool0oooo000000X0oooo00<000000?ooo`3oool00`3oool3000005P0oooo
+;@3oc=T60?l000030?l0o`3oool0oooo00D0003o2@3oool0103o0?l0o`000?l0003o001:0?o<fAH0
+oooo00090?ooo`040000003oool0oooo000000X0oooo00<000000?ooo`3oool00`3oool00`000000
+oooo0?ooo`1H0?ooobX0olcI0`3o00000`3o0?l0oooo0?ooo`070?ooo`<0003o3@3oool0103o0?l0
+o`000?l0003o00170?o<fAH0oooo00090?ooo`040000003oool0oooo000000X0oooo00<000000?oo
+o`3oool00`3oool00`000000oooo0?ooo`1H0?ooobH0olcI103o000Q0?ooo`<0o`00A03oc=TF0?oo
+o`002P3oool2000000X0oooo0P0000050?ooo`030000003oool0oooo05P0oooo8`3oc=T30?l00080
+o`3o9P3oool20?l00480olcI5P3oool001d0oooo00<000000?ooo`3oool0F03ooolP0?o<f@<0o`00
+00<0o`3o0?ooo`3oool0:P3oool20?l00400olcI5P3oool001d0oooo00<000000?ooo`3oool0F03o
+oolN0?o<f@80o`0000<0o`3o0?ooo`3oool0;`3oool00`3o0000olcI0?o<f@0m0?o<fAH0oooo000M
+0?ooo`030000003oool0oooo05P0oooo703oc=T20?l000030?l0o`3oool0oooo0380oooo0P3o000m
+0?o<fAH0oooo000M0?ooo`030000003oool0oooo05P0oooo6P3oc=T20?l000030?l0o`3oool0oooo
+03H0oooo00<0o`000?o<f@3oc=T0>P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oooaP0
+olcI0P3o00000`3o0?l0oooo0?ooo`0i0?ooo`80o`0000@0olcI003o0000o`000?l0=P3oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`1H0?oooaH0olcI0P3o00000`3o0?l0oooo0?ooo`0m0?ooo`D0
+0?l0=@3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oooa@0olcI0P3o00120?ooo`D00?l0
+=@3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oooa80olcI0P3o00140?ooo`D00?l0=@3o
+c=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?oooa00olcI0P3o00170?ooo`<00?l000<0o`00
+0?o<f@3oc=T0<`3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?ooo`h0olcI0P3o001=0?oo
+o`030?l0003oc=T0olcI0380olcI5P3oool001d0oooo00<000000?ooo`3oool0F03oool<0?o<f@80
+o`00D03oool00`3o0000olcI0?o<f@0a0?o<fAH0oooo000M0?ooo`030000003oool0oooo05P0oooo
+2P3oc=T20?l000030?l0o`3oool0oooo0500oooo00<0o`000?o<f@3oc=T0<03oc=TF0?ooo`007@3o
+ool00`000000oooo0?ooo`1H0?ooo`T0olcI00<0o`000?l0o`3oool0E03oool00`3o0000olcI0?o<
+f@0_0?o<fAH0oooo000M0?ooo`030000003oool0oooo05P0oooo1`3oc=T20?l005P0oooo00<0o`00
+0?o<f@3oc=T0;P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1H0?ooo`H0olcI00<0o`000?l0
+o`3oool0F@3oool00`3o0000olcI0?o<f@0]0?o<fAH0oooo000:0?ooo`800000103oool2000000<0
+oooo100000040?ooo`030000003oool0oooo05P0oooo103oc=T20?l005d0oooo00<0o`000?o<f@3o
+c=T0;03oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000080?ooo`030000003oool0oooo00D0
+oooo00<000000?ooo`3oool0E`3oool30000o`030?o<f@3o0000oooo05l0oooo00<0o`000?o<f@3o
+c=T0:`3oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000090?ooo`030000003oool0oooo00@0
+oooo0`00001F0?ooo`D0003oH@3oool00`3o0000olcI0?o<f@0[0?o<fAH0oooo00090?ooo`040000
+003oool0oooo000000X0oooo00<000000?ooo`3oool00`3oool00`000000oooo0?ooo`1F0?ooo`D0
+003oHP3oool00`3o0000olcI0?o<f@0Z0?o<fAH0oooo00090?ooo`040000003oool0oooo000000P0
+oooo00@000000?ooo`3oool00000103oool00`000000oooo0?ooo`1F0?ooo`D0003oH`3oool00`3o
+0000olcI0?o<f@0Y0?o<fAH0oooo000:0?ooo`8000002P3oool2000000D0oooo00<000000?ooo`3o
+ool0E03oool20?l0o`040?ooo`000?l0003o0000ofD0oooo00<0o`000?o<f@3oc=T0:03oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`1C0?ooo`030?l0o`3oool0oooo06X0oooo00<0o`000?o<f@3o
+c=T09`3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`1A0?ooo`80o`3oK@3oool00`3o0000olcI
+0?o<f@0W0?o<fAH0oooo000M0?ooo`030000003oool0oooo0500oooo00<0o`3o0?ooo`3oool0KP3o
+ool00`3o0000olcI0?o<f@0V0?o<fAH0oooo000M0?ooo`030000003oool0oooo04h0oooo0P3o0?mb
+0?ooo`030?l0003oc=T0olcI02D0olcI5P3oool001d0oooo00<000000?ooo`3oool0C@3oool00`3o
+0?l0oooo0?ooo`1b0?ooo`030?l0003oc=T0olcI02D0olcI5P3oool001d0oooo00<000000?ooo`3o
+ool0B`3oool20?l0ogH0oooo00<0o`000?o<f@3oc=T0903oc=TF0?ooo`007@3oool00`000000oooo
+0?ooo`1:0?ooo`030?l0o`3oool0oooo07L0oooo00<0o`000?o<f@3oc=T08`3oc=TF0?ooo`007@3o
+ool00`000000oooo0?ooo`190?ooo`030?l0o`3oool0oooo07P0oooo00<0o`000?o<f@3oc=T08`3o
+c=TF0?ooo`007@3oool00`000000oooo0?ooo`170?ooo`80o`3oO03oool00`3o0000olcI0?o<f@0R
+0?o<fAH0oooo000M0?ooo`030000003oool0oooo04H0oooo00<0o`3o0?ooo`3oool0O@3oool00`3o
+0000olcI0?o<f@0Q0?o<fAH0oooo000M0?ooo`030000003oool0oooo04@0oooo0P3o0?n00?ooo`03
+0?l0003oc=T0olcI0240olcI5P3oool001d0oooo00<000000?ooo`3oool0@`3oool00`3o0?l0oooo
+0?ooo`210?ooo`030?l0003oc=T0olcI0200olcI5P3oool001d0oooo00<000000?ooo`3oool0@@3o
+ool20?l0oh@0oooo00<0o`3o0?l0003oc=T0803oc=TF0?ooo`007@3oool00`000000oooo0?ooo`10
+0?ooo`030?l0o`3oool0oooo08D0oooo00<0o`000?o<f@3oc=T07`3oc=TF0?ooo`007@3oool00`00
+0000oooo0?ooo`0n0?ooo`80o`3oR@3oool00`3o0000olcI0?o<f@0N0?o<fAH0oooo000M0?ooo`03
+0000003oool0oooo03`0oooo0P3o0?n;0?ooo`030?l0003oc=T0olcI01h0olcI5P3oool000X0oooo
+0P0000040?ooo`800000103oool2000000D0oooo00<000000?ooo`3oool0>`3oool00`3o0?l0oooo
+0?ooo`2<0?ooo`030?l0003oc=T0olcI01d0olcI5P3oool000T0oooo00@000000?ooo`3oool00000
+203oool010000000oooo0?ooo`0000040?ooo`030000003oool0oooo03T0oooo0P3o0?n?0?ooo`03
+0?l0o`3o0000olcI01d0olcI5P3oool000T0oooo00@000000?ooo`3oool000002P3oool00`000000
+oooo0?ooo`030?ooo`<00000>03oool00`3o0?l0oooo0?ooo`2@0?ooo`030?l0003oc=T0olcI01`0
+olcI5P3oool000T0oooo00@000000?ooo`3oool000002`3oool00`000000oooo0?ooo`020?ooo`03
+0000003oool0oooo03L0oooo00<0o`3o0?ooo`3oool0T@3oool00`3o0?l0o`000?o<f@0L0?o<fAH0
+oooo00090?ooo`040000003oool0oooo000000P0oooo00@000000?ooo`3oool00000103oool00`00
+0000oooo0?ooo`0e0?ooo`80o`3oU@3oool00`3o0000olcI0?o<f@0K0?o<fAH0oooo000:0?ooo`80
+00002P3oool2000000D0oooo00<000000?ooo`3oool0=03oool00`3o0?l0oooo0?ooo`2E0?ooo`03
+0?l0o`3o0000olcI01/0olcI5P3oool001d0oooo00<000000?ooo`3oool0<`3oool00`3o0?l0oooo
+0?ooo`2G0?ooo`030?l0003oc=T0olcI01X0olcI5P3oool001d0oooo00<000000?ooo`3oool0<@3o
+ool20?l0oiX0oooo00<0o`3o0?l0003oc=T06P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`0`
+0?ooo`030?l0o`3oool0oooo09/0oooo00<0o`000?o<f@3oc=T06@3oc=TF0?ooo`007@3oool00`00
+0000oooo0?ooo`0_0?ooo`030?l0o`3oool0oooo09`0oooo00<0o`3o0?l0003oc=T06@3oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`0]0?ooo`80o`3oX03oool00`3o0000olcI0?o<f@0H0?o<fAH0
+oooo000M0?ooo`030000003oool0oooo02`0oooo00<0o`3o0?ooo`3oool0X03oool00`3o0?l0o`00
+0?o<f@0H0?o<fAH0oooo000M0?ooo`030000003oool0oooo02/0oooo00<0o`3o0?ooo`3oool0XP3o
+ool00`3o0000olcI0?o<f@0G0?o<fAH0oooo000M0?ooo`030000003oool0oooo02T0oooo0P3o0?nU
+0?ooo`030?l0o`3o0000olcI01L0olcI5P3oool001d0oooo00<000000?ooo`3oool0:03oool00`3o
+0?l0oooo0?ooo`2V0?ooo`030?l0003oc=T0olcI01H0olcI5P3oool001d0oooo00<000000?ooo`3o
+ool09P3oool20?l0ojT0oooo00<0o`3o0?l0003oc=T05P3oc=TF0?ooo`007@3oool00`000000oooo
+0?ooo`0U0?ooo`030?l0o`3oool0oooo0:X0oooo00<0o`000?o<f@3oc=T05@3oc=TF0?ooo`007@3o
+ool00`000000oooo0?ooo`0S0?ooo`80o`3o[@3oool00`3o0000olcI0?o<f@0E0?o<fAH0oooo000M
+0?ooo`030000003oool0oooo0280oooo00<0o`3o0?ooo`3oool0[P3oool00`3o0000olcI0?o<f@0D
+0?o<fAH0oooo000M0?ooo`030000003oool0oooo0240oooo00<0o`3o0?ooo`3oool0[`3oool00`3o
+0000olcI0?o<f@0D0?o<fAH0oooo000M0?ooo`030000003oool0oooo01l0oooo0P3o0?nc0?ooo`03
+0?l0003oc=T0olcI01<0olcI5P3oool000X0oooo0P0000040?ooo`8000001@3oool3000000<0oooo
+00<000000?ooo`3oool07P3oool00`3o0?l0oooo0?ooo`2c0?ooo`030?l0003oc=T0olcI01<0olcI
+5P3oool000T0oooo00@000000?ooo`3oool000002`3oool00`000000oooo0?ooo`020?ooo`030000
+003oool0oooo01`0oooo0P3o0?ng0?ooo`030?l0003oc=T0olcI0180olcI5P3oool000T0oooo00@0
+00000?ooo`3oool00000203oool5000000<0oooo0`00000K0?ooo`030?l0o`3oool0oooo0;L0oooo
+00<0o`000?o<f@3oc=T04P3oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000080?ooo`040000
+003oool0oooo000000@0oooo00<000000?ooo`3oool06@3oool20?l0okX0oooo00<0o`000?o<f@3o
+c=T04P3oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000090?ooo`030000003oool0000000@0
+oooo00<000000?ooo`3oool0603oool00`3o0?l0oooo0?ooo`2k0?ooo`030?l0003oc=T0olcI0140
+olcI5P3oool000X0oooo0P00000;0?ooo`800000103oool00`000000oooo0?ooo`0G0?ooo`030?l0
+o`3oool0oooo0;`0oooo00<0o`000?o<f@3oc=T04@3oc=TF0?ooo`007@3oool00`000000oooo0?oo
+o`0E0?ooo`80o`3o`03oool00`3o0000olcI0?o<f@0@0?o<fAH0oooo000M0?ooo`030000003oool0
+oooo01@0oooo00<0o`3o0?ooo`3oool0`03oool00`3o0000olcI0?o<f@0@0?o<fAH0oooo000M0?oo
+o`030000003oool0oooo0180oooo0P3o0?o40?ooo`030?l0003oc=T0olcI00l0olcI5P3oool001d0
+oooo00<000000?ooo`3oool04@3oool00`3o0?l0oooo0?ooo`340?ooo`030?l0003oc=T0olcI00l0
+olcI5P3oool001d0oooo00<000000?ooo`3oool0403oool00`3o0?l0oooo0?ooo`350?ooo`030?l0
+003oc=T0olcI00l0olcI5P3oool001d0oooo00<000000?ooo`3oool03P3oool20?l0olT0oooo00<0
+o`000?o<f@3oc=T03P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`0=0?ooo`030?l0o`3oool0
+oooo0<T0oooo00<0o`000?o<f@3oc=T03P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`0<0?oo
+o`030?l0o`3oool0oooo0<X0oooo00<0o`000?o<f@3oc=T03P3oc=TF0?ooo`007@3oool00`000000
+oooo0?ooo`0;0?ooo`030?l0o`3oool0oooo0<`0oooo00<0o`000?o<f@3oc=T03@3oc=TF0?ooo`00
+7@3oool00`000000oooo0?ooo`090?ooo`80o`3oc`3oool00`3o0000olcI0?o<f@0=0?o<fAH0oooo
+000M0?ooo`030000003oool0oooo00P0oooo00<0o`3o0?ooo`3oool0c`3oool00`3o0000olcI0?o<
+f@0=0?o<fAH0oooo000M0?ooo`030000003oool0oooo00L0oooo00<0o`3o0?ooo`3oool0d@3oool0
+0`3o0000olcI0?o<f@0<0?o<fAH0oooo000M0?ooo`030000003oool0oooo00D0oooo0P3o0?oD0?oo
+o`030?l0003oc=T0olcI00`0olcI5P3oool001d0oooo00<000000?ooo`3oool0103oool00`3o0?l0
+oooo0?ooo`3D0?ooo`030?l0o`3o0000olcI00`0olcI5P3oool001d0oooo00<000000?ooo`3oool0
+0`3oool00`3o0?l0oooo0?ooo`3F0?ooo`030?l0003oc=T0olcI00/0olcI5P3oool001d0oooo00@0
+00000?ooo`3oool0oooo0P3o0?oI0?ooo`030?l0003oc=T0olcI00/0olcI5P3oool000X0oooo0P00
+00040?ooo`800000103oool2000000@0oooo0`3o00000`3oool0o`3o0?ooo`3J0?ooo`030?l0o`3o
+0000olcI00/0olcI5P3oool000T0oooo00@000000?ooo`3oool00000203oool010000000oooo0?oo
+o`0000020?ooo`D0o`00g@3oool00`3o0000olcI0?o<f@0:0?o<fAH0oooo00090?ooo`040000003o
+ool0oooo000000/0oooo00<000000?ooo`3oool01@3o003M0?ooo`030?l0003oc=T0olcI00X0olcI
+5P3oool000T0oooo00@000000?ooo`3oool000002@3oool2000000<0oooo1@3o003M0?ooo`030?l0
+o`3o0000olcI00X0olcI5P3oool000T0oooo00@000000?ooo`3oool000002@3oool00`000000oooo
+0?ooo`030?ooo`<0o`00g`3oool00`3o0000olcI0?o<f@090?o<fAH0oooo000:0?ooo`8000002P3o
+ool3000000@0oooo00<000000?ooo`3oool0gP3oool00`3o0000olcI0?o<f@090?o<fAH0oooo000M
+0?ooo`030000003oool0oooo0=h0oooo00<0o`3o0?l0003oc=T02@3oc=TF0?ooo`007@3oool00`00
+0000oooo0?ooo`3O0?ooo`030?l0003oc=T0olcI00P0olcI5P3oool001d0oooo00<000000?ooo`3o
+ool0g`3oool00`3o0000olcI0?o<f@080?o<fAH0oooo000M0?ooo`030000003oool0oooo0=l0oooo
+00<0o`3o0?l0003oc=T0203oc=TF0?ooo`007@3oool00`000000oooo0?ooo`3P0?ooo`030?l0003o
+c=T0olcI00L0olcI5P3oool001d0oooo00<000000?ooo`3oool0h03oool00`3o0000olcI0?o<f@07
+0?o<fAH0oooo000M0?ooo`030000003oool0oooo0>00oooo00<0o`3o0?l0003oc=T01`3oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`3Q0?ooo`030?l0003oc=T0olcI00H0olcI5P3oool001d0oooo
+00<000000?ooo`3oool0h@3oool00`3o0000olcI0?o<f@060?o<fAH0oooo000M0?ooo`030000003o
+ool0oooo0>40oooo00<0o`000?o<f@3oc=T01P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`3R
+0?ooo`030?l0003oc=T0olcI00D0olcI5P3oool001d0oooo00<000000?ooo`3oool0hP3oool00`3o
+0000olcI0?o<f@050?o<fAH0oooo000M0?ooo`030000003oool0oooo0>80oooo00<0o`000?o<f@3o
+c=T01@3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`3R0?ooo`030?l0o`3o0000olcI00D0olcI
+5P3oool001d0oooo00<000000?ooo`3oool0h`3oool00`3o0000olcI0?o<f@040?o<fAH0oooo000:
+0?ooo`800000103oool2000000<0oooo0`0000050?ooo`030000003oool0oooo0><0oooo00<0o`00
+0?o<f@3oc=T0103oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000080?ooo`040000003oool0
+oooo000000@0oooo00<000000?ooo`3oool0h`3oool00`3o0?l0o`000?o<f@040?o<fAH0oooo0009
+0?ooo`040000003oool0oooo000000P0oooo00@000000?ooo`3oool00000103oool300000>@0oooo
+00<0o`000?o<f@3oc=T00`3oc=TF0?ooo`002@3oool010000000oooo0?ooo`0000080?ooo`<00000
+1@3oool00`000000oooo0?ooo`3T0?ooo`030?l0003oc=T0olcI00<0olcI5P3oool000T0oooo00@0
+00000?ooo`3oool000002@3oool00`000000oooo0?ooo`040?ooo`030000003oool0oooo0>@0oooo
+00<0o`3o0?l0003oc=T00`3oc=TF0?ooo`002P3oool2000000X0oooo0`0000040?ooo`030000003o
+ool0oooo0>D0oooo00<0o`000?o<f@3oc=T00P3oc=TF0?ooo`007@3oool00`000000oooo0?ooo`3U
+0?ooo`030?l0003oc=T0olcI0080olcI5P3oool001d0oooo00<000000?ooo`3oool0i@3oool00`3o
+0000olcI0?o<f@020?o<fAH0oooo000M0?ooo`030000003oool0oooo0>H0oooo00@0o`000?o<f@3o
+c=T0olcI5P3oool001d0oooo00<000000?ooo`3oool0iP3oool0103o0000olcI0?o<f@3oc=TF0?oo
+o`007@3oool00`000000oooo0?ooo`3V0?ooo`040?l0003oc=T0olcI0?o<fAH0oooo000M0?ooo`03
+0000003oool0oooo0>H0oooo00@0o`000?o<f@3oc=T0olcI5P3oool001d0oooo00<000000?ooo`3o
+ool0i`3oool00`3o0000olcI0?o<f@0F0?ooo`007@3oool00`000000oooo0?ooo`3W0?ooo`030?l0
+003oc=T0olcI01H0oooo000M0?ooo`030000003oool0oooo0>L0oooo00<0o`000?o<f@3oc=T05P3o
+ool001d0oooo00<000000?ooo`3oool0j03oool00`3o0000olcI0?ooo`0E0?ooo`007@3oool00`00
+0000oooo0?ooo`3X0?ooo`030?l0003oc=T0oooo01D0oooo000M0?ooo`030000003oool0oooo0>P0
+oooo00<0o`000?o<f@3oool05@3oool001d0oooo00<000000?ooo`3oool0j03oool00`3o0000olcI
+0?ooo`0E0?ooo`007@3oool00`000000oooo0?ooo`3Y0?ooo`030?l0003oool0oooo01@0oooo000M
+0?ooo`030000003oool0oooo0>T0oooo00<0o`000?ooo`3oool0503oool001d0oooo00<000000?oo
+o`3oool0j@3oool00`3o0000o`3o0?ooo`0D0?ooo`002P3oool2000000@0oooo0P0000050?ooo`03
+0000003oool0oooo00<0oooo00<000000?ooo`3oool0j@3oool30?l001@0oooo00090?ooo`040000
+003oool0oooo000000X0oooo00<000000?ooo`3oool00`3oool00`000000oooo0?ooo`3X0?ooo`D0
+o`004`3oool000T0oooo00@000000?ooo`3oool000002P3oool00`000000oooo0?ooo`030?ooo`<0
+0000j03oool50?l001<0oooo00090?ooo`040000003oool0oooo000000/0oooo00<000000?ooo`3o
+ool00P3oool00`000000oooo0?ooo`3X0?ooo`D0o`004`3oool000T0oooo00@000000?ooo`3oool0
+0000203oool010000000oooo0?ooo`0000040?ooo`030000003oool0oooo0>T0oooo0`3o000D0?oo
+o`002P3oool2000000T0oooo100000040?ooo`030000003oool0oooo0?l0oooo0@3oool001d0oooo
+00<000000?ooo`3oool0o`3oool10?ooo`007@3oool00`000000oooo0?ooo`3o0?ooo`40oooo000M
+0?ooo`030000003oool0oooo0?l0oooo0@3oool001d0oooo00<000000?ooo`3oool0o`3oool10?oo
+o`007@3oool00`000000oooo0?ooo`3o0?ooo`40oooo000M0?ooo`030000003oool0oooo0?l0oooo
+0@3oool001d0oooo00<000000?ooo`3oool0o`3oool10?ooo`00\
+\>"],
+    ImageRangeCache->{{{0, 287}, {176.938, 0}} -> {0, 0, 0, 0}}],
+  StyleBox["\nIf ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((c\_0)\) \[LessEqual] f \((d\_0)\)\)]],
+  ", then squeeze from the right and                            ",
+  StyleBox["If ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((c\_0)\) < f \((d\_0)\)\)]],
+  ", then squeeze from the left and  \nuse the new interval  ",
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\) = \([a\_0, d\_0]\)\)]],
+  ".                                        use the new interval  ",
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\) = \([c\_0, b\_0]\)\)]],
+  ". \n\n\t\t\t\t",
+  StyleBox["Figure 1.",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  The decision process for the Fibonacci ratio search.   ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\n\tIf  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((c\_0)\) \[LessEqual] f \((d\_0)\)\)]],
+  "  ",
+  StyleBox["and only one new function evaluation is to be made in the \
+interval ",
+    FontFamily->"Times-Roman"],
+  " ",
+  Cell[BoxData[
+      \(\([a\_0, d\_0]\)\)]],
+  StyleBox[",  then we select  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(r\_1\)]],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\((1\/2 < r\_1 < 1)\)\)]],
+  StyleBox["  for the subinterval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\) = \([a\_0, d\_0]\)\)]],
+  ".",
+  StyleBox["   We already have relabeled  \n\t\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(b\_1 = d\_0\)]],
+  StyleBox[" \n\nand since  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(c\_0\  \[Element] \([a\_0, d\_0]\)\)]],
+  " we will relabel it by  \n\n\t\t",
+  Cell[BoxData[
+      \(d\_1 = c\_0\)]],
+  " \n\t\t",
+  StyleBox["\nthen we will have \n\n(1)\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(d\_0 - c\_0\  = \ b\_1 - d\_1\)]],
+  ". ",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  "The ratio ",
+  Cell[BoxData[
+      \(r\_0\)]],
+  " is chosen so that  ",
+  Cell[BoxData[
+      \(d\_0 - a\_0\  = \ \(r\_0\) \((b\_0 - a\_0)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(c\_0 - a\_0\  = \ \((1 - r\_0)\) \((b\_0 - a\_0)\)\)]],
+  " and subtraction produces \n\n  \t\t",
+  Cell[BoxData[
+      \(d\_0 - c\_0\  = \ \((d\_0 - a\_0)\) - \((c\_0 - a\_0)\)\)]],
+  "  \n\t\t\n   \t\t",
+  Cell[BoxData[
+      \(d\_0 - 
+          c\_0\  = \ \ \(r\_0\) \((b\_0 - a\_0)\) - \((1 - r\_0)\) \((b\_0 - 
+                a\_0)\)\)]],
+  "  \n\t\t\n(2)\t\t",
+  Cell[BoxData[
+      \(d\_0 - c\_0\  = \ \ \((2  r\_0 - 1)\) \((b\_0 - a\_0)\)\)]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "And the ratio ",
+  Cell[BoxData[
+      \(r\_1\)]],
+  " is chosen so that  \n\n(3)\t\t",
+  Cell[BoxData[
+      \(b\_1 - d\_1\  = \ \((1 - r\_1)\) \((b\_1 - a\_1)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Now substitute (2) and (3) into (1) and get  \n\n(4)\t\t",
+  Cell[BoxData[
+      \(\((2  r\_0 - 1)\) \((b\_0 - a\_0)\)\  = \ \((1 - r\_1)\) \((b\_1 - 
+              a\_1)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Also the length of the interval ",
+  Cell[BoxData[
+      \(\([a\_1, b\_1]\)\)]],
+  " has been shrunk by the factor ",
+  Cell[BoxData[
+      \(r\_0\)]],
+  ".  Thus  ",
+  Cell[BoxData[
+      \(\((b\_1 - a\_1)\) = \(r\_0\) \((b\_0 - a\_0)\)\)]],
+  " and using this in (4) produces  \n\n(5)\t\t",
+  Cell[BoxData[
+      \(\((2  r\_0 - 1)\) \((b\_0 - a\_0)\)\  = \ \((1 - 
+              r\_1)\) \((\(r\_0\) \((b\_0 - a\_0)\))\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Cancel the common factor  ",
+  Cell[BoxData[
+      \(\((b\_0 - a\_0)\)\)]],
+  " in (5) and we now have  \n\n(6)\t\t",
+  Cell[BoxData[
+      \(\((2  r\_0 - 1)\)\  = \ \((1 - r\_1)\) r\_0\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Solving (6) for ",
+  Cell[BoxData[
+      \(r\_1\)]],
+  " produces  \n\n(7)\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), " ", "=", " ", 
+        StyleBox[\(\(1 - r\_0\)\/r\_0\),
+          FontSize->14]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Now we introduce the Fibonacci numbers  ",
+  Cell[BoxData[
+      \({F\_n = \ F\_\(n - 1\) + F\_\(n - 2\)}\)]],
+  "  for the subscript  ",
+  Cell[BoxData[
+      \(n \[GreaterEqual] 4\)]],
+  ".  In equation (7), substitute  ",
+  Cell[BoxData[
+      RowBox[{\(r\_0\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 1\)\/F\_n\),
+          FontSize->14]}]]],
+  " and get the following  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{"1", "-", 
+              StyleBox[\(F\_\(n - 1\)\/F\_n\),
+                FontSize->14]}], ")"}], "/", 
+          RowBox[{"(", 
+            StyleBox[\(F\_\(n - 1\)\/F\_n\),
+              FontSize->14], ")"}]}]}]]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), " ", "=", " ", 
+        StyleBox[\(\(F\_n - F\_\(n - 1\)\)\/F\_\(n - 1\)\),
+          FontSize->14]}]]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_1\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 2\)\/F\_\(n - 1\)\),
+          FontSize->14]}]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Reasoning inductively, it follows that the Fibonacci search can \
+be begun with\n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(r\_0\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 1\)\/F\_n\),
+          FontSize->14]}]]],
+  " \n ",
+  StyleBox["\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(r\_1\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 2\)\/F\_\(n - 1\)\),
+          FontSize->14]}]]],
+  "\nand\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_k\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 1 - k\)\/F\_\(n - k\)\),
+          FontSize->14]}]]],
+  "    for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 3\)}]]],
+  ".  \n\nNote that the last step will be  \t\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(r\_\(n - 3\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(F\_2\/F\_3\),
+            FontSize->14], "=", " ", \(1\/2\)}]}]]],
+  ", \n\nthus no new points can be added at this stage (i.e. the algorithm \
+terminates).  Therefore, the set of possible ratios is  \n\n\t\t",
+  Cell[BoxData[
+      \({r\_k}\_\(k = 0\)\%\(k = n - 3\)\)]],
+  ".     \n\nThere will be exactly  ",
+  StyleBox["n-2",
+    FontFamily->"Courier New"],
+  "  steps in a Fibonacci search!  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\((k + 1)\)\^st\)]],
+  "  ",
+  StyleBox["subinterval is obtained by reducing the length of the  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(k\^th\)]],
+  "  ",
+  StyleBox["subinterval by a factor of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(r\_k\), " ", "=", " ", 
+        StyleBox[\(F\_\(n - 1 - k\)\/F\_\(n - k\)\),
+          FontSize->14]}]]],
+  StyleBox[".  After",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(n - 2\)]],
+  "  steps t",
+  StyleBox["he length of the last subinterval will be  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            
+            StyleBox[\(\(F\_\(n - 1\)\/F\_n\) \(F\_\(n - 2\)\/F\_\(n - 1\)\) 
+                F\_\(n - 3\)\/F\_\(n - 2\)\),
+              FontSize->14], "..."}], 
+          StyleBox[\(F\_3\/F\_4\),
+            FontSize->14], 
+          StyleBox[\(F\_2\/F\_3\),
+            FontSize->14], \((b\_0 - a\_0)\)}], "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(F\_2\/F\_n\),
+              FontSize->14], \((b\_0 - a\_0)\)}], "  ", "=", "  ", 
+          RowBox[{
+            StyleBox[\(1\/F\_n\),
+              FontSize->14], \((b\_0 - a\_0)\)}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["If the abscissa of the minimum is to be found with a tolerance \
+of",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(\ \)\(\[Element]\)\)\)]],
+  StyleBox[",  then we want ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(1\/F\_n\),
+            FontSize->14], \((b\_0 - a\_0)\)}], "<", "\[Epsilon]"}]]],
+  ".  I",
+  StyleBox["t is necessary to use  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  iterations,  where  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  is the smallest integer such that  \n",
+    FontFamily->"Times-Roman"],
+  "\n(8)\t\t",
+  Cell[BoxData[
+      RowBox[{\(F\_n\), ">", 
+        StyleBox[\(\(b\_0 - a\_0\)\/\[Epsilon]\),
+          FontSize->14]}]]],
+  ".  \n\n",
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Solving the above inequality requires either a trial and error look at \
+the sequence of Fibonacci numbers, or the deeper fact that the Fibonacci \
+numbers can be generated by the formula \n\n\t\t",
+  Cell[BoxData[
+      \(F\_k\  = \ \((\((1 + \@5)\)\^k - \((1 - \@5)\)\^k)\)/\((\(2\^k\) \@5)\
+\)\)]],
+  ". \n\nKnowing this fact may be useful, but we still need to compute all \
+the Fibonacci numbers  ",
+  Cell[BoxData[
+      RowBox[{\(F\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(F\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(F\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(F\_\(n - 1\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(F\_n\)}]]],
+  "  in order to calculate the ratios  ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{\(r\_k\), "=", 
+            StyleBox[\(F\_\(n - 1 - k\)\/F\_\(n - k\)\),
+              FontSize->14]}], "}"}], \(k = 0\), \(k = n - 3\)]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe interior points  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(c\_k\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(d\_k\)]],
+  StyleBox["  of the ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(k\^th\)]],
+  " ",
+  StyleBox["subinterval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(a\_k\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(b\_k\)}], "]"}]]],
+  "  ",
+  StyleBox["are found, as needed, using the formulas  \n\n(9) \t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(c\_k\), "  ", "=", "  ", 
+        RowBox[{\(a\_k\), "+", 
+          RowBox[{
+            RowBox[{"(", 
+              RowBox[{"1", "-", 
+                StyleBox[\(F\_\(n - 1 - k\)\/F\_\(n - k\)\),
+                  FontSize->14]}], ")"}], \((b\_k - a\_k)\)}]}]}]]],
+  ",",
+  StyleBox["  \n\t\t\n(10)\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(d\_k\), "  ", "=", "  ", 
+        RowBox[{\(a\_k\), " ", "+", " ", 
+          RowBox[{
+            StyleBox[\(F\_\(n - 1 - k\)\/F\_\(n - k\)\),
+              FontSize->14], \((b\_k - a\_k)\)}]}]}]]],
+  ".  \n\n",
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  T",
+  StyleBox["he value of  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  used in formulas (9) and (10) is found using inequality (8). ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/n2003/FibonacciSearchProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FibonacciSearchProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Fibonacci Search for a Minimum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "To numerically approximate the minimum of  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  on the interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  "  by using a Fibonacci search.  Proceed with the method only if  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is a unimodal function on the interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ".  Terminate the process after  ",
+  StyleBox["n ",
+    FontFamily->"Courier New"],
+  "iterations have been completed, where  ",
+  Cell[BoxData[
+      RowBox[{\(F\_n\), ">", 
+        StyleBox[\(\(b\_0 - a\_0\)\/\[Epsilon]\),
+          FontSize->14]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/FibonacciSearchProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/GoldenRatioSearchProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Fibonacci Search for a \
+Minimum).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(FibonacciSearch[a0_, 
+          b0_, \[Epsilon]_] := \[IndentingNewLine]Module[{F, i, k, n, r, Ya, 
+            Yb, Yc, Yd}, \ \[IndentingNewLine]a\  = \ 
+            N[a0]; \ \[IndentingNewLine]b\  = \ N[b0]; \[IndentingNewLine]n = 
+            4; \[IndentingNewLine]F\_0 = 0; \ \[IndentingNewLine]F\_1 = 
+            1; \ \[IndentingNewLine]F\_i_ := \ \(F\_i\  = \ 
+              F\_\(i - 1\) + F\_\(i - 2\)\); \ \[IndentingNewLine]While[
+            F\_n \[LessEqual] \(b0 - a0\)\/\[Epsilon], \(n = 
+                n + 1;\)\ ]; \[IndentingNewLine]max = 
+            n - 3; \[IndentingNewLine]Ya\  = \ 
+            f[a]; \[IndentingNewLine]Yb\  = \ 
+            f[b]; \[IndentingNewLine]c\  = \ 
+            a + N[1 - F\_\(n - 1\)\/F\_n] \((b - 
+                    a)\); \ \[IndentingNewLine]d\  = \ 
+            a\  + N[F\_\(n - 1\)\/F\_n] \((b - 
+                    a)\); \ \[IndentingNewLine]Yc\  = \ 
+            f[c]; \[IndentingNewLine]Yd\  = \ 
+            f[d]; \[IndentingNewLine]Print["\<f[\>", 
+            PaddedForm[{a, c, d, b}, {8, 7}], "\<] = \>", 
+            PaddedForm[{Ya, Yc, Yd, Yb}, {8, 7}]\ ]; \[IndentingNewLine]k = 
+            1; \[IndentingNewLine]While[\ 
+            k \[LessEqual] max, \[IndentingNewLine]If[\ 
+              Yc < Yd, \[IndentingNewLine]Module[{}, \[IndentingNewLine]b\  = \
+\ d; \ \[IndentingNewLine]Yb\  = \ Yd; \ \[IndentingNewLine]d\  = \ 
+                  c; \ \[IndentingNewLine]Yd\  = \ 
+                  Yc; \ \[IndentingNewLine]c\  = \ 
+                  a + \((1 - F\_\(n - 1 - k\)\/F\_\(n - k\))\) \((b - 
+                          a)\); \ \[IndentingNewLine]Yc\  = \ 
+                  f[c];\ ], \[IndentingNewLine]\(Module[{}, \
+\[IndentingNewLine]a\  = \ c; \ \[IndentingNewLine]Ya\  = \ 
+                    Yc; \ \[IndentingNewLine]c\  = \ 
+                    d; \ \[IndentingNewLine]Yc\  = \ 
+                    Yd; \ \[IndentingNewLine]d\  = \ 
+                    a\  + \ \(F\_\(n - 1 - k\)\/F\_\(n - k\)\) \((b - 
+                            a)\); \ \[IndentingNewLine]Yd\  = \ 
+                    f[d];\ \ ];\)\ ]; \ \[IndentingNewLine]Print["\<f[\>", 
+              PaddedForm[{a, c, d, b}, {8, 7}], "\<] = \>", 
+              PaddedForm[{Ya, Yc, Yd, Yb}, {8, 
+                  7}]\ ]; \ \[IndentingNewLine]k = 
+              k + 1;\ ]; \ \[IndentingNewLine]p\  = \ 
+            c; \ \[IndentingNewLine]Yp\  = \ Yc; \ \[IndentingNewLine]If[\ 
+            Yb < Ya, \ p = b; \ 
+            Yp = Yb\ ]; \ \[IndentingNewLine]Print["\<After k = \>", 
+            
+            k, "\< iterations\>"]; \ \[IndentingNewLine]Print["\<{  a,   b,   \
+c,   d}  = \>", 
+            PaddedForm[{a, c, d, b}, {10, 
+                9}]]; \ \[IndentingNewLine]Print["\<{f[a],f[b],f[c],f[d]} = \
+\>", PaddedForm[{Ya, Yc, Yd, Yb}, {13, 
+                12}]]; \ \[IndentingNewLine]Return[{Yp, 
+              p}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["\tEach iteration requires the determination of two new interior \
+points, one from the previous iteration and the second from formula (9) or \
+(10).   When  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(r\_\(n - 3\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(F\_2\/F\_3\),
+            FontSize->14], "=", " ", \(1\/2\)}]}]]],
+  StyleBox[",  the two interior points will be concurrent in the middle of \
+the interval.  In following example, to distinguish the last two interior \
+points a small distinguishability constant, ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(e\)]],
+  StyleBox[", is introduced. Thus when  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(k = n - 3\)]],
+  "  is used in ",
+  StyleBox["formula (9) or (10), the coefficients of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\((b\_k - a\_k)\)\)]],
+  "  ",
+  StyleBox["are  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(1\/2 - e\)]],
+  "  ",
+  StyleBox["or  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(1\/2 + e\)]],
+  StyleBox[",  respectively. ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Find the minimum of the unimodal function  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\  = \ x\^2 - sin \((x)\)\)],
+    AspectRatioFixed->True],
+  StyleBox["  on the interval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "1"}], "]"}]]],
+  StyleBox["  using the Fibonacci search method.  Use the tolerance of  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Epsilon] = 10\^\(-4\)\)]],
+  "  ",
+  StyleBox["and the distinguishability constant  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(e = 0.01\)]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2 - Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 1}, PlotRange \[Rule] {{0, 1}, {\(-0.25\), 0.2}}, 
+        Ticks \[Rule] {Range[0, 1, 0.2], Range[\(-0.4\), 0.2, 0.1]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\n", 
+    \(\(Print["\<   y = f[x] = \>", f[x]];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["The smallest Fibonacci number satisfying  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(F\_n\  > \ \(b\_0 - a\_0\)\/\[Epsilon]\  = \ \(\(1 - 0\)\/10\^\(-4\) \
+= \ 10000\)\)]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  "A ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " function for generating the Fibonacci numbers is  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F\_0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_1 = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(F\_n_ := \ \(F\_n\  = \ 
+          F\_\(n - 1\) + F\_\(n - 2\)\);\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "By trial and error we find that ",
+  Cell[BoxData[
+      \(F\_20\  = \ 6765\)]],
+  " and  ",
+  Cell[BoxData[
+      \(F\_21\  = \ 10946\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(F\_20\) = \>\"", 
+        F\_20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(F\_21\) = \>\"", F\_21];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Thus we must choose  ",
+  Cell[BoxData[
+      \(n = 21\)]],
+  ", and the first ratio we must use is "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(r\_0\) = \!\(F\_20\/F\_21\) = \>\"", 
+        F\_20\/F\_21, "\< = \>", N[F\_20\/F\_21]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Let  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(a\_0 = 0\)]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(b\_0 = 1\)]],
+  ", and start with the initial interval  ",
+  Cell[BoxData[
+      \(\([a\_0, b\_0]\) = \([0, 1]\)\)]],
+  StyleBox[".   Formulas (9) and (10) are used to compute ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(d\_0\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(d\_0\)]],
+  StyleBox[" as follows:  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a\_0 = 0;\)\), "\[IndentingNewLine]", 
+    \(\(b\_0 = 1;\)\), "\[IndentingNewLine]", 
+    \(\(c\_0\ \  = \ \ a\_0 + \((1.0 - F\_20\/F\_21)\) \((b\_0 - 
+                a\_0)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d\_0\ \  = \ \ a\_0\  + 
+          N[\ F\_20\/F\_21] \((b\_0 - a\_0)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_0\) = \!\(a\_0\) + (1.0 - \
+\!\(F\_20\/F\_21\))(\!\(b\_0\)-\!\(a\_0\))\>\""];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_0\) = \>\"", a\_0, "\< + (\>", 1.0, "\< - \>", 
+        N[F\_20\/F\_21], "\<)(\>", 
+        b\_0 - a\_0, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_0\) = \>\"", a\_0, "\< + (\>", 
+        1.0 - F\_20\/F\_21, "\<)(\>", 
+        b\_0 - a\_0, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_0\) = \>\"", 
+        c\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(d\_0\) = \!\(a\_0\) + \!\(F\_20\/F\_21\)(\!\(b\_k\)-\
+\!\(a\_k\))\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(d\_0\) = \>\"", a\_0, "\< + (\>", 
+        N[F\_20\/F\_21], "\<)(\>", 
+        b\_0 - a\_0, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(d\_0\) = \>\"", d\_0];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<f[\!\(c\_0\)] = f[\>\"", c\_0, "\<] = \>", 
+        f[c\_0]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(d\_0\)] = f[\>\"", d\_0, "\<] = \>", 
+        f[d\_0]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Thus, the minimum of ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f[x]",
+    FontFamily->"Courier New"],
+  StyleBox[" will occur in the subinterval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([a\_0, d\_0]\)\)]],
+  ".  ",
+  StyleBox["We set  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(a\_1 = a\_0\)]],
+  StyleBox[",  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(b\_1 = d\_0\)]],
+  ",  and",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(d\_1 = c\_0\)]],
+  ".  ",
+  StyleBox["The new subinterval containing the abscissa of the minimum of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  StyleBox["f[x]",
+    FontFamily->"Courier New"],
+  "  is  ",
+  Cell[BoxData[
+      \(\([a\_1, 
+          b\_1]\)\  = \ \(\([a\_0, d\_0]\)\  = \ \([0, 0.618034]\)\)\)]],
+  ".  ",
+  StyleBox["Now use formulas (9) to calculate the interior point ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(c\_1\)]],
+  StyleBox["  as follows:  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a\_1 = a\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\_1 = d\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d\_1 = c\_0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c\_1\  = \ 
+        a\_1\  + \ \((1.0\  - \ F\_19\/F\_20)\) \((b\_1 - 
+                a\_1)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The new subinterval is [\!\(a\_1\),\!\(b\_1\)] = [\>\"", 
+        a\_1, "\<,\>", \(b\_1\) "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_1\) = \!\(a\_1\) + (1.0 - \
+\!\(F\_19\/F\_20\))(\!\(b\_1\)-\!\(a\_1\))\>\""];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_1\) = \>\"", a\_1, "\< + (\>", 1.0, "\< - \>", 
+        N[F\_19\/F\_20], "\<)(\>", 
+        b\_1 - a\_1, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_1\) = \>\"", a\_1, "\< + (\>", 
+        1.0 - F\_19\/F\_20, "\<)(\>", 
+        b\_1 - a\_1, "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_1\) = \>\"", c\_1];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<f[\!\(c\_1\)] = f[\>\"", c\_1, "\<] = \>", 
+        f[c\_1]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(d\_1\)] = f[\>\"", d\_1, "\<] = \>", 
+        f[d\_1]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Now compute and compare ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[c\_1]\)]],
+  " ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f[d\_1]\)]],
+  " ",
+  StyleBox["to determine the new subinterval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([a\_2, 
+          b\_2]\)\  = \ \(\([c\_1, b\_1]\)\  = \ \([0.23606797003471588`, 
+            0.618034]\)\)\)]],
+  StyleBox[",  and continue the iteration process.  The iterations are \
+obtained by calling the subroutine.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(FibonacciSearch[0, 1, 10\^\(-4\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["In the subroutine, we have used  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(F\_2\/F\_3\  = \ 1\/2\)]],
+  StyleBox[", and hence ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(c = d\)]],
+  ".  If this is acceptable then we have found an approximation to the \
+minimum.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<An approximation for the minimum is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<  c  =   \>", 
+        PaddedForm[c, {9, 8}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[c] = f[\>", 
+        PaddedForm[c, {9, 8}], "\<]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[c] = \>", PaddedForm[f[c], {10, 9}]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["If we use the distinguishability constant  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(e = 0.01\)]],
+  "  in the final computation, then a plausible computation would be "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e = 0.01;\)\), "\[IndentingNewLine]", 
+    \(\(c\  = \ 
+        a + \((1\/2 - e)\) \((b - a)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<{  a,   b,   c,   d}  = \>", 
+        PaddedForm[{a, c, d, b}, {9, 8}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<{f[a],f[b],f[c],f[d]} = \>", 
+        PaddedForm[{f[a], f[b], f[c], f[d]}, {10, 9}]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tBoth the Fibonacci and golden ratio search methods can be \
+applied in cases where ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)],
+    AspectRatioFixed->True],
+  StyleBox[" is not differentiable.  It should be noted that when  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  is small the Fibonacci method\nis more efficient than the \
+golden ratio method.  However, for  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  large the two methods are almost identical.  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Fibonacci Search Method.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(FibonacciSearch[a0_, 
+          b0_, \[Epsilon]_] := \[IndentingNewLine]Module[{F, i, k, n, r, Ya, 
+            Yb, Yc, Yd}, \ \[IndentingNewLine]a\  = \ 
+            N[a0]; \ \[IndentingNewLine]b\  = \ N[b0]; \[IndentingNewLine]n = 
+            4; \[IndentingNewLine]F\_0 = 0; \ \[IndentingNewLine]F\_1 = 
+            1; \ \[IndentingNewLine]F\_i_ := \ \(F\_i\  = \ 
+              F\_\(i - 1\) + F\_\(i - 2\)\); \ \[IndentingNewLine]While[
+            F\_n \[LessEqual] \(b0 - a0\)\/\[Epsilon], \(n = 
+                n + 1;\)\ ]; \[IndentingNewLine]max = 
+            n - 3; \[IndentingNewLine]Ya\  = \ 
+            f[a]; \[IndentingNewLine]Yb\  = \ 
+            f[b]; \[IndentingNewLine]c\  = \ 
+            a + N[1 - F\_\(n - 1\)\/F\_n] \((b - 
+                    a)\); \ \[IndentingNewLine]d\  = \ 
+            a\  + N[F\_\(n - 1\)\/F\_n] \((b - 
+                    a)\); \ \[IndentingNewLine]Yc\  = \ 
+            f[c]; \[IndentingNewLine]Yd\  = \ 
+            f[d]; \[IndentingNewLine]pointsab = {{Red, PointSize[0.02], 
+                Point[{a, f[a]}], Point[{b, f[b]}]}, {Blue, PointSize[0.02], 
+                Point[{c, f[c]}], 
+                Point[{d, f[d]}]}}; \ \ \[IndentingNewLine]dotsab = 
+            Graphics[pointsab]; \ \ \[IndentingNewLine]gr0 = 
+            Plot[f[x], {x, a0, b0}, 
+              PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.75}}, 
+              PlotStyle \[Rule] Magenta, 
+              DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]gr1 = 
+            FilledPlot[f[x], {x, a + 0.006, b}, 
+              PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.72}}, 
+              PlotStyle \[Rule] Red, Fills \[Rule] {RGBColor[1, 0.8, 0.85]}, 
+              Curves \[Rule] Front, 
+              DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[gr0, 
+            gr1, dotsab, 
+            PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.72}}, 
+            Ticks \[Rule] {Range[0, 2, 0.1], Range[0, 2, 0.1]}, 
+            DisplayFunction \[Rule] $DisplayFunction]; \ \[IndentingNewLine]k \
+= 1; \[IndentingNewLine]Print["\<{  a,   b,   c,   d}  = \>", 
+            PaddedForm[{a, c, d, b}, {7, 
+                6}]]; \ \[IndentingNewLine]Print["\<{f[a],f[b],f[c],f[d]} = \
+\>", PaddedForm[{Ya, Yc, Yd, Yb}, {13, 12}]]; \ \[IndentingNewLine]While[\ 
+            k \[LessEqual] max, \[IndentingNewLine]If[\ 
+              Yc < Yd, \[IndentingNewLine]Module[{}, \[IndentingNewLine]b\  = \
+\ d; \ \[IndentingNewLine]Yb\  = \ Yd; \ \[IndentingNewLine]d\  = \ 
+                  c; \ \[IndentingNewLine]Yd\  = \ 
+                  Yc; \ \[IndentingNewLine]c\  = \ 
+                  a + \((1 - F\_\(n - 1 - k\)\/F\_\(n - k\))\) \((b - 
+                          a)\); \ \[IndentingNewLine]Yc\  = \ 
+                  f[c];\ ], \[IndentingNewLine]\(Module[{}, \
+\[IndentingNewLine]a\  = \ c; \ \[IndentingNewLine]Ya\  = \ 
+                    Yc; \ \[IndentingNewLine]c\  = \ 
+                    d; \ \[IndentingNewLine]Yc\  = \ 
+                    Yd; \ \[IndentingNewLine]d\  = \ 
+                    a\  + \ \(F\_\(n - 1 - k\)\/F\_\(n - k\)\) \((b - 
+                            a)\); \ \[IndentingNewLine]Yd\  = \ 
+                    f[d];\ \ ];\)\ ]; \ \[IndentingNewLine]\ 
+            pointsab = {{Red, PointSize[0.02], Point[{a, f[a]}], 
+                  Point[{b, f[b]}]}, {Blue, PointSize[0.02], 
+                  Point[{c, f[c]}], 
+                  Point[{d, f[d]}]}}; \ \ \[IndentingNewLine]dotsab = 
+              Graphics[pointsab]; \ \ \[IndentingNewLine]gr0 = 
+              Plot[f[x], {x, a0, b0}, 
+                PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.75}}, 
+                PlotStyle \[Rule] Magenta, 
+                DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]gr1 = 
+              FilledPlot[f[x], {x, a, b}, 
+                PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.72}}, 
+                PlotStyle \[Rule] Red, 
+                Fills \[Rule] {RGBColor[1, 0.8, 0.85]}, Curves \[Rule] Front, 
+                DisplayFunction \[Rule] Identity]; \[IndentingNewLine]If[
+              b - a > 0.1, \[IndentingNewLine]Show[gr0, gr1, dotsab, 
+                PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.72}}, 
+                Ticks \[Rule] {Range[0, 2, 0.1], Range[0, 2, 0.1]}, 
+                DisplayFunction \[Rule] $DisplayFunction], \
+\[IndentingNewLine]\(Show[gr0, gr1, dotsab, 
+                  PlotRange \[Rule] {{a0 - 0.05, b0 + 0.05}, {0, 0.72}}, 
+                  Ticks \[Rule] {Range[0, 2, 0.1], Range[0, 2, 0.1]}, 
+                  DisplayFunction \[Rule] $DisplayFunction];\)]; \ \
+\[IndentingNewLine]k = 
+              k + 1; \[IndentingNewLine]Print["\<{  a,   b,   c,   d}  = \>", 
+              PaddedForm[{a, c, d, b}, {7, 
+                  6}]]; \ \[IndentingNewLine]Print["\<{f[a],f[b],f[c],f[d]} = \
+\>", PaddedForm[{Ya, Yc, Yd, Yb}, {13, 
+                  12}]];\ ]; \ \[IndentingNewLine]p\  = \ 
+            c; \ \[IndentingNewLine]Yp\  = \ Yc; \ \[IndentingNewLine]If[\ 
+            Yb < Ya, \ p = b; \ 
+            Yp = Yb\ ]; \ \[IndentingNewLine]Print["\<After k = \>", 
+            k, "\< iterations\>"]; \ \[IndentingNewLine]Print["\<{  a,   b,   \
+c,   d}  = \>", 
+            PaddedForm[{a, c, d, b}, {10, 
+                9}]]; \ \[IndentingNewLine]Print["\<{f[a],f[b],f[c],f[d]} = \
+\>", PaddedForm[{Ya, Yc, Yd, Yb}, {13, 
+                12}]]; \ \[IndentingNewLine]Return[{Yp, 
+              p}];\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[" ",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold"],
+  "Find the minimum of  ",
+  Cell[BoxData[
+      \(f[x] = 1\/2 + x\^5 - \(4\/5\) x\)],
+    AspectRatioFixed->True],
+  StyleBox["  on the interval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/2 + x\^5 - \(4\/5\) x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(FibonacciSearch[a0, b0, 
+        7.0\[Times]10\^\(-3\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/\
+Fibonacci1/Fibonacciaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Fibonacci1/Fibonacciaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/a2001/Animations/Optimization/\
+Fibonacci1/Fibonacci.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Optimization/\
+Fibonacci1/Fibonacci.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations. "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/FibonacciSearchBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fibonacci Search",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FibonacciSearchBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{960, 629},
+WindowMargins->{{18, Automatic}, {Automatic, 2}},
+CellLabelAutoDelete->True
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 173, 4, 35, "Text"],
+Cell[1952, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3431, 111, 1332, 41, 106, "Text"],
+Cell[4766, 154, 1027, 44, 109, "Text"],
+Cell[5796, 200, 1887, 57, 128, "Text"],
+Cell[7686, 259, 6965, 209, 145, "Text"],
+
+Cell[CellGroupData[{
+Cell[14676, 472, 123, 2, 33, "Text"],
+Cell[14802, 476, 270, 8, 33, "Text"],
+Cell[15075, 486, 175, 4, 90, "Input"],
+Cell[15253, 492, 324, 7, 70, "Input"],
+Cell[15580, 501, 135, 2, 30, "Input"],
+Cell[15718, 505, 577, 12, 90, "Text"],
+Cell[16298, 519, 39, 1, 30, "Input"],
+Cell[16340, 522, 116, 4, 33, "Text"],
+Cell[16459, 528, 38, 1, 30, "Input"],
+Cell[16500, 531, 60, 0, 33, "Text"],
+Cell[16563, 533, 39, 1, 30, "Input"],
+Cell[16605, 536, 72, 0, 33, "Text"],
+Cell[16680, 538, 226, 4, 90, "Input"],
+Cell[16909, 544, 116, 4, 33, "Text"],
+Cell[17028, 550, 38, 1, 30, "Input"],
+Cell[17069, 553, 60, 0, 33, "Text"],
+Cell[17132, 555, 39, 1, 30, "Input"],
+Cell[17174, 558, 427, 13, 71, "Text"],
+Cell[17604, 573, 176, 3, 71, "Input"],
+Cell[17783, 578, 172, 3, 50, "Input"],
+Cell[17958, 583, 426, 12, 109, "Text"],
+Cell[18387, 597, 218, 4, 35, "Input"],
+Cell[18608, 603, 541, 13, 183, "Text"],
+Cell[19152, 618, 270, 4, 89, "Input"],
+Cell[19425, 624, 173, 5, 42, "Text"],
+Cell[19601, 631, 223, 4, 89, "Input"],
+Cell[19827, 637, 666, 21, 89, "Text"],
+Cell[20496, 660, 437, 9, 101, "Input"]
+}, Closed]],
+Cell[20948, 672, 1086, 35, 52, "Text"],
+Cell[22037, 709, 61378, 1789, 349, "Text"],
+Cell[83418, 2500, 1209, 44, 264, "Text"],
+Cell[84630, 2546, 674, 22, 147, "Text"],
+Cell[85307, 2570, 206, 8, 71, "Text"],
+Cell[85516, 2580, 216, 6, 71, "Text"],
+Cell[85735, 2588, 465, 15, 71, "Text"],
+Cell[86203, 2605, 229, 8, 71, "Text"],
+Cell[86435, 2615, 245, 10, 77, "Text"],
+Cell[86683, 2627, 1069, 34, 169, "Text"],
+Cell[87755, 2663, 2082, 61, 379, "Text"],
+Cell[89840, 2726, 1367, 45, 102, "Text"],
+Cell[91210, 2773, 3087, 91, 239, "Text"],
+Cell[94300, 2866, 1772, 58, 159, "Text"],
+Cell[96075, 2926, 600, 22, 33, "Text"],
+Cell[96678, 2950, 1204, 39, 55, "Text"],
+Cell[97885, 2991, 607, 20, 33, "Text"],
+Cell[98495, 3013, 162, 3, 33, "Text"],
+Cell[98660, 3018, 2950, 52, 958, "Input"],
+Cell[101613, 3072, 1190, 37, 80, "Text"],
+Cell[102806, 3111, 1006, 31, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[103837, 3146, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[103990, 3152, 434, 7, 110, "Input"],
+Cell[104427, 3161, 242, 7, 74, "Text"],
+Cell[104672, 3170, 143, 5, 33, "Text"],
+Cell[104818, 3177, 204, 4, 71, "Input"],
+Cell[105025, 3183, 176, 8, 33, "Text"],
+Cell[105204, 3193, 172, 3, 50, "Input"],
+Cell[105379, 3198, 132, 5, 33, "Text"],
+Cell[105514, 3205, 152, 2, 44, "Input"],
+Cell[105669, 3209, 594, 23, 33, "Text"],
+Cell[106266, 3234, 1308, 24, 362, "Input"],
+Cell[107577, 3260, 229, 4, 50, "Input"],
+Cell[107809, 3266, 1117, 42, 52, "Text"],
+Cell[108929, 3310, 1051, 19, 274, "Input"],
+Cell[109983, 3331, 229, 4, 50, "Input"],
+Cell[110215, 3337, 601, 20, 52, "Text"],
+Cell[110819, 3359, 138, 2, 51, "Input"],
+Cell[110960, 3363, 337, 11, 39, "Text"],
+Cell[111300, 3376, 446, 8, 110, "Input"],
+Cell[111749, 3386, 226, 6, 33, "Text"],
+Cell[111978, 3394, 391, 7, 104, "Input"]
+}, Closed]],
+Cell[112384, 3404, 662, 18, 68, "Text"],
+Cell[113049, 3424, 313, 10, 35, "Text"],
+Cell[113365, 3436, 5669, 95, 1458, "Input"],
+Cell[119037, 3533, 460, 18, 36, "Text"],
+
+Cell[CellGroupData[{
+Cell[119522, 3555, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[119675, 3561, 335, 6, 124, "Input"],
+Cell[120013, 3569, 778, 26, 33, "Text"]
+}, Closed]],
+Cell[120806, 3598, 772, 24, 30, "Text"],
+Cell[121581, 3624, 158, 3, 35, "Text"],
+Cell[121742, 3629, 557, 16, 33, "Text"],
+Cell[122302, 3647, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,1687 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     54204,       1558]*)
+(*NotebookOutlinePosition[     55111,       1588]*)
+(*  CellTagsIndexPosition[     55067,       1584]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for ",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Hermite Polynomial Interpolation",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for the Hermite Polynomial",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe cubic ",
+  ButtonBox["Hermite polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/HermitesInterpolatingPolynomial.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  "  p(x)  has the interpolative properties  ",
+  Cell[BoxData[
+      RowBox[{\(p \((x\_0)\) = y\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"]}]]],
+  "   ",
+  Cell[BoxData[
+      RowBox[{\(p \((x\_1)\) = y\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"]}]]],
+  "   ",
+  Cell[BoxData[
+      RowBox[{\(p' \((x\_0)\) = d\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"]}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{\(p' \((x\_1)\) = d\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"]}]]],
+  "  both the function values and their derivatives are known at the ",
+  StyleBox["endpoints",
+    FontColor->RGBColor[1, 0, 1]],
+  " of the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_1]\)\)]],
+  ".  Hermite polynomials were studied by the French Mathematician ",
+  StyleBox[ButtonBox["Charles Hermite",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Hermite.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1822-1901), and are referred to as a \"clamped cubic,\" where \
+\"clamped\" refers to the slope at the endpoints being fixed.  This situation \
+is illustrated in the figure below.  \n\n",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .6 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-1.38778e-017 0.181818 -7.12863e-018 0.142857 [
+[.18182 -0.0125 -3 -9 ]
+[.18182 -0.0125 3 0 ]
+[.36364 -0.0125 -3 -9 ]
+[.36364 -0.0125 3 0 ]
+[.54545 -0.0125 -3 -9 ]
+[.54545 -0.0125 3 0 ]
+[.72727 -0.0125 -3 -9 ]
+[.72727 -0.0125 3 0 ]
+[.90909 -0.0125 -3 -9 ]
+[.90909 -0.0125 3 0 ]
+[-0.0125 .14286 -6 -4.5 ]
+[-0.0125 .14286 0 4.5 ]
+[-0.0125 .28571 -6 -4.5 ]
+[-0.0125 .28571 0 4.5 ]
+[-0.0125 .42857 -6 -4.5 ]
+[-0.0125 .42857 0 4.5 ]
+[-0.0125 .57143 -6 -4.5 ]
+[-0.0125 .57143 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .6 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.18182 0 m
+.18182 .00625 L
+s
+[(1)] .18182 -0.0125 0 1 Mshowa
+.36364 0 m
+.36364 .00625 L
+s
+[(2)] .36364 -0.0125 0 1 Mshowa
+.54545 0 m
+.54545 .00625 L
+s
+[(3)] .54545 -0.0125 0 1 Mshowa
+.72727 0 m
+.72727 .00625 L
+s
+[(4)] .72727 -0.0125 0 1 Mshowa
+.90909 0 m
+.90909 .00625 L
+s
+[(5)] .90909 -0.0125 0 1 Mshowa
+0 0 m
+1 0 L
+s
+0 .14286 m
+.00625 .14286 L
+s
+[(1)] -0.0125 .14286 1 0 Mshowa
+0 .28571 m
+.00625 .28571 L
+s
+[(2)] -0.0125 .28571 1 0 Mshowa
+0 .42857 m
+.00625 .42857 L
+s
+[(3)] -0.0125 .42857 1 0 Mshowa
+0 .57143 m
+.00625 .57143 L
+s
+[(4)] -0.0125 .57143 1 0 Mshowa
+0 0 m
+0 .6 L
+s
+0 0 m
+1 0 L
+1 .6 L
+0 .6 L
+closepath
+clip
+newpath
+0 0 1 r
+.5 Mabswid
+.18182 .28571 m
+.19618 .29585 L
+.21132 .30413 L
+.22668 .31015 L
+.23539 .31256 L
+.23928 .3134 L
+.2435 .31417 L
+.24766 .31477 L
+.25151 .31519 L
+.25341 .31535 L
+.25519 .31547 L
+.25704 .31557 L
+.25803 .31561 L
+.25909 .31565 L
+.26003 .31567 L
+.2609 .31568 L
+.26186 .31569 L
+.2624 .3157 L
+.26289 .3157 L
+.26378 .31569 L
+.26475 .31568 L
+.26566 .31566 L
+.2665 .31564 L
+.26807 .31558 L
+.26979 .31549 L
+.27327 .31525 L
+.27728 .31485 L
+.28107 .31436 L
+.28817 .31316 L
+.29582 .31148 L
+.30414 .30919 L
+.31924 .30392 L
+.33529 .29687 L
+.36411 .28096 L
+.39481 .26035 L
+.42436 .238 L
+.45577 .21272 L
+.48603 .18803 L
+.51513 .16501 L
+.54611 .14241 L
+.57592 .1236 L
+.59113 .11547 L
+.60761 .10799 L
+.6235 .10225 L
+.63106 .10007 L
+.63814 .09838 L
+.64505 .09706 L
+.6486 .09652 L
+.65247 .09604 L
+.65466 .09581 L
+Mistroke
+.6567 .09563 L
+.6588 .09549 L
+.66071 .09538 L
+.66161 .09534 L
+.66259 .09531 L
+.66351 .09528 L
+.66435 .09526 L
+.66525 .09525 L
+.66624 .09524 L
+.66674 .09524 L
+.66727 .09524 L
+.66823 .09525 L
+.66917 .09526 L
+.6697 .09528 L
+.6702 .09529 L
+.67129 .09533 L
+.67228 .09537 L
+.67408 .09546 L
+.67602 .0956 L
+.68015 .09599 L
+.68448 .09656 L
+.69183 .09791 L
+.69986 .09995 L
+.70772 .10253 L
+.71486 .1054 L
+.73087 .11371 L
+.74555 .12373 L
+.76144 .13732 L
+.79273 .17301 L
+.82286 .21955 L
+.85183 .27658 L
+.88268 .35165 L
+.90909 .42857 L
+Mfstroke
+1 0 0 r
+0 .14286 m
+.04425 .17763 L
+.09252 .21555 L
+.13785 .25117 L
+.18144 .28542 L
+.22784 .32187 L
+.2725 .35697 L
+.31998 .39427 L
+.36572 .43021 L
+.40972 .46478 L
+.45653 .50156 L
+.5016 .53697 L
+.54494 .57103 L
+s
+.54494 .57103 m
+.58182 .6 L
+s
+.77273 0 m
+.81851 .14389 L
+.86333 .28476 L
+.91096 .43445 L
+.95686 .57869 L
+s
+.95686 .57869 m
+.96364 .6 L
+s
+.02 w
+.18182 .28571 Mdot
+.90909 .42857 Mdot
+0 g
+gsave
+.23636 .25714 -90.5938 -17.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.90909 .42857 -120.188 -10.7813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 172.75},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000[1000`40O003h00Oogoo8Goo000mOol5
+000[Ool4000^Ool2000_Ool3000/Ool2000OOol003moo`03001oogoo02]oo`03001oogoo02ioo`04
+001oogoo000_Ool00`00Oomoo`0ZOol01000Oomoo`007Woo000oOol00`00Oomoo`0/Ool00`00Oomo
+o`0_Ool00`00Oomoo`0[Ool5000^Ool00`00Oomoo`0LOol003moo`03001oogoo02eoo`03001oogoo
+02moo`03001oogoo02Yoo`04001oogoo000]Ool2000OOol003moo`03001oogoo02]oo`04001oogoo
+000]Ool01000Oomoo`00;Goo00<007oo0000;Goo00<007ooOol07Woo000nOol2000^Ool2000_Ool2
+000_Ool2000]Ool3000NOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo000?
+Ooo=00000g`00000000k0006Ool000moo`03001oogoo02eoo`03001oogoo02eoo`03001oogoo02io
+o`03001oogoo02eoo`03001oogoo00Uoo`03O01oogoo025oo`03001oogoo01eoo`003goo00<007oo
+Ool0;Goo00<007ooOol0;Goo00<007ooOol0;Woo00<007ooOol0;Goo00<007ooOol02Woo00=l07oo
+Ool087oo00<007ooOol07Goo000?Ool00`00Oomoo`3;Ool00g`0Oomoo`10Ool000moo`03001oogoo
+0<]oo`03O01oogoo041oo`003goo00<007ooOol0c7oo00=l07ooOol0?goo000?Ool00`00Oomoo`3<
+Ool00g`0Oomoo`0oOol000moo`03001oogoo0<aoo`03O01oogoo03moo`003goo00<007ooOol0cGoo
+00=l07ooOol0?Woo000?Ool00`00Oomoo`3=Ool00g`0Oomoo`0nOol000moo`03001oogoo0<eoo`03
+O01oogoo03ioo`003goo00<007ooOol0cGoo00=l07ooOol0?Woo000?Ool00`00Oomoo`3>Ool00g`0
+Oomoo`0mOol000moo`03001oogoo0<ioo`03O01oogoo03eoo`003goo00<007ooOol0cWoo00=l07oo
+Ool0?Goo000?Ool00`00Oomoo`3?Ool00g`0Oomoo`0lOol000moo`03001oogoo0<moo`03O01oogoo
+03aoo`003goo00<007ooOol0cgoo00=l07ooOol0?7oo000?Ool00`00Oomoo`3@Ool00g`0Oomoo`0k
+Ool000moo`03001oogoo0=1oo`03O01oogoo03]oo`003goo00<007ooOol0d7oo00=l07ooOol0>goo
+000?Ool00`00Oomoo`3AOol00g`0Oomoo`0jOol000moo`03001oogoo0=5oo`03O01oogoo03Yoo`00
+3goo00<007ooOol0dGoo00=l07ooOol0>Woo000?Ool00`00Oomoo`3BOol00g`0Oomoo`0iOol000mo
+o`03001oogoo0:]oo`H07b5oo`03O01oogoo03Uoo`003goo00<007ooOol0YWoo1P0O1Goo1@0O77oo
+00=l07ooOol0>Goo000?Ool00`00Oomoo`2ROol401l@Ool401lIOol00g`0Oomoo`0hOol000moo`03
+001oogoo0:1oo`807aQoo`807aMoo`03O01oogoo03Qoo`003goo00<007ooOol0WWoo0P0O77oo0P0O
+5Goo00=l07ooOol0>7oo000?Ool00`00Oomoo`2LOol201lPOol201lCOol00g`0Oomoo`0hOol000mo
+o`03001oogoo09Yoo`807bAoo`0301moogoo015oo`03O01oogoo03Moo`003goo00<007ooOol0V7oo
+0P0O9goo0P0O4Goo00=l07ooOol0=goo000?Ool00`00Oomoo`2FOol201l[Ool00`0OOomoo`0>Ool0
+0g`0Oomoo`0gOol000moo`03001oogoo09Aoo`807bioo`0301moogoo00ioo`03O01oogoo03Ioo`00
+3goo00<007ooOol0Tgoo00<07gooOol0;goo00<07gooOol03Goo00=l07ooOol0=Woo0006Ool50004
+Ool00`00Oomoo`2AOol201lcOol00`0OOomoo`0<Ool00g`0Oomoo`0fOol000Qoo`03001oogoo00Ao
+o`03001oogoo08moo`807cIoo`0301moogoo00aoo`03O01oogoo03Eoo`0027oo00<007ooOol017oo
+00=l0000Ool0SWoo00<07gooOol0=goo00<07gooOol02goo00=l07ooOol0=Goo0008Ool00`00Oomo
+o`04Ool00`00O01oo`2=Ool00`0OOomoo`0iOol00`0OOomoo`0:Ool00g`0Oomoo`0eOol000Qoo`03
+001oogoo00Aoo`04001oog`0O02:Ool201lmOol00`0OOomoo`0:Ool00g`0Oomoo`0dOol000Moo`80
+00Ioo`05001oogooOoml0028Ool00`0OOomoo`0nOol00`0OOomoo`09Ool00g`0Oomoo`0dOol000mo
+o`03001oogoo009oo`03O01oogoo08Aoo`0301moogoo03moo`0301moogoo00Uoo`03O01oogoo03Ao
+o`003goo00<007ooOol00goo0W`0PWoo0P0O@goo00<07gooOol02Goo00=l07ooOol0<goo000?Ool0
+0`00Oomoo`05Ool00g`0Oomoo`1nOol00`0OOomoo`14Ool00`0OOomoo`08Ool00g`0Oomoo`0cOol0
+00moo`03001oogoo00Ioo`03O01oogoo07aoo`0301moogoo04Ioo`0301moogoo00Moo`03O01oogoo
+03=oo`003goo00<007ooOol01goo0W`0NWoo0P0OBWoo00<07gooOol01goo00=l07ooOol0<Woo000?
+Ool00`00Oomoo`09Ool00g`0Oomoo`1fOol00`0OOomoo`1;Ool00`0OOomoo`06Ool00g`0Oomoo`0b
+Ool000moo`03001oogoo00Yoo`03O01oogoo07Aoo`0301moogoo04aoo`0301moogoo00Ioo`03O01o
+ogoo039oo`003goo00<007ooOol02goo00=l07ooOol0LGoo0P0OD7oo00<07gooOol01Goo00=l07oo
+Ool0<Woo000?Ool00`00Oomoo`0<Ool2O01`Ool00`0OOomoo`1AOol00`0OOomoo`05Ool00g`0Oomo
+o`0aOol000moo`03001oogoo00ioo`03O01oogoo06aoo`0301moogoo059oo`0301moogoo00Eoo`03
+O01oogoo035oo`003goo00<007ooOol03goo00=l07ooOol0JWoo00<07gooOol0E7oo00<07gooOol0
+17oo00=l07ooOol0<Goo000?Ool00`00Oomoo`0@Ool00g`0Oomoo`1XOol00`0OOomoo`1FOol00`0O
+Oomoo`04Ool00g`0Oomoo`0`Ool000moo`03001oogoo015oo`03O01oogoo06Eoo`807eUoo`0301mo
+ogoo00Aoo`03O01oogoo031oo`003goo00<007ooOol04Woo0W`0I7oo00<07gooOol0FWoo00<07goo
+Ool00goo00=l07ooOol0<7oo000?Ool00`00Oomoo`0DOol00g`0Oomoo`1POol00`0OOomoo`1LOol0
+0`0OOomoo`03Ool00g`0Oomoo`0_Ool000moo`03001oogoo01Eoo`03O01oogoo00ioo`03001oogoo
+01Moo`@000aoo`03001oogoo02=oo`0301moogoo05eoo`0301moogoo00=oo`03O01oogoo02moo`00
+3goo00<007ooOol05Woo00=l07ooOol037oo00<007ooOol02goo0P0017oo00<007ooOol01Woo00<0
+07ooOol01Goo0P001Goo00<007ooOol08Goo00<07gooOol0Ggoo00<07gooOol00Woo00=l07ooOol0
+;goo000?Ool00`00Oomoo`0GOol00g`0Oomoo`0;Ool00`00Oomoo`0:Ool01000Oomoo`000goo0P00
+27oo00<007ooOol00goo00@007ooOol000Aoo`03001oogoo01moo`807f=oo`0301moogoo009oo`03
+O01oogoo02ioo`003goo00<007ooOol067oo0W`02Woo00<007ooOol00goo0`0000Ioo`00000007oo
+0002Ool00`00Oomoo`02Ool00`00Oomoo`06Ool20004Ool01000Oomoo`001Goo00<007ooOol07Goo
+00<07gooOol0Hgoo00<07gooOol00Woo00=l07ooOol0;Woo000?Ool00`00Oomoo`0JOol00g`0Oomo
+o`07Ool00`00Oomoo`04Ool01@00Oomoogoo00000Woo00@007ooOol000Aoo`8000Moo`8000Aoo`04
+001oogoo0005Ool00`00Oomoo`0LOol00`0OOomoo`1UOol01@0OOomoogooO000<7oo000?Ool00`00
+Oomoo`0KOol00g`0Oomoo`06Ool00`00Oomoo`05Ool00`00Ool00003Ool01000Oomoo`003Goo00<0
+07oo00000goo00@007ooOol000Eoo`03001oogoo01Yoo`807fQoo`0301moogoo009oo`03O01oogoo
+02eoo`003goo00<007ooOol077oo00=l07ooOol01Goo00<007ooOol01Woo0P0017oo0P003Woo00@0
+07ooOol000=oo`8000Ioo`03001oogoo01Uoo`0301moogoo06Uoo`0501moogooOoml000_Ool000mo
+o`03001oogoo01eoo`03O01oogoo00Aoo`03001oogoo00Eoo`04001oogoo000COol01000Oomoo`00
+2goo00<007ooOol067oo00<07gooOol0JWoo00D07gooOomoog`002moo`003goo00<007ooOol07Woo
+0W`017oo00<007ooOol017oo0`0000Aoo`000000011oo`<00004Ool000000009Ool00`00Oomoo`0F
+Ool201m^Ool01@0OOomoogooO000;Woo000?Ool00`00Oomoo`0POol00g`0Oomoo`02Ool00`00Oomo
+o`0YOol00`00Oomoo`0FOol00`0OOomoo`1^Ool01@0OOomoogooO000;Woo000?Ool00`00Oomoo`0Q
+Ool01G`0Oomoogoo0000:goo00<007ooOol05Goo00<07gooOol0L7oo00@07gooOoml02ioo`003goo
+00<007ooOol08Woo00El07ooOomoo`0002Uoo`03001oogoo01Aoo`807g=oo`0401moogooO00^Ool0
+00moo`03001oogoo02=oo`9l045oo`0301moogoo07Aoo`0401moogooO00]Ool000moo`03001oogoo
+02Eoo`03O01oogoo03eoo`0301moogoo07Eoo`0401moogooO00]Ool000moo`03001oogoo02Ioo`03
+O01oogoo03Yoo`807gUoo`0301moog`002eoo`003goo00<007ooOol09goo0W`0>Goo00<07gooOol0
+NGoo00@07gooOoml02aoo`003goo00<007ooOol0:Goo00=l07ooOol0=Goo00<07gooOol0Ngoo00<0
+7gooO000;7oo0006Ool40005Ool00`00Oomoo`0ZOol00g`0Ooml0002O00`Ool201mnOol00`0OOoml
+000/Ool000Ioo`03001oogoo00Ioo`03001oogoo02]oo`El02ioo`0301moogoo07ioo`0401moogoo
+O00[Ool000Moo`03001oogoo00Eoo`8002aoo`El02aoo`807h9oo`0301moog`002]oo`0027oo00<0
+07ooOol017oo00<007ooOol0:goo1G`0:Woo0P0OQ7oo00<07gooO000:goo0006Ool01000Oomoo`00
+1Goo00<007ooOol0;7oo17`000<07gooOol09Goo0P0OQgoo00<07gooO000:Woo0007Ool20006Ool0
+0`00Oomoo`0`Ool2O00TOol201n9Ool00`0OOoml000ZOol000moo`03001oogoo039oo`03O0007goo
+01moo`807h]oo`0301moog`002Yoo`003goo00<007ooOol0<goo00Al000O01l07aYoo`<07hioo`03
+01moog`002Uoo`003goo00<007ooOol0=7oo00=l07ooOol00`0O4goo100OTGoo00<07gooO000:Goo
+000?Ool00`00Oomoo`0eOol00g`0Oomoo`02Ool301l<Ool401nFOol00`0OO01oo`0XOol000moo`03
+001oogoo03Ioo`9l00Eoo``07iYoo`0301moog`002Qoo`003goo00<007ooOol0>7oo00=l07ooOol0
+Z7oo00<07gooO000:7oo000?Ool00`00Oomoo`0iOol00g`0Oomoo`2XOol00`0OO01oo`0WOol000mo
+o`03001oogoo03Yoo`03O01oogoo0:Moo`0301moog`002Moo`003goo00<007ooOol0>goo0W`0Z7oo
+00<07g`0Ool09Woo000?Ool00`00Oomoo`0mOol00g`0Oomoo`2UOol00`0OO01oo`0VOol000moo`03
+001oogoo03ioo`03O01oogoo0:Aoo`0301moog`002Ioo`003goo00<007ooOol0?goo0W`0YGoo00<0
+7g`0Ool09Goo000?Ool00`00Oomoo`11Ool00g`0Oomoo`2ROol00`0OO01oo`0UOol000moo`03001o
+ogoo049oo`03O01oogoo0:9oo`0301ml07oo02Aoo`003goo00<007ooOol0@goo0W`0XWoo00<07g`0
+Ool097oo000?Ool00`00Oomoo`15Ool00g`0Oomoo`2OOol00`0OO01oo`0TOol000moo`03001oogoo
+04Ioo`03O01oogoo09moo`0301ml07oo02=oo`003goo00<007ooOol0Agoo0W`0Wgoo00<07g`0Ool0
+8goo000?Ool00`00Oomoo`19Ool00g`0Oomoo`2LOol00`0OO01oo`0SOol000moo`03001oogoo04Yo
+o`03O01oogoo09aoo`03O01oogoo029oo`003goo00<007ooOol0Bgoo0W`0W7oo00<07g`0Ool08Woo
+000?Ool00`00Oomoo`1=Ool00g`0Oomoo`2IOol00`0OO01oo`0ROol000moo`03001oogoo04ioo`03
+O01oogoo09Uoo`03O01oogoo025oo`003goo00<007ooOol0Cgoo0W`0VGoo00<07g`0Ool08Goo000?
+Ool00`00Oomoo`1AOol00g`0Oomoo`2GOol00g`0Oomoo`0POol000moo`03001oogoo059oo`03O01o
+ogoo09Ioo`03O01oogoo021oo`003goo00<007ooOol0Dgoo00=l07ooOol0UGoo00<07g`0Ool087oo
+000?Ool00`00Oomoo`1DOol2O02FOol00g`0Oomoo`0OOol000moo`03001oogoo05Ioo`03O01oogoo
+09=oo`03O01oogoo01moo`003goo00<007ooOol0Egoo00=l07ooOol0HGoo00<007ooOol05goo1000
+37oo00<007ooOol017oo00<07g`0Ool07goo000?Ool00`00Oomoo`1HOol2O01POol00`00Oomoo`0:
+Ool50003Ool00`00Oomoo`05Ool00`00Oomoo`04Ool50003Ool00`00Oomoo`04Ool00g`0Oomoo`0N
+Ool000moo`03001oogoo05Yoo`03O01oogoo05eoo`03001oogoo00aoo`03001oogoo00=oo`8000Mo
+o`03001oogoo00Eoo`03001oogoo00=oo`03001oogoo00Aoo`03O01oogoo01ioo`001goo0P001Woo
+00<007ooOol0Fgoo00=l07ooOol0Fgoo00<007ooOol00goo0`0000Aoo`00000000=oo`03001oogoo
+00Aoo`03001oogoo00Eoo`8000Ioo`03001oogoo00Aoo`03001oogoo00=oo`=l01ioo`001Woo00@0
+07ooOol000Eoo`03001oogoo05aoo`9l05]oo`03001oogoo00Aoo`05001oogooOol00004Ool00`00
+Oomoo`04Ool20006Ool20006Ool00`00Oomoo`04Ool00`00Oomoo`02Ool5O00MOol000Qoo`03001o
+ogoo00Aoo`8005moo`03O01oogoo05Qoo`03001oogoo00Eoo`03001oo`0000Eoo`03001oogoo00ao
+o`03001oo`0000Eoo`03001oogoo00Aoo`03001oogoo009oo`El01eoo`002Goo00<007ooOol00goo
+00<007ooOol0Ggoo00=l07ooOol0Egoo00<007ooOol01Woo0P0017oo0P003Woo00@007ooOol000=o
+o`8000Ioo`03001oogoo009oo`El01eoo`001Woo00@007ooOol000Eoo`03001oogoo061oo`03O01o
+ogoo05Ioo`03001oogoo00Eoo`04001oogoo000COol01000Oomoo`002goo00<007ooOol00goo0g`0
+7Woo0007Ool20006Ool00`00Oomoo`1QOol2O01FOol00`00Oomoo`04Ool3000017oo0000000047oo
+0`0000Aoo`00000000Uoo`03001oogoo00Eoo`03O01oogoo01aoo`003goo00<007ooOol0Hgoo00=l
+07ooOol0E7oo00<007ooOol0:Goo00<007ooOol01goo00=l07ooOol06goo000?Ool00`00Oomoo`1T
+Ool00g`0Oomoo`1COol00`00Oomoo`0YOol00`00Oomoo`07Ool00g`0Oomoo`0KOol000moo`03001o
+ogoo06Eoo`03O01oogoo05=oo`03001oogoo02Moo`03001oogoo00Qoo`03O01oogoo01]oo`003goo
+00<007ooOol0IWoo00=l07ooOol0R7oo00=l07ooOol06Woo000?Ool00`00Oomoo`1WOol2O028Ool0
+0g`0Oomoo`0JOol000moo`03001oogoo06Uoo`03O01oogoo08Eoo`03O01oogoo01Yoo`003goo00<0
+07ooOol0JWoo00=l07ooOol0QGoo00=l07ooOol06Goo000?Ool00`00Oomoo`1[Ool00g`0Oomoo`24
+Ool00g`0Oomoo`0IOol000moo`03001oogoo06aoo`9l08Aoo`03O01oogoo01Uoo`003goo00<007oo
+Ool0KWoo00=l07ooOol0PGoo00=l07ooOol06Goo000?Ool00`00Oomoo`1_Ool00g`0Oomoo`21Ool0
+0g`0Oomoo`0HOol000moo`03001oogoo071oo`9l085oo`03O01oogoo01Qoo`003goo00<007ooOol0
+LWoo00=l07ooOol0OWoo00=l07ooOol067oo000?Ool00`00Oomoo`1cOol00g`0Oomoo`1nOol00g`0
+Oomoo`0GOol000moo`03001oogoo07Aoo`9l07ioo`03O01oogoo01Moo`003goo00<007ooOol0MWoo
+00=l07ooOol0Ngoo00=l07ooOol05goo000?Ool00`00Oomoo`1gOol00g`0Oomoo`1kOol00g`0Oomo
+o`0FOol000moo`03001oogoo07Qoo`03O01oogoo07Yoo`03O01oogoo01Ioo`003goo00<007ooOol0
+NGoo0W`0NWoo00=l07ooOol05Woo000?Ool00`00Oomoo`1kOol00g`0Oomoo`1hOol00g`0Oomoo`0E
+Ool000moo`03001oogoo07aoo`03O01oogoo07Moo`03O01oogoo01Eoo`003goo00<007ooOol0OGoo
+00=l07ooOol0MWoo00=l07ooOol05Goo000?Ool00`00Oomoo`1nOol00g`0Oomoo`1fOol00g`0Oomo
+o`0DOol000moo`03001oogoo07moo`9l07Ioo`03O01oogoo01Aoo`003goo00<007ooOol0PGoo00=l
+07ooOol0Lgoo00=l07ooOol057oo000?Ool00`00Oomoo`22Ool00g`0Oomoo`1cOol00g`0Oomoo`0C
+Ool000moo`03001oogoo08=oo`03O01oogoo079oo`03O01oogoo01=oo`003goo00<007ooOol0Q7oo
+0W`0LWoo00=l07ooOol04goo000?Ool00`00Oomoo`26Ool00g`0Oomoo`1_Ool00g`0Oomoo`0COol0
+00moo`03001oogoo08Moo`03O01oogoo06moo`03O01oogoo019oo`003goo00<007ooOol0R7oo0W`0
+Kgoo00=l07ooOol04Woo000?Ool00`00Oomoo`2:Ool00g`0Oomoo`1/Ool00g`0Oomoo`0BOol000Qo
+o`<000Aoo`03001oogoo08]oo`03O01oogoo06aoo`03O01oogoo015oo`002Goo00<007ooOol00goo
+00<007ooOol0S7oo0W`0K7oo00=l07ooOol04Goo0006Ool50004Ool2002?Ool00g`0Oomoo`1YOol0
+0g`0Oomoo`0AOol000Ioo`04001oogoo0005Ool00`00Oomoo`2?Ool00g`0Oomoo`1YOol00g`0Oomo
+o`0@Ool000Moo`03001oo`0000Eoo`03001oogoo091oo`9l06Uoo`03O01oogoo011oo`0027oo0P00
+1Goo00<007ooOol0TWoo00=l07ooOol0IWoo00=l07ooOol047oo000?Ool00`00Oomoo`2COol00g`0
+Oomoo`1VOol00g`0Oomoo`0?Ool000moo`03001oogoo09Aoo`9l06Ioo`03O01oogoo00moo`003goo
+00<007ooOol0UWoo00=l07ooOol0I7oo00=l07ooOol03Woo000?Ool00`00Oomoo`2GOol00g`0Oomo
+o`1SOol00g`0Oomoo`0>Ool00001\
+\>"],
+    ImageRangeCache->{{{0, 287}, {171.75, 0}} -> {0, 0, 0, 0}}]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Theorem (Cubic Hermite Polynomial).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  "  is continuous on the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_1]\)\)]],
+  ", there exists a unique cubic polynomial  ",
+  Cell[BoxData[
+      \(p[x]\  = \ a\ x\^3\  + \ b\ x\^2\  + \ c\ x\  + \ d\)]],
+  "  such that \n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \)\(p[x\_0]\  = \ f[x\_0]\)\)\)]],
+  ", \n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \)\(p[x\_1]\  = \ f[x\_1]\)\)\)]],
+  ", \n\t\t",
+  Cell[BoxData[
+      \(\(p'\)[x\_0]\  = \ \(f'\)[x\_0]\)]],
+  ",  \n\t\t",
+  Cell[BoxData[
+      \(\(p'\)[x\_2]\  = \ \(f'\)[x\_2]\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/HermitePolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HermitePolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The cubic Hermite polynomial is a generalization of both the Taylor \
+polynomial and Lagrange polynomial, and it is referred to as an \"osculating \
+polynomial.\"  Hermite polynomials can be generalized to higher degrees by \
+requiring that the use of more nodes  ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_1\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "...", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_n\)}], "}"}]]],
+  " and the extension to agreement at higher derivatives  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["p", 
+            TagBox[\((k)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_i\), "]"}], " ", "=", 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((k)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_i\), "]"}]}]]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(i\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  "  and    ",
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(m\_i\)}]]],
+  ".  The details are found in advanced texts on numerical analysis    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/HermitePolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HermitePolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the cubic Hermite polynomial or \"clamped cubic\" that satisfies  \n\
+\t\t",
+  Cell[BoxData[{
+      \(\ \ \ p \((1)\) = 2\), "\n", 
+      \(p' \((1)\) = 1\), "\n", 
+      \(\ \ \ p \((3)\) = 1\), "\n", 
+      \(p' \((3)\) = 2\)}]],
+  "  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the formula for a general cubic equation.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(p[x_]\  = \ a\ x\^3\  + \ b\ x\^2\  + \ c\ x\  + \ d\ ;\)\ \), "\n", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Symbolic differentiation (integration too) is permitted with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Print["\<p'[x] = \>", \(p'\)[x]\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Set up four equations using the prescribed endpoint conditions. Then find \
+the solution set to this linear system and store it in the variable ",
+  StyleBox["solset",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(eq1\  = \ \ \ \ p[1]\  \[Equal] \ 2;\)\ \ \), "\n", 
+    \(\(eq2\  = \ \(p'\)[1]\  \[Equal] \ 1;\)\ \ \), "\n", 
+    \(\(eq3\  = \ \ \ \ p[3]\  \[Equal] \ 1;\)\ \ \), "\n", 
+    \(\(eq4\  = \ \(p'\)[3]\  \[Equal] \ 2;\)\ \ \), "\n", 
+    \(\(eqns\  = \ {eq1, eq2, eq3, eq4};\)\ \ \), "\n", 
+    \(\(vars\  = \ {a, b, c, d};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Use the solution given above for the coefficients and form the cubic \
+function.  Remember that we must dig out one set of braces using ",
+  " ",
+  Cell[BoxData[
+      \(solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)],
+    
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  "  before we can use the ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " command."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f[x_]\  = \ 
+        ReplaceAll[p[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(xy = {\ {1, f[1]}, {3, f[3]}\ };\)\ \ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xy, PlotStyle -> {Red, PointSize[0.02]}\ , 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr\  = 
+        Plot[f[x], {x, 1, 3}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Magenta, AspectRatio \[Rule] 2.2\/3, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr, dots, DisplayFunction \[Rule] $DisplayFunction];\)\), "\n", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[1] = \>", f[1], "\<,      f[3] = \>", 
+        f[3]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f'[1] = \>", \(f'\)[1]\ , \ "\<,     f'[3] = \>", \(f'\)[
+          3]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["More Background. The Clamped Cubic Spline",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA ",
+  ButtonBox["clamped cubic spline",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/CubicSpline.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " is obtained by forming a piecewise cubic function which passes through \
+the given set of knots ",
+  Cell[BoxData[
+      \(\((x\_0, y\_0)\), \((x\_1, y\_1)\),  ... , \((x\_n, y\_n)\)\)]],
+  "  with the condition the function values, their derivatives and second \
+derivatives of adjacent cubics agree at the interior nodes.  The endpoint \
+conditions are ",
+  Cell[BoxData[
+      RowBox[{\(S' \((x\_0)\)\), "=", 
+        RowBox[{
+          RowBox[{\(d\_0\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(S'\), \((x\_n)\)}], 
+          "=", \(d\_n\)}]}]]],
+  ", where ",
+  Cell[BoxData[
+      RowBox[{\(d\_0\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], " ", \(d\_n\)}]]],
+  "  are given."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the \"clamped cubic spline\" that satisfies  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ \ \ \ \(S\_1\) \((1)\)\  = \ 2\ \), "\n", 
+      \(\ \ \ S\_1' \((1)\)\  = \ 1\), "\n", 
+      \(\ \ \ \ \ \ \(\(\(S\_1\) \((2)\)\)\(\ \)\(=\)\(\ \)\(1\)\(\ \)\)\), 
+    "\n", 
+      \(\ \ \ \ \ \ \(S\_1\) \((2)\)\  = \ \(S\_2\) \((2)\)\), "\n", 
+      \(\ \ \ S\_1' \((2)\)\  = \ S\_2' \((2)\)\), "\n", 
+      \(\(S\_1'\)' \((2)\)\  = \ \(S\_2'\)' \((2)\)\), "\n", 
+      \(\ \ \ \ \ \ \(S\_2\) \((3)\)\  = \ 1\), "\n", 
+      \(\ \ \ S\_2' \((3)\)\  = \ 2\)}]],
+  "   "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formulas for the two cubic polynomials and form the equations \
+to solve.  Subscripted variables are used if you prefer you can use ordinary \
+variables  ",
+  Cell[BoxData[
+      \(a\_1, b\_1, c\_1, d\_1, a\_2, b\_2, c\_2, d\_2\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S1[x_]\  = \ 
+        a\_1\ x\^3\  + \ b\_1\ x\^2\  + \ c\_1\ x\  + \ d\_1;\)\ \ \), "\n", 
+    \(\(S2[x_]\  = \ 
+        a\_2\ x\^3\  + \ b\_2\ x\^2\  + \ c\_2\ x\  + \ d\_2;\)\ \ \), "\n", 
+    \(\(Print["\<S1[x_] = \>", S1[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S2[x_] = \>", S2[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Set up eight equations using the prescribed endpoint conditions. Then find \
+the solution set to this linear system and store it in the variable ",
+  StyleBox["solset",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(eq1\  = \ \ \ \ \ \ S1[1]\  \[Equal] \ 2;\)\ \ \ \), "\n", 
+    \(\(eq2\  = \ \ \ \(S1'\)[1]\  \[Equal] \ 1;\)\ \ \ \), "\n", 
+    \(\(eq3\  = \ \ \ \ \ \ S1[2]\  \[Equal] \ \ 1;\)\ \ \ \), "\n", 
+    \(\(eq4\  = \ \ \ \ \ \ S1[2]\  \[Equal] \ S2[2];\)\ \ \ \), "\n", 
+    \(\(eq5\  = \ \ \ \(S1'\)[2]\  \[Equal] \ \(S2'\)[2];\)\ \ \ \), "\n", 
+    \(\(eq6\  = \(\(S1'\)'\)[2]\  \[Equal] \ \(S2''\)[2];\)\ \ \ \), "\n", 
+    \(\(eq7\  = \ \ \ \ \ \ S2[3]\  \[Equal] \ 1;\)\ \ \ \), "\n", 
+    \(\(eq8\  = \ \ \ \(S2'\)[3]\  \[Equal] \ 2;\)\ \ \ \), "\n", 
+    \(\(eqns\  = \ {\ eq1, eq2, eq3, eq4, eq5, eq6, eq7, 
+          eq8\ };\)\ \ \ \), "\n", 
+    \(\(vars\  = \ {\ a\_1, b\_1, c\_1, d\_1, a\_2, b\_2, c\_2, 
+          d\_2\ };\)\ \ \ \), "\n", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Use the solution given above for the coefficients and form the cubic \
+functions.  Remember that we must dig out one set of braces using ",
+  " ",
+  Cell[BoxData[
+      \(solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)],
+    
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  "  before we can use the ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " command."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f1[x_]\  = \ 
+        ReplaceAll[\ S1[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \), "\n", 
+    \(\(f2[x_]\  = \ 
+        ReplaceAll[\ S2[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f1[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", f2[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the portion of each cubic in the interval over which it \
+is to be used.  Then combine the two piecewise cubic graphs to form the \
+spline.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(xy = {\ {1, f1[1]}, {2, f1[2]}, {3, f2[3]}\ };\)\ \ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xy, PlotStyle -> {Red, PointSize[0.02]}\ , 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(graph1\  = \ 
+        Plot[f1[x], {x, 1, 2}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(graph2\  = \ 
+        Plot[f2[x], {x, 2, 3}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph12\  = \ 
+        Show[graph1, graph2, dots, AspectRatio \[Rule] 2.2\/3, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f1[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", f2[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Note that the individual cubics were graphed over different intervals \
+and then the graphs were combined. If they were plotted together over a \
+common interval it would look different."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph0\  = 
+        Plot[{f1[x], f2[x]}, {x, 0, 4}, PlotRange \[Rule] {{0, 4}, {0, 2.2}}, 
+          PlotStyle \[Rule] {Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graphs = \ 
+        Show[graph0, dots, AspectRatio \[Rule] 2.2\/4, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f1[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", f2[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  It would be nice to have one piecewise cubic function S[z] that is used. \
+The following formulas for  S[x]  uses the condition syntax  ",
+  Cell[BoxData[
+      StyleBox["/;",
+        FontWeight->"Bold"]]],
+  "  for making a piecewise function.  Under the help menu we can find the \
+following information about Condition.\n",
+  StyleBox["patt", "TI"],
+  "  ",
+  Cell[BoxData[
+      StyleBox["/;",
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["test", "TI"],
+  " is a pattern which matches only if the evaluation of ",
+  StyleBox["test", "TI"],
+  " yields ",
+  StyleBox["True", "MR"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[S];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S[x_ /; 1 \[LessEqual] x \[LessEqual] 2]\  = \ 
+        f1[x];\)\ \ \ \), "\n", 
+    \(\(S[x_ /; 2 \[LessEqual] x \[LessEqual] 3]\  = \ 
+        f2[x];\)\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We cannot print the formula for a piecewise function with the Print \
+command.  It is only possible to interrogate the system and determine what \
+rule it is storing for  S.  Hence, it was a good idea to always use two \
+formulas f1 and f2 to define  S, since they can be printed."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(?S\ \ \)\)], "Input"],
+
+Cell["\<\
+When a plot is made, it only uses real numbers specified in the \
+conditions.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(graph = 
+        Plot[S[x], {x, 1, 3}, PlotRange \[Rule] {{0, 4}, {0, 2.2}}, 
+          PlotStyle \[Rule] Magenta, AspectRatio \[Rule] 2.2\/4, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[graph, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<S[x_/;1\[LessEqual]x\[LessEqual]2] = \>", 
+        f1[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S[x_/;2\[LessEqual]x\[LessEqual]3] = \>", 
+        f2[x]\ ];\)\ \ \ \)}], "Input"],
+
+Cell["\<\
+The clamped cubic spline forces the slope at the endpoints to be \
+prescribed values.\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["More Background. The Natural Cubic Spline",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA ",
+  ButtonBox["natural cubic spline",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/CubicSpline.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " is obtained by forming a piecewise cubic function which passes through \
+the given set of knots ",
+  Cell[BoxData[
+      \(\((x\_0, y\_0)\), \((x\_1, y\_1)\),  ... , \((x\_n, y\_n)\)\)]],
+  " with the condition the function values, their derivatives and second \
+derivatives of adjacent cubics agree at the interior nodes.  The endpoint \
+conditions are  ",
+  Cell[BoxData[
+      RowBox[{\(\(S'\)' \((x\_0)\)\), "=", 
+        RowBox[{
+          RowBox[{"0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(S''\), \((x\_n)\)}], 
+          "=", "0"}]}]]],
+  ". The natural cubic spline is said to be \"a relaxed curve.\""
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the \"natural cubic spline\" that satisfies  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ \ \ \ \(S\_1\) \((1)\)\  = \ 2\), "\n", 
+      \(\ \(S\_1'\)' \((1)\)\  = \ 0\), "\n", 
+      \(\ \ \ \ \ \ \(S\_1\) \((2)\)\  = \ 1\), "\n", 
+      \(\ \ \ \ \ \ \(S\_1\) \((2)\)\  = \ \(S\_2\) \((2)\)\), "\n", 
+      \(\ \ \ S\_1' \((2)\)\  = \ S\_2' \((2)\)\), "\n", 
+      \(\(S\_1'\)' \((2)\)\  = \ \(S\_2'\)' \((2)\)\), "\n", 
+      \(\ \ \ \ \ \(S\_2\) \((3)\)\  = \ 1\), "\n", 
+      \(\(S\_2'\)' \((3)\)\  = \ 0\)}]],
+  "    "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formulas for the two cubic polynomials and form the equations \
+to solve. Subscripted variables are used if you prefer you can use ordinary \
+variables  ",
+  Cell[BoxData[
+      \(a\_1, b\_1, c\_1, d\_1, a\_2, b\_2, c\_2, d\_2\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S1[x_]\  = \ 
+        a\_1\ x\^3\  + \ b\_1\ x\^2\  + \ c\_1\ x\  + \ d\_1;\)\ \ \), "\n", 
+    \(\(S2[x_]\  = \ 
+        a\_2\ x\^3\  + \ b\_2\ x\^2\  + \ c\_2\ x\  + \ d\_2;\)\ \ \), "\n", 
+    \(\(Print["\<S1[x_] = \>", S1[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S2[x_] = \>", S2[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Set up eight equations using the prescribed endpoint conditions. Then find \
+the solution set to this linear system and store it in the variable ",
+  StyleBox["solset",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(eq1\  = \ \ \ \ \ S1[1]\  \[Equal] \ 2;\)\ \ \ \), "\n", 
+    \(\(eq2\  = \(S1''\)[1]\  \[Equal] \ 0;\)\ \ \ \), "\n", 
+    \(\(eq3\  = \ \ \ \ \ S1[2]\  \[Equal] \ \ 1;\)\ \ \ \), "\n", 
+    \(\(eq4\  = \ \ \ \ \ S1[2]\  \[Equal] \ S2[2];\)\ \ \ \), "\n", 
+    \(\(eq5\  = \ \ \ \(S1'\)[2]\  \[Equal] \ \(S2'\)[2];\)\ \ \ \), "\n", 
+    \(\(eq6\  = \(\(S1'\)'\)[2]\  \[Equal] \ \(S2''\)[2];\)\ \ \ \), "\n", 
+    \(\(eq7\  = \ \ \ \ \ S2[3]\  \[Equal] \ 1;\)\ \ \ \), "\n", 
+    \(\(eq8\  = \(\(S2'\)'\)[3]\  \[Equal] \ 0;\)\ \ \ \), "\n", 
+    \(\(eqns\  = \ {\ eq1, eq2, eq3, eq4, eq5, eq6, eq7, 
+          eq8\ };\)\ \ \ \), "\n", 
+    \(\(vars\  = \ {\ a\_1, b\_1, c\_1, d\_1, a\_2, b\_2, c\_2, 
+          d\_2\ };\)\ \ \ \), "\n", 
+    \(\(solset\  = \ Solve[eqns, vars];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Use the solution given above for the coefficients and form the cubic \
+functions.  Remember that we must dig out one set of braces using ",
+  " ",
+  Cell[BoxData[
+      \(solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)],
+    
+    AspectRatioFixed->False,
+    FontWeight->"Bold"],
+  "  before we can use the ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " command."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(f1[x_]\  = \ 
+        ReplaceAll[\ S1[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \ \), "\n", 
+    \(\(f2[x_]\  = \ 
+        ReplaceAll[\ S2[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f1[x]\ ];\)\ \ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", f2[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the portion of each cubic in the interval over which it \
+is to be used. Then combine the two piecewise cubic graphs to form the \
+spline.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(xy = {\ {1, f1[1]}, {2, f1[2]}, {3, f2[3]}\ };\)\ \ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xy, PlotStyle -> {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph1\  = \ 
+        Plot[f1[x], {x, 1, 2}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(graph2\  = \ 
+        Plot[f2[x], {x, 2, 3}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(graph12\  = \ 
+        Show[graph1, graph2, dots, AspectRatio \[Rule] 2.2\/3, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f1[x]\ ];\)\ \ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", f2[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  It would be nice to have one piecewise cubic function S[z] that is used. \
+The following formulas for  S[x]  uses the condition syntax  ",
+  Cell[BoxData[
+      StyleBox["/;",
+        FontWeight->"Bold"]]],
+  "  for making a piecewise function.  Under the help menu we can find the \
+following information about Condition.\n",
+  StyleBox["patt", "TI"],
+  "  ",
+  Cell[BoxData[
+      StyleBox["/;",
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["test", "TI"],
+  " is a pattern which matches only if the evaluation of ",
+  StyleBox["test", "TI"],
+  " yields ",
+  StyleBox["True", "MR"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[S];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S[x_ /; 1 \[LessEqual] x \[LessEqual] 2]\  = \ 
+        f1[x];\)\ \ \ \), "\n", 
+    \(\(S[x_ /; 2 \[LessEqual] x \[LessEqual] 3]\  = \ 
+        f2[x];\)\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We cannot print the formula for a piecewise function with the Print \
+command.  It is only possible to ",
+  "interrogate",
+  " the system and determine what rule it is storing for  S.  Hence, it was a \
+good idea to always use two formulas f1 and f2 to define  S, since they can \
+be printed."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(?S\ \)\)], "Input"],
+
+Cell["\<\
+When a plot is made, it only uses real numbers specified in the \
+conditions.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(graph = 
+        Plot[S[x], {x, 1, 3}, PlotRange \[Rule] {{0, 3}, {0, 2.2}}, 
+          PlotStyle \[Rule] Magenta, AspectRatio \[Rule] 2.2\/3, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(\(Show[graph, dots, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ ;\)\ \ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<S[x_/;1\[LessEqual]x\[LessEqual]2] = \>", 
+        f1[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S[x_/;2\[LessEqual]x\[LessEqual]3] = \>", 
+        f2[x]\ ];\)\ \ \ \)}], "Input"],
+
+Cell["\<\
+Notice that the natural cubic spline is different from the clamped \
+cubic spline, it is \"a relaxed curve.\" (and happy too!)\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Hermite polynomial interpolation",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/hp.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Hermite polynomial interpolation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/hp.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/HermitePolyBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Hermite Polynomial Interpolation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HermitePolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  "Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, 128}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False},
+CharacterEncoding->"MacintoshAutomaticEncoding"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 291, 10, 35, "Text"],
+Cell[2070, 65, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3549, 117, 22385, 617, 298, "Text",
+  Evaluatable->False],
+Cell[25937, 736, 779, 28, 109, "Text",
+  Evaluatable->False],
+Cell[26719, 766, 650, 21, 33, "Text"],
+Cell[27372, 789, 3602, 103, 71, "Text"],
+Cell[30977, 894, 642, 21, 33, "Text"],
+Cell[31622, 917, 409, 14, 107, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[32056, 935, 101, 2, 33, "Text"],
+Cell[32160, 939, 112, 2, 33, "Text",
+  Evaluatable->False],
+Cell[32275, 943, 175, 3, 50, "Input"],
+Cell[32453, 948, 201, 7, 33, "Text",
+  Evaluatable->False],
+Cell[32657, 957, 109, 2, 30, "Input"],
+Cell[32769, 961, 278, 8, 33, "Text",
+  Evaluatable->False],
+Cell[33050, 971, 589, 10, 190, "Input"],
+Cell[33642, 983, 473, 15, 33, "Text",
+  Evaluatable->False],
+Cell[34118, 1000, 1087, 20, 204, "Input"]
+}, Closed]],
+Cell[35220, 1023, 1123, 31, 106, "Text",
+  Evaluatable->False],
+Cell[36346, 1056, 727, 18, 183, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[37098, 1078, 101, 2, 33, "Text"],
+Cell[37202, 1082, 282, 7, 33, "Text"],
+Cell[37487, 1091, 376, 7, 90, "Input"],
+Cell[37866, 1100, 279, 8, 33, "Text",
+  Evaluatable->False],
+Cell[38148, 1110, 986, 16, 270, "Input"],
+Cell[39137, 1128, 474, 15, 33, "Text",
+  Evaluatable->False],
+Cell[39614, 1145, 485, 11, 90, "Input"],
+Cell[40102, 1158, 222, 6, 33, "Text",
+  Evaluatable->False],
+Cell[40327, 1166, 938, 19, 164, "Input"],
+Cell[41268, 1187, 301, 7, 33, "Text"],
+Cell[41572, 1196, 518, 10, 104, "Input"],
+Cell[42093, 1208, 701, 22, 71, "Text"],
+Cell[42797, 1232, 247, 5, 70, "Input"],
+Cell[43047, 1239, 396, 8, 52, "Text"],
+Cell[43446, 1249, 43, 1, 30, "Input"],
+Cell[43492, 1252, 101, 3, 33, "Text"],
+Cell[43596, 1257, 545, 11, 103, "Input"],
+Cell[44144, 1270, 109, 3, 33, "Text"]
+}, Closed]],
+Cell[44268, 1276, 1023, 26, 106, "Text",
+  Evaluatable->False],
+Cell[45294, 1304, 691, 17, 183, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[46010, 1325, 101, 2, 33, "Text"],
+Cell[46114, 1329, 281, 7, 33, "Text"],
+Cell[46398, 1338, 376, 7, 90, "Input"],
+Cell[46777, 1347, 279, 8, 33, "Text",
+  Evaluatable->False],
+Cell[47059, 1357, 974, 16, 270, "Input"],
+Cell[48036, 1375, 474, 15, 33, "Text",
+  Evaluatable->False],
+Cell[48513, 1392, 493, 11, 90, "Input"],
+Cell[49009, 1405, 221, 6, 33, "Text",
+  Evaluatable->False],
+Cell[49233, 1413, 942, 19, 164, "Input"],
+Cell[50178, 1434, 701, 22, 71, "Text"],
+Cell[50882, 1458, 247, 5, 70, "Input"],
+Cell[51132, 1465, 408, 10, 52, "Text"],
+Cell[51543, 1477, 41, 1, 30, "Input"],
+Cell[51587, 1480, 101, 3, 33, "Text"],
+Cell[51691, 1485, 562, 11, 103, "Input"],
+Cell[52256, 1498, 150, 3, 33, "Text"]
+}, Closed]],
+Cell[52421, 1504, 727, 20, 30, "Text"],
+Cell[53151, 1526, 158, 3, 35, "Text"],
+Cell[53312, 1531, 592, 17, 33, "Text"],
+Cell[53907, 1550, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

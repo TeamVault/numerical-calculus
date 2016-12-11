@@ -1,0 +1,3610 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    109883,       3456]*)
+(*NotebookOutlinePosition[    110577,       3480]*)
+(*  CellTagsIndexPosition[    110533,       3476]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" Gauss-Legendre Quadrature",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Legendre-GaussQuadrature.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tWe wish to find the area under the curve  ",
+  Cell[BoxData[
+      \(y\  = \ f[x]\ \ for\ \  - 1 \[LessEqual] x \[LessEqual] 1\)]],
+  ".  What method gives the best answer if only two function evaluations are \
+to be made?  We have already seen that the trapezoidal rule is a method for \
+finding the area under the curve that uses two function evaluations at the \
+endpoints ",
+  StyleBox["(-1,f[-1])",
+    FontFamily->"Courier New"],
+  ",  and  ",
+  StyleBox["(1,f[1])",
+    FontFamily->"Courier New"],
+  ".  But if the graph of  ",
+  StyleBox["y = f[x]",
+    FontFamily->"Courier New"],
+  "  is concave, the error in approximation is the entire region that lies \
+between the curve and the line segment joining the points.  If we are \
+permitted to use the nodes  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  "  and ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  "  that lie inside the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ",  the line through the two points  ",
+  Cell[BoxData[
+      \(\((x\_1, f[x\_1])\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\((x\_2, f[x\_2])\)\)]],
+  "crosses the curve, and the area under the line more closely approximates \
+the area under the curve.  This method is attributed to ",
+  StyleBox[ButtonBox["Johann Carl Friedrich Gauss",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Gauss.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1777-1855) and ",
+  StyleBox[ButtonBox["Adrien-Marie Legendre",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Legendre.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1752-1833).  \n\t"
+}], "Text"],
+
+Cell[TextData[{
+  "\t",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0 1 0 0.618034 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+% Start of sub-graphic
+p
+0 0 1 0.618034 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.5 0.5 -2.71051e-020 0.374566 [
+[0 -0.0125 -6 -9 ]
+[0 -0.0125 6 0 ]
+[.25 -0.0125 -11.4063 -20.125 ]
+[.25 -0.0125 11.4063 0 ]
+[.75 -0.0125 -8.09375 -20.125 ]
+[.75 -0.0125 8.09375 0 ]
+[.4875 .18728 -18 -4.5 ]
+[.4875 .18728 0 4.5 ]
+[.4875 .37457 -6 -4.5 ]
+[.4875 .37457 0 4.5 ]
+[.4875 .56185 -18 -4.5 ]
+[.4875 .56185 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+0 0 m
+0 .00625 L
+s
+[(-1)] 0 -0.0125 0 1 Mshowa
+.25 0 m
+.25 .00625 L
+s
+gsave
+.25 -0.0125 -72.4063 -24.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 28.125 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 17.063 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+72.688 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+71.375 17.063 moveto
+(\\200\\200) show
+75.625 17.063 moveto
+(\\200) show
+77.688 17.063 moveto
+(\\200) show
+72.688 23.125 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+1.000 setlinewidth
+grestore
+.75 0 m
+.75 .00625 L
+s
+gsave
+.75 -0.0125 -69.0938 -24.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 28.125 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+66.063 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+64.750 17.063 moveto
+(\\200\\200) show
+69.000 17.063 moveto
+(\\200) show
+71.063 17.063 moveto
+(\\200) show
+66.063 23.125 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+s
+.5 .18728 m
+.50625 .18728 L
+s
+[(0.5)] .4875 .18728 1 0 Mshowa
+.5 .37457 m
+.50625 .37457 L
+s
+[(1)] .4875 .37457 1 0 Mshowa
+.5 .56185 m
+.50625 .56185 L
+s
+[(1.5)] .4875 .56185 1 0 Mshowa
+.5 0 m
+.5 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 0 1 r
+.5 Mabswid
+0 .60511 m
+.04057 .5811 L
+.08481 .55492 L
+.12636 .53033 L
+.16632 .50668 L
+.20885 .48151 L
+.2498 .45728 L
+.29331 .43152 L
+.33524 .40671 L
+.37557 .38284 L
+.41848 .35745 L
+.4598 .33299 L
+.49953 .30948 L
+.54183 .28445 L
+.58254 .26035 L
+.62583 .23474 L
+.66752 .21006 L
+.70762 .18633 L
+.7503 .16107 L
+.79139 .13676 L
+.83505 .11092 L
+.87712 .08602 L
+.9176 .06206 L
+.96065 .03658 L
+1 .0133 L
+s
+0 1 1 r
+0 .60511 m
+.04057 .5811 L
+.08481 .55492 L
+.12636 .53033 L
+.16632 .50668 L
+.20885 .48151 L
+.2498 .45728 L
+.29331 .43152 L
+.33524 .40671 L
+.37557 .38284 L
+.41848 .35745 L
+.4598 .33299 L
+.49953 .30948 L
+.54183 .28445 L
+.58254 .26035 L
+.62583 .23474 L
+.66752 .21006 L
+.70762 .18633 L
+.7503 .16107 L
+.79139 .13676 L
+.83505 .11092 L
+.87712 .08602 L
+.9176 .06206 L
+.96065 .03658 L
+1 .0133 L
+1 0 L
+0 0 L
+F
+0 0 1 r
+0 .60511 m
+.04057 .5811 L
+.08481 .55492 L
+.12636 .53033 L
+.16632 .50668 L
+.20885 .48151 L
+.2498 .45728 L
+.29331 .43152 L
+.33524 .40671 L
+.37557 .38284 L
+.41848 .35745 L
+.4598 .33299 L
+.49953 .30948 L
+.54183 .28445 L
+.58254 .26035 L
+.62583 .23474 L
+.66752 .21006 L
+.70762 .18633 L
+.7503 .16107 L
+.79139 .13676 L
+.83505 .11092 L
+.87712 .08602 L
+.9176 .06206 L
+.96065 .03658 L
+1 .0133 L
+s
+.01 w
+0 .60511 m
+.04057 .5811 L
+.08481 .55492 L
+.12636 .53033 L
+.16632 .50668 L
+.20885 .48151 L
+.2498 .45728 L
+.29331 .43152 L
+.33524 .40671 L
+.37557 .38284 L
+.41848 .35745 L
+.4598 .33299 L
+.49953 .30948 L
+.54183 .28445 L
+.58254 .26035 L
+.62583 .23474 L
+.66752 .21006 L
+.70762 .18633 L
+.7503 .16107 L
+.79139 .13676 L
+.83505 .11092 L
+.87712 .08602 L
+.9176 .06206 L
+.96065 .03658 L
+1 .0133 L
+s
+1 0 1 r
+0 .60511 m
+.04057 .50128 L
+.08481 .40603 L
+.12636 .3323 L
+.16632 .27456 L
+.20885 .22595 L
+.2498 .19043 L
+.27066 .17618 L
+.29331 .16339 L
+.31326 .15429 L
+.33524 .14643 L
+.35607 .14091 L
+.36747 .13862 L
+.37815 .13691 L
+.38905 .13559 L
+.39442 .13508 L
+.39941 .1347 L
+.40429 .1344 L
+.40871 .13419 L
+.41107 .1341 L
+.41362 .13402 L
+.41503 .13399 L
+.41632 .13396 L
+.41754 .13394 L
+.41886 .13392 L
+.42018 .13391 L
+.42144 .1339 L
+.42266 .1339 L
+.42379 .1339 L
+.42501 .13391 L
+.42636 .13392 L
+.42703 .13392 L
+.42776 .13393 L
+.42908 .13395 L
+.43151 .134 L
+.43406 .13407 L
+.43863 .13423 L
+.44399 .13448 L
+.44899 .13478 L
+.46032 .13566 L
+.47137 .13677 L
+.4818 .13803 L
+.50132 .14086 L
+.54171 .14817 L
+.58467 .15698 L
+.62605 .16519 L
+.66583 .17161 L
+.68625 .17398 L
+.69771 .17495 L
+.70278 .17529 L
+Mistroke
+.70818 .17558 L
+.71099 .17571 L
+.71362 .17581 L
+.71619 .17589 L
+.71855 .17595 L
+.7208 .176 L
+.72193 .17602 L
+.72317 .17603 L
+.72442 .17604 L
+.72575 .17605 L
+.72701 .17605 L
+.72816 .17605 L
+.72951 .17604 L
+.73019 .17604 L
+.73095 .17603 L
+.73228 .17601 L
+.73352 .17599 L
+.73633 .17593 L
+.73935 .17584 L
+.74487 .1756 L
+.74993 .1753 L
+.76025 .17444 L
+.76984 .17332 L
+.78037 .17171 L
+.79159 .16956 L
+.81405 .16374 L
+.83522 .15627 L
+.87567 .13603 L
+.89658 .12218 L
+.91869 .10478 L
+.95852 .06567 L
+1 .0133 L
+Mfstroke
+1 0 0 r
+.025 w
+0 .60511 Mdot
+1 .0133 Mdot
+MathSubEnd
+P
+% End of sub-graphic
+% Start of sub-graphic
+p
+0 0 1 0.618034 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.5 0.5 -2.71051e-020 0.374566 [
+[0 -0.0125 -6 -9 ]
+[0 -0.0125 6 0 ]
+[.25 -0.0125 -11.4063 -20.125 ]
+[.25 -0.0125 11.4063 0 ]
+[.75 -0.0125 -8.09375 -20.125 ]
+[.75 -0.0125 8.09375 0 ]
+[.4875 .18728 -18 -4.5 ]
+[.4875 .18728 0 4.5 ]
+[.4875 .37457 -6 -4.5 ]
+[.4875 .37457 0 4.5 ]
+[.4875 .56185 -18 -4.5 ]
+[.4875 .56185 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+0 0 m
+0 .00625 L
+s
+[(-1)] 0 -0.0125 0 1 Mshowa
+.25 0 m
+.25 .00625 L
+s
+gsave
+.25 -0.0125 -72.4063 -24.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 28.125 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 17.063 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+72.688 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+71.375 17.063 moveto
+(\\200\\200) show
+75.625 17.063 moveto
+(\\200) show
+77.688 17.063 moveto
+(\\200) show
+72.688 23.125 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+1.000 setlinewidth
+grestore
+.75 0 m
+.75 .00625 L
+s
+gsave
+.75 -0.0125 -69.0938 -24.125 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 28.125 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+66.063 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+64.750 17.063 moveto
+(\\200\\200) show
+69.000 17.063 moveto
+(\\200) show
+71.063 17.063 moveto
+(\\200) show
+66.063 23.125 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+s
+.5 .18728 m
+.50625 .18728 L
+s
+[(0.5)] .4875 .18728 1 0 Mshowa
+.5 .37457 m
+.50625 .37457 L
+s
+[(1)] .4875 .37457 1 0 Mshowa
+.5 .56185 m
+.50625 .56185 L
+s
+[(1.5)] .4875 .56185 1 0 Mshowa
+.5 0 m
+.5 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+MathSubEnd
+P
+% End of sub-graphic
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 177.938},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/A000`40O003h00Oogoo8Goo003oOolQ
+Ool005Eoo`@007Eoo`@004ioo`00EGoo00<007ooOol0MWoo00<007ooOol0Cgoo001FOol00`00Oomo
+o`1fOol00`00Oomoo`1>Ool005Moo`03001oogoo07Ioo`03001oogoo04eoo`00EGoo00@007ooOol0
+07Eoo`04001oogoo001>Ool005Ioo`8007Moo`8004moo`00ogoo8Goo001;Ool40004Ool8001aOol8
+001<Ool00?moob5oo`00ogoo8Goo000GOol5003oOol5Ool001Uoo`03001oogoo03Uoo`D007Aoo`D0
+04eoo`006Goo00<007ooOol0>goo00<007ooOol0MWoo00<007ooOol0CGoo000AOol40004Ool00`00
+Oomoo`0kOol00`00Oomoo`1fOol00`00Oomoo`1=Ool001Uoo`03001oogoo03]oo`03001oogoo07Io
+o`03001oogoo04eoo`0067oo0P00?Goo00<007ooOol0MWoo00<007ooOol0CGoo001FOol2001gOol2
+001?Ool00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`005Woon@004Goo000FOol00`000ol3
+o`0k0ol00`000ol3o`0k0ol00`000ol3o`0k0ol00`000ol3o`0j0ol4O00?Ool001Ioog`3o`030003
+o`?o07L3o`Il00ioo`005WooO0?o00<000?o0ol0M`?o1W`03Woo000FOoml0ol00`000ol3o`1e0ol0
+0`0OO1ml0005O00>Ool001Ioog`3o`030003o`?o07@3o`807`03O1ml07`000Al00ioo`005WooO0?o
+00<000?o0ol0LP?o0`0O0g`O17`03goo000FOoml0ol00`000ol3o`1a0ol301l4O1lCOol001Ioog`3
+o`030003o`?o06l3o`@07`Al7aAoo`005WooO0?o00<000?o0ol0KP?o1@0O0g`O5Goo000FOoml0ol0
+0`000ol3o`1/0ol501l017ooO1ml7g`O5Woo000FOoml0ol00`000ol3o`1Z0ol601l00gooO1ml7`02
+O1lFOol001Ioog`3o`030003o`?o06P3o`H07`9oo`Al7aMoo`005WooO0?o00<000?o0ol0IP?o1P0O
+17oo0g`O67oo000FOoml0ol00`000ol3o`1T0ol601l5Ool3O1lIOol001Ioog`3o`030003o`?o06<3
+o`D07`Ioo`Al7aUoo`005WooO0?o00<000?o0ol0H@?o1@0O1goo17`O6Woo000FOoml0ol00`000ol3
+o`1O0ol601l7Ool4O1lKOol001Ioog`3o`030003o`?o05h3o`D07`Qoo`Al7aaoo`005WooO0?o00<0
+00?o0ol0G0?o1@0O2Goo17`O7Goo000FOoml0ol00`000ol3o`1J0ol601l9Ool4O1lNOol001Ioog`3
+o`030003o`?o05T3o`D07`Yoo`Al7amoo`005WooO0?o00<000?o0ol0E`?o1@0O2goo17`O87oo000F
+Ooml0ol00`000ol3o`1E0ol601l;Ool4O1lQOol001Ioog`3o`030003o`?o05<3o`H07`aoo`Al7b9o
+o`005WooO0?o00<000?o0ol0D@?o1P0O3Goo17`O8goo000FOoml0ol00`000ol3o`1?0ol601l>Ool4
+O1lTOol001Ioog`3o`030003o`?o04h3o`D07`moo`Al7bEoo`005WooO0?o00<000?o0ol0C0?o1@0O
+3goo1G`O9Woo000FOoml0ol00`000ol3o`1;0ol501l?Ool5O1lWOol001Ioog`3o`030003o`?o04T3
+o`D07a1oo`Al7bUoo`005WooO0?o00<000?o0ol0A`?o1P0O3goo1G`O:Woo000FOoml0ol00`000ol3
+o`160ol501l@Ool5O1l[Ool001Iooel3oaAl7`T3o`030003o`?o04@3o`D07a1oo`El7beoo`005Woo
+E`?o9G`O00<000?o0ol0@`?o1@0O3goo1W`O;Woo000FOomB0ol?O1l@0ol;O1l01000O1ml7g`O@0?o
+1@0O3goo1W`O<7oo000FOom@0ol9O1lR0ol00g`O001l7`09O1lg0ol601l>Ool6O1lbOol001Ioodd3
+o`Ml7bP3o`030003og`O00]l7c<3o`D07`ioo`Il7cAoo`005WooB`?o1g`O:P?o00<000?o0ol01P?o
+3G`O:@?o1@0O3Woo1W`O=Woo000FOom80ol7O1l]0ol00`000ol3o`090ol=O1lT0ol601l=Ool6O1lh
+Ool001IoodL3o`Il7bl3o`030003o`?o0143o`al7a`3o`D07`aoo`Ml7cYoo`005WooA@?o1G`O<P?o
+00<000?o0ol050?o4g`O40?o1@0O27oo2g`O?7oo000FOom40ol5O1lc0ol00`000ol3o`0K0olAO1l9
+0ol601l4Ool=O1loOol001Iood83o`El7cD3o`030003o`?o02D3o`il7`040ol07`0O01l?O1m5Ool0
+01Iood43o`El7b<3o`8000@3o`8000@3o`8000D3o`030003o`?o02X3oaMl7dYoo`005Woo?`?o1G`O
+90?o00@000?o0ol000P3o`040003o`?o00040ol00`000ol3o`0`0ol00`0OO1ml7`06O1mBOol001Io
+ocd3o`Il7bD3o`040003o`?o000;0ol00`000ol3o`020ol3000_0ol501mGOol001Iooc`3o`El7bL3
+o`040003o`?o00090ol200050ol00`000ol3o`0]0ol501mIOol001Iooc/3o`Al7bT3o`040003o`?o
+00090ol00`000ol3o`040ol00`000ol3o`0[0ol601mJOol001IoocX3o`Al7b/3o`8000X3o`<000@3
+o`030003o`?o02X3o`D07eaoo`005Woo>@?o17`O?`?o00<000?o0ol0:0?o1@0OGWoo000FOolg0ol5
+O1m00ol00`000ol3o`0V0ol601mOOol001IoocH3o`El7d43o`030003o`?o02D3o`D07f5oo`005Woo
+=@?o17`O@`?o00<000?o0ol08`?o1@0OHgoo000FOold0ol4O1m40ol00`000ol3o`0Q0ol601mTOol0
+01Iooc<3o`Al7dD3o`030003o`?o01l3o`H07fIoo`005Woo<P?o17`OAP?o00<000?o0ol07@?o1P0O
+J7oo000FOola0ol4O1m70ol00`000ol3o`0K0ol601mZOol001Iooc03o`Al7dP3o`030003o`?o01X3
+o`D07faoo`005Woo;`?o17`OB@?o00<000?o0ol060?o1@0OKWoo000FOol^0ol4O1m:0ol00`000ol3
+o`0G0ol501m_Ool001Ioobh3o`=l7d/3o`030003o`?o01D3o`D07g5oo`005Woo;@?o0g`OC0?o00<0
+00?o0ol04`?o1P0OLWoo000FOol/0ol4O1m<0ol00`000ol3o`0B0ol501mdOol001Ioob/3o`Al7dd3
+o`030003o`?o0103o`D07gIoo`005Woo:P?o17`OCP?o00<000?o0ol03`?o1@0OMgoo000FOolY0ol4
+O1m?0ol00`000ol3o`0=0ol501miOol001IoobP3o`Al7e03o`030003o`?o00/3o`H07gYoo`005Woo
+9`?o17`OD@?o00<000?o0ol02P?o1@0OO7oo000FOolW0ol3O1mB0ol00`000ol3o`080ol501mnOol0
+01IoobH3o`=l7e<3o`030003o`?o00H3o`H07gmoo`005Woo9@?o17`OD`?o00<000?o0ol01@?o1@0O
+PGoo000FOolT0ol4O1mD0ol00`000ol3o`030ol501n3Ool001Ioob@3o`=l7eD3o`040003o`?o0ol6
+01n4Ool001Ioob<3o`=l7eH3o`030003o`?o00D07hIoo`005Woo8P?o17`OEP?o00<0000O01l00`0O
+R7oo000FOolR0ol3O1mF0ol00`0O00007`0301n9Ool001Ioob43o`=l7eH3o`807`0300007`0O08]o
+o`005Woo80?o17`OE0?o100O00<007ooOol0Rgoo000FOolO0ol4O1mC0ol601l00`00Oomoo`2;Ool0
+01Iooal3o`=l7e<3o`D07`9oo`03001oogoo08]oo`005Woo7P?o0g`ODP?o1@0O17oo00<007ooOol0
+Rgoo000FOolM0ol4O1m@0ol601l5Ool00`00Oomoo`2;Ool001Iooad3o`=l7e03o`D07`Moo`03001o
+ogoo08]oo`005Woo70?o0g`OC`?o1@0O2Goo00<007ooOol0Rgoo000FOolL0ol3O1m=0ol601l:Ool0
+0`00Oomoo`2;Ool001Iooa/3o`=l7dd3o`D07`aoo`03001oogoo08]oo`005Woo6`?o0g`OB`?o1@0O
+3Woo00<007ooOol0Rgoo000FOolJ0ol3O1m:0ol601l?Ool00`00Oomoo`2;Ool001IooaX3o`=l7dT3
+o`D07a5oo`03001oogoo08]oo`005Woo6@?o0g`OB0?o1@0O4goo00<007ooOol0Rgoo000FOolI0ol3
+O1m60ol601l<Ool50003Ool00`00Oomoo`2;Ool001IooaP3o`=l7dD3o`H07a1oo`03001oogoo00=o
+o`03001oogoo08]oo`005Woo60?o0g`O@`?o1P0O4Woo00<007ooOol00goo0`00Rgoo000FOolG0ol3
+O1m20ol601lDOol00`00Oomoo`03Ool00`00Oomoo`2;Ool001IooaL3o`=l7d43o`D07aIoo`03001o
+ogoo00=oo`03001oogoo08]oo`005Woo5P?o0g`O@0?o1@0O5goo0P001Goo00<007ooOol0Rgoo000F
+OolF0ol3O1ln0ol601lOOol00`00Oomoo`2;Ool001IooaD3o`=l7ch3o`D07b5oo`03001oogoo08]o
+o`005Woo5@?o0g`O?0?o1@0O8goo00<007ooOol0Rgoo000FOolD0ol3O1lk0ol601lTOol00`00Oomo
+o`2;Ool001Iooa@3o`=l7cX3o`D07bIoo`03001oogoo08]oo`005Woo4`?o0g`O>@?o1@0O:7oo00<0
+07ooOol0Rgoo000FOolC0ol3O1lg0ol601lYOol00`00Oomoo`2;Ool001Iooa83o`=l7cL3o`D07b]o
+o`03001oogoo08]oo`005Woo4P?o0g`O=@?o1@0O;Goo00<007ooOol0Rgoo000FOolA0ol3O1ld0ol6
+01l^Ool00`00Oomoo`2;Ool001Iooa43o`=l7c<3o`D07c1oo`03001oogoo08]oo`005Woo40?o0g`O
+<P?o1@0O<Woo00<007ooOol0Rgoo000FOol@0ol3O1la0ol501lcOol00`00Oomoo`2;Ool001Ioo`l3
+o`=l7c03o`D07cEoo`03001oogoo08]oo`005Woo3`?o0g`O;P?o1P0O=Woo00<007ooOol0Rgoo000F
+Ool>0ol3O1l^0ol501lhOol00`00Oomoo`2;Ool001Ioo`h3o`=l7b`3o`D07cYoo`03001oogoo08]o
+o`005Woo3@?o0g`O;0?o1@0O>goo00<007ooOol0Rgoo000FOol=0ol3O1lZ0ol501lmOol00`00Oomo
+o`2;Ool001Ioo``3o`=l7bT3o`H07cioo`03001oogoo08]oo`005Woo30?o0g`O:0?o1@0O@7oo00<0
+07ooOol0Rgoo000FOol;0ol3O1lW0ol501m2Ool00`00Oomoo`2;Ool001Ioo`/3o`=l7bD3o`H07d=o
+o`03001oogoo08]oo`005Woo2P?o0g`O9@?o1@0OAGoo00<007ooOol0Rgoo000FOol:0ol3O1lS0ol5
+01m7Ool00`00Oomoo`2;Ool001Ioo`T3o`=l7b83o`H07dQoo`03001oogoo08]oo`005Woo2@?o0g`O
+80?o1P0OBWoo00<007ooOol0Rgoo000FOol90ol2O1lO0ol601m<Ool00`00Oomoo`2;Ool001Ioo`P3
+o`=l7ad3o`H07dioo`03001oogoo08]oo`005Woo20?o0g`O70?o1@0OD7oo00<007ooOol0Rgoo000F
+Ool70ol3O1lK0ol501mBOol00`00Oomoo`2;Ool001Ioo`L3o`=l7aT3o`H07e=oo`03001oogoo08]o
+o`005Woo1`?o0W`O6@?o1@0OEGoo00<007ooOol0Rgoo000FOol60ol3O1lG0ol501mGOol00`00Oomo
+o`2;Ool001Ioo`H3o`=l7aD3o`H07eQoo`03001oogoo08]oo`005Woo1P?o0W`O5@?o1@0OFWoo00<0
+07ooOol0Rgoo000FOol50ol3O1lC0ol501mLOol00`00Oomoo`2;Ool001Ioo`D3o`=l7a43o`H07eeo
+o`03001oogoo08]oo`005Woo10?o0g`O4@?o1@0OGgoo00<007ooOol0Rgoo000FOol40ol3O1l?0ol5
+01mQOol00`00Oomoo`2;Ool001Ioo`@3o`9l7`h3o`H07f9oo`03001oogoo08]oo`005Woo0`?o0g`O
+3@?o1@0OD7oo1@000Woo0P0017oo0P001Goo00<007ooOol0Rgoo000FOol30ol3O1l;0ol501mDOol0
+0`00Oomoo`07Ool01000Oomoo`0017oo00<007ooOol0Rgoo000FOol20ol3O1l:0ol601mEOol00`00
+Oomoo`0:Ool00`00Oomoo`02Ool3002;Ool001Ioo`83o`=l7`P3o`H07eMoo`03001oogoo00Qoo`80
+00Eoo`03001oogoo08]oo`005Woo0P?o0W`O1`?o1P0OFGoo00<007ooOol027oo00<007ooOol017oo
+00<007ooOol0Rgoo000FOol010?oO1ml7g`O1@?o1P0OFWoo0P002Woo0`0017oo00<007ooOol0Rgoo
+000FOol010?oO1ml7g`O10?o1@0OKgoo00<007ooOol0Rgoo000FOol00`?oO1ml7`030ol501maOol0
+0`00Oomoo`2;Ool001Ioo`=l7`030ol07`0O00@07g9oo`03001oogoo08]oo`005Woo0g`O1@0OM7oo
+00<007ooOol0Rgoo000DOol4O00401mfOol00`00Oomoo`2;Ool001=oo`Il00807gMoo`03001oogoo
+08]oo`004goo1W`0NGoo00<007ooOol0Rgoo000COol6O01iOol00`00Oomoo`2;Ool001=oo`Il07Uo
+o`03001oogoo08]oo`0057oo17`0NWoo00<007ooOol0Rgoo0000\
+\>"],
+    ImageRangeCache->{{{0, 287}, {176.938, 0}} -> {0, 0, 0, 0}, {{0.3125, 
+    286.625}, {176.938, 0}} -> {-1, 0, 0, 0}}],
+  "\t",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0 1 0 0.618034 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+% Start of sub-graphic
+p
+0 0 1 0.618034 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.5 0.5 -2.71051e-020 0.374566 [
+[0 -0.0125 -6 -9 ]
+[0 -0.0125 6 0 ]
+[.21132 -0.0125 -16.6875 -24.1875 ]
+[.21132 -0.0125 16.6875 0 ]
+[.78868 -0.0125 -13.375 -24.1875 ]
+[.78868 -0.0125 13.375 0 ]
+[1 -0.0125 -3 -9 ]
+[1 -0.0125 3 0 ]
+[.4875 .18728 -18 -4.5 ]
+[.4875 .18728 0 4.5 ]
+[.4875 .37457 -6 -4.5 ]
+[.4875 .37457 0 4.5 ]
+[.4875 .56185 -18 -4.5 ]
+[.4875 .56185 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+0 0 m
+0 .00625 L
+s
+[(-1)] 0 -0.0125 0 1 Mshowa
+.21132 0 m
+.21132 .00625 L
+s
+gsave
+.21132 -0.0125 -77.6875 -28.1875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 32.1875 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 17.063 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+78.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+71.375 17.063 moveto
+(\\200\\200\\200\\200) show
+79.875 17.063 moveto
+(\\200\\200\\200\\200) show
+88.250 17.063 moveto
+(\\200) show
+0.000 0.000 0.000 setrgbcolor
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+72.688 20.250 moveto
+(\\217) show
+80.875 20.250 moveto
+(!) show
+83.063 20.250 moveto
+(!) show
+85.250 20.250 moveto
+(!) show
+86.125 20.250 moveto
+(!) show
+81.188 25.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+1.000 setlinewidth
+grestore
+.78868 0 m
+.78868 .00625 L
+s
+gsave
+.78868 -0.0125 -74.375 -28.1875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 32.1875 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+71.375 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+64.750 17.063 moveto
+(\\200\\200\\200\\200) show
+73.250 17.063 moveto
+(\\200\\200\\200\\200) show
+81.625 17.063 moveto
+(\\200) show
+0.000 0.000 0.000 setrgbcolor
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+66.063 20.250 moveto
+(\\217) show
+74.250 20.250 moveto
+(!) show
+76.438 20.250 moveto
+(!) show
+78.625 20.250 moveto
+(!) show
+79.500 20.250 moveto
+(!) show
+74.563 25.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+1.000 setlinewidth
+grestore
+1 0 m
+1 .00625 L
+s
+[(1)] 1 -0.0125 0 1 Mshowa
+0 0 m
+1 0 L
+s
+.5 .18728 m
+.50625 .18728 L
+s
+[(0.5)] .4875 .18728 1 0 Mshowa
+.5 .37457 m
+.50625 .37457 L
+s
+[(1)] .4875 .37457 1 0 Mshowa
+.5 .56185 m
+.50625 .56185 L
+s
+[(1.5)] .4875 .56185 1 0 Mshowa
+.5 0 m
+.5 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 0 1 r
+.5 Mabswid
+0 .24303 m
+.04057 .23928 L
+.08481 .2352 L
+.12636 .23136 L
+.16632 .22766 L
+.20885 .22373 L
+.2498 .21995 L
+.29331 .21593 L
+.33524 .21206 L
+.37557 .20833 L
+.41848 .20437 L
+.4598 .20055 L
+.49953 .19688 L
+.54183 .19297 L
+.58254 .18921 L
+.62583 .18521 L
+.66752 .18136 L
+.70762 .17765 L
+.7503 .17371 L
+.79139 .16991 L
+.83505 .16588 L
+.87712 .16199 L
+.9176 .15825 L
+.96065 .15427 L
+1 .15064 L
+s
+0 1 1 r
+0 .24303 m
+.04057 .23928 L
+.08481 .2352 L
+.12636 .23136 L
+.16632 .22766 L
+.20885 .22373 L
+.2498 .21995 L
+.29331 .21593 L
+.33524 .21206 L
+.37557 .20833 L
+.41848 .20437 L
+.4598 .20055 L
+.49953 .19688 L
+.54183 .19297 L
+.58254 .18921 L
+.62583 .18521 L
+.66752 .18136 L
+.70762 .17765 L
+.7503 .17371 L
+.79139 .16991 L
+.83505 .16588 L
+.87712 .16199 L
+.9176 .15825 L
+.96065 .15427 L
+1 .15064 L
+1 0 L
+0 0 L
+F
+0 0 1 r
+0 .24303 m
+.04057 .23928 L
+.08481 .2352 L
+.12636 .23136 L
+.16632 .22766 L
+.20885 .22373 L
+.2498 .21995 L
+.29331 .21593 L
+.33524 .21206 L
+.37557 .20833 L
+.41848 .20437 L
+.4598 .20055 L
+.49953 .19688 L
+.54183 .19297 L
+.58254 .18921 L
+.62583 .18521 L
+.66752 .18136 L
+.70762 .17765 L
+.7503 .17371 L
+.79139 .16991 L
+.83505 .16588 L
+.87712 .16199 L
+.9176 .15825 L
+.96065 .15427 L
+1 .15064 L
+s
+.01 w
+0 .24303 m
+.04057 .23928 L
+.08481 .2352 L
+.12636 .23136 L
+.16632 .22766 L
+.20885 .22373 L
+.2498 .21995 L
+.29331 .21593 L
+.33524 .21206 L
+.37557 .20833 L
+.41848 .20437 L
+.4598 .20055 L
+.49953 .19688 L
+.54183 .19297 L
+.58254 .18921 L
+.62583 .18521 L
+.66752 .18136 L
+.70762 .17765 L
+.7503 .17371 L
+.79139 .16991 L
+.83505 .16588 L
+.87712 .16199 L
+.9176 .15825 L
+.96065 .15427 L
+1 .15064 L
+s
+1 0 1 r
+0 .60511 m
+.04057 .50128 L
+.08481 .40603 L
+.12636 .3323 L
+.16632 .27456 L
+.20885 .22595 L
+.2498 .19043 L
+.27066 .17618 L
+.29331 .16339 L
+.31326 .15429 L
+.33524 .14643 L
+.35607 .14091 L
+.36747 .13862 L
+.37815 .13691 L
+.38905 .13559 L
+.39442 .13508 L
+.39941 .1347 L
+.40429 .1344 L
+.40871 .13419 L
+.41107 .1341 L
+.41362 .13402 L
+.41503 .13399 L
+.41632 .13396 L
+.41754 .13394 L
+.41886 .13392 L
+.42018 .13391 L
+.42144 .1339 L
+.42266 .1339 L
+.42379 .1339 L
+.42501 .13391 L
+.42636 .13392 L
+.42703 .13392 L
+.42776 .13393 L
+.42908 .13395 L
+.43151 .134 L
+.43406 .13407 L
+.43863 .13423 L
+.44399 .13448 L
+.44899 .13478 L
+.46032 .13566 L
+.47137 .13677 L
+.4818 .13803 L
+.50132 .14086 L
+.54171 .14817 L
+.58467 .15698 L
+.62605 .16519 L
+.66583 .17161 L
+.68625 .17398 L
+.69771 .17495 L
+.70278 .17529 L
+Mistroke
+.70818 .17558 L
+.71099 .17571 L
+.71362 .17581 L
+.71619 .17589 L
+.71855 .17595 L
+.7208 .176 L
+.72193 .17602 L
+.72317 .17603 L
+.72442 .17604 L
+.72575 .17605 L
+.72701 .17605 L
+.72816 .17605 L
+.72951 .17604 L
+.73019 .17604 L
+.73095 .17603 L
+.73228 .17601 L
+.73352 .17599 L
+.73633 .17593 L
+.73935 .17584 L
+.74487 .1756 L
+.74993 .1753 L
+.76025 .17444 L
+.76984 .17332 L
+.78037 .17171 L
+.79159 .16956 L
+.81405 .16374 L
+.83522 .15627 L
+.87567 .13603 L
+.89658 .12218 L
+.91869 .10478 L
+.95852 .06567 L
+1 .0133 L
+Mfstroke
+1 0 0 r
+.025 w
+.21132 .22351 Mdot
+.78868 .17016 Mdot
+MathSubEnd
+P
+% End of sub-graphic
+% Start of sub-graphic
+p
+0 0 1 0.618034 MathSubStart
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.5 0.5 -2.71051e-020 0.374566 [
+[0 -0.0125 -6 -9 ]
+[0 -0.0125 6 0 ]
+[.21132 -0.0125 -16.6875 -24.1875 ]
+[.21132 -0.0125 16.6875 0 ]
+[.78868 -0.0125 -13.375 -24.1875 ]
+[.78868 -0.0125 13.375 0 ]
+[1 -0.0125 -3 -9 ]
+[1 -0.0125 3 0 ]
+[.4875 .18728 -18 -4.5 ]
+[.4875 .18728 0 4.5 ]
+[.4875 .37457 -6 -4.5 ]
+[.4875 .37457 0 4.5 ]
+[.4875 .56185 -18 -4.5 ]
+[.4875 .56185 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+0 0 m
+0 .00625 L
+s
+[(-1)] 0 -0.0125 0 1 Mshowa
+.21132 0 m
+.21132 .00625 L
+s
+gsave
+.21132 -0.0125 -77.6875 -28.1875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 32.1875 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 17.063 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(-) show
+78.000 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+71.375 17.063 moveto
+(\\200\\200\\200\\200) show
+79.875 17.063 moveto
+(\\200\\200\\200\\200) show
+88.250 17.063 moveto
+(\\200) show
+0.000 0.000 0.000 setrgbcolor
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+72.688 20.250 moveto
+(\\217) show
+80.875 20.250 moveto
+(!) show
+83.063 20.250 moveto
+(!) show
+85.250 20.250 moveto
+(!) show
+86.125 20.250 moveto
+(!) show
+81.188 25.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+1.000 setlinewidth
+grestore
+.78868 0 m
+.78868 .00625 L
+s
+gsave
+.78868 -0.0125 -74.375 -28.1875 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 32.1875 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+71.375 11.250 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+64.750 17.063 moveto
+(\\200\\200\\200\\200) show
+73.250 17.063 moveto
+(\\200\\200\\200\\200) show
+81.625 17.063 moveto
+(\\200) show
+0.000 0.000 0.000 setrgbcolor
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+66.063 20.250 moveto
+(\\217) show
+74.250 20.250 moveto
+(!) show
+76.438 20.250 moveto
+(!) show
+78.625 20.250 moveto
+(!) show
+79.500 20.250 moveto
+(!) show
+74.563 25.375 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+1.000 setlinewidth
+grestore
+1 0 m
+1 .00625 L
+s
+[(1)] 1 -0.0125 0 1 Mshowa
+0 0 m
+1 0 L
+s
+.5 .18728 m
+.50625 .18728 L
+s
+[(0.5)] .4875 .18728 1 0 Mshowa
+.5 .37457 m
+.50625 .37457 L
+s
+[(1)] .4875 .37457 1 0 Mshowa
+.5 .56185 m
+.50625 .56185 L
+s
+[(1.5)] .4875 .56185 1 0 Mshowa
+.5 0 m
+.5 .61803 L
+s
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+MathSubEnd
+P
+% End of sub-graphic
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 177.938},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000/A000`40O003h00Oogoo8Goo003oOolQ
+Ool004Yoo`8008Ioo`8004aoo`00BWoo0P0017oo0P00P7oo0P001Goo0P00AGoo0019Ool00`00Ool0
+0003Ool01000Oomoo`00OWoo00<007oo000017oo00@007ooOol004Aoo`00Agoo00D007oo001oo`00
+00Eoo`03001oogoo07]oo`05001oo`00Ool00006Ool00`00Oomoo`13Ool004Qoo`05001oogooOol0
+0005Ool00`00Oomoo`1kOol01@00Oomoogoo00001Woo00<007ooOol0@Woo001<Ool01000Oomoo`00
+0Woo00<007ooOol0Ogoo00D007ooOomoo`00009oo`03001oogoo049oo`00C7oo00@007ooOomoo`80
+089oo`03001oogoo009oo`8004Eoo`00CGoo00<007ooOol0QGoo00<007ooOol0B7oo001=Ool00`00
+Oomoo`25Ool00`00Oomoo`18Ool004eoo`T007moo`X0045oo`00ogoo8Goo000mOol40003Ool80000
+0goo00000008001fOol@00000goo00000010Ool00?moob5oo`00ogoo8Goo000HOol5003[Ool5000C
+Ool001Yoo`03001oogoo02moo`D008=oo`D0035oo`03001oogoo01=oo`006Woo00<007ooOol0<Goo
+00<007ooOol0QGoo00<007ooOol0<Goo00<007ooOol04goo000BOol40004Ool00`00Oomoo`0aOol0
+0`00Oomoo`25Ool00`00Oomoo`0aOol00`00Oomoo`0COol001Yoo`03001oogoo035oo`03001oogoo
+08Eoo`03001oogoo035oo`03001oogoo01=oo`006Goo0P00<goo00<007ooOol0QGoo00<007ooOol0
+<7oo0P005Goo001=Ool20026Ool20019Ool00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00
+5goom0005Goo000GOol00`000ol3o`0a0ol00`000ol3o`120ol00`000ol3o`130ol00`000ol3o`0a
+0ol00`00Oomoo`0COol001MoogT3o`030003o`?o07L3oaIoo`005gooN@?o00<000?o0ol0M@?o0g`O
+5Goo000GOomi0ol00`000ol3o`1d0ol4O1lEOol001MoogT3o`030003o`?o07@3o`=l7aIoo`005goo
+N@?o00<000?o0ol0L`?o0g`O00<3ogooOol057oo000GOomi0ol00`000ol3o`1b0ol4O1l00`?oOomo
+o`0DOol001MoogT3o`030003o`?o0743o`Al7`83oaIoo`005gooN@?o00<000?o0ol0L@?o0g`O0`?o
+5Woo000GOomi0ol00`000ol3o`1`0ol3O1l40olFOol001MoogT3o`030003o`?o06l3o`Al7`@3oaIo
+o`005gooN@?o00<000?o0ol0KP?o17`O1@?o5Woo000GOomi0ol00`000ol3o`1^0ol3O1l60olFOol0
+01MoogT3o`030003o`?o06d3o`=l7`L3oaIoo`005gooN@?o00<000?o0ol0K0?o17`O1`?o5Woo000G
+Oomi0ol00`000ol3o`1[0ol4O1l80olFOol001MoogT3o`030003o`?o06X3o`Al7`T3oaIoo`005goo
+N@?o00<000?o0ol0J@?o17`O2P?o5Woo000GOomi0ol00`000ol3o`1X0ol4O1l;0olFOol001MoogT3
+o`030003o`?o06H3o`El7``3oaIoo`005gooN@?o00<000?o0ol0I@?o1G`O3@?o5Woo000GOomi0ol0
+0`000ol3o`1T0ol4O1l?0olFOol001MoogT3o`030003o`?o06<3o`Al7a03oaIoo`005gooN@?o00<0
+00?o0ol0HP?o17`O4@?o5Woo000GOomi0ol00`000ol3o`1Q0ol4O1lB0olFOol001MoogT3o`030003
+o`?o0603o`Al7a<3oaIoo`005gooN@?o00<000?o0ol0GP?o1G`O50?o5Woo000GOomi0ol00`000ol3
+o`1M0ol5O1lE0olFOol001MoogT3o`030003o`?o05`3o`Al7aL3oaIoo`005gooN@?o00<000?o0ol0
+FP?o1G`O60?o5Woo000GOomi0ol00`000ol3o`1I0ol5O1lI0olFOol001Mooel3oa9l7`P3o`030003
+o`?o05L3o`El7a/3oaIoo`005gooEP?o8g`O00<007`O0ol0EP?o1G`O70?o5Woo000GOomA0ol@O1l>
+0ol:O1l00`00O1ml7`02O1mB0ol5O1lN0olFOol001Moodl3o`Ul7b43o`03001l7g`O00Ul7dT3o`Il
+7al3oaIoo`005gooB`?o27`O9P?o00<000?o0ol037`OA0?o1W`O5P?o300O5Goo000GOom90ol8O1lX
+0ol00`000ol3o`070ol<O1lk0ol6O1l>0olF01lEOol001MoodH3o`Ml7b`3o`030003o`?o00X3o`al
+7b`3o`Al00<3o`Ul7`H3oaH07amoo`005gooA@?o1W`O;P?o00<000?o0ol04@?o37`O90?o1W`02G`O
+500O:Goo000GOom30ol5O1la0ol00`000ol3o`0D0olCO1lJ0ol6O004O1l?01lcOol001Mood43o`Il
+7c83o`030003o`?o01/3oa5l7`d3o`D07`=l7`Il009l7`L07ceoo`005goo@0?o1G`O=0?o00<000?o
+0ol09@?o77`O1W`0AWoo000GOolo0ol4O1lS0ol200040ol200040ol200050ol00`000ol3o`0U0ol5
+01lFO1l2Ool4O017Ool001Moocd3o`El7b<3o`040003o`?o00080ol010000ol3o`0010?o00<000?o
+0ol06`?o5P0OG7oo000GOoll0ol5O1lT0ol010000ol3o`002`?o00<000?o0ol00P?o0`0040?o5`0O
+IWoo000GOolk0ol4O1lV0ol010000ol3o`002@?o0P001@?o00<000?o0ol01`?o5P0OL7oo000GOolj
+0ol4O1lW0ol010000ol3o`001P?o0`0O00<0000O01l0100O00<0000O01l04P0ONgoo000GOoli0ol4
+O1lX0ol00`0O0000000:01l3000401l00`0001l07`0901n4Ool001MoocP3o`Al7ah3oaL07`Qoo`03
+001oogoo08eoo`005goo=P?o1G`O5P?o5P0O4Woo00<007ooOol0SGoo000GOolb0ol4O004O1l<0olF
+01lMOol00`00Oomoo`2=Ool001Mooc43o`Il0003O1l3o`?o0083oaL07bIoo`03001oogoo08eoo`00
+5goo<@?o1W`04@0O<Goo00<007ooOol0SGoo000GOolX0ol901l6O00701lkOol00`00Oomoo`2=Ool0
+01Mooah3oa<07`Il049oo`03001oogoo08eoo`005goo50?o5P0O1Woo0W`O17`0@goo00<007ooOol0
+SGoo000GOol90olG01l?Ool4O1m6Ool00`00Oomoo`2=Ool001IooaL07aQoo`Al7dMoo`03001oogoo
+08eoo`005Woo300O8Woo17`OB7oo00<007ooOol0SGoo000FOol201l/Ool3O1m9Ool00`00Oomoo`2=
+Ool004=oo`=l7dYoo`03001oogoo08eoo`00@Woo17`OBWoo00<007ooOol0SGoo0011Ool4O1m;Ool0
+0`00Oomoo`2=Ool0041oo`Al7daoo`03001oogoo08eoo`00?goo17`OCGoo00<007ooOol0SGoo000n
+Ool4O1m>Ool00`00Oomoo`2=Ool003ioo`=l7dmoo`03001oogoo08eoo`00?Goo0g`OD7oo00<007oo
+Ool0SGoo000lOol4O1m@Ool00`00Oomoo`2=Ool003]oo`Al7e5oo`03001oogoo08eoo`00>goo0g`O
+DWoo00<007ooOol0SGoo000jOol3O1mCOol00`00Oomoo`2=Ool003Uoo`Al7e=oo`03001oogoo08eo
+o`00>Goo0g`OE7oo00<007ooOol0SGoo000hOol3O1mEOol00`00Oomoo`2=Ool003Moo`Al7eEoo`03
+001oogoo08eoo`00=Woo17`OEWoo00<007ooOol0SGoo000fOol3O1mGOol00`00Oomoo`2=Ool003Eo
+o`=l7eQoo`03001oogoo08eoo`00=7oo17`OF7oo00<007ooOol0SGoo000dOol3O1mIOol00`00Oomo
+o`2=Ool003=oo`=l7eYoo`03001oogoo08eoo`00<goo0g`OFWoo00<007ooOol0SGoo000bOol3O1mK
+Ool00`00Oomoo`2=Ool0039oo`=l7e]oo`03001oogoo08eoo`00<Goo0g`OG7oo00<007ooOol0SGoo
+000aOol3O1mLOol00`00Oomoo`2=Ool0031oo`=l7eeoo`03001oogoo08eoo`00;goo17`OEGoo1@00
+0goo00<007ooOol0SGoo000_Ool3O1mHOol00`00Oomoo`03Ool00`00Oomoo`2=Ool002ioo`=l7eUo
+o`03001oogoo00=oo`<008eoo`00;Woo0g`OFGoo00<007ooOol00goo00<007ooOol0SGoo000]Ool3
+O1mJOol00`00Oomoo`03Ool00`00Oomoo`2=Ool002eoo`=l7eUoo`8000Eoo`03001oogoo08eoo`00
+;7oo0g`OHGoo00<007ooOol0SGoo000/Ool3O1mQOol00`00Oomoo`2=Ool002]oo`=l7f9oo`03001o
+ogoo08eoo`00:goo0g`OHWoo00<007ooOol0SGoo000ZOol3O1mSOol00`00Oomoo`2=Ool002Yoo`=l
+7f=oo`03001oogoo08eoo`00:Goo0g`OI7oo00<007ooOol0SGoo000YOol3O1mTOol00`00Oomoo`2=
+Ool002Qoo`=l7fEoo`03001oogoo08eoo`00:7oo0g`OIGoo00<007ooOol0SGoo000WOol3O1mVOol0
+0`00Oomoo`2=Ool002Moo`=l7fIoo`03001oogoo08eoo`009Woo0g`OIgoo00<007ooOol0SGoo000V
+Ool3O1mWOol00`00Oomoo`2=Ool002Eoo`=l7fQoo`03001oogoo08eoo`009Goo0g`OJ7oo00<007oo
+Ool0SGoo000TOol3O1mYOol00`00Oomoo`2=Ool002Aoo`=l7fUoo`03001oogoo08eoo`008goo0g`O
+JWoo00<007ooOol0SGoo000SOol3O1mZOol00`00Oomoo`2=Ool0029oo`=l7f]oo`03001oogoo08eo
+o`008Woo0g`OJgoo00<007ooOol0SGoo000QOol3O1m/Ool00`00Oomoo`2=Ool0025oo`=l7faoo`03
+001oogoo08eoo`0087oo0g`OKGoo00<007ooOol0SGoo000POol3O1m]Ool00`00Oomoo`2=Ool0021o
+o`9l7fioo`03001oogoo08eoo`007goo0g`OKWoo00<007ooOol0SGoo000OOol3O1m^Ool00`00Oomo
+o`2=Ool001ioo`=l7fmoo`03001oogoo08eoo`007Woo0g`OKgoo00<007ooOol0SGoo000NOol2O1m`
+Ool00`00Oomoo`2=Ool001eoo`=l7g1oo`03001oogoo08eoo`007Goo0g`OL7oo00<007ooOol0SGoo
+000LOol3O1maOol00`00Oomoo`2=Ool001aoo`=l7g5oo`03001oogoo08eoo`0077oo0W`OLWoo00<0
+07ooOol0SGoo000KOol3O1mbOol00`00Oomoo`2=Ool001]oo`=l7g9oo`03001oogoo08eoo`006Woo
+0g`OGgoo1@000Woo0P0017oo0P001Goo00<007ooOol0SGoo000JOol3O1mQOol00`00Oomoo`07Ool0
+1000Oomoo`0017oo00<007ooOol0SGoo000JOol2O1mROol00`00Oomoo`0:Ool00`00Oomoo`02Ool3
+002=Ool001Uoo`=l7f9oo`03001oogoo00Qoo`8000Eoo`03001oogoo08eoo`006Goo0g`OHWoo00<0
+07ooOol027oo00<007ooOol017oo00<007ooOol0SGoo000HOol3O1mROol2000:Ool30004Ool00`00
+Oomoo`2=Ool001Qoo`=l7gEoo`03001oogoo08eoo`0067oo0W`OMWoo00<007ooOol0SGoo000GOol3
+O1mfOol00`00Oomoo`2=Ool001Moo`=l7gIoo`03001oogoo08eoo`005Woo0g`OMgoo00<007ooOol0
+SGoo000FOol3O1mgOol00`00Oomoo`2=Ool001Ioo`9l7gQoo`03001oogoo08eoo`005Woo0W`ON7oo
+00<007ooOol0SGoo002@Ool00`00Oomoo`2=Ool0091oo`03001oogoo08eoo`00\
+\>"],
+    ImageRangeCache->{{{0, 287}, {176.938, 0}} -> {0, 0, 0, 0}, {{0.3125, 
+    286.625}, {176.938, 0}} -> {-1, 0, 0, 0}}],
+  "\n\tThe line through ",
+  Cell[BoxData[
+      RowBox[{\((\(-1\), f[\(-1\)])\), 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((1, f[1])\)}]]],
+  ". \t\tThe line through  ",
+  Cell[BoxData[
+      RowBox[{\((\(-\@3\)\/3, f[\(-\@3\)\/3])\), 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((\@3\/3, f[\@3\/3])\)}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe equation of the line through the two points  ",
+  Cell[BoxData[
+      \(\((x\_1, f[x\_1])\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\((x\_2, f[x\_2])\)\)]],
+  "is  \n\t\n(1)\t\t",
+  Cell[BoxData[
+      \(y\  = \ \(\(\(f[x\_1]\)\(\ \)\)\/\(x\_1 - x\_2\)\) \((x - 
+                x\_2)\) + \(\(\(f[x\_2]\)\(\ \)\)\/\(x\_2 - x\_1\)\) \((x - 
+                x\_1)\)\)]],
+  ",  \n\nand the area of the trapezoid under this line is\n\n(2)\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_\(-1\)\%1\((\(\(\(f[x\_1]\)\(\ \)\)\/\(x\_1 - 
+                        x\_2\)\) \((t - 
+                      x\_2)\) + \(\(\(f[x\_2]\)\(\ \)\)\/\(x\_2 - 
+                        x\_1\)\) \((t - 
+                      x\_1)\))\) \[DifferentialD]t\  = \ \(\(2\ \ x\_2\)\/\(x\
+\_2 - x\_1\)\) f[x\_1] + \(\(2\ \ x\_1\)\/\(x\_1 - x\_2\)\) f[x\_2]\)]],
+  ".  \n\nNotice that the trapezoidal rule  ",
+  Cell[BoxData[
+      \(\(h\/2\) f[x\_1] + \(h\/2\) f[x\_2]\)]],
+  "  is a special case of (2).  When we choose  ",
+  Cell[BoxData[
+      \(x\_1 = \(-1\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_2 = 1\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(h = 2\)]],
+  ",  \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(2\ \ 1\)\/\(1 - \((\(-1\))\)\)\) 
+            f[x\_1] + \(\(2\ \((\(-1\))\)\)\/\(\((\(-1\))\) - 1\)\) 
+            f[x\_2]\ \  = \ \(2\/2\) f[x\_1] + \(2\/2\) f[x\_2]\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe trapezoidal rule is \n\n\t\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1\ 
+            f[x] \[DifferentialD]x\  \[TildeTilde] \ \ f[\(-1\)] + \ f[1]\),
+        FontWeight->"Plain"]]],
+  ",  \n\nand it exact for straight lines  (i.e. ",
+  Cell[BoxData[
+      \(f[x]\  = \ a\_0 + a\_1\ x\)]],
+  ").  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tIf the abscissas   ",
+  Cell[BoxData[
+      \(x\_1 = \(-\(\@3\/3\)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  " = ",
+  Cell[BoxData[
+      \(\@3\/3\)]],
+  ",   and weights ",
+  Cell[BoxData[
+      \(w\_1 = \(w\_2 = 1\)\)]],
+  " are used, we have the Gauss-Legendre 2 point quadrature rule\n\n\t\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1\ 
+            f[x] \[DifferentialD]x\  \[TildeTilde] \ \ f[\(-\(\@3\/3\)\)] + \ 
+            f[\@3\/3]\),
+        FontWeight->"Plain"]]],
+  ",  \n\nwhich exact for cubic polynomials (i.e. ",
+  Cell[BoxData[
+      \(f[x]\  = \ a\_0 + a\_1\ x + a\_2\ x\^2 + a\_3\ x\^3\)]],
+  ").  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Gauss-Legendre Quadrature).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  An approximation to the integral  \n\n\t\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1\ 
+            f[x] \[DifferentialD]x\  \[TildeTilde] \ \[Sum]\+\(i = 1\)\%n\( 
+                  w\_\(n, i\)\) f[z\_\(n, i\)]\),
+        FontWeight->"Bold"]]],
+  " \n\nis obtained by sampling  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  "  at the  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  unequally spaced abscissas  ",
+  Cell[BoxData[
+      \(z\_\(n, 1\), z\_\(n, 2\),  ... , z\_\(n, n\)\)]],
+  " , where the corresponding weights are  ",
+  Cell[BoxData[
+      \(w\_\(n, 1\), w\_\(n, 2\),  ... , w\_\(n, n\)\)]],
+  " .  \nThe abscissa's and weights for Gauss-Legendre quadrature are often \
+expressed in decimal form. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=2 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2]\),
+        FontWeight->"Bold"]]],
+  "  \n\t\t\twhere\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_1\),
+            FontWeight->"Bold"], "=", " ", \(-0.57735026918962576451\)}], ",",
+         
+        RowBox[{
+          StyleBox[\(w\_1\),
+            FontWeight->"Bold"], "=", "1.00000000000000000000"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_2\),
+            FontWeight->"Bold"], "=", "    ", "0.57735026918962576451"}], ",",
+         
+        RowBox[{
+          StyleBox[\(w\_2\),
+            FontWeight->"Bold"], "=", "1.00000000000000000000"}]}]]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=3 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3]\),
+        FontWeight->"Bold"]]],
+  "   \n\t\t\twhere\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_1\),
+            FontWeight->"Bold"], "=", \(-0.77459666924148337704\)}], ",", 
+        RowBox[{
+          StyleBox[\(w\_1\),
+            FontWeight->"Bold"], "=", "0.55555555555555555556"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_2\),
+            FontWeight->"Bold"], "=", "   ", "0.00000000000000000000"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_2\),
+            FontWeight->"Bold"], "=", "0.88888888888888888889"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_3\),
+            FontWeight->"Bold"], "=", "   ", "0.77459666924148337704"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_3\),
+            FontWeight->"Bold"], "=", "0.55555555555555555556"}]}]]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=4 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3] + \(w\_4\) 
+              f[z\_4]\),
+        FontWeight->"Bold"]]],
+  "  \n\t\t\twhere\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_1\),
+            FontWeight->"Bold"], "=", \(-0.86113631159405257522\)}], ",", 
+        RowBox[{
+          StyleBox[\(w\_1\),
+            FontWeight->"Bold"], "=", "0.34785484513745385737"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_2\),
+            FontWeight->"Bold"], "=", \(-0.33998104358485626480\)}], ",", 
+        RowBox[{
+          StyleBox[\(w\_2\),
+            FontWeight->"Bold"], "=", "0.65214515486254614263"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_3\),
+            FontWeight->"Bold"], "=", "   ", "0.33998104358485626480"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_3\),
+            FontWeight->"Bold"], "=", "0.65214515486254614263"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_4\),
+            FontWeight->"Bold"], "=", "   ", "0.86113631159405257522"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_4\),
+            FontWeight->"Bold"], "=", "0.34785484513745385737"}]}]]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=5 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3] + \(w\_4\) 
+              f[z\_4] + \(w\_5\) f[z\_5]\),
+        FontWeight->"Bold"]]],
+  "  \n\t\t\twhere\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_1\),
+            FontWeight->"Bold"], "=", \(-0.90617984593866399280\)}], ",", 
+        RowBox[{
+          StyleBox[\(w\_1\),
+            FontWeight->"Bold"], "=", "0.23692688505618908751"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_2\),
+            FontWeight->"Bold"], "=", \(-0.53846931010568309104\)}], ",", 
+        RowBox[{
+          StyleBox[\(w\_2\),
+            FontWeight->"Bold"], "=", "0.47862867049936646804"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_3\),
+            FontWeight->"Bold"], "=", "   ", "0.00000000000000000000"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_3\),
+            FontWeight->"Bold"], "=", "0.56888888888888888889"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_4\),
+            FontWeight->"Bold"], "=", "   ", "0.53846931010568309104"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_4\),
+            FontWeight->"Bold"], "=", "0.47862867049936646804"}]}]]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(z\_5\),
+            FontWeight->"Bold"], "=", "   ", "0.90617984593866399280"}], ",", 
+        
+        RowBox[{
+          StyleBox[\(w\_5\),
+            FontWeight->"Bold"], "=", "0.23692688505618908751"}]}]]],
+  " \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " For ease of reading the above list of rules has used the notation ",
+  Cell[BoxData[
+      StyleBox[\(z\_i\),
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox[\(w\_i\),
+        FontWeight->"Bold"]]],
+  " instead of  ",
+  Cell[BoxData[
+      StyleBox[\(z\_\(n, i\)\),
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox[\(w\_\(n, i\)\),
+        FontWeight->"Bold"]]],
+  ", respectively."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Truth.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+\tThe abscissas and weights for the rules n=2,3,4,5 can be expressed with \
+radicals.  \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["n=2 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ f[\(-\(\@3\/3\)\)] + 
+            f[\@3\/3]\),
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=3 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(5\/9\) 
+              f[\(-\@\(3\/5\)\)] + \(8\/9\) f[0] + \(5\/9\) f[\@\(3\/5\)]\),
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=4 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(\(3\ \@30 - 
+                    5\)\/\(6\ \@30\)\) 
+              f[\(-\@\(\(\(15 + 2\ \@30\)\/35\)\(\ \)\)\)] + \(\(7\ \((\@30 - 
+                        10)\)\)\/\(12\ \((2\ \@30 - 15)\)\)\) 
+              f[\(-\@\(\(\(15 - 2\ \@30\)\/35\)\(\ \)\)\)] + \(\(7\ \((\@30 - 
+                        10)\)\)\/\(12\ \((2\ \@30 - 15)\)\)\) 
+              f[\@\(\(\(15 - 2\ \@30\)\/35\)\(\ \)\)] + \(\(3\ \@30 - 
+                    5\)\/\(6\ \@30\)\) 
+              f[\@\(\(\(15 + 2\ \@30\)\/35\)\(\ \)\)]\),
+        FontWeight->"Bold"]]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=5 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(23\ \@70 - \
+65\)\/450\ \(\@\(7\/10\)\) 
+              f[\(-\@\(\(35 + 2\ \@70\)\/63\)\)] + \ \(\(21\ \((\@70 - 
+                        50)\)\)\/\(100\ \((2\ \@70 - 35)\)\)\) 
+              f[\(-\@\(\(35 - 2\ \@70\)\/63\)\)] + \(128\/225\) 
+              f[0] + \(\(21\ \((\@70 - 50)\)\)\/\(100\ \((2\ \@70 - 35)\)\)\) 
+              f[\@\(\(35 - 2\ \@70\)\/63\)] + \(23\ \@70 - 65\)\/450\ \(\@\(7\
+\/10\)\) f[\@\(\(35 + 2\ \@70\)\/63\)]\),
+        FontWeight->"Bold"]]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+The higher rules for n>5 only use decimal values for the abscissas and \
+weights.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["n=6 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3] + \(w\_4\) 
+              f[z\_4] + \(w\_5\) f[z\_5]\),
+        FontWeight->"Bold"]],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_6\) f[z\_6]\)],
+    FontWeight->"Bold"],
+  " \n\n\t\t\twhere\t",
+  Cell[BoxData[
+      \(z\_1 = \(-0.932469514203152\), w\_1 = 0.171324492379171\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_2 = \(-0.661209386466265\), w\_2 = 0.360761573048138\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_3 = \(-0.238619186083197\), w\_3 = 0.467913934572691\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_4 = \ \ \ 0.238619186083197, w\_4 = 0.467913934572691\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_6 = \ \ \ 0.661209386466265, w\_5 = 0.360761573048138\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_6 = \ \ \ 0.932469514203152, w\_6 = 0.171324492379171\)]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=7 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3] + \(w\_4\) 
+              f[z\_4] + \(w\_5\) f[z\_5]\),
+        FontWeight->"Bold"]],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_6\) f[z\_6]\)],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_7\) f[z\_7]\)],
+    FontWeight->"Bold"],
+  " \n\n\t\t\twhere\t",
+  Cell[BoxData[
+      \(z\_1 = \(-0.949107912342759\), w\_1 = 0.129484966168869\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_2 = \(-0.741531185599395\), w\_2 = 0.279705391489278\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_3 = \(-0.405845151377397\), w\_3 = 0.381830050505117\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_4 = \ \ \ 0.000000000000000, w\_4 = 0.417959183673472\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_5 = \ \ \ 0.405845151377397, w\_5 = 0.381830050505117\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_6 = \ \ \ 0.741531185599395, w\_6 = 0.279705391489278\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_7 = \ \ \ 0.949107912342759, w\_7 = 0.129484966168869\)]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=8 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(\[Integral]\_\(-1\)\%1 f[
+                x] \[DifferentialD]x\  \[TildeTilde] \ \ \(w\_1\) 
+              f[z\_1] + \ \(w\_2\) f[z\_2] + \(w\_3\) f[z\_3] + \(w\_4\) 
+              f[z\_4] + \(w\_5\) f[z\_5]\),
+        FontWeight->"Bold"]],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_6\) f[z\_6]\)],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_7\) f[z\_7]\)],
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(\(+w\_8\) f[z\_8]\)],
+    FontWeight->"Bold"],
+  " \n\n\t\t\twhere\t",
+  Cell[BoxData[
+      \(z\_1 = \(-0.960289856497536\), w\_1 = 0.101228536290376\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_2 = \(-0.796666477413627\), w\_2 = 0.222381034453374\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_3 = \(-0.525532409916329\), w\_3 = 0.313706645877887\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_4 = \(-0.183434642495650\), w\_4 = 0.362683783378361\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_5 = \ \ \ 0.183434642495650, w\_5 = 0.362683783378361\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_6 = \ \ \ 0.525532409916329, w\_6 = 0.313706645877887\)]],
+  "  \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_7 = \ \ \ 0.796666477413627, w\_7 = 0.222381034453374\)]],
+  " \n\t\t\t\t",
+  Cell[BoxData[
+      \(z\_8 = \ \ \ 0.960289856497536, w\_8 = 0.101228536290376\)]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussianQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Error for Gauss-Legendre Quadrature).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The error terms for the rules n = 2, 3, 4 and 5 can be expressed as \
+follows:"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=2 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(\[Integral]\_\(-1\)\%1 f[
+                  x] \[DifferentialD]x - \[Sum]\+\(i = 1\)\%2\( w\_\(2, i\)\) 
+                f[z\_\(2, i\)]\), " ", "=", " ", 
+          RowBox[{\(1\/135\), " ", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((4)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}]}]}],
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=3 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(\[Integral]\_\(-1\)\%1 f[
+                  x] \[DifferentialD]x - \[Sum]\+\(i = 1\)\%3\( w\_\(3, i\)\) 
+                f[z\_\(3, i\)]\), " ", "=", " ", 
+          RowBox[{\(1\/15750\), 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((6)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}]}]}],
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=4 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(\[Integral]\_\(-1\)\%1 f[
+                  x] \[DifferentialD]x - \[Sum]\+\(i = 1\)\%4\( w\_\(4, i\)\) 
+                f[z\_\(4, i\)]\), " ", "=", " ", 
+          RowBox[{\(1\/3472875\), " ", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((8)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}]}]}],
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["n=5 Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[
+        RowBox[{\(\[Integral]\_\(-1\)\%1 f[
+                  x] \[DifferentialD]x - \ \[Sum]\+\(i = 1\)\%5\( w\_\(5, 
+                    i\)\) f[z\_\(5, i\)]\), " ", "=", " ", 
+          RowBox[{\(1\/1237732650\), " ", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((10)\),
+                  Derivative],
+                MultilineFunction->None], "[", "c", "]"}]}]}],
+        FontWeight->"Bold"]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussianQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadratur",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendre.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "e  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendre.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianQuadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussianQuadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Gauss-Legendre Quadrature).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(GaussLegendre[n_] := 
+        Module[{i}, \[IndentingNewLine]Which[
+            n \[Equal] 
+              2, \[IndentingNewLine]z = {\(-0.57735026918962576451\), \ 
+                0.57735026918962576451}; \ \[IndentingNewLine]w = {\ \ \
+1.00000000000000000000, 
+                1.00000000000000000000}; \
+\[IndentingNewLine]Return[\[Sum]\+\(i = 1\)\%2 \
+w\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[
+                    z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]], \[IndentingNewLine]n \[Equal] 
+              3, \[IndentingNewLine]z = {\(-0.77459666924148337704\), \ 
+                0.00000000000000000000\ , 
+                0.77459666924148337704}\ ; \[IndentingNewLine]w = {\ \ \
+0.55555555555555555556, \ 0.88888888888888888889\ , 
+                0.55555555555555555556}\ ; \[IndentingNewLine]Return[\[Sum]\+\
+\(i = 1\)\%3 w\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[
+                    z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]], \[IndentingNewLine]n \[Equal] 
+              4, \[IndentingNewLine]z = {\(-0.86113631159405257522\), \
+\(-0.33998104358485626480\), 0.33998104358485626480, 
+                0.86113631159405257522}; \[IndentingNewLine]w = {\ \ \
+0.34785484513745385737, \ \ 0.65214515486254614263, 0.65214515486254614263, 
+                0.34785484513745385737}; \
+\[IndentingNewLine]Return[\[Sum]\+\(i = 1\)\%4 \
+w\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[
+                    z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]], \[IndentingNewLine]n \[Equal] 
+              5, \[IndentingNewLine]z = {\(-0.90617984593866399280\), \
+\(-0.53846931010568309104\), 0.00000000000000000000, 0.53846931010568309104, 
+                0.90617984593866399280}; \[IndentingNewLine]w = {\ \ \
+0.23692688505618908751, \ \ 0.47862867049936646804, 0.56888888888888888889, 
+                0.47862867049936646804, 
+                0.23692688505618908751}; \
+\[IndentingNewLine]Return[\[Sum]\+\(i = 1\)\%5 \
+w\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[
+                    z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]]]\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Gauss-Legendre quadrature rules for n = 2, 3, 4 and 5 points to \
+compute numerical approximations for   ",
+  Cell[BoxData[
+      \(\[Integral]\_\(-1\)\%1\ \ Cos[x] \[DifferentialD]x\)]],
+  " .  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Q\_2 = \ GaussLegendre[2];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_3 = \ GaussLegendre[3];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_4 = \ GaussLegendre[4];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_5 = \ GaussLegendre[5];\)\), "\[IndentingNewLine]", 
+    \(\(line1 = 
+        Graphics[{Line[{{\(-1\), 0}, {\(-1\), f[\(-1\)]}}]}];\)\), "\n", 
+    \(\(line2 = Graphics[{Line[{{1, 0}, {1, f[1]}}]}];\)\), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, \(-1\), 1}, PlotStyle \[Rule] {Blue, Thickness[0.01]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(gr1\  = \ 
+        FilledPlot[{f[x]}, {x, \(-1\), 1}, Fills \[Rule] {{{1, Axis}, Cyan}}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[gr1, graph, line1, line2, 
+        PlotRange \[Rule] {{\(-1.1\), 1.1}, {0, 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<Gauss-Legendre rule \!\(Q\_2\) = \>\"", 
+        NumberForm[Q\_2, 12]];\)\), "\n", 
+    \(\(Print[\*"\"\<Gauss-Legendre rule \!\(Q\_3\) = \>\"", 
+        NumberForm[Q\_3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Gauss-Legendre rule \!\(Q\_4\) = \>\"", 
+        NumberForm[Q\_4, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Gauss-Legendre rule \!\(Q\_5\) = \>\"", 
+        NumberForm[Q\_5, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< \>", \*"\"\<\!\(\[Integral]\_\(-1\)\%1\)\>\"", 
+        f[x], "\<\[DifferentialD]x = \>", \[Integral]\_\(-1\)\%1 f[
+              x] \[DifferentialD]x, "\< = \>", 
+        NumberForm[N[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x], 
+          12]];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Find the error for the Gauss-Legendre rules.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The error for Gauss-Legendre quadrature\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[n = 2, 
+        n \[LessEqual] 5, \(n++\), \[IndentingNewLine]Print["\<n = \>", 
+          n]; \[IndentingNewLine]Print["\< \>", \
+\*"\"\<\!\(\[Integral]\_\(-1\)\%1\)\>\"", 
+          f[x], "\<\[DifferentialD]x - \>", \*"\"\<\!\(\[Sum]\+\(i = \
+1\)\)\>\""\&n, "\< w\>"\_\(n, "\<i\>"\), "\<f[\>", "\<z\>"\_\(n, "\<i\>"\), "\
+\<] = \>", 
+          NumberForm[N[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x - Q\_n], 
+            12]];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since we are using the example ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  ", the higher derivative are all bounded by 1 and we can use the \
+inequalities  ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((2  n)\),
+              Derivative],
+            MultilineFunction->None], "[", "c", "]"}], "|", 
+        " ", \(\(\[LessEqual]\)\(\ \)\(1\)\)}]]],
+  ".\nWe have the following list of \"theoretical\" bounds for the errors."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      "\[IndentingNewLine]", \(K = {1, 1\/135, 1\/15750, 1\/3472875, 
+            1\/1237732650};\)}], "\[IndentingNewLine]", \(Print["\<Bounds for \
+the error for Gauss-Legendre quadrature\>"];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"For", "[", 
+        RowBox[{\(n = 2\), ",", \(n \[LessEqual] 5\), ",", \(n++\), ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{\(Print["\<Rule n = \>", n]\), ";", "\[IndentingNewLine]", 
+            RowBox[{"Print", "[", 
+              
+              RowBox[{\(K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), ",", "\"\<|\>\"", ",", 
+                SuperscriptBox["\"\<f\>\"", 
+                  TagBox[\((2  n)\),
+                    Derivative],
+                  MultilineFunction->None], ",", "\"\<[c]| \[LessEqual] \>\"",
+                 ",", \(K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), ",", "\"\< = \>\"", 
+                ",", \(N[
+                  K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\
+\)]\)}], "]"}]}]}], " ", "]"}], ";"}]}], "Input"],
+
+Cell["\<\
+Compare the actual \"error\" and the \"theoretical\" bound for the error.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The error is less than the `error bound`.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[n = 2, 
+        n \[LessEqual] 5, \(n++\), \[IndentingNewLine]Print["\<n = \>", 
+          n]; \[IndentingNewLine]Print[
+          NumberForm[
+            N[Abs[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x - Q\_n]], 
+            12], "\< \[LessEqual] \>", 
+          NumberForm[
+            N[K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)], 
+            12]\ ];\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  For Example 3, compare the accuracy of the Trapezoidal Rule, Simpson's \
+Rule, Simpson's ",
+  Cell[BoxData[
+      \(TraditionalForm\`3\/8\)]],
+  " Rule and Boole's Rule, with the Gauss-Legendre quadrature rules for n = \
+2, 3, 4 and 5 points, respectively. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(v = \[Integral]\_\(-1. \)\%1. f[
+              x] \[DifferentialD]x\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Q\_2 = \ GaussLegendre[2];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_3 = \ GaussLegendre[3];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_4 = \ GaussLegendre[4];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_5 = \ GaussLegendre[5];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\ ;\)\), "\[IndentingNewLine]", 
+    \(\(TR = \ \(h\/2\) \((f[\(-1.0\)] + 
+              f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 2 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\< The  Trapezoidal  Rule   TR = \>", 
+        NumberForm[TR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_2\) = \>\"", 
+        NumberForm[Q\_2, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for TR  = \>", 
+        NumberForm[v - TR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_2\)  = \>\"", 
+      NumberForm[v - Q\_2, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/2\ ;\)\), "\n", 
+    \(\(SR = \ \(h\/3\) \((f[\(-1.0\)] + 4  f[0.0] + 
+              f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 3 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<        Simpson  Rule     SR = \>", 
+        NumberForm[SR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_3\) = \>\"", 
+        NumberForm[Q\_3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for SR  = \>", 
+        NumberForm[v - SR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_3\)  = \>\"", 
+      NumberForm[v - Q\_3, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/3\ ;\)\), "\n", 
+    \(\(SE = \ \(\(3  h\)\/8\) \((f[\(-1.0\)] + 3  f[\(-1.0\)\/3] + 
+              3  f[1.0\/3] + f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 4 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<     Simpson 3/8 Rule     SE = \>", 
+        NumberForm[SE, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_4\) = \>\"", 
+        NumberForm[Q\_4, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for SE  = \>", 
+        NumberForm[v - SE, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_4\)  = \>\"", 
+      NumberForm[v - Q\_4, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/4\ ;\)\), "\n", 
+    \(\(BR = \ \(\(2  h\)\/45\) \((7  f[\(-1.0\)] + 32  f[\(-1.0\)\/2] + 
+              12  f[0.0] + 32  f[1.0\/2] + 
+              7  f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 5 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<         Boole's Rule     BR = \>", 
+        NumberForm[BR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_5\) = \>\"", 
+        NumberForm[Q\_5, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for BR  = \>", 
+        NumberForm[v - BR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_5\)  = \>\"", 
+      NumberForm[v - Q\_5, 12]]\)}], "Input"],
+
+Cell["\<\
+In all four cases, Gauss-Legendre quadrature is more accurate.\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Gauss-Legendre quadrature rules for n = 2, 3, 4 and 5 points to \
+compute numerical approximations for  ",
+  Cell[BoxData[
+      \(\[Integral]\_\(-1\)\%1 \[ExponentialE]\^\(\(-\ x\^2\)/2\)\ \
+\[DifferentialD]x\)]],
+  " .  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \[ExponentialE]\^\(\(\(-\ x\^2\)/2\)\(\ \)\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Q\_2 = \ GaussLegendre[2];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_3 = \ GaussLegendre[3];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_4 = \ GaussLegendre[4];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_5 = \ GaussLegendre[5];\)\), "\[IndentingNewLine]", 
+    \(\(line1 = 
+        Graphics[{Line[{{\(-1\), 0}, {\(-1\), f[\(-1\)]}}]}];\)\), "\n", 
+    \(\(line2 = Graphics[{Line[{{1, 0}, {1, f[1]}}]}];\)\), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph = 
+        Plot[f[x], {x, \(-2\), 2}, PlotStyle \[Rule] {Blue, Thickness[0.01]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(gr1\  = \ 
+        FilledPlot[{f[x]}, {x, \(-1\), 1}, Fills \[Rule] {{{1, Axis}, Cyan}}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[gr1, graph, line1, line2, 
+        PlotRange \[Rule] {{\(-2.1\), 2.1}, {0, 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\n", 
+    \(\(Print[\*"\"\<The Gauss-Legendre rule \!\(Q\_2\) = \>\"", 
+        NumberForm[Q\_2, 12]];\)\), "\n", 
+    \(\(Print[\*"\"\<The Gauss-Legendre rule \!\(Q\_3\) = \>\"", 
+        NumberForm[Q\_3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The Gauss-Legendre rule \!\(Q\_4\) = \>\"", 
+        NumberForm[Q\_4, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The Gauss-Legendre rule \!\(Q\_5\) = \>\"", 
+        NumberForm[Q\_5, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(-1\)\%1\)\>\"", 
+        f[x], "\<\[DifferentialD]x = \>", \[Integral]\_\(-1\)\%1 f[
+              x] \[DifferentialD]x, "\< = \>", 
+        NumberForm[N[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x], 
+          12]];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Find the error for the Gauss-Legendre rules.", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The error for Gauss-Legendre quadrature\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[n = 2, 
+        n \[LessEqual] 5, \(n++\), \[IndentingNewLine]Print["\<n = \>", 
+          n]; \[IndentingNewLine]Print["\< \>", \
+\*"\"\<\!\(\[Integral]\_\(-1\)\%1\)\>\"", 
+          f[x], "\<\[DifferentialD]x - \>", \*"\"\<\!\(\[Sum]\+\(i = \
+1\)\)\>\""\&n, "\< w\>"\_\(n, "\<i\>"\), "\<f[\>", "\<z\>"\_\(n, "\<i\>"\), "\
+\<] = \>", 
+          NumberForm[N[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x - Q\_n], 
+            12]];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "It is tedious, but possible to verify the following inequalities for the \
+higher derivatives over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"|", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((4)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], "|", 
+          RowBox[{"\[LessEqual]", 
+            RowBox[{"|", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((4)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}]}]}]}], " ", "=", 
+        " ", "3"}]]],
+  " \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"|", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((6)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], "|", 
+          RowBox[{"\[LessEqual]", 
+            RowBox[{"|", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((6)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}], "|"}]}]}], " ", 
+        "=", " ", "15"}]]],
+  " \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"|", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((8)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], "|", 
+          RowBox[{"\[LessEqual]", 
+            RowBox[{"|", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((8)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}], "|"}]}]}], " ", 
+        "=", " ", "105"}]]],
+  " \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"|", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((10)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], "|", 
+          RowBox[{"\[LessEqual]", 
+            RowBox[{"|", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((10)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}], "|"}]}]}], " ", 
+        "=", " ", "945"}]]],
+  " "
+}], "Text"],
+
+Cell["\<\
+We can now establish the  following list of \"theoretical\" bounds for the \
+errors.\
+\>", "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      "\[IndentingNewLine]", \(K = {1, 1\/135, 1\/15750, 1\/3472875, 
+            1\/1237732650};\)}], "\[IndentingNewLine]", \(M = {1, 3, 15, 105, 
+          945};\), "\[IndentingNewLine]", \(Print["\<Bounds for the error for \
+Gauss-Legendre quadrature\>"];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"For", "[", 
+        RowBox[{\(n = 2\), ",", \(n \[LessEqual] 5\), ",", \(n++\), ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{\(Print["\<Rule n = \>", n]\), ";", "\[IndentingNewLine]", 
+            RowBox[{"Print", "[", 
+              
+              RowBox[{\(K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), ",", "\"\<|\>\"", ",", 
+                SuperscriptBox["\"\<f\>\"", 
+                  TagBox[\((2  n)\),
+                    Derivative],
+                  MultilineFunction->None], ",", "\"\<[c]| \[LessEqual] \>\"",
+                 ",", \(K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), ",", "\"\<(\>\"", 
+                ",", \(M\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\), ",", "\"\<) = \>\"", 
+                ",", \(N[\(K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\
+\[RightDoubleBracket]\)\)\) 
+                    M\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\
+\)\)]\)}], "]"}]}]}], " ", "]"}], ";"}]}], "Input"],
+
+Cell["\<\
+Compare the actual \"error\" and the \"theoretical\" bound for the error.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The error is less than the `error bound`.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[n = 2, 
+        n \[LessEqual] 5, \(n++\), \[IndentingNewLine]Print["\<n = \>", 
+          n]; \[IndentingNewLine]Print[
+          NumberForm[
+            N[Abs[\[Integral]\_\(-1\)\%1 f[x] \[DifferentialD]x - Q\_n]], 
+            12], "\< \[LessEqual] \>", 
+          NumberForm[
+            N[K\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)] 
+              M\_\(\(\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\), 
+            12]\ ];\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  For Example 3, compare the accuracy of the Trapezoidal Rule, Simpson's \
+Rule, Simpson's ",
+  Cell[BoxData[
+      \(TraditionalForm\`3\/8\)]],
+  " Rule and Boole's Rule, with the Gauss-Legendre quadrature rules for n = \
+2, 3, 4 and 5 points, respectively. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \[ExponentialE]\^\(\(\(-\ x\^2\)/2\)\(\ \)\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(v = \[Integral]\_\(-1. \)\%1. f[
+              x] \[DifferentialD]x\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Q\_2 = \ GaussLegendre[2];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_3 = \ GaussLegendre[3];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_4 = \ GaussLegendre[4];\)\), "\[IndentingNewLine]", 
+    \(\(Q\_5 = \ GaussLegendre[5];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\ ;\)\), "\[IndentingNewLine]", 
+    \(\(TR = \ \(h\/2\) \((f[\(-1.0\)] + 
+              f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 2 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\< The  Trapezoidal  Rule   TR = \>", 
+        NumberForm[TR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_2\) = \>\"", 
+        NumberForm[Q\_2, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for TR  = \>", 
+        NumberForm[v - TR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_2\)  = \>\"", 
+      NumberForm[v - Q\_2, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/2\ ;\)\), "\n", 
+    \(\(SR = \ \(h\/3\) \((f[\(-1.0\)] + 4  f[0.0] + 
+              f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 3 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<        Simpson  Rule     SR = \>", 
+        NumberForm[SR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_3\) = \>\"", 
+        NumberForm[Q\_3, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for SR  = \>", 
+        NumberForm[v - SR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_3\)  = \>\"", 
+      NumberForm[v - Q\_3, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/3\ ;\)\), "\n", 
+    \(\(SE = \ \(\(3  h\)\/8\) \((f[\(-1.0\)] + 3  f[\(-1.0\)\/3] + 
+              3  f[1.0\/3] + f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 4 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<     Simpson 3/8 Rule     SE = \>", 
+        NumberForm[SE, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_4\) = \>\"", 
+        NumberForm[Q\_4, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for SE  = \>", 
+        NumberForm[v - SE, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_4\)  = \>\"", 
+      NumberForm[v - Q\_4, 12]]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(h = 2\/4\ ;\)\), "\n", 
+    \(\(BR = \ \(\(2  h\)\/45\) \((7  f[\(-1.0\)] + 32  f[\(-1.0\)\/2] + 
+              12  f[0.0] + 32  f[1.0\/2] + 
+              7  f[1.0])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< The area under y = \>", 
+        f[x], "\< over [-1, 1].\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< Quadrature based on n = 5 points.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<         Boole's Rule     BR = \>", 
+        NumberForm[BR, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< The  Gauss-Legendre Rule \!\(Q\_5\) = \>\"", 
+        NumberForm[Q\_5, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<`True Value` of the integral = \>", 
+        NumberForm[v, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<               Error for BR  = \>", 
+        NumberForm[v - BR, 12]];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<               Error for \!\(Q\_5\)  = \>\"", 
+      NumberForm[v - Q\_5, 12]]\)}], "Input"],
+
+Cell["\<\
+In all four cases, Gauss-Legendre quadrature is more accurate.\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The shifted Gauss-Legendre rule for [a,b].",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   ",
+  StyleBox["\n\nTheorem (The Gauss-Legendre Translation).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Suppose that the abscissas ",
+  Cell[BoxData[
+      \({z\_\(n, i\)}\_\(i = 1\)\%n\)]],
+  " and weights ",
+  Cell[BoxData[
+      \({w\_\(n, i\)}\_\(i = 1\)\%n\)]],
+  " are given for the n-point Gauss-Legendre rule over ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  To apply the rule over the interval ",
+  StyleBox["[a,b]",
+    FontFamily->"Courier New"],
+  ", use the change of variable \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{"t", "=", 
+        RowBox[{
+          RowBox[{\(\(a + b\)\/2\), "+", 
+            RowBox[{\(\(b - a\)\/2\), "x", "   ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "dt"}]}], 
+          "=", \(\(\(b - a\)\/2\) dx\)}]}]]],
+  ".  \n\nThen the relationship  ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          f[t] \[DifferentialD]t\ \  = \ \ \[Integral]\_\(-1\)\%1\ 
+          f[\(a + b\)\/2 + \(\(b - a\)\/2\) x] \(\(b - 
+                  a\)\/2\) \(\(\[DifferentialD]x\)\(\ \)\)\)]],
+  " is used to obtain the quadrature formula \n\n\t\t",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          f[t] \[DifferentialD]t\  \[TildeTilde] \ \(\(b - 
+                a\)\/2\) \(\[Sum]\+\(i = 1\)\%n\( w\_\(n, i\)\) 
+              f[\(a + b\)\/2 + \(\(b - a\)\/2\) z\_\(n, i\)]\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm  (The Gauss-Legendre Translation).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To approximate the integral ",
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ f[t] \[DifferentialD]t\)]],
+  " use the change of variable ",
+  Cell[BoxData[
+      \(t = \(\(a + b\)\/2 + \(\(b - a\)\/2\) 
+              x\ \ \ and\ \ \ dt = \(\(b - a\)\/2\) dx\)\)]],
+  " . Then use ",
+  Cell[BoxData[
+      \(g[x] = f[\(a + b\)\/2 + \(\(b - a\)\/2\) x]\)]],
+  " and apply the Gauss-Legendre rules for ",
+  Cell[BoxData[
+      \(\(\(b - a\)\/2\) \(\[Integral]\_\(-1\)\%1\ 
+          g[x] \[DifferentialD]x\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(GaussLegendre[a_, b_, n_] := 
+        Module[{i}, \[IndentingNewLine]Which[
+            n \[Equal] 
+              2, \[IndentingNewLine]z = {\(-0.57735026918962576451\), \ 
+                0.57735026918962576451}; \ \[IndentingNewLine]w = {\ \ \
+1.00000000000000000000, 
+                1.00000000000000000000}; \[IndentingNewLine]Return[\(\(b - 
+                      a\)\/2\) \(\[Sum]\+\(i = 1\)\%2 w\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[\(a + b\)\/2 + \
+\(\(b - a\)\/2\) 
+                          z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]\)], \[IndentingNewLine]n \[Equal] 
+              3, \[IndentingNewLine]z = {\(-0.77459666924148337704\), \ 
+                0.00000000000000000000\ , 
+                0.77459666924148337704}\ ; \[IndentingNewLine]w = {\ \ \
+0.55555555555555555556, \ 0.88888888888888888889\ , 
+                0.55555555555555555556}\ ; \[IndentingNewLine]Return[\(\(b - 
+                      a\)\/2\) \(\[Sum]\+\(i = 1\)\%3 w\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[\(a + b\)\/2 + \
+\(\(b - a\)\/2\) 
+                          z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]\)], \[IndentingNewLine]n \[Equal] 
+              4, \[IndentingNewLine]z = {\(-0.86113631159405257522\), \
+\(-0.33998104358485626480\), 0.33998104358485626480, 
+                0.86113631159405257522}; \[IndentingNewLine]w = {\ \ \
+0.34785484513745385737, \ \ 0.65214515486254614263, 0.65214515486254614263, 
+                0.34785484513745385737}; \[IndentingNewLine]Return[\(\(b - 
+                      a\)\/2\) \(\[Sum]\+\(i = 1\)\%4 w\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[\(a + b\)\/2 + \
+\(\(b - a\)\/2\) 
+                          z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]\)], \[IndentingNewLine]n \[Equal] 
+              5, \[IndentingNewLine]z = {\(-0.90617984593866399280\), \
+\(-0.53846931010568309104\), 0.00000000000000000000, 0.53846931010568309104, 
+                0.90617984593866399280}; \[IndentingNewLine]w = {\ \ \
+0.23692688505618908751, \ \ 0.47862867049936646804, 0.56888888888888888889, 
+                0.47862867049936646804, 
+                0.23692688505618908751}; \[IndentingNewLine]Return[\(\(b - 
+                      a\)\/2\) \(\[Sum]\+\(i = 1\)\%5 w\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ f[\(a + b\)\/2 + \
+\(\(b - a\)\/2\) 
+                          z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]\)]]\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the shifted Gauss-Legendre rules for n = 3 points to compute \
+approximations for the integrals  \n\t\t",
+  Cell[BoxData[
+      \(\(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_0\%1 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\), \ \(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_1\%2 \
+\[ExponentialE]\^\(\(-\ x\^2\)/2\)\ \[DifferentialD]x\ \ \ and\ \ \(1\/\@\(2  \
+\[Pi]\)\) \(\[Integral]\_2\%3 \[ExponentialE]\^\(\(-\ x\^2\)/2\)\ \
+\[DifferentialD]x\)\)\)]],
+  " .  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[TextData[{
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Find ",
+  Cell[BoxData[
+      \(\(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_0\%1 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\);\)\), "\n", 
+    \(\(a = 0\ ;\)\), "\n", 
+    \(\(b = 1\ ;\)\), "\[IndentingNewLine]", 
+    \(\(v = \(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_0\%1 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\);\)\), "\[IndentingNewLine]", 
+    \(\(v1\  = \ GaussLegendre[a, b, 3];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(line0 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{0, 0}, {0, f[0]}}]}];\)\), "\n", 
+    \(\(line1 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{1, 0}, {1, f[1]}}]}];\)\), "\n", 
+    \(\(line2 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{2, 0}, {2, f[2]}}]}];\)\), "\n", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        Plot[f[x], {x, \(-3\), 3}, PlotStyle \[Rule] {Blue, Thickness[0.01]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(gr1\  = \ 
+        FilledPlot[{f[x]}, {x, a, b}, Fills \[Rule] {{{1, Axis}, Green}}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[gr1, gr0, line0, line1, line2, 
+        PlotRange \[Rule] {{\(-3.1\), 3.1}, {0, 0.4}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x \[Cross] \>", 
+        v1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x = \>", 
+        v, "\< = \>", N[v]];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Find ",
+  Cell[BoxData[
+      \(\(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_1\%2 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\);\)\), "\n", 
+    \(\(a = 1\ ;\)\), "\n", 
+    \(\(b = 2\ ;\)\), "\[IndentingNewLine]", 
+    \(\(v = \(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_1\%2 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\);\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(v2\  = \ GaussLegendre[a, b, 3];\)\), "\[IndentingNewLine]", 
+    \(\(line0 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{0, 0}, {0, f[0]}}]}];\)\), "\n", 
+    \(\(line1 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{1, 0}, {1, f[1]}}]}];\)\), "\n", 
+    \(\(line2 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{2, 0}, {2, f[2]}}]}];\)\), "\n", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        Plot[f[x], {x, \(-3\), 3}, PlotStyle \[Rule] {Blue, Thickness[0.01]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(gr2\  = \ 
+        FilledPlot[{f[x]}, {x, a, b}, Fills \[Rule] {{{1, Axis}, Orange}}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[gr2, gr0, line0, line1, line2, 
+        PlotRange \[Rule] {{\(-3.1\), 3.1}, {0, 0.4}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x \[Cross] \>", 
+        v2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x = \>", 
+        v, "\< = \>", N[v]];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Find ",
+  Cell[BoxData[
+      \(\(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_2\%3 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\);\)\), "\n", 
+    \(\(a = 2\ ;\)\), "\n", 
+    \(\(b = 3\ ;\)\), "\[IndentingNewLine]", 
+    \(\(v = \(1\/\@\(2  \[Pi]\)\) \(\[Integral]\_2\%3 \[ExponentialE]\^\(\(-\ \
+x\^2\)/2\)\ \[DifferentialD]x\);\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(v3\  = \ GaussLegendre[a, b, 3];\)\), "\[IndentingNewLine]", 
+    \(\(line0 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{0, 0}, {0, f[0]}}]}];\)\), "\n", 
+    \(\(line1 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{1, 0}, {1, f[1]}}]}];\)\), "\n", 
+    \(\(line2 = 
+        Graphics[{Blue, Thickness[0.01], 
+            Line[{{2, 0}, {2, f[2]}}]}];\)\), "\n", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        Plot[f[x], {x, \(-3\), 3}, PlotStyle \[Rule] {Blue, Thickness[0.01]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(gr3\  = \ 
+        FilledPlot[{f[x]}, {x, a, b}, Fills \[Rule] {{{1, Axis}, Cyan}}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[gr3, gr0, line0, line1, line2, 
+        PlotRange \[Rule] {{\(-3.1\), 3.1}, {0, 0.4}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x \[Cross] \>", 
+        v3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\+a\%b, \*"\"\< \!\(1\/\@\(2  \[Pi]\)\)\!\(\
+\[ExponentialE]\^\(\(-x\^2\)/2\)\)\>\"", "\<\[DifferentialD]x = \>", 
+        v, "\< = \>", N[v]];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Show[gr1, gr2, gr3, gr0, line0, line1, line2, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<           \>", {v1, v2, v3}];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for Gauss-Legendre Quadrature.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use Gauss-Legendre quadrature to approximate the value of the integral. \
+ "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold"]], "Text",
+  FontWeight->"Plain",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(For[n = 2, 
+        n \[LessEqual] 5, \(n++\), \[IndentingNewLine]Q\_n = \ 
+          GaussLegendre[0, 2, 
+            n]; \[IndentingNewLine]Needs["\<Graphics`Colors`\>"]; \ \
+\[IndentingNewLine]dots = 
+          Show[Graphics[{Red, PointSize[0.02], 
+                Point /@ Transpose[{\(a + b\)\/2 + \(\(b - a\)\/2\) z, 
+                      f[Abs[\(a + b\)\/2 + \(\(b - a\)\/2\) z]]}]}], 
+            DisplayFunction \[Rule] Identity]; \[IndentingNewLine]gr = 
+          Plot[f[x], {x, 0, 2}, PlotStyle \[Rule] Magenta, 
+            DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[gr, 
+          dots, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+          DisplayFunction \[Rule] $DisplayFunction]; \
+\[IndentingNewLine]Print["\<\[Integral]\>"\+a\%b, "\<(\>", 
+          f[x], "\<)\[DifferentialD]x \[Cross] \>", "\<Q\>"\_n, "\< = \>", 
+          Q\_n];];\)\)}], "Input",
+  AnimationDisplayTime->0.371293],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendreaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendreaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadratur",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendre.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "e  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+GaussLegendre/GaussLegendre.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/gl.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/gl.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianQuadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Gauss-Legendre Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussianQuadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 322, 11, 35, "Text"],
+Cell[2101, 66, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3580, 118, 2194, 64, 163, "Text"],
+Cell[5777, 184, 39865, 1501, 233, "Text"],
+Cell[45645, 1687, 1394, 38, 246, "Text"],
+Cell[47042, 1727, 350, 10, 110, "Text"],
+Cell[47395, 1739, 681, 23, 127, "Text"],
+Cell[48079, 1764, 857, 24, 129, "Text"],
+Cell[48939, 1790, 930, 31, 72, "Text"],
+Cell[49872, 1823, 1233, 40, 91, "Text"],
+Cell[51108, 1865, 1551, 50, 110, "Text"],
+Cell[52662, 1917, 2390, 80, 167, "Text"],
+
+Cell[CellGroupData[{
+Cell[55077, 2001, 96, 2, 33, "Text"],
+Cell[55176, 2005, 111, 3, 33, "Text"],
+Cell[55290, 2010, 310, 10, 37, "Text"],
+Cell[55603, 2022, 350, 10, 51, "Text"],
+Cell[55956, 2034, 777, 18, 52, "Text"],
+Cell[56736, 2054, 715, 17, 53, "Text"],
+Cell[57454, 2073, 105, 3, 33, "Text"],
+Cell[57562, 2078, 1115, 34, 167, "Text"],
+Cell[58680, 2114, 1289, 40, 186, "Text"],
+Cell[59972, 2156, 1456, 45, 205, "Text"]
+}, Closed]],
+Cell[61443, 2204, 638, 21, 30, "Text"],
+Cell[62084, 2227, 232, 6, 33, "Text"],
+Cell[62319, 2235, 570, 17, 36, "Text"],
+Cell[62892, 2254, 567, 17, 36, "Text"],
+Cell[63462, 2273, 574, 17, 36, "Text"],
+Cell[64039, 2292, 584, 17, 36, "Text"],
+Cell[64626, 2311, 638, 21, 33, "Text"],
+Cell[65267, 2334, 736, 23, 33, "Text"],
+Cell[66006, 2359, 624, 20, 33, "Text"],
+Cell[66633, 2381, 155, 2, 33, "Text"],
+Cell[66791, 2385, 2268, 39, 470, "Input"],
+Cell[69062, 2426, 369, 11, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[69456, 2441, 124, 3, 33, "Text"],
+Cell[69583, 2446, 1981, 36, 383, "Input"],
+Cell[71567, 2484, 60, 0, 33, "Text"],
+Cell[71630, 2486, 572, 11, 112, "Input"],
+Cell[72205, 2499, 522, 15, 52, "Text"],
+Cell[72730, 2516, 1101, 22, 146, "Input"],
+Cell[73834, 2540, 97, 2, 33, "Text"],
+Cell[73934, 2544, 520, 11, 104, "Input"]
+}, Closed]],
+Cell[74469, 2558, 423, 12, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[74917, 2574, 124, 3, 33, "Text"],
+Cell[75044, 2579, 489, 8, 164, "Input"],
+Cell[75536, 2589, 932, 17, 204, "Input"],
+Cell[76471, 2608, 930, 17, 217, "Input"],
+Cell[77404, 2627, 960, 17, 217, "Input"],
+Cell[78367, 2646, 997, 18, 217, "Input"],
+Cell[79367, 2666, 86, 2, 33, "Text"]
+}, Closed]],
+Cell[79468, 2671, 396, 12, 39, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[79889, 2687, 124, 3, 33, "Text"],
+Cell[80016, 2692, 2039, 38, 386, "Input"],
+Cell[82058, 2732, 60, 0, 33, "Text"],
+Cell[82121, 2734, 572, 11, 112, "Input"],
+Cell[82696, 2747, 2341, 74, 109, "Text"],
+Cell[85040, 2823, 108, 3, 33, "Text"],
+Cell[85151, 2828, 1346, 26, 166, "Input"],
+Cell[86500, 2856, 97, 2, 33, "Text"],
+Cell[86600, 2860, 597, 12, 104, "Input"]
+}, Closed]],
+Cell[87212, 2875, 423, 12, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[87660, 2891, 124, 3, 33, "Text"],
+Cell[87787, 2896, 540, 10, 167, "Input"],
+Cell[88330, 2908, 932, 17, 204, "Input"],
+Cell[89265, 2927, 930, 17, 217, "Input"],
+Cell[90198, 2946, 960, 17, 217, "Input"],
+Cell[91161, 2965, 997, 18, 217, "Input"],
+Cell[92161, 2985, 86, 2, 33, "Text"]
+}, Closed]],
+Cell[92262, 2990, 1788, 48, 210, "Text"],
+Cell[94053, 3040, 676, 19, 58, "Text"],
+Cell[94732, 3061, 2606, 44, 470, "Input"],
+Cell[97341, 3107, 581, 13, 65, "Text"],
+
+Cell[CellGroupData[{
+Cell[97947, 3124, 124, 3, 33, "Text"],
+Cell[98074, 3129, 295, 11, 46, "Text"],
+Cell[98372, 3142, 1778, 36, 402, "Input"],
+Cell[100153, 3180, 296, 11, 46, "Text"],
+Cell[100452, 3193, 1779, 36, 402, "Input"],
+Cell[102234, 3231, 296, 11, 46, "Text"],
+Cell[102533, 3244, 1777, 36, 402, "Input"],
+Cell[104313, 3282, 215, 4, 50, "Input"]
+}, Closed]],
+Cell[104543, 3289, 311, 10, 32, "Text"],
+Cell[104857, 3301, 393, 14, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[105275, 3319, 124, 3, 33, "Text"],
+Cell[105402, 3324, 1155, 22, 243, "Input"],
+Cell[106560, 3348, 811, 26, 33, "Text"]
+}, Closed]],
+Cell[107386, 3377, 736, 23, 30, "Text"],
+Cell[108125, 3402, 713, 20, 33, "Text"],
+Cell[108841, 3424, 158, 3, 35, "Text"],
+Cell[109002, 3429, 581, 17, 33, "Text"],
+Cell[109586, 3448, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

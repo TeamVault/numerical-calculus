@@ -1,0 +1,1862 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     55186,       1670]*)
+(*NotebookOutlinePosition[     56165,       1700]*)
+(*  CellTagsIndexPosition[     56121,       1696]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Jacobi and Gauss-Seidel Iteration",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIterative schemes require time to achieve sufficient accuracy and \
+are reserved for large systems of equations where there are a majority of \
+zero elements in the matrix. Often times the algorithms are taylor-made to \
+take advantage of the special structure such as band matrices.  Practical \
+uses include applications in circuit analysis, boundary value problems and \
+partial differential equations. \n\t\n\tIteration is a popular technique \
+finding roots of equations.  Generalization of fixed point iteration can be \
+applied to systems of linear equations to produce accurate results.  The \
+method Jacobi iteration is attributed to ",
+  StyleBox[ButtonBox["Carl Jacobi",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Jacobi.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1804-1851) and Gauss-Seidel iteration is attributed to  ",
+  StyleBox[ButtonBox["Johann Carl Friedrich Gauss",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Gauss.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1777-1855) and ",
+  StyleBox[ButtonBox["Philipp Ludwig von Seidel",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Seidel.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1821-1896)."
+}], "Text"],
+
+Cell[TextData[{
+  "\tConsider that the n\[Times]n square matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " is split into three parts, the main diagonal ",
+  StyleBox["D",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ", below diagonal ",
+  StyleBox["L",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " and above diagonal ",
+  StyleBox["U",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  We have  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" = ",
+    FontFamily->"Courier New"],
+  StyleBox["D",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" - ",
+    FontFamily->"Courier New"],
+  StyleBox["L",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" - ",
+    FontFamily->"Courier New"],
+  StyleBox["U",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". \n\n",
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), \(a\_\(1, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(1, n - 2\)\), \(a\_\(1, 
+                    n - 1\)\), \(a\_\(1, n\)\)},
+              {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(2, n - 2\)\), \(a\_\(2, 
+                    n - 1\)\), \(a\_\(2, n\)\)},
+              {\(a\_\(3, 1\)\), \(a\_\(3, 2\)\), \(a\_\(3, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(3, n - 2\)\), \(a\_\(3, 
+                    n - 1\)\), \(a\_\(3, n\)\)},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {\(a\_\(n - 2, 1\)\), \(a\_\(n - 2, 2\)\), \(a\_\(n - 2, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(n - 2, n - 2\)\), \(a\_\(n - 2, 
+                    n - 1\)\), \(a\_\(n - 2, n\)\)},
+              {\(a\_\(n - 1, 1\)\), \(a\_\(n - 1, 2\)\), \(a\_\(n - 1, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(n - 1, n - 2\)\), \(a\_\(n - 1, 
+                    n - 1\)\), \(a\_\(n - 1, n\)\)},
+              {\(a\_\(n, 1\)\), \(a\_\(n, 2\)\), \(a\_\(n, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(n, n - 2\)\), \(a\_\(n, 
+                    n - 1\)\), \(a\_\(n, n\)\)}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]]],
+  " ",
+  StyleBox["=",
+    FontWeight->"Bold"],
+  " \n\n",
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(a\_\(1, 1\)\), "0", "0", "\[CenterEllipsis]", "0", "0", 
+                "0"},
+              {"0", \(a\_\(2, 2\)\), "0", "\[CenterEllipsis]", "0", "0", 
+                "0"},
+              {"0", "0", \(a\_\(3, 3\)\), "\[CenterEllipsis]", "0", "0", 
+                "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {"0", "0", "0", "\[CenterEllipsis]", \(a\_\(n - 2, n - 2\)\), 
+                "0", "0"},
+              {"0", "0", "0", "\[CenterEllipsis]", 
+                "0", \(a\_\(n - 1, n - 1\)\), "0"},
+              {"0", "0", "0", "\[CenterEllipsis]", "0", "0", \(a\_\(n, n\)\)}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]]],
+  StyleBox["-",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {"0", "0", "0", "\[CenterEllipsis]", "0", "0", "0"},
+              {\(-a\_\(2, 1\)\), "0", "0", "\[CenterEllipsis]", "0", "0", 
+                "0"},
+              {\(-a\_\(3, 1\)\), \(-a\_\(3, 2\)\), "0", "\[CenterEllipsis]", 
+                "0", "0", "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {\(-a\_\(n - 2, 1\)\), \(-a\_\(n - 2, 2\)\), \(-a\_\(n - 2, 3\)\
+\), "\[CenterEllipsis]", "0", "0", "0"},
+              {\(-a\_\(n - 1, 1\)\), \(-a\_\(n - 1, 2\)\), \(-a\_\(n - 1, 3\)\
+\), "\[CenterEllipsis]", \(-a\_\(n - 1, n - 2\)\), "0", "0"},
+              {\(-a\_\(n, 1\)\), \(-a\_\(n, 2\)\), \(-a\_\(n, 3\)\), 
+                "\[CenterEllipsis]", \(-a\_\(n, n - 2\)\), \(-a\_\(n, n - 1\)\
+\), "0"}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]]],
+  StyleBox["-",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {"0", \(-a\_\(1, 2\)\), \(-a\_\(1, 3\)\), 
+                "\[CenterEllipsis]", \(-a\_\(1, n - 2\)\), \(-a\_\(1, n - 1\)\
+\), \(-a\_\(1, n\)\)},
+              {"0", "0", \(-a\_\(2, 3\)\), 
+                "\[CenterEllipsis]", \(-a\_\(2, n - 2\)\), \(-a\_\(2, n - 1\)\
+\), \(-a\_\(2, n\)\)},
+              {"0", "0", "0", 
+                "\[CenterEllipsis]", \(-a\_\(3, n - 2\)\), \(-a\_\(3, n - 1\)\
+\), \(-a\_\(3, n\)\)},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[DescendingEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {"0", "0", "0", "\[CenterEllipsis]", 
+                "0", \(-a\_\(n - 2, n - 1\)\), \(-a\_\(n - 2, n\)\)},
+              {"0", "0", "0", "\[CenterEllipsis]", "0", 
+                "0", \(-a\_\(n - 1, n\)\)},
+              {"0", "0", "0", "\[CenterEllipsis]", "0", "0", "0"}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Diagonally Dominant).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  is strictly diagonally dominant if \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(i, i\)\)\(|\)\(\ \)\(\(>\)\(\ \)\)\)\)]],
+  Cell[BoxData[
+      \(\[Sum]\+\(j = 1\)\%\(i - 1\)\)]],
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(i, j\)\)\(|\)\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \ \)\(+\ \ \[Sum]\+\(j = i + 1\)\%n\)\)\)]],
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(i, j\)\)\(|\)\)\)]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Jacobi Iteration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/JacobiMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The solution to the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  can be obtained starting with  ",
+  Cell[BoxData[
+      StyleBox[\(P\_0\),
+        FontWeight->"Bold"]]],
+  ", and using iteration scheme \n\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_\(k + 1\)\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", " ", 
+        StyleBox[\(M\_J\ P\_k + C\_J\),
+          FontWeight->"Bold"]}]]],
+  "  \nwhere  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(M\_J\),
+          FontWeight->"Bold"], "=", " ", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], \(-1\)], 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["L",
+                FontWeight->"Bold"], "+", 
+              StyleBox["U",
+                FontWeight->"Bold"]}], ")"}]}]}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(C\_J\),
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], \(-1\)], 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\nIf  ",
+  Cell[BoxData[
+      StyleBox[\(P\_0\),
+        FontWeight->"Bold"]]],
+  " is carefully chosen a sequence ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        StyleBox[\(P\_k\),
+          FontWeight->"Bold"], "}"}]]],
+  " is generated which converges to the solution  ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  ",  i.e.  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AP",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ".  \nA sufficient condition for the method to be applicable is that ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is strictly diagonally dominant or diagonally dominant and irreducible.  \
+"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussSeidelProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussSeidelProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Gauss-SeidelMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The solution to the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  can be obtained starting with  ",
+  Cell[BoxData[
+      StyleBox[\(P\_0\),
+        FontWeight->"Bold"]]],
+  ", and using iteration scheme \n\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_\(k + 1\)\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", " ", 
+        StyleBox[\(M\_S\ P\_k + C\_S\),
+          FontWeight->"Bold"]}]]],
+  "  \nwhere  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(M\_S\),
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            RowBox[{"(", 
+              StyleBox[\(D - L\),
+                FontWeight->"Bold"], ")"}], \(-1\)], 
+          StyleBox["U",
+            FontWeight->"Bold"]}]}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(C\_S\),
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            RowBox[{"(", 
+              StyleBox[\(D - L\),
+                FontWeight->"Bold"], ")"}], \(-1\)], 
+          StyleBox["B",
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\nIf  ",
+  Cell[BoxData[
+      StyleBox[\(P\_0\),
+        FontWeight->"Bold"]]],
+  " is carefully chosen a sequence ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        StyleBox[\(P\_k\),
+          FontWeight->"Bold"], "}"}]]],
+  " is generated which converges to the solution  ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  ",  i.e.  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AP",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ".  \nA sufficient condition for the method to be applicable is that ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is strictly diagonally dominant or diagonally dominant and irreducible. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussSeidelProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussSeidelProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussSeidelProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussSeidelProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Jacobi Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Jacobi[A0_, B0_, P0_, 
+          max_] := \[IndentingNewLine]Module[{A = N[A0], B = N[B0], i, j, 
+            k = 0, n = Length[P0], P = P0, 
+            Pold = P0}, \ \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+            P]; \ \[IndentingNewLine]While[\ 
+            k < max, \[IndentingNewLine]For[\ i = 1, 
+              i \[LessEqual] 
+                n, \(i++\), \
+\[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(1\/A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\)\) \((B\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)\ Pold\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ Pold\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\ ]; \ \
+\[IndentingNewLine]Print["\<P\>"\_\(k + 1\), "\< = \>", 
+              P]; \ \[IndentingNewLine]Pold\  = \ 
+              P; \ \[IndentingNewLine]k\  = \ 
+              k + 1;\ ]; \ \[IndentingNewLine]Return[
+            P];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Gauss-Seidel Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(GaussSeidel[A0_, B0_, P0_, 
+          max_] := \[IndentingNewLine]Module[{A = N[A0], B = N[B0], i, j, 
+            k = 0, n = Length[P0], 
+            P = P0}, \ \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+            P]; \ \[IndentingNewLine]While[\ 
+            k < max, \[IndentingNewLine]For[\ i = 1, 
+              i \[LessEqual] 
+                n, \(i++\), \
+\[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(1\/A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\)\) \((B\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)\ P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\ ]; \ \
+\[IndentingNewLine]Print["\<P\>"\_\(k + 1\), "\< = \>", 
+              P]; \ \[IndentingNewLine]k\  = \ 
+              k + 1;\ ]; \ \[IndentingNewLine]Return[
+            P];];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use Jacobi iteration to solve the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"3"},
+                {\(-2\)},
+                {"5"},
+                {"4"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {3, -2, 5, 4}]]}]]],
+  ".  \nTry 10, 20 and 30 iterations.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " and starting vector ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(B\  = \ {3, \(-2\), 5, 4};\), 
+      "  "}], "\[IndentingNewLine]", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \
+\*"\"\<\!\(x\_2\)\>\"", \*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\
+\[IndentingNewLine]", \(Print["\<Solve the system\>"];\), \
+"\[IndentingNewLine]", \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Use 10 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 10];\)\ \ \)}], "Input"],
+
+Cell["Determine if the method has converged.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\(\ \ \)\)\)], "Input"],
+
+Cell["Use 20 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 20];\)\ \ \)}], "Input"],
+
+Cell["Determine if the method has converged.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\(\ \ \)\)\)], "Input"],
+
+Cell["Use 30 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 30];\)\ \ \)}], "Input"],
+
+Cell["Determine if the method has converged.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use Jacobi iteration to attempt solving the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", "8", "3", "1"},
+                {"0", "2", \(-1\), "4"},
+                {"7", \(-2\), "1", "2"},
+                {\(-1\), "0", "5", "2"}
+                }], "\[NoBreak]", ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(-2\)},
+                {"4"},
+                {"3"},
+                {"5"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {-2, 4, 3, 5}]]}]]],
+  ".\nTry 10 iterations.  \nObserve that something is not working.  In \
+example 5 we will check to see if this matrix is diagonally dominant.   "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " and starting vector ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"2", "8", "3", "1"},
+                  {"0", "2", \(-1\), "4"},
+                  {"7", \(-2\), "1", "2"},
+                  {\(-1\), "0", "5", "2"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], "  "}], "\n", 
+    RowBox[{\(B\  = {\(-2\), 4, 3, 5};\), 
+      " "}], "\[IndentingNewLine]", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\
+\!\(x\_2\)\>\"", \*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\
+\[IndentingNewLine]", \(Print["\<Solve the system\>"];\), \
+"\[IndentingNewLine]", \(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Use 10 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {\(-1\), 1, 0, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 10];\)\ \)}], "Input"],
+
+Cell["Determine if the method has converged.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\(\ \ \)\)\)], "Input"],
+
+Cell["Was a solution found ?  Why ?", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\)], "Input"],
+
+Cell[TextData[{
+  "The matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is not diagonally dominant !"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use Gauss-Seidel iteration to solve the linear system",
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"3"},
+                {\(-2\)},
+                {"5"},
+                {"4"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {3, -2, 5, 4}]]}]]],
+  ".  ",
+  "\nTry 10, 20 iterations.  Compare the speed of convergence with Jacobi \
+iteration. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " and starting vector ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(B\  = \ {3, \(-2\), 5, 4};\), 
+      " "}], "\n", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\!\(x\_2\)\>\"", \
+\*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\[IndentingNewLine]", \
+\(Print["\<Solve the system\>"];\), "\[IndentingNewLine]", \(Print[
+        MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Use 10 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 10];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = GaussSeidel[A, B, P, 10];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell["Use 20 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = GaussSeidel[A, B, P, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Which method converges faster ?  Were all the iterations necessary \
+?  Why ? \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use Gauss-Seidel iteration to attempt solving the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2", "8", "3", "1"},
+                {"0", "2", \(-1\), "4"},
+                {"7", \(-2\), "1", "2"},
+                {\(-1\), "0", "5", "2"}
+                }], "\[NoBreak]", ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(-2\)},
+                {"4"},
+                {"3"},
+                {"5"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {-2, 4, 3, 5}]]}]]],
+  ".\nTry 10 iterations.  \nObserve that something is not working.  In \
+example 5 we will check to see if this matrix is diagonally dominant.   "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " and starting vector ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"2", "8", "3", "1"},
+                  {"0", "2", \(-1\), "4"},
+                  {"7", \(-2\), "1", "2"},
+                  {\(-1\), "0", "5", "2"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}], "\n", 
+    RowBox[{\(B\  = {\(-2\), 4, 3, 5};\), 
+      " "}], "\n", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\!\(x\_2\)\>\"", \
+\*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\[IndentingNewLine]", \
+\(Print["\<Solve the system\>"];\), "\[IndentingNewLine]", \(Print[
+        MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell["Use 10 iterations.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(P\  = {\(-1\), 1, 0, 1}; \ 
+    X = GaussSeidel[A, B, P, 10];\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell["Was a solution found ?  Why ?", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\)], "Input"],
+
+Cell[TextData[{
+  "The matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is not diagonally dominant !"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\tIteration does not always converge.  A sufficient condition for \
+iteration to Jacobi iteration to converge is that ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is strictly diagonally  dominant. The following subroutine will check to \
+see if a matrix is strictly diagonally dominant.  It should be used before \
+any call to Jacobi iteration or Gauss-Seidel iteration is made.  There exists \
+a counter-example for which Jacobi iteration converges and Gauss-Seidel \
+iteration does not converge.  The \"true\" sufficient condition for Jacobi \
+iteration to converge is that the \"spectral radius\" of   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], \(-1\)], 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], "-", 
+              StyleBox["D",
+                FontWeight->"Bold"]}], ")"}]}]}]]],
+  "  is less than 1, where  ",
+  Cell[BoxData[
+      StyleBox["D",
+        FontWeight->"Bold"]]],
+  " is the diagonal of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  That is, the magnitude of the largest eigenvalue of ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " must be less than 1.  This condition seems harsh because numerical \
+computation of eigenvalues is an advanced topic compared to solution of a \
+linear system.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Dominant[
+          A_] := \[IndentingNewLine]Module[{cond = 1, 
+            n = Length[A]}, \[IndentingNewLine]For[\ i = 1, \ 
+            i \[LessEqual] 
+              n, \ \(i++\), \[IndentingNewLine]\(If[\ \[Sum]\+\(j = 1\)\%n 
+                      Abs[A\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)] > 
+                  2\ Abs[A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)], \(cond = 0;\)\ ];\)\ ]; \[IndentingNewLine]If[\ 
+            cond \[Equal] 
+              1, \[IndentingNewLine]Print["\<The matrix IS strictly \
+diagonally dominant.\>"]; \[IndentingNewLine]Print["\<Jacobi iteration should \
+converge.\>"];\ , \[IndentingNewLine]Print["\<The matrix is NOT strictly \
+diagonally dominant.\>"]; \[IndentingNewLine]Print["\<Jacobi iteration will \
+FAIL !\>"];\ \ ];\ \ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 5",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Test the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " of Examples 2 and 4 to see if ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " is strictly diagonally dominant. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"2", "8", "3", "1"},
+                  {"0", "2", \(-1\), "4"},
+                  {"7", \(-2\), "1", "2"},
+                  {\(-1\), "0", "5", "2"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}], "\n", 
+    RowBox[{\(Dominant[A];\), " "}]}], "Input"],
+
+Cell[TextData[StyleBox["We are done !",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " We can use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem subroutine and actually find the spectral radius of  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], \(-1\)], 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], "-", 
+              StyleBox["D",
+                FontWeight->"Bold"]}], ")"}]}]}]]],
+  "  is less than 1.    This is just for fun."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d = 
+        DiagonalMatrix[
+          Table[A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\), {i, Length[A]}]];\)\ \), "\n", 
+    \(\(M = Abs[Inverse[d] . \((A - d)\)];\)\ \), "\n", 
+    \(Eigenvalues[N[M]]\ \ \), "\[IndentingNewLine]", 
+    \(Abs[Eigenvalues[N[M]]]\ \ \), "\[IndentingNewLine]", 
+    \(Max[Abs[Eigenvalues[N[M]]]]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the spectral radius is  ",
+  Cell[BoxData[
+      \(5.37399 > 1\)]],
+  ",  iteration in Example 4 will not converge."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Test the matrix of Example 1.\n\nThis is just for fun."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Dominant[A];\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Test the matrix of Example 1to see if the spectral radius of  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], \(-1\)], 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], "-", 
+              StyleBox["D",
+                FontWeight->"Bold"]}], ")"}]}]}]]],
+  "  is less than 1.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(d = 
+        DiagonalMatrix[
+          Table[A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\), {i, Length[A]}]];\)\ \), "\n", 
+    \(\(M = Abs[Inverse[d] . \((A - d)\)];\)\ \), "\n", 
+    \(Eigenvalues[N[M]]\ \ \), "\[IndentingNewLine]", 
+    \(Abs[Eigenvalues[N[M]]]\ \ \), "\[IndentingNewLine]", 
+    \(Max[Abs[Eigenvalues[N[M]]]]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Since the spectral radius is  ",
+  Cell[BoxData[
+      \(0.702014 < 1\)]],
+  ",  iteration in Example 1 will converge."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["More efficient subroutines",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA tolerance can be supplied to either the Jacobi or Gauss-Seidel \
+method which will permit it to exit the loop if convergence has been \
+achieved.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussSeidelProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussSeidelProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Jacobi Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Jacobi[A0_, B0_, P0_, \[Epsilon]_, 
+          max_] := \[IndentingNewLine]Module[{A = N[A0], B = N[B0], e, i, j, 
+            k = 0, n = Length[P0], P = P0, 
+            Pold = P0}, \ \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+            P]; \ \[IndentingNewLine]e = 1; \ \[IndentingNewLine]While[\ 
+            And[\ k < max, e > \[Epsilon]\ ], \[IndentingNewLine]For[\ i = 1, 
+              i \[LessEqual] 
+                n, \(i++\), \
+\[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(1\/A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\)\) \((B\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)\ Pold\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ Pold\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\ ]; \ \
+\[IndentingNewLine]e = \@\(\((P - Pold)\) . \((P - Pold)\)\); \ \
+\[IndentingNewLine]Print["\<P\>"\_\(k + 1\), "\< = \>", 
+              P]; \ \[IndentingNewLine]Pold = P; \ \[IndentingNewLine]k = 
+              k + 1]; \ \[IndentingNewLine]Return[
+            P];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Gauss-Seidel Iteration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(GaussSeidel[A0_, B0_, P0_, \[Epsilon]_, 
+          max_] := \[IndentingNewLine]Module[{A = N[A0], B = N[B0], e, i, j, 
+            k = 0, n = Length[P0], P = P0, 
+            Pold = P0}, \ \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+            P]; \ \[IndentingNewLine]e = 1; \ \[IndentingNewLine]While[\ 
+            And[\ k < max, e > \[Epsilon]\ ], \[IndentingNewLine]Pold = 
+              P; \ \[IndentingNewLine]For[\ i = 1, 
+              i \[LessEqual] 
+                n, \(i++\), \
+\[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(1\/A\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\)\) \((B\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\)\ P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\ ]; \ \
+\[IndentingNewLine]e = \@\(\((P - Pold)\) . \((P - Pold)\)\); \ \
+\[IndentingNewLine]Print["\<P\>"\_\(k + 1\), "\< = \>", 
+              P]; \ \[IndentingNewLine]k = 
+              k + 1]; \ \[IndentingNewLine]Return[
+            P];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use Jacobi and Gauss-Seidel iteration to solve the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"3"},
+                {\(-2\)},
+                {"5"},
+                {"4"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {3, -2, 5, 4}]]}]]],
+  ".  \nUse a tolerance of  ",
+  Cell[BoxData[
+      \(10\^\(-6\)\)]],
+  "  and a maximum of  50  iterations."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " and starting vector ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(B\  = \ {3, \(-2\), 5, 4};\), 
+      " "}], "\n", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\!\(x\_2\)\>\"", \
+\*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\[IndentingNewLine]", \
+\(Print["\<Solve the system\>"];\), "\[IndentingNewLine]", \(Print[
+        MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = Jacobi[A, B, P, 0.000001, 50];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell["How many iterations did Jacobi iteration use ?", "Text"],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        GaussSeidel[A, B, P, 0.000001, 50];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"],
+
+Cell["How many iterations did Gauss-Seidel iteration use ?", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Subroutines using matrix commands",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIn the Jacobi subroutine we can use fix point iteration as suggested \
+by the theory.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Jacobi Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(JacobiFP[A0_, B0_, P0_, 
+          max_] := \[IndentingNewLine]Module[{A = N[A0], B = N[B0], i, k = 0, 
+            n = Length[P0], 
+            P = P0}, \ \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+            P]; \ \[IndentingNewLine]d = 
+            DiagonalMatrix[
+              Table[A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\), {i, Length[A]}]]; \ \ \[IndentingNewLine]M = \(-\ 
+              Inverse[d] . \((A - d)\)\); \ \ \[IndentingNewLine]c = 
+            Inverse[d] . \((B)\); \ \ \ \[IndentingNewLine]For[k = 1, 
+            k \[LessEqual] max, \(k++\), \[IndentingNewLine]P = 
+              c + M . P; \ \ \[IndentingNewLine]Print["\<P\>"\_\(k + 1\), "\< \
+= \>", P];\ \ ]; \ \[IndentingNewLine]Return[P];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use the fixed point version of Jacobi iteration to solve the linear \
+system",
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4]}]]}], " ", "=", " ", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"3"},
+                {\(-2\)},
+                {"5"},
+                {"4"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {3, -2, 5, 4}]]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          RowBox[{"(", GridBox[{
+                {"7", \(-2\), "1", "2"},
+                {"2", "8", "3", "1"},
+                {\(-1\), "0", "5", "2"},
+                {"0", "2", \(-1\), "4"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(B\  = \ {3, \(-2\), 5, 4};\), 
+      " "}], "\n", \(vars = {\*"\"\<\!\(x\_1\)\>\"", \*"\"\<\!\(x\_2\)\>\"", \
+\*"\"\<\!\(x\_3\)\>\"", \*"\"\<\!\(x\_4\)\>\""};\), "\[IndentingNewLine]", \
+\(Print["\<Solve the system\>"];\), "\[IndentingNewLine]", \(Print[
+        MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(P\  = {0, \(-1\), 1, 1};\)\ \), "\[IndentingNewLine]", 
+    \(\(X = JacobiFP[A, B, P, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A X = \>", MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[B], "\< = B\>"];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/GaussSeidelBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Jacobi and Gauss-Seidel Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussSeidelBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Raphson", "solset", "Steffensen's", "Steffensen", 
+    "Aitken's", "Aitken", "eqn"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 186, 4, 35, "Text"],
+Cell[1965, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3444, 111, 1566, 37, 182, "Text"],
+Cell[5013, 150, 5890, 141, 298, "Text"],
+Cell[10906, 293, 1489, 47, 71, "Text"],
+Cell[12398, 342, 2607, 91, 185, "Text"],
+Cell[15008, 435, 652, 21, 33, "Text"],
+Cell[15663, 458, 2564, 88, 185, "Text"],
+Cell[18230, 548, 652, 21, 33, "Text"],
+Cell[18885, 571, 638, 20, 33, "Text"],
+Cell[19526, 593, 332, 10, 33, "Text"],
+Cell[19861, 605, 1221, 22, 244, "Input"],
+Cell[21085, 629, 338, 10, 33, "Text"],
+Cell[21426, 641, 1157, 21, 224, "Input"],
+Cell[22586, 664, 1236, 39, 92, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[23847, 707, 101, 2, 33, "Text"],
+Cell[23951, 711, 269, 13, 33, "Text",
+  Evaluatable->False],
+Cell[24223, 726, 688, 15, 158, "Input"],
+Cell[24914, 743, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[24999, 747, 133, 2, 50, "Input"],
+Cell[25135, 751, 104, 2, 33, "Text",
+  Evaluatable->False],
+Cell[25242, 755, 147, 2, 30, "Input"],
+Cell[25392, 759, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[25477, 763, 133, 2, 50, "Input"],
+Cell[25613, 767, 104, 2, 33, "Text",
+  Evaluatable->False],
+Cell[25720, 771, 147, 2, 30, "Input"],
+Cell[25870, 775, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[25955, 779, 133, 2, 50, "Input"],
+Cell[26091, 783, 104, 2, 33, "Text",
+  Evaluatable->False],
+Cell[26198, 787, 147, 2, 30, "Input"]
+}, Closed]],
+Cell[26360, 792, 1380, 40, 108, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[27765, 836, 101, 2, 33, "Text"],
+Cell[27869, 840, 269, 13, 33, "Text",
+  Evaluatable->False],
+Cell[28141, 855, 776, 17, 158, "Input"],
+Cell[28920, 874, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[29005, 878, 129, 2, 50, "Input"],
+Cell[29137, 882, 104, 2, 33, "Text",
+  Evaluatable->False],
+Cell[29244, 886, 147, 2, 30, "Input"],
+Cell[29394, 890, 93, 2, 33, "Text",
+  Evaluatable->False],
+Cell[29490, 894, 70, 1, 30, "Input"],
+Cell[29563, 897, 167, 7, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[29745, 907, 1305, 42, 89, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[31075, 953, 101, 2, 33, "Text"],
+Cell[31179, 957, 269, 13, 33, "Text",
+  Evaluatable->False],
+Cell[31451, 972, 677, 15, 158, "Input"],
+Cell[32131, 989, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[32216, 993, 269, 4, 70, "Input"],
+Cell[32488, 999, 274, 4, 70, "Input"],
+Cell[32765, 1005, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[32850, 1009, 269, 4, 70, "Input"],
+Cell[33122, 1015, 274, 4, 70, "Input"],
+Cell[33399, 1021, 150, 5, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[33564, 1029, 1385, 40, 108, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[34974, 1073, 101, 2, 33, "Text"],
+Cell[35078, 1077, 269, 13, 33, "Text",
+  Evaluatable->False],
+Cell[35350, 1092, 765, 17, 158, "Input"],
+Cell[36118, 1111, 82, 2, 33, "Text",
+  Evaluatable->False],
+Cell[36203, 1115, 238, 4, 50, "Input"],
+Cell[36444, 1121, 93, 2, 33, "Text",
+  Evaluatable->False],
+Cell[36540, 1125, 70, 1, 30, "Input"],
+Cell[36613, 1128, 167, 7, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[36795, 1138, 1604, 42, 144, "Text"],
+Cell[38402, 1182, 874, 15, 218, "Input"],
+Cell[39279, 1199, 380, 15, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[39684, 1218, 101, 2, 33, "Text"],
+Cell[39788, 1222, 455, 12, 98, "Input"],
+Cell[40246, 1236, 103, 2, 33, "Text"],
+Cell[40352, 1240, 698, 23, 33, "Text"],
+Cell[41053, 1265, 391, 8, 110, "Input"],
+Cell[41447, 1275, 153, 5, 33, "Text"],
+Cell[41603, 1282, 168, 5, 71, "Text"],
+Cell[41774, 1289, 369, 10, 98, "Input"],
+Cell[42146, 1301, 601, 20, 33, "Text"],
+Cell[42750, 1323, 391, 8, 110, "Input"],
+Cell[43144, 1333, 150, 5, 33, "Text"]
+}, Closed]],
+Cell[43309, 1341, 325, 8, 68, "Text"],
+Cell[43637, 1351, 638, 20, 33, "Text"],
+Cell[44278, 1373, 146, 2, 33, "Text"],
+Cell[44427, 1377, 1330, 22, 286, "Input"],
+Cell[45760, 1401, 338, 10, 33, "Text"],
+Cell[46101, 1413, 1344, 23, 286, "Input"],
+Cell[47448, 1438, 1323, 42, 92, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[48796, 1484, 101, 2, 33, "Text"],
+Cell[48900, 1488, 269, 13, 33, "Text",
+  Evaluatable->False],
+Cell[49172, 1503, 677, 15, 158, "Input"],
+Cell[49852, 1520, 279, 4, 70, "Input"],
+Cell[50134, 1526, 62, 0, 33, "Text"],
+Cell[50199, 1528, 293, 5, 70, "Input"],
+Cell[50495, 1535, 68, 0, 33, "Text"]
+}, Closed]],
+Cell[50578, 1538, 270, 7, 68, "Text"],
+Cell[50851, 1547, 146, 2, 33, "Text"],
+Cell[51000, 1551, 801, 13, 210, "Input"],
+Cell[51804, 1566, 1238, 41, 73, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[53067, 1611, 101, 2, 33, "Text"],
+Cell[53171, 1615, 677, 15, 158, "Input"],
+Cell[53851, 1632, 271, 4, 70, "Input"]
+}, Closed]],
+Cell[54137, 1639, 158, 3, 32, "Text"],
+Cell[54298, 1644, 588, 16, 33, "Text"],
+Cell[54889, 1662, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

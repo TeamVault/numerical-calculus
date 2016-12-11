@@ -1,0 +1,2093 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     71651,       1904]*)
+(*NotebookOutlinePosition[     72344,       1928]*)
+(*  CellTagsIndexPosition[     72300,       1924]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Cubic Spline Quadrature",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["Background for Cubic Spline.\n",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\tSuppose that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\((x\_k, y\_k)\)}\_\(k = 0\)\%n\)]],
+  "  are  n+1  points, where  ",
+  Cell[BoxData[
+      \(a = \(\(x\_0 < x\_0 <  ... \) < x\_n = b\)\)]],
+  StyleBox[".  The function  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  "  ",
+  StyleBox["is called a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["cubic spline",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/CubicSpline.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" if there exists  n  cubic polynomials  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(S\_k\) \((x)\)\)]],
+  StyleBox["  with coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(s\_\(k, 0\)\), ",", \(s\_\(k, 1\)\), ",", \(s\_\(k, 2\)\), 
+        ",", " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  ", \(s\_\(k, 3\)\)}]}]]],
+  StyleBox["  that satisfy the properties:\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["I.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S \((x)\)\  = \ \(S\_k\) \((x)\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(\(=\)\(\ \)\(s\_\(k, 0\) + \(s\_\(k, 1\)\) \((x - 
+                x\_k)\) + \(s\_\(k, 2\)\) \((x - x\_k)\)\^2 + \(s\_\(k, 
+                3\)\) \((x - x\_k)\)\^3\)\)\)\)]],
+  "  \n\t",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"x", "\[Element]", 
+            RowBox[{\([x\_k, x\_\(k + 1\)]\), "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", "k"}]}], "=", "0"}], 
+        ",", "1", ",", "...", ",", \(n - 1\)}]]],
+  StyleBox[".  \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["II.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S \((x\_k)\)\  = \ y\_k\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = 0, 1,  ... , n\)]],
+  StyleBox[".  \n\tThe spline passes through each data point.",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["III.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(S\_k\) \((x\_\(k + 1\))\) = \(S\_\(k + 
+                1\)\) \((x\_\(k + 1\))\)\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = 0, 1,  ... , n - 2\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["\tThe spline forms a continuous function over [a,b].\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["IV.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(S\_k\%'\) \((x\_\(k + 1\))\) = \(S\_\(k + 
+                1\)\%'\) \((x\_\(k + 1\))\)\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = 0, 1,  ... , n - 2\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["\tThe spline forms a smooth function.\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["IV.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(S\_k\%''\) \((x\_\(k + 1\))\) = \(S\_\(k + 
+                1\)\%''\) \((x\_\(k + 1\))\)\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = 0, 1,  ... , n - 2\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["\tThe second derivative is continuous.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Natural Spline.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  There exists a unique cubic spline with the free boundary \
+conditions  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S'' \((a)\) = 0\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S'' \((b)\) = 0\)]],
+  ". ",
+  StyleBox[" \n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["Cubic Spline Quadrature.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Integrate the natural cubic spline over the interval [a,b]. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/SplineQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SplineQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Natural Cubic Spline.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To construct and evaluate the cubic spline interpolant ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  StyleBox[" for the  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n + 1\)]],
+  StyleBox[" data points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\((x\_0, y\_0)\), \((x\_1, y\_1)\),  ... , \((x\_n, y\_n)\)\)]],
+  ",  using the ",
+  StyleBox["free boundary conditions  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S'' \((a)\) = 0\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S'' \((b)\) = 0\)]],
+  ". ",
+  StyleBox[" Then integrate the natural cubic spline for a quadrature method. \
+",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/Spline/\
+Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Spline/\
+Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/SplineQuadProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SplineQuadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Natural Cubic Spline",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell["Execute the following large group of cells:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(NaturalSpline[XY0_] := 
+        Module[{XY = XY0}, \ \[IndentingNewLine]Differences := \ 
+            Module[{k}, \ \[IndentingNewLine]n\  = \ 
+                Length[XY] - 
+                  1; \ \[IndentingNewLine]X\  = \ \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]Y\  = \ \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\
+\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]h = \(d\  = \ 
+                  Table[0, {n}]\); \ \[IndentingNewLine]m\  = \ 
+                Table[0, {n + 
+                      1}]; \ \[IndentingNewLine]a = \(b = \(c = \(v\  = \ 
+                      Table[0, {n - 1}]\)\)\); \ \[IndentingNewLine]s\  = \ 
+                Table[0, {n}, {4}]; \ \[IndentingNewLine]h\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                X\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\
+\  - \ X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\  = \ \(Y\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\  - \
+\ Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)\/h\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ k = 2, \ 
+                k \[LessEqual] 
+                  n, \ \(k++\), \ \[IndentingNewLine]h\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ 
+                    X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\
+\)\); \ \[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\  = \ \(Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)\/h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]a\_\(\(\[LeftDoubleBracket]\)\
+\(k - 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\); \ \[IndentingNewLine]b\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  2\ \((h\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\  + \ 
+                        h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\))\); \ \
+\[IndentingNewLine]c\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\); \ \[IndentingNewLine]v\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  6\ \((d\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\  - \ 
+                        d\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\))\)];\ ]; \ \n
+          TriDiagonal := 
+            Module[{k, 
+                t}, \ \[IndentingNewLine]m\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                0; \ \[IndentingNewLine]m\_\(\(\[LeftDoubleBracket]\)\(n + \
+1\)\(\[RightDoubleBracket]\)\)\  = \ 0; \[IndentingNewLine]For[\ k = 2, \ 
+                k \[LessEqual] n - 1, \ \(k++\), \ \[IndentingNewLine]t\  = \ 
+                  a\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\/b\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]b\_\(\(\[LeftDoubleBracket]\)\
+\(k\)\(\[RightDoubleBracket]\)\)\ \  = \ \ b\_\(\(\[LeftDoubleBracket]\)\(k\)\
+\(\[RightDoubleBracket]\)\)\  - \ 
+                    t\ \ c\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]v\_\(\(\[LeftDoubleBracket]\)\
+\(k\)\(\[RightDoubleBracket]\)\)\ \  = \ \ v\_\(\(\[LeftDoubleBracket]\)\(k\)\
+\(\[RightDoubleBracket]\)\)\  - \ 
+                    t\ \ v\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\);\ ]; \ \[IndentingNewLine]m\_\(\(\
+\[LeftDoubleBracket]\)\(n\)\(\[RightDoubleBracket]\)\)\ \  = \ \ v\_\(\(\
+\[LeftDoubleBracket]\)\(n - 1\)\(\[RightDoubleBracket]\)\)\/b\_\(\(\
+\[LeftDoubleBracket]\)\(n - 1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ k = n - 2, \ 
+                1 \[LessEqual] 
+                  k, \ \(k--\), \ \[IndentingNewLine]\(m\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ \(v\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\  - \ c\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ m\_\(\(\
+\[LeftDoubleBracket]\)\(k + 2\)\(\[RightDoubleBracket]\)\)\)\/b\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\);\)\ ];\ ]; \ \n
+          ComputeCoeff := 
+            Module[{k}, \ \[IndentingNewLine]\(For[\ k = 1, \ 
+                  k \[LessEqual] 
+                    n, \ \(k++\), \ \[IndentingNewLine]s\_\(\(\
+\[LeftDoubleBracket]\)\(k, 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\
+\)\); \ \[IndentingNewLine]s\_\(\(\[LeftDoubleBracket]\)\(k, 2\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                    d\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\
+\)\)\  - \ 
+                      1\/6\ h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\ \((2\ m\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\) + 
+                            m\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\))\); \ \
+\[IndentingNewLine]s\_\(\(\[LeftDoubleBracket]\)\(k, 3\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                    m\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\
+\)\)\/2; \ \[IndentingNewLine]s\_\(\(\[LeftDoubleBracket]\)\(k, 4\)\(\
+\[RightDoubleBracket]\)\)\  = \ \(m\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ m\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\)\/\(6\ h\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)\);\ ];\)\ ]; \ \n
+          CS[t_] := Module[{j}, \ \[IndentingNewLine]For[\ j = 1, \ 
+                j \[LessEqual] 
+                  n, \ \(j++\), \ \[IndentingNewLine]\(If[\ 
+                    X\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) \[LessEqual] t\  && \ 
+                      t < X\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\), k = j\ ];\)\ ]; \ \[IndentingNewLine]If[
+                t < X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), k = 1\ ]; \ \[IndentingNewLine]If[
+                X\_\(\(\[LeftDoubleBracket]\)\(n + 1\)\(\[RightDoubleBracket]\
+\)\) \[LessEqual] t, k = n\ ]; \ \[IndentingNewLine]w\  = \ 
+                t\  - \ 
+                  X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\); \ \[IndentingNewLine]Return[\ \((\((s\_\(\(\[LeftDoubleBracket]\)\(k, 4\)\
+\(\[RightDoubleBracket]\)\)\ w + 
+                              s\_\(\(\[LeftDoubleBracket]\)\(k, 3\)\(\
+\[RightDoubleBracket]\)\))\)\ w + 
+                        s\_\(\(\[LeftDoubleBracket]\)\(k, 2\)\(\
+\[RightDoubleBracket]\)\))\)\ w + 
+                  s\_\(\(\[LeftDoubleBracket]\)\(k, \
+1\)\(\[RightDoubleBracket]\)\)\ ];\ ]; \ \[IndentingNewLine]Differences; \ \
+\[IndentingNewLine]TriDiagonal; \ \[IndentingNewLine]ComputeCoeff;\ ];\)\ \
+\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(\(CubicSplineQuad[a0_, b0_, m0_] := 
+        Module[{a = a0, b = b0, i, m = m0, Z}, \ \[IndentingNewLine]Z\_i_ := 
+            a + i\ \(b - a\)\/m; \ \[IndentingNewLine]pts\  = \ 
+            Table[{Z\_i, f[Z\_i]}, {i, 0, 
+                m}]; \ \[IndentingNewLine]NaturalSpline[
+            pts]; \[IndentingNewLine]Return[\ \[Sum]\+\(i = 1\)\%m\[Integral]\
+\_\(Z\_i\)\%\(Z\_\(i + 1\)\)\((\((\((s\_\(\(\[LeftDoubleBracket]\)\(i, 4\)\(\
+\[RightDoubleBracket]\)\)\ \((t\  - \ Z\_i)\) + 
+                                  s\_\(\(\[LeftDoubleBracket]\)\(i, 3\)\(\
+\[RightDoubleBracket]\)\))\)\ \((t\  - \ Z\_i)\) + 
+                            s\_\(\(\[LeftDoubleBracket]\)\(i, 2\)\(\
+\[RightDoubleBracket]\)\))\)\ \((t\  - \ Z\_i)\) + 
+                      s\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\
+\[RightDoubleBracket]\)\))\) \[DifferentialD]t\ ];\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate cubic spline quadrature for approximating the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0.0\%1.25 Cos[x\^2] \[DifferentialD]x\)]],
+  ".  \nUse  11, 21, 41 and 81 nodes.  Compare with the analytic or \"true \
+value\" of the integral. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 1.25]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 11 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(m0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl = Table[{i, i}, {i, 1, 4}];\)\), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%1.25\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 21 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%1.25\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\  = \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%1.25\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(m0 = 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%1.25\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Compare the results from parts b-d."
+}], "Text"]
+}, Open  ]],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"tbl2", "=", 
+        RowBox[{"(", GridBox[{
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(1, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(2, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(3, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(4, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl2, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+            TableSpacing \[Rule] {2, 1}]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral",
+  ", i.e. the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%\(5/4\)Cos[
+              x\^2] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<F[\!\(5\/4\)] = \>\"", 
+        F[5\/4]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x = \>\"", analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  cubic  spline quadrature \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<using \>", 
+      tbl\_\(\(\[LeftDoubleBracket]\)\(4, 1\)\(\[RightDoubleBracket]\)\), "\< \
+nodes in the cubic spline\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use cubic spline quadrature to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\ \((14  x - 
+              11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                x\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[\(-0.5\), 2, 2]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 11 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(m0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl = Table[{i, i}, {i, 1, 4}];\)\), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 21 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(Z\_i_ := a0 + i\ \(b0 - a0\)\/m0;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(m0 = 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Compare the results from parts b-d."
+}], "Text"]
+}, Open  ]],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"tbl2", "=", 
+        RowBox[{"(", GridBox[{
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(1, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(2, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(3, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(4, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl2, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+            TableSpacing \[Rule] {2, 1}]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%2\((14  x - 
+                11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                  x\)\) \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[2] = \>", F[2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x = \>\"", 
+        analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  cubic  spline quadrature \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, 
+        PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[\(-0.5\), 2, 2]}, \[IndentingNewLine]PlotStyle \[Rule] 
+          Magenta, Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<using \>", 
+      tbl\_\(\(\[LeftDoubleBracket]\)\(4, 1\)\(\[RightDoubleBracket]\)\), "\< \
+nodes in the cubic spline\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[N[analytic], 9]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use cubic spline quadrature to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2 x\^10\ \(\[ExponentialE]\^\(4  x\^3 - \ 
+                3  x\^4\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s \"numerical value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {\(-0.5\), 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[5, 20, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 11 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(m0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Z\_i_ := a0 + i\ \(b0 - a0\)\/m0;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts\  = \ 
+        Table[{Z\_i, f[Z\_i]}, {i, 0, m0}];\)\ \), "\[IndentingNewLine]", 
+    \(\(NaturalSpline[pts];\)\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[{i, i}, {i, 1, 4}];\)\), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - \\\ 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 21 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - \\\ 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - \\\ 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(m0 = 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - \\\ 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Compare the results from parts b-d."
+}], "Text"]
+}, Open  ]],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"tbl2", "=", 
+        RowBox[{"(", GridBox[{
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(1, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(2, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(3, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(4, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl2, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+            TableSpacing \[Rule] {2, 1}]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the numerical solution to the integral. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(\(analytic\  = \ 
+        NIntegrate[
+          x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\), {x, 0, 
+            2}];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - \\\ 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s \"numerical value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the numerical value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  cubic  spline quadrature \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(ratio = 1;\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[0, 20, 5]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan, 
+        AspectRatio \[Rule] ratio];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<using \>", 
+      tbl\_\(\(\[LeftDoubleBracket]\)\(4, 1\)\(\[RightDoubleBracket]\)\), "\< \
+nodes in the cubic spline\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use cubic spline quadrature to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_]\ \  = \ 2 + Cos[2 \@ x];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] Magenta, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 11 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(m0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl = Table[{i, i}, {i, 1, 4}];\)\), "\n", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 21 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m0 = 40;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(\(m0 = 80;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\  = \ \
+{m0 + 1, CubicSplineQuad[a0, b0, m0]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Compare the results from parts b-d."
+}], "Text"]
+}, Open  ]],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"tbl2", "=", 
+        RowBox[{"(", GridBox[{
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(1, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(2, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(3, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(4, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl2, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+            TableSpacing \[Rule] {2, 1}]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \((2 + Cos[2 \@ x])\);\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%2\((2 + 
+                Cos[2 \@ x])\) \[DifferentialD]x;\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[2] = \>", F[2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x = \>\"", analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  cubic  spline quadrature \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<using \>", 
+      tbl\_\(\(\[LeftDoubleBracket]\)\(4, 1\)\(\[RightDoubleBracket]\)\), "\< \
+nodes in the cubic spline\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use cubic spline quadrature to compute a numerical approximation to the \
+integral ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 3]."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "  ", "=", " ", 
+          RowBox[{
+            RowBox[{"3", 
+              StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox[\(Sin[x\^2]\),
+                FontSize->12]}], 
+            StyleBox["+",
+              FontSize->12], 
+            StyleBox[" ",
+              FontSize->12], 
+            StyleBox["1",
+              FontSize->12]}]}], ";"}], " "}], "\n", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\n", 
+    RowBox[{\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+          PlotStyle \[Rule] Magenta, AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 11 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(a0 = 0.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b0 = 3.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(m0 = 10;\), 
+      " "}], "\n", \(tbl = Table[{i, i}, {i, 1, 4}];\), "\n", 
+    RowBox[{\(tbl\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\  = \ {m0 + 1, CubicSplineQuad[a0, b0, m0]};\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(f[x]\),
+            FontSize->12], 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox["\"\<)\[DifferentialD]x\>\"",
+            FontSize->12], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(NumberForm[
+            tbl\_\(\(\[LeftDoubleBracket]\)\(1, \
+2\)\(\[RightDoubleBracket]\)\), 9]\)}], " ", "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 21 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(m0 = 20;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(tbl\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\
+\  = \ {m0 + 1, CubicSplineQuad[a0, b0, m0]};\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(f[x]\),
+            FontSize->12], 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox["\"\<)\[DifferentialD]x\>\"",
+            FontSize->12], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(NumberForm[
+            tbl\_\(\(\[LeftDoubleBracket]\)\(2, \
+2\)\(\[RightDoubleBracket]\)\), 9]\)}], " ", "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(m0 = 40;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(tbl\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\
+\  = \ {m0 + 1, CubicSplineQuad[a0, b0, m0]};\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(f[x]\),
+            FontSize->12], 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox["\"\<)\[DifferentialD]x\>\"",
+            FontSize->12], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(NumberForm[
+            tbl\_\(\(\[LeftDoubleBracket]\)\(3, \
+2\)\(\[RightDoubleBracket]\)\), 9]\)}], " ", "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the cubic spline for 41 nodes and use it for quadrature."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    RowBox[{\(m0 = 80;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(tbl\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\
+\  = \ {m0 + 1, CubicSplineQuad[a0, b0, m0]};\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(f[x]\),
+            FontSize->12], 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox["\"\<)\[DifferentialD]x\>\"",
+            FontSize->12], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(NumberForm[
+            tbl\_\(\(\[LeftDoubleBracket]\)\(4, \
+2\)\(\[RightDoubleBracket]\)\), 9]\)}], " ", "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Compare the results from parts b-d."
+}], "Text"]
+}, Open  ]],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"tbl2", "=", 
+        RowBox[{"(", GridBox[{
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(1, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(2, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(3, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(3, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)},
+              {\(tbl\_\(\(\[LeftDoubleBracket]\)\(4, 
+                    1\)\(\[RightDoubleBracket]\)\)\), \(\(NumberForm[
+                  tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\
+\[RightDoubleBracket]\)\), 9]\)\(\ \)\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl2, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+            TableSpacing \[Rule] {2, 1}]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "=", 
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}]}], ";"}], " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(F[x_] = \[Integral]f[x] \[DifferentialD]x;\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"analytic", " ", "=", " ", 
+          RowBox[{\(\[Integral]\_0\%3\), 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{
+                  RowBox[{"3", 
+                    StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                      FontSize->12], 
+                    StyleBox[" ",
+                      FontSize->12], 
+                    StyleBox[\(Sin[x\^2]\),
+                      FontSize->12]}], 
+                  StyleBox["+",
+                    FontSize->12], 
+                  StyleBox[" ",
+                    FontSize->12], 
+                  StyleBox["1",
+                    FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]}], 
+        ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[x] = \>", F[x]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[0] = \>", F[0]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[2] = \>", F[2]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox[\(f[x]\),
+              FontSize->12], 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox["\"\<)\[DifferentialD]x\>\"",
+              FontSize->12], ",", "\"\< = \>\"", ",", "analytic"}], " ", 
+          "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{\("\<\[Integral]\>"\+a0\%b0\), ",", "\"\<(\>\"", 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox[\(f[x]\),
+              FontSize->12], 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox["\"\<)\[DifferentialD]x\>\"",
+              FontSize->12], ",", "\"\< = \>\"", 
+            ",", \(NumberForm[N[Re[analytic]], 10]\)}], " ", "]"}], ";"}], 
+      " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[Re[analytic]], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using  cubic  spline quadrature \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<over  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(Print["\<using \>", 
+      tbl\_\(\(\[LeftDoubleBracket]\)\(4, 1\)\(\[RightDoubleBracket]\)\), "\< \
+nodes in the cubic spline\>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          tbl\_\(\(\[LeftDoubleBracket]\)\(4, 2\)\(\[RightDoubleBracket]\)\), 
+          9]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for Cubic Spline Quadrature.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use cubic spline quadrature to approximate the value of the integral.  \
+"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(tbl = Table[i, {i, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 20, \(j++\), \ \[IndentingNewLine]m0 = 
+          2\ j; \ \[IndentingNewLine]tbl\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) = {m0 + 1, 
+            NumberForm[CubicSplineQuad[a0, b0, m0], 
+              7]};\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(\
+\[Integral]\_a\%b\) CS[x] \[DifferentialD]x\>\""}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  AnimationDisplayTime->0.371293],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/Spline/\
+Splineaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Spline/\
+Splineaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/Spline/\
+Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Natural Cubic Spline Quadrature",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Spline/\
+Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+CellLabelAutoDelete->True
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 180, 4, 35, "Text"],
+Cell[1959, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3438, 111, 4636, 150, 382, "Text"],
+Cell[8077, 263, 733, 23, 71, "Text"],
+Cell[8813, 288, 636, 22, 33, "Text"],
+Cell[9452, 312, 1036, 33, 52, "Text"],
+Cell[10491, 347, 750, 24, 33, "Text"],
+Cell[11244, 373, 615, 20, 33, "Text"],
+Cell[11862, 395, 371, 11, 33, "Text"],
+Cell[12236, 408, 107, 2, 33, "Text",
+  Evaluatable->False],
+Cell[12346, 412, 8253, 139, 1202, "Input"],
+Cell[20602, 553, 418, 11, 53, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[21045, 568, 101, 2, 33, "Text"],
+Cell[21149, 572, 155, 3, 51, "Input"],
+Cell[21307, 577, 160, 5, 33, "Text"],
+Cell[21470, 584, 363, 6, 70, "Input"],
+Cell[21836, 592, 179, 5, 33, "Text"],
+Cell[22018, 599, 678, 12, 163, "Input"],
+Cell[22699, 613, 179, 5, 33, "Text"],
+Cell[22881, 620, 510, 9, 103, "Input"],
+Cell[23394, 631, 179, 5, 33, "Text"],
+Cell[23576, 638, 508, 9, 103, "Input"],
+Cell[24087, 649, 179, 5, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[24291, 658, 510, 9, 103, "Input"],
+Cell[24804, 669, 148, 5, 33, "Text"]
+}, Open  ]],
+Cell[24967, 677, 1294, 25, 120, "Input"],
+Cell[26264, 704, 269, 9, 33, "Text"],
+Cell[26536, 715, 1023, 18, 299, "Input"],
+Cell[27562, 735, 231, 6, 33, "Text"],
+Cell[27796, 743, 330, 6, 50, "Input"],
+Cell[28129, 751, 1039, 18, 210, "Input"]
+}, Closed]],
+Cell[29183, 772, 516, 14, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[29724, 790, 101, 2, 33, "Text"],
+Cell[29828, 794, 199, 5, 51, "Input"],
+Cell[30030, 801, 157, 5, 33, "Text"],
+Cell[30190, 808, 351, 5, 90, "Input"],
+Cell[30544, 815, 179, 5, 33, "Text"],
+Cell[30726, 822, 710, 12, 163, "Input"],
+Cell[31439, 836, 179, 5, 33, "Text"],
+Cell[31621, 843, 616, 10, 137, "Input"],
+Cell[32240, 855, 179, 5, 33, "Text"],
+Cell[32422, 862, 543, 9, 103, "Input"],
+Cell[32968, 873, 179, 5, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[33172, 882, 543, 9, 103, "Input"],
+Cell[33718, 893, 148, 5, 33, "Text"]
+}, Open  ]],
+Cell[33881, 901, 1294, 25, 120, "Input"],
+Cell[35178, 928, 265, 9, 33, "Text"],
+Cell[35446, 939, 1202, 22, 285, "Input"],
+Cell[36651, 963, 231, 6, 33, "Text"],
+Cell[36885, 971, 330, 6, 50, "Input"],
+Cell[37218, 979, 978, 17, 210, "Input"]
+}, Closed]],
+Cell[38211, 999, 545, 16, 58, "Text"],
+
+Cell[CellGroupData[{
+Cell[38781, 1019, 101, 2, 33, "Text"],
+Cell[38885, 1023, 177, 4, 53, "Input"],
+Cell[39065, 1029, 157, 5, 33, "Text"],
+Cell[39225, 1036, 403, 6, 90, "Input"],
+Cell[39631, 1044, 179, 5, 33, "Text"],
+Cell[39813, 1051, 941, 16, 237, "Input"],
+Cell[40757, 1069, 179, 5, 33, "Text"],
+Cell[40939, 1076, 550, 9, 103, "Input"],
+Cell[41492, 1087, 179, 5, 33, "Text"],
+Cell[41674, 1094, 550, 9, 103, "Input"],
+Cell[42227, 1105, 179, 5, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[42431, 1114, 550, 9, 103, "Input"],
+Cell[42984, 1125, 148, 5, 33, "Text"]
+}, Open  ]],
+Cell[43147, 1133, 1294, 25, 120, "Input"],
+Cell[44444, 1160, 224, 8, 33, "Text"],
+Cell[44671, 1170, 630, 14, 143, "Input"],
+Cell[45304, 1186, 293, 9, 33, "Text"],
+Cell[45600, 1197, 334, 6, 50, "Input"],
+Cell[45937, 1205, 1110, 20, 230, "Input"]
+}, Closed]],
+Cell[47062, 1228, 447, 12, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[47534, 1244, 101, 2, 33, "Text"],
+Cell[47638, 1248, 157, 5, 33, "Text"],
+Cell[47798, 1255, 357, 6, 93, "Input"],
+Cell[48158, 1263, 179, 5, 33, "Text"],
+Cell[48340, 1270, 659, 12, 163, "Input"],
+Cell[49002, 1284, 179, 5, 33, "Text"],
+Cell[49184, 1291, 509, 9, 103, "Input"],
+Cell[49696, 1302, 179, 5, 33, "Text"],
+Cell[49878, 1309, 509, 9, 103, "Input"],
+Cell[50390, 1320, 179, 5, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[50594, 1329, 509, 9, 103, "Input"],
+Cell[51106, 1340, 148, 5, 33, "Text"]
+}, Open  ]],
+Cell[51269, 1348, 1294, 25, 120, "Input"],
+Cell[52566, 1375, 265, 9, 33, "Text"],
+Cell[52834, 1386, 1014, 18, 287, "Input"],
+Cell[53851, 1406, 231, 6, 33, "Text"],
+Cell[54085, 1414, 330, 6, 50, "Input"],
+Cell[54418, 1422, 984, 17, 190, "Input"]
+}, Closed]],
+Cell[55417, 1442, 949, 28, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[56391, 1474, 101, 2, 33, "Text"],
+Cell[56495, 1478, 157, 5, 33, "Text"],
+Cell[56655, 1485, 856, 22, 91, "Input"],
+Cell[57514, 1509, 179, 5, 33, "Text"],
+Cell[57696, 1516, 959, 22, 170, "Input"],
+Cell[58658, 1540, 179, 5, 33, "Text"],
+Cell[58840, 1547, 810, 19, 110, "Input"],
+Cell[59653, 1568, 179, 5, 33, "Text"],
+Cell[59835, 1575, 810, 19, 110, "Input"],
+Cell[60648, 1596, 179, 5, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[60852, 1605, 810, 19, 110, "Input"],
+Cell[61665, 1626, 148, 5, 33, "Text"]
+}, Open  ]],
+Cell[61828, 1634, 1294, 25, 120, "Input"],
+Cell[63125, 1661, 265, 9, 33, "Text"],
+Cell[63393, 1672, 2884, 75, 300, "Input"],
+Cell[66280, 1749, 231, 6, 33, "Text"],
+Cell[66514, 1757, 334, 6, 50, "Input"],
+Cell[66851, 1765, 986, 17, 190, "Input"]
+}, Closed]],
+Cell[67852, 1785, 309, 10, 32, "Text"],
+Cell[68164, 1797, 344, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[68533, 1813, 101, 2, 33, "Text"],
+Cell[68637, 1817, 1153, 22, 225, "Input"],
+Cell[69793, 1841, 793, 26, 33, "Text"]
+}, Closed]],
+Cell[70601, 1870, 750, 24, 30, "Text"],
+Cell[71354, 1896, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

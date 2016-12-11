@@ -1,0 +1,1563 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     41706,       1382]*)
+(*NotebookOutlinePosition[     42532,       1409]*)
+(*  CellTagsIndexPosition[     42488,       1405]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Trapezoidal Rule for Numerical \
+Integration",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Theorem  (",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TrapezoidalRule.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[")",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Consider ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y = f \((x)\)\)]],
+  " over",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([x\_0, x\_1]\)\)]],
+  StyleBox[", where ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_1 = x\_0 + h\)]],
+  ". ",
+  StyleBox["The trapezoidal rule is  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(TR \((f, 
+            h)\)\  = \ \(h\/2\) \((f \((x\_0)\)\  + \ f \((x\_1)\))\)\)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["This is an numerical approximation to the integral of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox[" over ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([x\_0, x\_1]\)\)]],
+  StyleBox[" and we have the expression  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_\(x\_0\)\%\(x\_1\)\ 
+          f \((x)\) \[DifferentialD]x\), "  ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], "  ", \(TR \((f, h)\)\)}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "The remainder term for the ",
+  StyleBox["trapezoidal",
+    FontFamily->"Times New Roman"],
+  " rule is  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{\(\(R\_TR\) \((f, h)\)\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"-", 
+              InterpretationBox[
+                RowBox[{\(1\/12\), 
+                  SuperscriptBox["f", "''",
+                    MultilineFunction->None], \((c)\)}],
+                SeriesData[ h, 0, {
+                  Times[ 
+                    Rational[ 1, 24], 
+                    Derivative[ 2][ f][ x]]}, 3, 4, 1]]}], \(h\^3\)}]}],
+        SeriesData[ h, 0, {
+          Times[ 
+            Rational[ 1, 24], 
+            Derivative[ 2][ f][ x]]}, 3, 4, 1]]]],
+  ",  where ",
+  Cell[BoxData[
+      \(c\)]],
+  " lies somewhere between ",
+  Cell[BoxData[
+      RowBox[{\(x\_0\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(x\_1\)}]]],
+  ", and have the equality  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_\(x\_0\)\%\(x\_1\)\ 
+          f \((x)\) \[DifferentialD]x\), " ", "=", " ", 
+        RowBox[{\(\(h\/2\) \((f \((x\_0)\)\  + \ f \((x\_1)\))\)\), " ", "-", 
+          
+          RowBox[{
+            InterpretationBox[
+              RowBox[{\(1\/12\), 
+                SuperscriptBox["f", "''",
+                  MultilineFunction->None], \((c)\)}],
+              SeriesData[ h, 0, {
+                Times[ 
+                  Rational[ 1, 24], 
+                  Derivative[ 2][ f][ x]]}, 3, 4, 1]], \(h\^3\)}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TrapezoidalRuleProof.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/TrapezoidalRuleProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Composite Trapezoidal Rule",
+  FontFamily->"Times New Roman",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tAn intuitive method of finding the area under a curve y = f(x)  \
+is by approximating that area with a series of trapezoids that lie above the \
+intervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\([x\_\(k - 1\), x\_k]\)}\_\(k = 1\)\%m\)]],
+  StyleBox[".  When several trapezoids are used, we call it the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite trapezoidal rule",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Composite Trapezoidal Rule)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Consider ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y = f \((x)\)\)]],
+  " over",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[".  Suppose that the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[" is subdivided into  m  subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\([x\_\(k - 1\), x\_k]\)}\_\(k = 1\)\%m\)]],
+  StyleBox["  of equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/m\)]],
+  StyleBox["  by using the equally spaced nodes  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_k\  = \ x\_0\  + \ k\ h\)]],
+  "  ",
+  StyleBox["for  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k = 1, 2,  ... , m\)]],
+  StyleBox[".   The ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite trapezoidal rule for m subintervals",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" is  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(T \((f, h)\)\), " ", "=", " ", 
+        RowBox[{\(\(h\/2\) \((f \((a)\)\  + \ f \((b)\))\)\), " ", "+", " ", 
+          RowBox[{"h", " ", 
+            RowBox[{\(\[Sum]\+\(k = 1\)\%m\), 
+              RowBox[{Cell[""], " ", "f", \((x\_k)\)}]}]}]}]}]]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["This is an numerical approximation to the integral of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox[" over ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[" and we write  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_a\%b\ f \((x)\) \[DifferentialD]x\), "  ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], "  ", \(T \((f, h)\)\)}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Remainder term for the Composite Trapezoidal Rule",
+  FontFamily->"Times New Roman",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary  (Trapezoidal Rule: Remainder term)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Suppose that ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[" is subdivided into  m  subintervals  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\([x\_\(k - 1\), x\_k]\)}\_\(k = 1\)\%m\)]],
+  StyleBox["  of width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/m\)]],
+  StyleBox[".   The ",
+    FontFamily->"Times New Roman"],
+  StyleBox["composite trapezoidal rule",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(T \((f, h)\)\), " ", "=", " ", 
+        RowBox[{\(\(h\/2\) \((f \((a)\)\  + \ f \((b)\))\)\), " ", "+", " ", 
+          RowBox[{"h", " ", 
+            RowBox[{\(\[Sum]\+\(k = 1\)\%m\), 
+              RowBox[{Cell[""], " ", "f", \((x\_k)\)}]}]}]}]}]]],
+  "  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["is an numerical approximation to the integral, and  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Integral]\_a\%b\ 
+          f \((x)\) \[DifferentialD]x\ \  = \ \ T \((f, 
+              h)\)\  + \ \(E\_T\) \((f, h)\)\)]],
+  ".  \n\nFurthermore, if ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(f \((x)\)\), "\[Element]", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["C",
+              FontWeight->"Bold"], "2"], "[", \(a, b\), "]"}]}]]],
+  ",  then there exists a value  c  with  a < c < b  so that the error term  \
+",
+  Cell[BoxData[
+      \(\(E\_T\) \((f, h)\)\)]],
+  "  has the form\n\n\t",
+  Cell[BoxData[
+      \(\(E\_T\) \((f, 
+            h)\)\  = \ \(-\ \(\(\((b\  - \ a)\) \(f\^2\) \((c)\)\)\/12\)\) 
+          h\^2\)]],
+  ".  \n\nThis is expressed using the \"big ",
+  Cell[BoxData[
+      StyleBox["O",
+        FontWeight->"Bold",
+        FontSlant->"Italic"]]],
+  "\" notation  ",
+  Cell[BoxData[
+      RowBox[{\(\(E\_T\) \((f, h)\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold",
+            FontSlant->"Italic"], \((h\^2)\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  When the step size is reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the error term  ",
+  Cell[BoxData[
+      \(\(E\_T\) \((f, h)\)\)]],
+  " should be reduced by approximately ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^2\  = \ 0.25\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TrapezoidalRuleProof.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/TrapezoidalRuleProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TrapezoidalRuleProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/TrapezoidalRuleProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm Composite Trapezoidal Rule.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To approximate the integral  \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubsuperscriptBox["\[Integral]", 
+            StyleBox["a",
+              FontSize->10], 
+            StyleBox["b",
+              FontSize->10]],
+          FontSize->18], \(f \((x)\) \[DifferentialD]x\)}]]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["\[TildeTilde]",
+          FontSize->14], " ", 
+        RowBox[{
+          FractionBox[
+            StyleBox["h",
+              FontSize->12], "2"], \((f \((a)\) + f \((b)\))\)}]}]]],
+  Cell[BoxData[
+      \(\(\(\ \)\(\(+\ 
+          h\) \(\[Sum]\+\(k = 1\)\%\(m - 1\)f \((x\_k)\)\)\)\)\)]],
+  ",  \n\nby sampling ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " at the ",
+  Cell[BoxData[
+      \(m + 1\)]],
+  " equally spaced points  ",
+  Cell[BoxData[
+      \(x\_k = a + k\ h\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(k = 0, 1, \[CenterEllipsis], m\)]],
+  ",  where  ",
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/m\)],
+    AspectRatioFixed->False],
+  ".  Notice that  ",
+  Cell[BoxData[
+      \(x\_0 = a\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_m = b\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Trapezoidal Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(TrapRule[a0_, b0_, 
+          m0_] := \[IndentingNewLine]Module[{a = N[a0], b = N[b0], k, m = m0, 
+            X}, \[IndentingNewLine]h\  = \ \(b - a\)\/m; \[IndentingNewLine]X\
+\_k_\  = \ a\  + \ 
+              k\ h; \ \[IndentingNewLine]Return[\ \(h\/2\) \((f[a] + 
+                    f[b])\) + 
+              h \(\[Sum]\+\(k = 1\)\%\(m - 1\)f[
+                    X\_k]\)\ ];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell["Or you can use the traditional program.", "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Trapezoidal Rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(TrapRule[a0_, b0_, 
+          m0_] := \[IndentingNewLine]Module[{a = N[a0], b = N[b0], m = m0, 
+            k}, \[IndentingNewLine]h\  = \ \(b - a\)\/m; \ \ \
+\[IndentingNewLine]sum = 0; \ \[IndentingNewLine]For[\ k = 1, \ 
+            k \[LessEqual] 
+              m - 1, \ \(k++\), \ \[IndentingNewLine]\(sum = 
+                sum + f[
+                    a + h\ k];\)\ ]; \ \[IndentingNewLine]Return[\ \(h\/2\) \
+\((f[a] + f[b])\) + h\ sum];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Numerically approximate the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  "  by using the trapezoidal rule with  m = 1, 2, 4, 8, and 16  \
+subintervals."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_]\ \  = \ 2 + Cos[2 \@ x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["We will use simulated hand computations for the solution.", "Text"],
+
+Cell[BoxData[
+    \(\(\(f[x_] = 2 + Cos[2 \@ x];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(t1 = \(\(\(\(2 - 0\)\/1\)\/2\) \((f[0] + 
+            f[2])\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(N[t1]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t2 = \(\(\(\(2 - 0\)\/2\)\/2\) \((f[0] + 2  f[1] + 
+            f[2])\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(N[t2]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t4 = \(\(\(\(2 - 0\)\/4\)\/2\) \((f[0] + 2  f[1\/2] + 2  f[1] + 
+            2  f[3\/2] + f[2])\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(N[t4]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t8 = \(\(\(\(2 - 0\)\/8\)\/2\) \((f[0] + 2  f[1\/4] + 2  f[1\/2] + 
+            2  f[3\/4] + 2  f[1] + 2  f[5\/4] + 2  f[3\/2] + 2  f[7\/4] + 
+            f[2])\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(N[t8]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t16 = \(\(\(\(2 - 0\)\/16\)\/2\) \((f[0] + 2  f[1\/8] + 2  f[1\/4] + 
+            2  f[3\/8] + 2  f[1\/2] + 2  f[5\/8] + 2  f[3\/4] + 2  f[7\/8] + 
+            2  f[1] + 2  f[9\/8] + 2  f[5\/4] + 2  f[11\/8] + 2  f[3\/2] + 
+            2  f[13\/8] + 2  f[7\/4] + 2  f[15\/8] + 
+            f[2])\)\(\ \ \)\)\), "\[IndentingNewLine]", 
+    \(N[t16]\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Numerically approximate the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  "  by using the trapezoidal rule with  m = 50, 100, 200, 400  and 800  \
+subintervals."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["We will use the subroutine for the solution.", "Text"],
+
+Cell[BoxData[
+    \(\(\(f[x_] = 2 + Cos[2 \@ x];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(t50 = TrapRule[0, 2, 50]\ \ \), "\[IndentingNewLine]", 
+    \(NumberForm[t50, 12]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t100 = TrapRule[0, 2, 100]\ \ \), "\[IndentingNewLine]", 
+    \(NumberForm[t100, 12]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t200 = TrapRule[0, 2, 200]\ \ \), "\[IndentingNewLine]", 
+    \(NumberForm[t200, 12]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t400 = TrapRule[0, 2, 400]\ \ \), "\[IndentingNewLine]", 
+    \(NumberForm[t400, 12]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t800 = TrapRule[0, 2, 800]\ \ \), "\[IndentingNewLine]", 
+    \(NumberForm[t800, 12]\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the analytic value of the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  "  (i.e. find the \"true value\").   "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(val = \[Integral]\_0\%2\((2 + 
+              Cos[2 \@ x])\) \[DifferentialD]x\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(N[val]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(NumberForm[N[val]\ \ , 12]\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the \"true value\" in example 3 and find the error for the \
+trapezoidal rule approximations in example 2.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(val\)\(-\)\(t50\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val\)\(-\)\(t100\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val\)\(-\)\(t200\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val\)\(-\)\(t400\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val\)\(-\)\(t800\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  When the step size is reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the error term  ",
+  Cell[BoxData[
+      \(\(E\_T\) \((f, h)\)\)]],
+  " should be reduced by approximately  ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^2\  = \ 0.25\)]],
+  ".  Explore this phenomenon. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(val - t100\)\/\(val - t50\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t200\)\/\(val - t100\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t400\)\/\(val - t200\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t800\)\/\(val - t400\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Numerically approximate the integral ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  " by using the trapezoidal rule with  m = 1, 2, 4, 8, and 16  \
+subintervals."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "  ", "=", " ", 
+          RowBox[{
+            RowBox[{"3", 
+              StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox[\(Sin[x\^2]\),
+                FontSize->12]}], 
+            StyleBox["+",
+              FontSize->12], 
+            StyleBox[" ",
+              FontSize->12], 
+            StyleBox["1",
+              FontSize->12]}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`FilledPlot`\>"];\), " "}], "\n", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\n", 
+    RowBox[{\(FilledPlot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+          PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}]}], "Input"],
+
+Cell["We will use simulated hand computations for the solution.", "Text"],
+
+Cell[BoxData[{
+    \(t1 = \(\(\(3 - 0\)\/1\)\/2\) \((f[0] + 
+            f[3])\)\), "\[IndentingNewLine]", 
+    \(N[t1]\)}], "Input"],
+
+Cell[BoxData[{
+    \(t2 = \(\(\(3 - 0\)\/2\)\/2\) \((f[0] + 2  f[3\/2] + 
+            f[3])\)\), "\[IndentingNewLine]", 
+    \(N[t2]\)}], "Input"],
+
+Cell[BoxData[{
+    \(t4 = \(\(\(3 - 0\)\/4\)\/2\) \((f[0] + 2  f[3\/4] + 2  f[3\/2] + 
+            2  f[9\/4] + f[3])\)\), "\[IndentingNewLine]", 
+    \(N[t4]\)}], "Input"],
+
+Cell[BoxData[{
+    \(t8 = \(\(\(3 - 0\)\/8\)\/2\) \((f[0] + 2  f[3\/8] + 2  f[3\/4] + 
+            2  f[9\/8] + 2  f[3\/2] + 2  f[15\/8] + 2  f[9\/4] + 
+            2  f[21\/8] + f[3])\)\), "\[IndentingNewLine]", 
+    \(N[t8]\)}], "Input"],
+
+Cell[BoxData[{
+    \(t16 = \(\(\(3 - 0\)\/16\)\/2\) \((f[0] + 2\ f[3\/16] + 2\ f[3\/8] + 
+            2\ f[9\/16] + 2\ f[3\/4] + 2\ f[15\/16] + 2\ f[9\/8] + 
+            2\ f[21\/16] + 2\ f[3\/2] + 2\ f[27\/16] + 2\ f[15\/8] + 
+            2\ f[33\/16] + 2\ f[9\/4] + 2\ f[39\/16] + 2\ f[21\/8] + 
+            2\ f[45\/16] + f[3])\)\), "\[IndentingNewLine]", 
+    \(N[t16]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Numerically approximate the integral ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  " by using the trapezoidal rule with  m = 50, 100, 200, 400  and 800  \
+subintervals."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["We will use the subroutine for the solution.", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "=", 
+          RowBox[{
+            RowBox[{"3", 
+              StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox[\(Sin[x\^2]\),
+                FontSize->12]}], 
+            StyleBox["+",
+              FontSize->12], 
+            StyleBox[" ",
+              FontSize->12], 
+            StyleBox["1",
+              FontSize->12]}]}], ";"}], " "}]], "Input"],
+
+Cell[BoxData[{
+    \(t50 = TrapRule[0, 3, 50]\ \), "\[IndentingNewLine]", 
+    \(NumberForm[t50, 12]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t100 = TrapRule[0, 3, 100]\ \), "\[IndentingNewLine]", 
+    \(NumberForm[t100, 12]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t200 = TrapRule[0, 3, 200]\ \), "\[IndentingNewLine]", 
+    \(NumberForm[t200, 12]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t400 = TrapRule[0, 3, 400]\ \), "\[IndentingNewLine]", 
+    \(NumberForm[t400, 12]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(t800 = TrapRule[0, 3, 800]\ \), "\[IndentingNewLine]", 
+    \(NumberForm[t800, 12]\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the analytic value of the integral  ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  "  (i.e. find the \"true value\").  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{"val", "=", 
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]}]], "Input"],
+
+Cell[BoxData[
+    \(val = N[Re[val]]\)], "Input"],
+
+Cell[BoxData[
+    \(NumberForm[val, 12]\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[" 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the \"true value\" in example 8 and find the error for the \
+trapezoidal rule approximations in exercise 7.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(val - t50\)], "Input"],
+
+Cell[BoxData[
+    \(val - t100\)], "Input"],
+
+Cell[BoxData[
+    \(val - t200\)], "Input"],
+
+Cell[BoxData[
+    \(val - t400\)], "Input"],
+
+Cell[BoxData[
+    \(val - t800\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  When the step size is reduced by a factor of ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " the error term  ",
+  Cell[BoxData[
+      \(\(E\_T\) \((f, h)\)\)]],
+  " should be reduced by approximately  ",
+  Cell[BoxData[
+      \(\((1\/2)\)\^2\  = \ 0.25\)]],
+  ".  Explore this phenomenon. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(val - t100\)\/\(val - t50\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t200\)\/\(val - t100\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t400\)\/\(val - t200\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(val - t800\)\/\(val - t400\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Recursive Integration Rules",
+  FontFamily->"Times New Roman",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Successive Trapezoidal Rules)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Suppose that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(j \[GreaterEqual] 1\)]],
+  "  ",
+  StyleBox["and the points  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({x\_k\  = \ a\  + \ k\ h}\)]],
+  StyleBox["  subdivide ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[" into  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(2\^j = 2  m\)]],
+  StyleBox["  subintervals equal width  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/2\^j\)]],
+  StyleBox[".  The trapezoidal rules ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"T", \((f, h)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", "T", \((f, 2  h)\)}]]],
+  StyleBox[" obey the relationship  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(T \((f, h)\)\), " ", "=", "  ", 
+        RowBox[{\(\(T \((f, 2  h)\)\)\/2\), Cell[""]}]}]]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(+\ \ h\), " ", 
+          RowBox[{\(\[Sum]\+\(k = 1\)\%m\), 
+            RowBox[{Cell[""], " ", "f", \((x\_\(2  k - 1\))\)}]}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Sequence of Trapezoidal Rules)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Define  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(T \((0)\)\  = \ \(h\/2\) \((f \((a)\)\  + \ f \((b)\))\)\)]],
+  StyleBox[",  which is the trapezoidal rule with step size  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = b - a\)]],
+  StyleBox[".  Then for each  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(j \[GreaterEqual] 1\)]],
+  StyleBox["  define  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(T \((0)\) = T \((f, h)\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman"], 
+        RowBox[{
+          StyleBox["where",
+            FontFamily->"Times New Roman"], "  ", "T", \((f, h)\)}]}]]],
+  StyleBox["  is the trapezoidal rule with step size  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/2\^j\)]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary (Recursive Trapezoidal Rule)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Start with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(T \((0)\)\  = \ \(h\/2\) \((f \((a)\)\  + \ f \((b)\))\)\)]],
+  StyleBox[".  Then a sequence of trapezoidal rules  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({T \((j)\)}\)]],
+  StyleBox["  is generated by the recursive formula  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(T \((j)\)\), " ", "=", "  ", 
+        RowBox[{\(\(T \((j - 1)\)\)\/2\), " ", "+", " ", 
+          RowBox[{"h", " ", 
+            RowBox[{\(\[Sum]\+\(k = 1\)\%m\), 
+              RowBox[{Cell[""], " ", "f", \((x\_\(2  k - 1\))\)}]}]}]}]}]]],
+  "  for  ",
+  Cell[BoxData[
+      \(j = 1, 2,  ... \)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["where  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"h", "=", 
+        RowBox[{\(\(b\  - \ a\)\/2\^j\), "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman"], 
+          "  ", \({x\_k\  = \ a\  + \ k\ h}\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell["\<\
+The recursive trapezoidal rule is used for the Romberg integration \
+algorithm. \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Trapezoidal Rule.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Trapezoidal Rule to approximate the value of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 50, 60, 70, 
+          80, 100, 120};\)\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[j, {j, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 
+          20, \(j++\), \ \[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) + 1, 
+              NumberForm[
+                TrapRule[a, b, 
+                  M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)], {8, 6}]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<TrapRule[a,b,m]\>"}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  AnimationDisplayTime->0.371293],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidalaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidalaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/TrapezoidalRuleBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule for Numerical Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/TrapezoidalRuleBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {54, 54}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->False,
+"PrintMultipleHorizontalPages"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 201, 5, 35, "Text"],
+Cell[1980, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3459, 112, 1669, 56, 142, "Text"],
+Cell[5131, 170, 1769, 52, 78, "Text"],
+Cell[6903, 224, 680, 22, 33, "Text"],
+Cell[7586, 248, 165, 4, 35, "Text"],
+Cell[7754, 254, 624, 16, 52, "Text"],
+Cell[8381, 272, 2199, 69, 164, "Text"],
+Cell[10583, 343, 188, 4, 35, "Text"],
+Cell[10774, 349, 2399, 73, 264, "Text"],
+Cell[13176, 424, 371, 14, 36, "Text"],
+Cell[13550, 440, 680, 22, 33, "Text"],
+Cell[14233, 464, 744, 24, 33, "Text"],
+Cell[14980, 490, 671, 21, 33, "Text"],
+Cell[15654, 513, 1277, 48, 119, "Text"],
+Cell[16934, 563, 332, 10, 33, "Text"],
+Cell[17269, 575, 457, 9, 149, "Input"],
+Cell[17729, 586, 55, 0, 33, "Text"],
+Cell[17787, 588, 332, 10, 33, "Text"],
+Cell[18122, 600, 523, 10, 178, "Input"],
+Cell[18648, 612, 325, 9, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[18998, 625, 101, 2, 33, "Text"],
+Cell[19102, 629, 478, 7, 113, "Input"],
+Cell[19583, 638, 73, 0, 33, "Text"],
+Cell[19659, 640, 71, 1, 33, "Input"],
+Cell[19733, 643, 149, 3, 72, "Input"],
+Cell[19885, 648, 159, 3, 72, "Input"],
+Cell[20047, 653, 185, 3, 72, "Input"],
+Cell[20235, 658, 250, 4, 72, "Input"],
+Cell[20488, 664, 386, 6, 72, "Input"]
+}, Closed]],
+Cell[20889, 673, 333, 9, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[21247, 686, 101, 2, 33, "Text"],
+Cell[21351, 690, 60, 0, 33, "Text"],
+Cell[21414, 692, 71, 1, 33, "Input"],
+Cell[21488, 695, 120, 2, 50, "Input"],
+Cell[21611, 699, 123, 2, 50, "Input"],
+Cell[21737, 703, 123, 2, 50, "Input"],
+Cell[21863, 707, 123, 2, 50, "Input"],
+Cell[21989, 711, 123, 2, 50, "Input"]
+}, Closed]],
+Cell[22127, 716, 287, 8, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[22439, 728, 101, 2, 33, "Text"],
+Cell[22543, 732, 110, 2, 42, "Input"],
+Cell[22656, 736, 55, 1, 30, "Input"],
+Cell[22714, 739, 75, 1, 30, "Input"]
+}, Closed]],
+Cell[22804, 743, 230, 6, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[23059, 753, 101, 2, 33, "Text"],
+Cell[23163, 757, 64, 1, 30, "Input"],
+Cell[23230, 760, 65, 1, 30, "Input"],
+Cell[23298, 763, 65, 1, 30, "Input"],
+Cell[23366, 766, 65, 1, 30, "Input"],
+Cell[23434, 769, 65, 1, 30, "Input"]
+}, Closed]],
+Cell[23514, 773, 400, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[23939, 791, 101, 2, 33, "Text"],
+Cell[24043, 795, 62, 1, 42, "Input"],
+Cell[24108, 798, 63, 1, 42, "Input"],
+Cell[24174, 801, 63, 1, 42, "Input"],
+Cell[24240, 804, 63, 1, 42, "Input"]
+}, Closed]],
+Cell[24318, 808, 826, 25, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[25169, 837, 101, 2, 33, "Text"],
+Cell[25273, 841, 997, 24, 111, "Input"],
+Cell[26273, 867, 73, 0, 33, "Text"],
+Cell[26349, 869, 133, 3, 72, "Input"],
+Cell[26485, 874, 146, 3, 72, "Input"],
+Cell[26634, 879, 172, 3, 72, "Input"],
+Cell[26809, 884, 239, 4, 72, "Input"],
+Cell[27051, 890, 386, 6, 72, "Input"]
+}, Closed]],
+Cell[27452, 899, 834, 25, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[28311, 928, 101, 2, 33, "Text"],
+Cell[28415, 932, 60, 0, 33, "Text"],
+Cell[28478, 934, 530, 17, 31, "Input"],
+Cell[29011, 953, 116, 2, 50, "Input"],
+Cell[29130, 957, 119, 2, 50, "Input"],
+Cell[29252, 961, 119, 2, 50, "Input"],
+Cell[29374, 965, 119, 2, 50, "Input"],
+Cell[29496, 969, 119, 2, 50, "Input"]
+}, Closed]],
+Cell[29630, 974, 789, 24, 31, "Text"],
+
+Cell[CellGroupData[{
+Cell[30444, 1002, 101, 2, 33, "Text"],
+Cell[30548, 1006, 621, 18, 42, "Input"],
+Cell[31172, 1026, 49, 1, 30, "Input"],
+Cell[31224, 1029, 52, 1, 30, "Input"]
+}, Closed]],
+Cell[31291, 1033, 305, 9, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[31621, 1046, 101, 2, 33, "Text"],
+Cell[31725, 1050, 42, 1, 30, "Input"],
+Cell[31770, 1053, 43, 1, 30, "Input"],
+Cell[31816, 1056, 43, 1, 30, "Input"],
+Cell[31862, 1059, 43, 1, 30, "Input"],
+Cell[31908, 1062, 43, 1, 30, "Input"]
+}, Closed]],
+Cell[31966, 1066, 401, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[32392, 1084, 102, 2, 33, "Text"],
+Cell[32497, 1088, 62, 1, 42, "Input"],
+Cell[32562, 1091, 63, 1, 42, "Input"],
+Cell[32628, 1094, 63, 1, 42, "Input"],
+Cell[32694, 1097, 63, 1, 42, "Input"]
+}, Closed]],
+Cell[32772, 1101, 166, 4, 32, "Text"],
+Cell[32941, 1107, 1381, 43, 96, "Text"],
+Cell[34325, 1152, 1152, 34, 58, "Text"],
+Cell[35480, 1188, 1298, 39, 109, "Text"],
+Cell[36781, 1229, 104, 3, 33, "Text"],
+Cell[36888, 1234, 306, 10, 35, "Text"],
+Cell[37197, 1246, 338, 11, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[37560, 1261, 102, 2, 33, "Text"],
+Cell[37665, 1265, 1409, 28, 231, "Input"],
+Cell[39077, 1295, 785, 26, 33, "Text"]
+}, Closed]],
+Cell[39877, 1324, 744, 24, 30, "Text"],
+Cell[40624, 1350, 158, 3, 35, "Text"],
+Cell[40785, 1355, 621, 17, 33, "Text"],
+Cell[41409, 1374, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

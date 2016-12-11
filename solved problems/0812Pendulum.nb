@@ -1,0 +1,1916 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     61690,       1705]*)
+(*NotebookOutlinePosition[     62940,       1744]*)
+(*  CellTagsIndexPosition[     62896,       1740]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Nonlinear Pendulum",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The second order D. E. approach",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n",
+  StyleBox["Math-Model (Nonlinear Pendulum)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  A ",
+  ButtonBox["simple pendulum",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/physics/Pendulum.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " consists of a point mass  ",
+  StyleBox["m",
+    FontFamily->"Courier New"],
+  "  attached to a rod of negligible weight.   The ",
+  ButtonBox["torque",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/physics/Torque.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      \(\[Tau]\)]],
+  "  is  \n\n(1)\t\t",
+  Cell[BoxData[
+      \(\[Tau]\  = \ \(-\ m\)\ g\ l\ sin \((\[Theta])\)\)]],
+  ", \n\t\t\n where  ",
+  Cell[BoxData[
+      \(\[Theta]\)]],
+  "  denotes the the angle of the rod measured downward from a vertical axis. \
+ The moment of inertia for the point mass is  ",
+  Cell[BoxData[
+      \(I\  = \ m\ l\^2\)]],
+  "  where  ",
+  StyleBox["l",
+    FontFamily->"Courier New"],
+  "  is the length of the rod.  The torque can also be expressed as  ",
+  Cell[BoxData[
+      \(\[Tau]\  = \ I\ \[Alpha]\)]],
+  ",  where  ",
+  Cell[BoxData[
+      \(\[Alpha]\)]],
+  "  is the angular acceleration, using ",
+  ButtonBox["Newton's second law",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/physics/NewtonsSecondLaw.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  ", and the second derivative, this can be written as  \n\n(2)\t\t",
+  Cell[BoxData[
+      \(\[Tau]\  = \ I\ \(\(d\^2\) \(\[Theta]\)\(\ \)\)\/\(d\ t\^2\)\)]],
+  ".\n\nEquating  (1) and (2) results in the nonlinear D. E. \n\n(3)\t\t",
+  Cell[BoxData[
+      \(\(\(d\^2\) \(\[Theta]\)\(\ \)\)\/\(d\ t\^2\)\  + \ \(m\ g\ l\)\/I\ \
+sin \((\[Theta])\)\  = \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/PendulumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PendulumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Math-Model (Linear Pendulum)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Introductory courses discuss the ",
+  ButtonBox["pendulum with small oscillations",
+    ButtonData:>{
+      URL[ 
+      "http://scienceworld.wolfram.com/physics/PendulumSmallOscillations.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  " as an example of a ",
+  ButtonBox["simple harmonic oscillator",
+    ButtonData:>{
+      URL[ 
+      "http://scienceworld.wolfram.com/physics/SimpleHarmonicOscillator.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+  ".  If the angle of oscillation ",
+  Cell[BoxData[
+      \(\(\(\ \)\(\[Theta]\)\)\)]],
+  "  is small, use the approximation  ",
+  Cell[BoxData[
+      \(sin \((\[Theta])\)\  \[TildeTilde] \ \[Theta]\)]],
+  "  in equation (3) and obtain the familiar linear D. E. for ",
+  ButtonBox["simple harmonic motion",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SimpleHarmonicMotion.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ":  \n\n(4)\t\t",
+  Cell[BoxData[
+      \(\(\(d\^2\) \(\[Theta]\)\(\ \)\)\/\(d\ t\^2\)\  + \ \(m\ g\ l\)\/I\ \
+\[Theta]\  = \ 0\)]],
+  ",\n\nUsing the substitution  ",
+  Cell[BoxData[
+      \(\[Omega]\_0\  = \ \@\(\(m\ g\ l\)\/I\)\)]],
+  ", the solution to (4)  is known to be \n\n(5)\t\t",
+  Cell[BoxData[
+      \(\[Theta] \((t)\)\  = \ \(a\_1\) cos \((\[Omega]\_0\ t)\) + \(a\_2\) 
+            sin \((\[Omega]\_0\ t)\)\)]],
+  ",\n\nwhich has period  ",
+  Cell[BoxData[
+      \(T\  = \ 2  \[Pi] \@\( I\/\(g\ l\ m\)\)\)]],
+  ".  When the solution (5) is written with a phase shift, it becomes \n\n(6)\
+\t\t",
+  Cell[BoxData[
+      \(\[Theta] \((t)\)\  = \ A\ cos \((\[Omega]\_0\ t + \[Delta])\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/PendulumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PendulumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/PendulumProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pendulum Models",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PendulumProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Runge-Kutta Method for second order D.E.'s)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x''\  = \ f \((t, x, x')\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((a)\) = \[Alpha]\)]],
+  ", ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((a)\) = \[Beta]\)]],
+  StyleBox[",  \n\nover the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ t\  \[LessEqual] \ b\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "at a discrete set of points.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge2D[a0_, b0_, \[Alpha]_, \[Beta]_, 
+          m0_] := \[IndentingNewLine]Module[{a = a0, b = b0, j, 
+            m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]T\  = \ 
+            Table[\ a + \((j - 1)\) h, {j, 1, 
+                m + 1}]; \ \[IndentingNewLine]Z = \ 
+            Table[\ {\[Alpha], \[Beta]}, {j, 1, 
+                m + 1}]; \ \ \[IndentingNewLine]For[\ j = 1, \ 
+            j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\), Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_3]; \ \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\
+\(j + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+              Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                      k\_4)\);\ \ ]; \ \[IndentingNewLine]Return[
+            Z];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the second order  I.V.P.  \n\n\t",
+  Cell[BoxData[
+      \(x''\  + 1\/10\ x' + \ \ 2\ x\  = \ 0\)]],
+  "  ",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((0)\) = 2\)]],
+  ".  ",
+  StyleBox["  \n\nUse the Runge-Kutta method to compute the solution over the \
+interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([0, 20]\)\)]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "The D. E. can be written as   ",
+  Cell[BoxData[
+      \(x''\  = f \((t, x, x')\)\)]],
+  "  where  ",
+  Cell[BoxData[
+      \(f \((t, x, x')\) = \ \(-\ \(1\/10\)\) x'\  - 2\ \ x\)]],
+  ".  \nWe use the substitution ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' = y\)]],
+  "  and make the second order I.V.P. into a system of first order I.V.P.'s  \
+\n\n\t",
+  Cell[BoxData[
+      \(x'\  = \ y\)]],
+  ",  \nand  \n\t",
+  Cell[BoxData[
+      \(y'\  = \ f \((t, x, y)\)\)]],
+  ",  \nwhere  \n\t",
+  Cell[BoxData[
+      \(f \((t, x, y)\) = \ \(-\ \(1\/10\)\)\ y\  - \ 2  x\)]],
+  ",  \nand  \n\t",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = 2\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, x_, y_] = \(-\ \(1\/10\)\) y - 
+          2  x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_] = f[t, x, y];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 20.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Runge2D[a, b, 1.0, 2.0, n];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The solution we seek is the first coordinate in the 2D \
+system.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X = \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(pts = Transpose[{T, X}];\)\ \)}], "Input"],
+
+Cell["Now we can plot the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = 
+        ListPlot[pts, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution to\>"];\)\), "\[IndentingNewLine]", \
+
+    \(\(Print["\<x'' = \>", f[t, x, "\<x'\>"]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the analytic solution to the second order  I.V.P.  \n\n\t",
+  Cell[BoxData[
+      \(x''\  + \ \(1\/10\) x' + \ \ 2\ x\  = \ 0\)]],
+  "  ",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((0)\) = 2\)]],
+  ".  ",
+  StyleBox["  \n\nPlot the solution over the interval ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\([0, 20]\)\)]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(solset\)\(=\)\(DSolve[{\(x''\)[t] + \ \(1\/10\) \(x'\)[t] + 
+              2  x[t] \[Equal] 0, x[0] \[Equal] 1, \(x'\)[0] \[Equal] 2}, 
+        x[t], t]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(g[
+        t_]\)\(=\)\(solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, 
+          2\)\(\[RightDoubleBracket]\)\)\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+We usually prefer our solutions in terms of real functions of a \
+real variable.  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(g[t_]\)\(=\)\(ComplexExpand[g[t]]\)\(\ \)\)\)], "Input"],
+
+Cell["The graph is now plotted.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(graph2 = 
+        Plot[g[t], {t, 0, 20}, PlotStyle \[Rule] \ Blue, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution to\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x'' = \>", f[t, x, "\<x'\>"]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the second order  I.V.P.  \n\n\t",
+  Cell[BoxData[
+      \(x''\  + \(1\/10\) x' + \ \ 2\ sin \((x)\)\  = \ 0\)]],
+  "  ",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((0)\) = 2\)]],
+  ".  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "The D. E. can be written as   ",
+  Cell[BoxData[
+      \(x''\  = f \((t, x, x')\)\)]],
+  "  where  ",
+  Cell[BoxData[
+      \(f \((t, x, x')\) = \ \(-\ \(1\/10\)\) x'\  - 2  sin \((x)\)\)]],
+  ".  \nWe use the substitution ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' = y\)]],
+  "  and make the second order I.V.P. into a system of first order I.V.P.'s  \
+\n\n\t",
+  Cell[BoxData[
+      \(x'\  = \ y\)]],
+  ",  \nand  \n\t",
+  Cell[BoxData[
+      \(y'\  = \ f \((t, x, y)\)\)]],
+  ",  \nwhere  \n\t",
+  Cell[BoxData[
+      \(f \((t, x, y)\) = \ \(-\ \(1\/10\)\) y\  - \ 2  sin \((x)\)\)]],
+  ",  \nand  \n\t",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, x_, y_] = \(-\ \(1\/10\)\) y\  - \ 
+          2  Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_] = f[t, x, y];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["Compute the Runge-Kutta solution.", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 20.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Runge2D[a, b, 1.0, 2.0, n];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The solution we seek is the first coordinate in the 2D \
+system.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(X = \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(pts = Transpose[{T, X}];\)\ \)}], "Input"],
+
+Cell["Now we can plot the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph3 = 
+        ListPlot[pts, PlotJoined \[Rule] True, PlotStyle \[Rule] Red, 
+          PlotRange \[Rule] All];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Runge-Kutta solution to\>"];\)\), "\[IndentingNewLine]", \
+
+    \(\(Print["\<x'' = \>", f[t, x, "\<x'\>"]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compare the graphs of the solutions to  \n\n(i)\t\t",
+  Cell[BoxData[
+      \(x''\  + \ \(1\/10\) x' + \ \ 2\ x\  = \ 0\)]],
+  "  ",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((0)\) = 2\)]],
+  ",  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "\n\tand\n(ii)\t\t",
+  Cell[BoxData[
+      \(x''\  + \(1\/10\) x' + \ \ 2\ sin \((x)\)\  = \ 0\)]],
+  "  ",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 1\)]],
+  ",  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x' \((0)\) = 2\)]],
+  ".  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph2, graph3];\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+From the graph's can you tell which is the solution to (ii)?  How?
+
+The differential equation in example 3 is called the nonlinear pendulum.
+
+Is is a better model that the one given in example 1. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The systems of  D. E.'s approach",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe pendulum can also be explored using a ",
+  ButtonBox["phase curve",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PhaseCurve.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " in the ",
+  ButtonBox["phase plane",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PhasePlane.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  This requires a method to solve systems of D. E.'s, and our choice will \
+be the Runge-Kutta method.  Plotting several curves will enable us to make a \
+",
+  ButtonBox["phase portrait",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PhasePortrait.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " which help understand some of the subtle features of the non-linear \
+pendulum. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Runge-Kutta Method in 2D space)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'\  = \ \(f\_1\) \((t, x, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((a)\) = \[Alpha]\)]],
+  ",  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ \(f\_2\) \((t, x, y)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \[Beta]\)]],
+  StyleBox[",  \n\nover the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ t\  \[LessEqual] \ b\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "at a discrete set of points. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge2D[a0_, b0_, \[Alpha]_, \[Beta]_, 
+        m0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{a = a0, b = b0, j, k, 
+          m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]T\  = \ 
+          Table[\ a + \((j - 1)\) h, {j, 1, 
+              m + 1}]; \ \[IndentingNewLine]Z = \ 
+          Table[\ {\[Alpha], \[Beta]}, {j, 1, 
+              m + 1}]; \ \ \[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\), Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+            h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\) + h, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                  k\_3]; \ \
+\[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                    k\_4)\);\ \ ]; \ \[IndentingNewLine]Return[
+          Z];\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Runge-Kutta method in 2D is a \"vector form\" of the one-dimensional \
+method, here the function ",
+  StyleBox["f",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " is replaced with ",
+  StyleBox["F",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Solve   ",
+  Cell[BoxData[
+      \(\(x''\)[x]\  + \(g\/l\) Sin[x]\  = \ 0\)]],
+  ",  by using the Runge-Kutta method to solve the system of D. E.'s  \n\n\t\t\
+",
+  Cell[BoxData[
+      \(x'\  = \ \ y\)]],
+  " ,  \nand\n\t\t",
+  Cell[BoxData[
+      \(y' = \(-\(g\/l\)\) Sin[x]\)]],
+  ".  ",
+  StyleBox["  \n\nUse  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["g = 32",
+    FontFamily->"Courier New"],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["l = 32",
+    FontFamily->"Courier New"],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g = 32;\)\), "\[IndentingNewLine]", 
+    \(\(l = 32;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_] = \(-\(g\/l\)\) 
+          Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solutions.
+First, graph four closed loops around the origin. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 0.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{\(-1\), 1}, {\(-1\), 1}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.8;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph2 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{\(-1.1\), 1.1}, {\(-1\), 1}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 7.7;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph3 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2\), 2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 25.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph4 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Second, graph two curves where the initial velocity is large enough \
+to make the pendulum continue turning about its pivot. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph5 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{0, 13}, {0, 3}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+              Range[\(-3\), 3, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph6 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{0, 13}, {0, 3}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+              Range[\(-3\), 3, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, 
+        PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Third, graph two curves where the initial velocity is large enough to make \
+the pendulum continue turning about its pivot but in the opposite direction.\n\
+",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  In order to keep these curves from plotting in quadrant III, we have \
+started them at ",
+  Cell[BoxData[
+      \(x\_0\  = \ 4  \[Pi]\)]],
+  " instead of ",
+  Cell[BoxData[
+      \(x\_0\  = \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 4  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-2.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph7 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 13}, {\(-3\), 0}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+              Range[\(-3\), 3, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = 4  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph8 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{0, 13}, {\(-3\), 0}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+              Range[\(-3\), 3, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph four closed loops around the point ",
+  Cell[BoxData[
+      \(\((2  \[Pi], 0)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts1\  = Runge2D[0.0, 6.4, 2  \[Pi], 0.5, 100];\)\ \ \), "\n", 
+    \(\(graph9 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 6.8, 2  \[Pi], 1.0, 100];\)\ \ \), "\n", 
+    \(\(graph10 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 7.7, 2  \[Pi], 1.5, 100];\)\ \ \), "\n", 
+    \(\(graph11 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 25.5, 2  \[Pi], 2.0, 100];\)\ \ \), "\n", 
+    \(\(graph12 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph9, graph10, graph11, graph12, 
+        PlotRange \[Rule] {{3, 9.5}, {\(-2\), 2}}, 
+        Ticks \[Rule] {Range[\[Pi], 4  \[Pi], \[Pi]], Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, graph9, graph10, graph11, graph12, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph four closed loops around the point ",
+  Cell[BoxData[
+      \(\((4  \[Pi], 0)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts1\  = Runge2D[0.0, 6.4, 4  \[Pi], 0.5, 100];\)\ \ \), "\n", 
+    \(\(graph13 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 6.8, 4  \[Pi], 1.0, 100];\)\ \ \), "\n", 
+    \(\(graph14 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 7.7, 4  \[Pi], 1.5, 100];\)\ \ \), "\n", 
+    \(\(graph15 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 25.5, 4  \[Pi], 2.0, 100];\)\ \ \), "\n", 
+    \(\(graph16 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph13, graph14, graph15, graph16, 
+        PlotRange \[Rule] {{9.3, 16}, {\(-2\), 2}}, 
+        Ticks \[Rule] {Range[3  \[Pi], 5  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, graph9, graph10, graph11, graph12, graph13, graph14, graph15, 
+        graph16, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Solve   ",
+  Cell[BoxData[
+      \(\(x''\)[x]\  + 2  Sin[x]\  = \ 0\)]],
+  ",  by using the Runge-Kutta method to solve the system of D. E.'s  \n\n\t\t\
+",
+  Cell[BoxData[
+      \(x'\  = \ \ y\)]],
+  " ,  \nand\n\t\t",
+  Cell[BoxData[
+      \(y' = \(-2\) Sin[x]\)]],
+  ".  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g = 32;\)\), "\[IndentingNewLine]", 
+    \(\(l = 16;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_] = \(-\(g\/l\)\) 
+          Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solutions.
+First, graph four closed loops around the origin. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(1\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 4.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 4.8;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph2 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(3\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5.4;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph3 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2\ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 18.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph4 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Second, graph two curves where the initial velocity is large enough \
+to make the pendulum continue turning about its pivot. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(5\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph5 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{0, 19}, {0, 5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 3\ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph6 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{0, 19}, {0, 5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, 
+        PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-5\), 5, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Third, graph two curves where the initial velocity is large enough to make \
+the pendulum continue turning about its pivot but in the opposite direction.\n\
+",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  In order to keep these curves from plotting in quadrant III, we have \
+started them at ",
+  Cell[BoxData[
+      \(x\_0\  = \ 6  \[Pi]\)]],
+  " instead of ",
+  Cell[BoxData[
+      \(x\_0\  = \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-\(5\/2\)\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph7 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 19}, {\(-5\), 0}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-3\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph8 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{0, 19}, {\(-5\), 0}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph four closed loops around the point ",
+  Cell[BoxData[
+      \(\((2  \[Pi], 0)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts1\  = 
+        Runge2D[0.0, 4.5, 2  \[Pi], \(1\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph9 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 4.8, 2  \[Pi], \@2, 100];\)\ \ \), "\n", 
+    \(\(graph10 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = 
+        Runge2D[0.0, 5.4, 2  \[Pi], \(3\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph11 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 18.0, 2  \[Pi], 2 \@ 2, 100];\)\ \ \), "\n", 
+    \(\(graph12 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph9, graph10, graph11, graph12, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\[Pi], 4  \[Pi], \[Pi]], Range[\(-4\), 4, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, graph9, graph10, graph11, graph12, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph four closed loops around the point ",
+  Cell[BoxData[
+      \(\((4  \[Pi], 0)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts1\  = 
+        Runge2D[0.0, 4.5, 4  \[Pi], \(1\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph13 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 4.8, 4  \[Pi], \@2, 100];\)\ \ \), "\n", 
+    \(\(graph14 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = 
+        Runge2D[0.0, 5.4, 4  \[Pi], \(3\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph15 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 18.0, 4  \[Pi], 2 \@ 2, 100];\)\ \ \), "\n", 
+    \(\(graph16 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph13, graph14, graph15, graph16, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[3  \[Pi], 5  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, graph9, graph10, graph11, graph12, graph13, graph14, graph15, 
+        graph16, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Solve  ",
+  Cell[BoxData[
+      \(x''\  + \ \(1\/10\) x' + \ \ 2\ x\  = \ 0\)]],
+  ",  by using the Runge-Kutta method to solve the system of D. E.'s  \n\n\t\t\
+",
+  Cell[BoxData[
+      \(x'\  = \ \ y\)]],
+  " ,  \nand\n\t\t",
+  Cell[BoxData[
+      \(y' = \(-\(1\/10\)\) y - 2  Sin[x]\)]],
+  ".  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the functions  ",
+  Cell[BoxData[
+      \(f\_1[t, x, y]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(f\_2[t, x, y]\)]],
+  "  and form the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y}]\  = \ {f\_1[t, x, y], f\_2[t, x, y]\ }\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g = 32;\)\), "\[IndentingNewLine]", 
+    \(\(l = 16;\)\), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_] = \ \ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, 
+          y_] = \(-\(1\/10\)\) y\  - \(g\/l\) 
+            Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_}]\  = \ {f\_1[t, x, y], 
+          f\_2[t, x, y]\ };\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find numerical solutions to the system of D.E.'s\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y}] = \>", F[t, {x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solutions.
+First, graph four spirals around the origin. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(1\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 9.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph1 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 9.3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph2 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(3\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 5.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph3 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{\(-2\), 2}, {\(-2.2\), 2.2}}, 
+          Ticks \[Rule] {Range[\(-2\), 2, 1], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2\ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 6.4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph4 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          PlotRange \[Rule] All, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]], 
+              Range[\(-2\), 2, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 4  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Second, graph a curves where the initial velocity is large enough \
+to make the pendulum turn twice about its pivot. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(5\/2\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 19.9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(graph5 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          PlotRange \[Rule] {{0, 22}, {\(-2.5\), 4.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 7  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Third, graph a curves where the initial velocity is large enough to \
+make the pendulum turn three about its pivot. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 3\ \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 20.2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph6 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          PlotRange \[Rule] {{0, 22}, {\(-2.5\), 4.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 7  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, 
+        PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-5\), 5, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Third, graph two curves where the initial velocity is large enough to make \
+the pendulum continue turning about its pivot but in the opposite direction.\n\
+",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  In order to keep these curves from plotting in quadrant III, we have \
+started them at ",
+  Cell[BoxData[
+      \(x\_0\  = \ 6  \[Pi]\)]],
+  " instead of ",
+  Cell[BoxData[
+      \(x\_0\  = \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-\(5\/2\)\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 11.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph7 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Orange, 
+          PlotRange \[Rule] {{0, 19}, {\(-4.5\), 2.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-3\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 11.2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph8 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Brown, 
+          PlotRange \[Rule] {{\(-3\), 19}, {\(-4.5\), 2.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph four spirals around the point ",
+  Cell[BoxData[
+      \(\((2  \[Pi], 0)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts1\  = 
+        Runge2D[0.0, 9.0, 2  \[Pi], \(1\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph9 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 9.3, 2  \[Pi], \@2, 100];\)\ \ \), "\n", 
+    \(\(graph10 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = 
+        Runge2D[0.0, 5.2, 2  \[Pi], \(3\/2\) \@2, 100];\)\ \ \), "\n", 
+    \(\(graph11 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(pts1\  = Runge2D[0.0, 6.4, 2  \[Pi], 2 \@ 2, 100];\)\ \ \), "\n", 
+    \(\(graph12 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph9, graph10, graph11, graph12, 
+        PlotRange \[Rule] {{2.8, 9.5}, {\(-3\), 3}}, 
+        Ticks \[Rule] {Range[\ \[Pi], 4  \[Pi], \[Pi]], Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph1, graph2, graph3, graph4, graph5, graph6, graph7, 
+        graph8, graph9, graph10, graph11, graph12, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 7  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Next, graph two curves where the initial velocity is large enough to make \
+the pendulum continue turning about its pivot but in the opposite direction.\n\
+",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  "  In order to keep these curves from plotting in quadrant III, we have \
+started them at ",
+  Cell[BoxData[
+      \(x\_0\  = \ 6  \[Pi]\)]],
+  " instead of ",
+  Cell[BoxData[
+      \(x\_0\  = \ 0\)]],
+  ", and the time interval is larger than before."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = \ 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-\(5\/2\)\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 19.9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph7 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] \ Magenta, 
+          PlotRange \[Rule] {{0, 19}, {\(-4.5\), 2.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x\_0\  = 6  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ \(-3\) \@2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 20.2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(pts1\  = Runge2D[a, b, x\_0, y\_0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(graph8 = \ 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          PlotRange \[Rule] {{\(-3\), 19}, {\(-4.5\), 2.5}}, 
+          Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+              Range[\(-5\), 5, 1]}];\)\ \ \)}], "Input"],
+
+Cell["Combine the above graphs. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Show[graph5, graph6, graph7, graph8, PlotRange \[Rule] All, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), 6  \[Pi], \[Pi]], 
+            Range[\(-3\), 3, 1]}];\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Pendulum",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/PendulumBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Pendulum",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PendulumBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PageHeaders->{{Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"], Inherited, Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"]}, {Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"], Inherited, Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"]}},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {36, 36}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->True,
+"PrintMultipleHorizontalPages"->False,
+"FirstPageHeader"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 175, 4, 35, "Text"],
+Cell[1954, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3433, 111, 1901, 57, 287, "Text"],
+Cell[5337, 170, 611, 21, 33, "Text"],
+Cell[5951, 193, 1729, 48, 283, "Text"],
+Cell[7683, 243, 611, 21, 33, "Text"],
+Cell[8297, 266, 597, 20, 33, "Text"],
+Cell[8897, 288, 959, 29, 109, "Text"],
+Cell[9859, 319, 1639, 26, 309, "Input"],
+Cell[11501, 347, 667, 25, 112, "Text"],
+
+Cell[CellGroupData[{
+Cell[12193, 376, 101, 2, 33, "Text"],
+Cell[12297, 380, 867, 33, 210, "Text"],
+Cell[13167, 415, 690, 11, 183, "Input"],
+Cell[13860, 428, 49, 0, 33, "Text"],
+Cell[13912, 430, 223, 4, 90, "Input"],
+Cell[14138, 436, 88, 3, 33, "Text"],
+Cell[14229, 441, 188, 3, 51, "Input"],
+Cell[14420, 446, 46, 0, 33, "Text"],
+Cell[14469, 448, 376, 7, 90, "Input"]
+}, Closed]],
+Cell[14860, 458, 661, 24, 109, "Text"],
+
+Cell[CellGroupData[{
+Cell[15546, 486, 101, 2, 33, "Text"],
+Cell[15650, 490, 201, 3, 42, "Input"],
+Cell[15854, 495, 153, 3, 30, "Input"],
+Cell[16010, 500, 106, 3, 33, "Text"],
+Cell[16119, 505, 80, 1, 30, "Input"],
+Cell[16202, 508, 43, 0, 33, "Text"],
+Cell[16248, 510, 369, 6, 90, "Input"]
+}, Closed]],
+Cell[16632, 519, 510, 20, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[17167, 543, 101, 2, 33, "Text"],
+Cell[17271, 547, 884, 33, 210, "Text"],
+Cell[18158, 582, 699, 11, 183, "Input"],
+Cell[18860, 595, 49, 0, 33, "Text"],
+Cell[18912, 597, 223, 4, 90, "Input"],
+Cell[19138, 603, 88, 3, 33, "Text"],
+Cell[19229, 608, 188, 3, 51, "Input"],
+Cell[19420, 613, 46, 0, 33, "Text"],
+Cell[19469, 615, 370, 7, 90, "Input"]
+}, Closed]],
+Cell[19854, 625, 892, 36, 112, "Text"],
+
+Cell[CellGroupData[{
+Cell[20771, 665, 101, 2, 33, "Text"],
+Cell[20875, 669, 68, 1, 30, "Input"],
+Cell[20946, 672, 220, 6, 109, "Text"]
+}, Closed]],
+Cell[21181, 681, 884, 23, 87, "Text"],
+Cell[22068, 706, 1074, 33, 128, "Text"],
+Cell[23145, 741, 1619, 27, 309, "Input"],
+Cell[24767, 770, 390, 14, 34, "Text"],
+Cell[25160, 786, 684, 25, 153, "Text"],
+
+Cell[CellGroupData[{
+Cell[25869, 815, 101, 2, 33, "Text"],
+Cell[25973, 819, 280, 11, 33, "Text"],
+Cell[26256, 832, 706, 12, 202, "Input"],
+Cell[26965, 846, 109, 3, 52, "Text"],
+Cell[27077, 851, 649, 12, 170, "Input"],
+Cell[27729, 865, 597, 11, 150, "Input"],
+Cell[28329, 878, 594, 11, 150, "Input"],
+Cell[28926, 891, 585, 11, 150, "Input"],
+Cell[29514, 904, 42, 0, 33, "Text"],
+Cell[29559, 906, 204, 3, 30, "Input"],
+Cell[29766, 911, 149, 3, 33, "Text"],
+Cell[29918, 916, 600, 11, 150, "Input"],
+Cell[30521, 929, 650, 12, 170, "Input"],
+Cell[31174, 943, 42, 0, 33, "Text"],
+Cell[31219, 945, 229, 4, 30, "Input"],
+Cell[31451, 951, 458, 14, 52, "Text"],
+Cell[31912, 967, 674, 12, 170, "Input"],
+Cell[32589, 981, 664, 12, 170, "Input"],
+Cell[33256, 995, 42, 0, 33, "Text"],
+Cell[33301, 997, 245, 4, 30, "Input"],
+Cell[33549, 1003, 134, 5, 33, "Text"],
+Cell[33686, 1010, 1165, 20, 190, "Input"],
+Cell[34854, 1032, 42, 0, 33, "Text"],
+Cell[34899, 1034, 280, 4, 30, "Input"],
+Cell[35182, 1040, 134, 5, 33, "Text"],
+Cell[35319, 1047, 1184, 21, 190, "Input"],
+Cell[36506, 1070, 42, 0, 33, "Text"],
+Cell[36551, 1072, 325, 5, 50, "Input"]
+}, Closed]],
+Cell[36891, 1080, 445, 17, 106, "Text"],
+
+Cell[CellGroupData[{
+Cell[37361, 1101, 101, 2, 33, "Text"],
+Cell[37465, 1105, 280, 11, 33, "Text"],
+Cell[37748, 1118, 706, 12, 202, "Input"],
+Cell[38457, 1132, 109, 3, 52, "Text"],
+Cell[38569, 1137, 662, 12, 184, "Input"],
+Cell[39234, 1151, 597, 11, 152, "Input"],
+Cell[39834, 1164, 605, 11, 164, "Input"],
+Cell[40442, 1177, 588, 11, 152, "Input"],
+Cell[41033, 1190, 42, 0, 33, "Text"],
+Cell[41078, 1192, 204, 3, 30, "Input"],
+Cell[41285, 1197, 149, 3, 33, "Text"],
+Cell[41437, 1202, 609, 11, 164, "Input"],
+Cell[42049, 1215, 655, 12, 172, "Input"],
+Cell[42707, 1229, 42, 0, 33, "Text"],
+Cell[42752, 1231, 229, 4, 30, "Input"],
+Cell[42984, 1237, 458, 14, 52, "Text"],
+Cell[43445, 1253, 683, 12, 184, "Input"],
+Cell[44131, 1267, 668, 12, 172, "Input"],
+Cell[44802, 1281, 42, 0, 33, "Text"],
+Cell[44847, 1283, 245, 4, 30, "Input"],
+Cell[45095, 1289, 134, 5, 33, "Text"],
+Cell[45232, 1296, 1175, 21, 223, "Input"],
+Cell[46410, 1319, 42, 0, 33, "Text"],
+Cell[46455, 1321, 280, 4, 30, "Input"],
+Cell[46738, 1327, 134, 5, 33, "Text"],
+Cell[46875, 1334, 1193, 22, 223, "Input"],
+Cell[48071, 1358, 42, 0, 33, "Text"],
+Cell[48116, 1360, 325, 5, 50, "Input"]
+}, Closed]],
+Cell[48456, 1368, 468, 17, 112, "Text"],
+
+Cell[CellGroupData[{
+Cell[48949, 1389, 101, 2, 33, "Text"],
+Cell[49053, 1393, 280, 11, 33, "Text"],
+Cell[49336, 1406, 735, 13, 204, "Input"],
+Cell[50074, 1421, 104, 3, 52, "Text"],
+Cell[50181, 1426, 662, 12, 184, "Input"],
+Cell[50846, 1440, 597, 11, 152, "Input"],
+Cell[51446, 1453, 605, 11, 164, "Input"],
+Cell[52054, 1466, 587, 11, 152, "Input"],
+Cell[52644, 1479, 42, 0, 33, "Text"],
+Cell[52689, 1481, 204, 3, 30, "Input"],
+Cell[52896, 1486, 141, 3, 33, "Text"],
+Cell[53040, 1491, 619, 11, 164, "Input"],
+Cell[53662, 1504, 140, 3, 33, "Text"],
+Cell[53805, 1509, 667, 12, 172, "Input"],
+Cell[54475, 1523, 42, 0, 33, "Text"],
+Cell[54520, 1525, 229, 4, 30, "Input"],
+Cell[54752, 1531, 458, 14, 52, "Text"],
+Cell[55213, 1547, 687, 12, 184, "Input"],
+Cell[55903, 1561, 680, 12, 172, "Input"],
+Cell[56586, 1575, 42, 0, 33, "Text"],
+Cell[56631, 1577, 245, 4, 30, "Input"],
+Cell[56879, 1583, 129, 5, 33, "Text"],
+Cell[57011, 1590, 1207, 22, 223, "Input"],
+Cell[58221, 1614, 42, 0, 33, "Text"],
+Cell[58266, 1616, 280, 4, 30, "Input"],
+Cell[58549, 1622, 501, 14, 52, "Text"],
+Cell[59053, 1638, 688, 12, 184, "Input"],
+Cell[59744, 1652, 680, 12, 172, "Input"],
+Cell[60427, 1666, 42, 0, 33, "Text"],
+Cell[60472, 1668, 204, 3, 30, "Input"]
+}, Closed]],
+Cell[60691, 1674, 158, 3, 32, "Text"],
+Cell[60852, 1679, 538, 16, 33, "Text"],
+Cell[61393, 1697, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,2144 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     66528,       1937]*)
+(*NotebookOutlinePosition[     67385,       1966]*)
+(*  CellTagsIndexPosition[     67341,       1962]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for Pad",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\[EAcute]",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" Approximation",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " \n\tA Pad\[EAcute] rational approximation to f(x) on [a,b] is the \
+quotient of two polynomials ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(\(Q\_m\) \((x)\)\)]],
+  " of degrees n and m, respectively. We use the notation ",
+  Cell[BoxData[
+      \(\(R\_\(n, m\)\) \((x)\)\)]],
+  " to denote this quotient: \n\n\t\t",
+  Cell[BoxData[
+      \(\(R\_\(n, 
+              m\)\) \((x)\)\  = \ \(\(P\_n\) \((x)\)\)\/\(\(Q\_m\) \
+\((x)\)\)\)]],
+  ".  \n\t\t\nWe attribute much of the founding theory to ",
+  StyleBox[ButtonBox["Henri Eug\[EGrave]ne Pad\[EAcute]",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Pade.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1863-1953).  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PadeApproximant.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        StyleBox[\(C\^\(n + m\)\),
+          FontWeight->"Bold"]}]]],
+  ", and that ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " Maclaurin polynomial expansion of degree at least ",
+  Cell[BoxData[
+      \(n + m\)]],
+  ".  Then \n\n\t",
+  Cell[BoxData[
+      \(f \((x)\)\  \[TildeTilde] \ \(R\_\(n, 
+                m\)\) \((x)\)\  = \ \(\(P\_n\) \((x)\)\)\/\(\(Q\_m\) \
+\((x)\)\)\)]],
+  ",  \n\nwhere ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(\(Q\_m\) \((x)\)\)]],
+  " are polynomials of degree n and m, respectively.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PadeApproximationProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/PadeApproximationProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlink to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PadeApproximationProg.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/PadeApproximationProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Pad\[EAcute] approximation ",
+  Cell[BoxData[
+      \(\(R\_\(2, 2\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)],
+    AspectRatioFixed->True],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, set up the equation   ",
+  Cell[BoxData[
+      \(f \((x)\) \(Q\_m\) \((x)\)\  - \ \(P\_n\) \((x)\)\  = \ \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\n", 
+    \(\(F[x_, k_]\  := \ Series[f[x], {x, 0, k}];\)\ \ \ \ \), "\n", 
+    \(\(P[x_, k_]\  = \ \[Sum]\+\(i = 0\)\%k p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_, k_]\  = \ 
+        1\  + \ \[Sum]\+\(i = 1\)\%k q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(n = 2;\)\ \ \), "\n", 
+    \(\(m = 2;\)\ \ \), "\n", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x, n]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x, m]\ ];\)\ \ \ \), "\n", 
+    \(\(Print["\< f(x) = \>", 
+        F[x, m + n]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Form  f(x)\!\(Q\_m\)(x) - \!\(P\_n\)(x) = 0\>\""];\)\ \ \
+\), "\n", 
+    \(\(Print[
+        Expand[F[x, n + m] Q[x, m] - P[x, n]] \[Equal] 0];\)\ \ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Second, solve the equation   ",
+  Cell[BoxData[
+      \(f \((x)\) \(Q\_m\) \((x)\)\  - \ \(P\_n\) \((x)\)\  = \ \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(L = Expand[F[x, n + m] Q[x, m] - P[x, n]];\)\ \ \), "\n", 
+    \(\(coeffs = CoefficientList[L, x];\)\ \ \), "\n", 
+    \(\(Eqns = Distribute[coeffs \[Equal] 0, \ List];\)\ \ \), "\n", 
+    \(\(Print[TableForm[Eqns]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = Solve[Eqns, vars];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(R[x_] = 
+        Simplify[
+          ReplaceAll[P[x, n]\/Q[x, n], 
+            solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[Transpose[solset]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Compare our work with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Pade subroutine."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \ \), "\n", 
+    \(\(Clear[r];\)\), "\[IndentingNewLine]", 
+    \(\(r[x_] = 
+        ExpandDenominator[
+          ExpandNumerator[
+            Together[
+              Pade[f[x], {x, 0, 2, 
+                  2}]\ ]\ ]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Pade approximation over the \
+interval  [-1,1].  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell["Find the error  over the interval  [-1,1].  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[f[x] - r[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-r[x] = \>", 
+        f[x] - r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-r[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - r[1.0]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with the error in a ",
+  Cell[BoxData[
+      \(4\^th\)]],
+  " degree ",
+  "Maclaurin",
+  " polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 4}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell["Find the error  over the interval  [-1,1].  ", "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 4}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-s[x] = \>", 
+        f[x] - s[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-s[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - s[1.0]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with the error in a ",
+  Cell[BoxData[
+      \(5\^th\)]],
+  " degree ",
+  "Maclaurin",
+  " polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 5}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell["Find the error  over the interval  [-1,1].  ", "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 5}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-s[x] = \>", 
+        f[x] - s[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-s[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - s[1.0]]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Pad\[EAcute] approximation ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)],
+    AspectRatioFixed->True],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, set up the equation   ",
+  Cell[BoxData[
+      \(f \((x)\) \(Q\_m\) \((x)\)\  - \ \(P\_n\) \((x)\)\  = \ \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Cos[x];\)\ \ \), "\n", 
+    \(\(F[x_, k_]\  := \ Series[f[x], {x, 0, k}];\)\ \ \ \ \), "\n", 
+    \(\(P[x_, k_]\  = \ \[Sum]\+\(i = 0\)\%k p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_, k_]\  = \ 
+        1\  + \ \[Sum]\+\(i = 1\)\%k q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\n", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x, n]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x, m]\ ];\)\ \ \ \), "\n", 
+    \(\(Print["\< f(x) = \>", 
+        F[x, m + n]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Form  f(x)\!\(Q\_m\)(x) - \!\(P\_n\)(x) = 0\>\""];\)\ \ \
+\), "\n", 
+    \(\(Print[
+        Expand[F[x, n + m] Q[x, m] - P[x, n]] \[Equal] 0];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Second, solve the equation   ",
+  Cell[BoxData[
+      \(f \((x)\) \(Q\_m\) \((x)\)\  - \ \(P\_n\) \((x)\)\  = \ \ 0\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(L = Expand[F[x, n + m] Q[x, m] - P[x, n]];\)\ \), "\n", 
+    \(\(coeffs = CoefficientList[L, x];\)\ \), "\n", 
+    \(\(Eqns = Distribute[coeffs \[Equal] 0, \ List];\)\ \), "\n", 
+    \(\(Print[TableForm[Eqns]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = Solve[Eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(R[x_] = 
+        Simplify[
+          ReplaceAll[P[x, n]\/Q[x, n], 
+            solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[Transpose[solset]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R[x] = \>", R[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Compare our work with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Pade subroutine."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \ \), "\n", 
+    \(\(Clear[r];\)\), "\[IndentingNewLine]", 
+    \(\(r[x_] = 
+        ExpandDenominator[
+          ExpandNumerator[
+            Together[
+              Pade[f[x], {x, 0, 4, 
+                  4}]\ ]\ ]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Plot graphs of the function and its Pade approximation over the ",
+  "interval  ",
+  Cell[BoxData[
+      \(\(\([\)\(\(-1\), 1\)\(]\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the ",
+  "interval  ",
+  Cell[BoxData[
+      \(\(\([\)\(\(-1\), 1\)\(]\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[f[x] - r[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-r[x] = \>", 
+        f[x] - r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-r[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - r[1.0]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with the error in a ",
+  Cell[BoxData[
+      \(7\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The coefficient of  ",
+  Cell[BoxData[
+      \(x\^7\)]],
+  " is zero, but that's o.k.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 7}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Plot graphs of the function and its Pade approximation over the ",
+  "interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 7}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-s[x] = \>", 
+        f[x] - s[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-s[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - s[1.0]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with the error in a ",
+  Cell[BoxData[
+      \(9\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The coefficient of  ",
+  Cell[BoxData[
+      \(x\^9\)]],
+  " is zero, but that's o.k.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 9}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Plot graphs of the function and its Pade approximation over the ",
+  "interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 9}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - s[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] \ Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x]-s[x] = \>", 
+        f[x] - s[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x]-s[x]| \[LessEqual] \>", 
+        Abs[f[1.0] - s[1.0]]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for the Pade \
+Approximation.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = \@x\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 1\)]],
+  ", ",
+  Cell[BoxData[
+      \(x\_0 = 4\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = 5\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \[IndentingNewLine]Print["\
+\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade01/Padeaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade01/Padeaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 8.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]P[x_]\  = \ \ Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ ]\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade02/Padebb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade02/Padebb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]P[x_]\  = \ \ Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ ]\ \ \ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade03/Padecc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade03/Padecc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = 1\/\@\(1 - x\)\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\@\(1 - x\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 8.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[\ 
+          Pade[f[x], {x, x0, n, n}]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, \(-1.5\),  .9999}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 5, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ ]\ \ \ \ \ \ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade04/Padedd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade04/Padedd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = Log[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 1\)]],
+  ", and ",
+  Cell[BoxData[
+      \(x\_0 = 2\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-5\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ ]\ \ \ \ \ \ \ \ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade05/Padeee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade05/Padeee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-6\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ ]\ \ \ \ \ \ \ \ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade06/Padeff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade06/Padeff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = Sin[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n, n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 8.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade08/Padehh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade08/Padehh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n + 1, n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n + 1, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 9.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade09/Padeii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade09/Padeii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = Tan[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Tan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-\[Pi]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-\[Pi]\)\/2;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = \[Pi]\/2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = 
+        Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, a, \(-\[Pi]\)\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[f[x], {x, \(-\[Pi]\)\/2, \[Pi]\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph3 = 
+        Plot[f[x], {x, \[Pi]\/2, b}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] 
+            Identity]; \[IndentingNewLine]r = \[Pi]\/2; \ \
+\[IndentingNewLine]If[n > 1, 
+        solset = 
+          NSolve[Denominator[P[x]] \[Equal] 0]; \[IndentingNewLine]solset = 
+          Sort[Abs[\(Transpose[solset]\)\_\(\(\[LeftDoubleBracket]\)\(1, All, \
+2\)\(\[RightDoubleBracket]\)\)]]; \[IndentingNewLine]r = 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\ ]; \[IndentingNewLine]graph4 = 
+        Plot[P[x], {x, a, \(-r\)}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph5 = 
+        Plot[P[x], {x, \(-r\), r}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph6 = 
+        Plot[P[x], {x, r, b}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, graph3, graph4, graph5, graph6, Cdot, Rends, 
+        PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]\/2], 
+            Range[\(-6\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 12.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade12/Padell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade12/Padell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 20.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-5.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 4, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n, n}]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-2\), 3, 1], Range[0, 20, 5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]figure = 
+        Show[graph1, Cdot, Rends, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 13.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade13/Pademm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade13/Pademm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations ",
+  Cell[BoxData[
+      \(f[x] = ArcTan[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.6\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.6;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n, n}]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+              Range[\(-\[Pi]\)\/4, \[Pi]\/4, \[Pi]\/4]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 16.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade16/Padepp.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade16/Padepp.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = ArcSin[x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcSin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-2.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 2.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]P[x_]\  = 
+        Together[
+          Pade[f[x], {x, x0, n, n}]]; \ \ \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, \(-0.9999\), 0.9999}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+            Range[\(-\[Pi]\)\/2, \[Pi]\/2, \[Pi]\/4]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 17.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade17/Padeqq.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade17/Padeqq.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[" ).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = BesselJ[0, x]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-10.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 10.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.8\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-11\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 11;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n + 1, n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-10\), 10, 2], Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 18.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade18/Paderr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade18/Paderr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.15\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 0.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n + 1, n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.4, 0.1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 20.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade20/Padett.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade20/Padett.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find Pade approximations for ",
+  Cell[BoxData[
+      \(f[x] = 1\/2\  + 1\/2\ Erf[x\/\@2]\)]],
+  " expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/2\  + 1\/2\ Erf[x\/\@2];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.25\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4. \);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Calculus`Pade`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 6, \(n++\), \[IndentingNewLine]P[x_]\  = \ 
+        Together[Pade[f[x], {x, x0, n, n}]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.8, 0.25]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P\>"\_\(n, n\), "\<[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 21.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade21/Padeuu.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade21/Padeuu.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Pade/Pade.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pade Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/Pade/\
+Pade.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlink to animations."
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PadeApproximationBib.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Pad\[EAcute] Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/PadeApproximationBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, -1}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 415, 15, 35, "Text"],
+Cell[2194, 70, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3673, 122, 919, 28, 149, "Text"],
+Cell[4595, 152, 1053, 36, 114, "Text"],
+Cell[5651, 190, 652, 22, 33, "Text"],
+Cell[6306, 214, 775, 24, 33, "Text"],
+Cell[7084, 240, 638, 21, 33, "Text"],
+Cell[7725, 263, 309, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[8059, 279, 101, 2, 33, "Text"],
+Cell[8163, 283, 158, 5, 33, "Text"],
+Cell[8324, 290, 1060, 23, 340, "Input"],
+Cell[9387, 315, 158, 5, 33, "Text"],
+Cell[9548, 322, 892, 17, 246, "Input"],
+Cell[10443, 341, 131, 5, 33, "Text"],
+Cell[10577, 348, 433, 10, 110, "Input"],
+Cell[11013, 360, 109, 3, 33, "Text"],
+Cell[11125, 365, 328, 5, 90, "Input"],
+Cell[11456, 372, 60, 0, 33, "Text"],
+Cell[11519, 374, 408, 7, 90, "Input"],
+Cell[11930, 383, 215, 10, 33, "Text"],
+Cell[12148, 395, 163, 3, 50, "Input"],
+Cell[12314, 400, 328, 5, 90, "Input"],
+Cell[12645, 407, 60, 0, 33, "Text"],
+Cell[12708, 409, 500, 9, 110, "Input"],
+Cell[13211, 420, 215, 10, 33, "Text"],
+Cell[13429, 432, 163, 3, 50, "Input"],
+Cell[13595, 437, 328, 5, 90, "Input"],
+Cell[13926, 444, 60, 0, 33, "Text"],
+Cell[13989, 446, 500, 9, 110, "Input"]
+}, Closed]],
+Cell[14504, 458, 297, 12, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[14826, 474, 101, 2, 33, "Text"],
+Cell[14930, 478, 158, 5, 33, "Text"],
+Cell[15091, 485, 1019, 21, 340, "Input"],
+Cell[16113, 508, 158, 5, 33, "Text"],
+Cell[16274, 515, 865, 16, 246, "Input"],
+Cell[17142, 533, 131, 5, 33, "Text"],
+Cell[17276, 540, 437, 10, 110, "Input"],
+Cell[17716, 552, 178, 6, 33, "Text"],
+Cell[17897, 560, 328, 5, 90, "Input"],
+Cell[18228, 567, 139, 6, 33, "Text"],
+Cell[18370, 575, 408, 7, 90, "Input"],
+Cell[18781, 584, 381, 15, 52, "Text"],
+Cell[19165, 601, 163, 3, 50, "Input"],
+Cell[19331, 606, 166, 6, 33, "Text"],
+Cell[19500, 614, 328, 5, 90, "Input"],
+Cell[19831, 621, 500, 9, 110, "Input"],
+Cell[20334, 632, 381, 15, 52, "Text"],
+Cell[20718, 649, 163, 3, 50, "Input"],
+Cell[20884, 654, 166, 6, 33, "Text"],
+Cell[21053, 662, 328, 5, 90, "Input"],
+Cell[21384, 669, 500, 9, 110, "Input"]
+}, Closed]],
+Cell[21899, 681, 168, 4, 32, "Text"],
+Cell[22070, 687, 353, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[22448, 708, 105, 2, 33, "Text"],
+Cell[22556, 712, 1519, 29, 392, "Input"],
+Cell[24078, 743, 781, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[24896, 774, 105, 2, 30, "Text"],
+Cell[25004, 778, 1536, 30, 429, "Input"],
+Cell[26543, 810, 781, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[27361, 841, 105, 2, 30, "Text"],
+Cell[27469, 845, 1545, 30, 372, "Input"],
+Cell[29017, 877, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[29814, 906, 268, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[30107, 921, 101, 2, 33, "Text"],
+Cell[30211, 925, 1711, 31, 410, "Input"],
+Cell[31925, 958, 781, 26, 33, "Text"]
+}, Closed]],
+Cell[32721, 987, 310, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[33056, 1005, 105, 2, 33, "Text"],
+Cell[33164, 1009, 1725, 31, 390, "Input"],
+Cell[34892, 1042, 781, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[35710, 1073, 105, 2, 30, "Text"],
+Cell[35818, 1077, 1723, 31, 390, "Input"],
+Cell[37544, 1110, 781, 26, 33, "Text"]
+}, Closed]],
+Cell[38340, 1139, 260, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[38625, 1154, 101, 2, 33, "Text"],
+Cell[38729, 1158, 1590, 30, 390, "Input"],
+Cell[40322, 1190, 781, 26, 33, "Text"]
+}, Closed]],
+Cell[41118, 1219, 256, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[41399, 1234, 101, 2, 33, "Text"],
+Cell[41503, 1238, 1598, 30, 390, "Input"],
+Cell[43104, 1270, 781, 26, 33, "Text"]
+}, Closed]],
+Cell[43900, 1299, 260, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[44185, 1314, 101, 2, 33, "Text"],
+Cell[44289, 1318, 2733, 49, 818, "Input"],
+Cell[47025, 1369, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[47822, 1398, 272, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[48119, 1413, 101, 2, 33, "Text"],
+Cell[48223, 1417, 1571, 29, 427, "Input"],
+Cell[49797, 1448, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[50594, 1477, 260, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[50879, 1492, 102, 2, 33, "Text"],
+Cell[50984, 1496, 1588, 30, 463, "Input"],
+Cell[52575, 1528, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[53372, 1557, 264, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[53661, 1572, 102, 2, 33, "Text"],
+Cell[53766, 1576, 1758, 33, 503, "Input"],
+Cell[55527, 1611, 776, 25, 33, "Text"]
+}, Closed]],
+Cell[56318, 1639, 268, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[56611, 1654, 102, 2, 33, "Text"],
+Cell[56716, 1658, 1564, 29, 450, "Input"],
+Cell[58283, 1689, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[59080, 1718, 309, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[59414, 1733, 102, 2, 33, "Text"],
+Cell[59519, 1737, 1612, 31, 467, "Input"],
+Cell[61134, 1770, 782, 26, 33, "Text"]
+}, Closed]],
+Cell[61931, 1799, 281, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[62237, 1814, 102, 2, 33, "Text"],
+Cell[62342, 1818, 1569, 29, 467, "Input"],
+Cell[63914, 1849, 781, 26, 33, "Text"]
+}, Closed]],
+Cell[64710, 1878, 759, 24, 30, "Text"],
+Cell[65472, 1904, 158, 3, 35, "Text"],
+Cell[65633, 1909, 595, 18, 33, "Text"],
+Cell[66231, 1929, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

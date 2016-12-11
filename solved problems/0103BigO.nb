@@ -1,0 +1,2203 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     68650,       2042]*)
+(*NotebookOutlinePosition[     69789,       2076]*)
+(*  CellTagsIndexPosition[     69616,       2069]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Big \"O\" Truncation Error",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^n)\)}]],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" Order of Approximation",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tClearly, the sequences  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({1\/n\^2}\_\(n = 1\)\%\[Infinity]\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({1\/n}\_\(n = 1\)\%\[Infinity]\)]],
+  StyleBox["  are both converging to zero.  In addition, it should be \
+observed that the first sequence is converging to zero more rapidly than the \
+second sequence.  In the coming modules some special terminology and notation \
+will be used to describe how rapidly a sequence is converging. ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition 1.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  The function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((h)\)\)]],
+  "  ",
+  StyleBox["is said to be ",
+    FontFamily->"Times-Roman"],
+  StyleBox["big Oh",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(g \((h)\)\)]],
+  StyleBox[",  denoted",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((g \((h)\))\)}]}]]],
+  StyleBox[",  if there exist constants  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(C\&^ > 0\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  StyleBox["  such that  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((h)\)\)\(|\)\(\ \ \)\(\(\[LessEqual]\)\(\ \ \)\(C\&^\)\)\
+\(\ \)\(|\)\(g \((h)\)\)\(|\)\)\)]],
+  "   ",
+  StyleBox["whenever",
+    FontFamily->"Times-Roman"],
+  "   ",
+  Cell[BoxData[
+      \(\(\(0\)\(\ \)\(\[LessEqual]\)\)\  | 
+        h | \(\(\[LessEqual]\)\(\ \)\(\[Delta]\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Consider the functions  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\  = \ x\^4 + 2  x\^5\)]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(g \((x)\)\  = \ x\^3\)]],
+  StyleBox[".   Show that ",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((g \((h)\))\)}]}]]],
+  StyleBox[",  over the interval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(1\)\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Since  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\^4\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \
+\)\(\(|\)\(h\^3\)\(|\)\)\)\)\)]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\^5\)\(|\)\(\(\[LessEqual]\)\(\(|\)\(h\^3\)\(|\)\)\)\)\)]],
+  StyleBox["  for  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\)\(|\)\(\(\[LessEqual]\)\(1\)\)\)\)]],
+  " ",
+  StyleBox[" it follows that  \n\n\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\^4 + 
+          2  h\^5\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\(\(|\)\(h\^4\)\(|\)\(+\(\(|\)\(2 
+                   h\^5\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \
+\)\(3\)\)\(|\)\(h\^3\)\(|\)\)\)\)\)\)\)]],
+  ".  \n\nIf we set  ",
+  Cell[BoxData[
+      \(\(\(\ \)\(C\&^\  = 3\)\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\[Delta] = 1\)]],
+  "  then we see that",
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((g \((h)\))\)}]}]]],
+  StyleBox[",  over the interval  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(h\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(1\)\)\)\)]],
+  ".     "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{Abs[h\^4], Abs[h\^3]}, {h, \(-1\), 1}, 
+        PlotStyle \[Rule] {Red, Blue}, 
+        PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(h\^4\)| \[LessEqual] |\!\(h\^3\)|   for   0 \
+\[LessEqual] |h| \[LessEqual] 1\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = |\!\(h\^3\)|  is the blue curve\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = |\!\(h\^4\)|  is the red  curve\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Plot[{Abs[2  h\^5], 2  Abs[h\^3]}, {h, \(-1\), 1}, 
+        PlotStyle \[Rule] {Red, Blue}, 
+        PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|2 \!\(h\^5\)| \[LessEqual] 2|\!\(h\^3\)|   for   0 \
+\[LessEqual] |h| \[LessEqual] 1\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = 2 |\!\(h\^3\)|  is the blue curve\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = |2 \!\(h\^5\)|  is the red  curve\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell["Combine the above to obtain the desired result.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_]\  = \ x\^4 + 2  x\^5;\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x_]\  = \ x\^3;\)\ \), "\[IndentingNewLine]", 
+    \(\(C\&^\  = \ 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Delta]\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{Abs[f[h]], C\&^\ Abs[g[h]]}, {h, \(-\[Delta]\), \[Delta]}, 
+        PlotStyle \[Rule] {Red, Blue}, 
+        PlotRange \[Rule] All];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", 
+        f[h], "\<  is the red curve\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = g[x] = \>", 
+        g[h], "\<       is the blue curve\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[h]  =  O(g[h])   for   0 \[LessEqual] |h| \[LessEqual] \
+\>", \[Delta]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Because\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|f[h]| \[LessEqual] \!\(C\&^\) |g[h]|   for   0 \
+\[LessEqual] |h| \[LessEqual] \[Delta]\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<choose  \!\(C\&^\) = \>\"", 
+        C\&^, "\<  and  \[Delta] = \>", \[Delta], "\<  and get\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|\>", f[h], "\<| \[LessEqual] \>", C\&^\ , "\<|\>", 
+        g[h], "\<|   for   0 \[LessEqual] |h| \[LessEqual] \>", \[Delta]];\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<Therefore\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< \>", f[h], "\< = O(\>", g[h], "\<)\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tThe ",
+    FontFamily->"Times-Roman"],
+  StyleBox["big Oh",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" notation provides a useful way of describing the rate of growth \
+of a function in terms of well-known elementary functions (",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(x\^n\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(x\^\(1\/n\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(a\^x\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(\(log\_a\) x\)}]]],
+  StyleBox[", ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["etc.).  The rate of convergence of sequences can be described in \
+a similar manner.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition 2.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Let  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({x\_n}\_\(n = 1\)\%\[Infinity]\)]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({y\_n}\_\(n = 1\)\%\[Infinity]\)]],
+  "  ",
+  StyleBox["be two sequences.  The sequence",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({x\_n}\)]],
+  StyleBox["is said to be of order ",
+    FontFamily->"Times-Roman"],
+  StyleBox["big Oh",
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" of",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({y\_n}\)]],
+  StyleBox[", denoted  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\({x\_n}\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \(({y\_n})\)}]}]]],
+  StyleBox[",  if there exist  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(C\&^ > 0\)]],
+  StyleBox["  and  N  such that  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(x\_n\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\(C\&^\)\)\(|\)\(y\_n\)\(|\)\)\)]],
+  "   ",
+  StyleBox["whenever",
+    FontFamily->"Times-Roman"],
+  "   ",
+  Cell[BoxData[
+      \(n \[GreaterEqual] N\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Given the sequences ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({\ x\_n\  = \ \(n\^2 - 1\)\/n\^3\ }\_\(n = 1\)\%\[Infinity]\)]],
+  "  ",
+  StyleBox["and  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({\ y\_n\  = \ 1\/n\ }\_\(n = 1\)\%\[Infinity]\)]],
+  ".  ",
+  StyleBox["Show that  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\({x\_n}\), " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \(({y\_n})\)}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x, y, n];\)\), "\[IndentingNewLine]", 
+    \(\(x\_n_\  = \ \(n\^2 - 1\)\/n\^3;\)\), "\[IndentingNewLine]", 
+    \(\(y\_n_\  = \ 1\/n;\)\), "\[IndentingNewLine]", 
+    \(\(C\&^\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(m\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(xpts = Table[x\_n, {n, 1, 10}];\)\), "\[IndentingNewLine]", 
+    \(\(ypts = Table[y\_n, {n, 1, 10}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[ypts, PlotStyle \[Rule] {Blue, PointSize[0.016]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[xpts, PlotStyle \[Rule] {Red, PointSize[0.016]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, PlotRange \[Rule] {{0, 7}, {0, 1}}, 
+        Ticks \[Rule] {Range[1, 10, 1], Range[0, 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(x\_n\) = \>\"", 
+        x\_\(\(n\)\(\ \)\), "\<}   the red dots\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(y\_n\) = \>\"", 
+        y\_\(\(n\)\(\ \)\), "\<}   the blue dots\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(x\_n\)} = O({\!\(y\_n\)})\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Because\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(x\_n\)| \[LessEqual] \!\(C\&^\) |\!\(y\_n\)]|   for \
+N \[LessEqual] n\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<choose  \!\(C\&^\) = \>\"", C\&^, "\<  and  N = \>", 
+        m, "\<  and get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(x\_n\)| \[LessEqual] \>\"", 
+        C\&^, \*"\"\< |\!\(y\_n\)]|   for \>\"", \ 
+        m\ , "\< \[LessEqual] n\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tOften a function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((h)\)\)]],
+  "  ",
+  StyleBox["is approximated by a function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(p \((h)\)\)]],
+  "  ",
+  StyleBox["and the error bound is known to be  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(M | h\^n | \)]],
+  StyleBox[".  This leads to the following definition.",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition 3.",
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Assume that",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((h)\)\)]],
+  "  ",
+  StyleBox["is approximated by the function",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(p \((h)\)\)]],
+  "  ",
+  StyleBox["and that there exist a real constant  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(M > 0\)]],
+  "  ",
+  StyleBox["and a positive integer ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox[" so that  \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((h)\) - p \((h)\)\)\(|\)\)\/\(\(|\)\(h\^n\)\(|\)\)\  \
+\[LessEqual] \ M\)]],
+  StyleBox["   for sufficiently small ",
+    FontFamily->"Times-Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[".  \nWe say that  approximates  with order of approximation  and  \
+write \n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(f \((h)\)\), " ", "=", " ", 
+        RowBox[{\(p \((h)\)\), " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^n)\)}]}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tWhen this relation is rewritten in the form  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((h)\) - 
+          p \((h)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\(M\)\)\(|\)\(h\^n\)\(|\)\)\)]],
+  StyleBox[",  we see that the notation",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{"   ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^n)\)}]}]]],
+  StyleBox["  stands in place of the error bound  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(M | h\^n | \)]],
+  StyleBox[".  The following results show how to apply the definition to \
+simple combinations of two functions. ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Big \"O\" Remainders for Series Approximations).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\nAssume that  ",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\)\), "=", 
+        RowBox[{\(p \((h)\)\), "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^n)\)}]}]}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{\(g \((h)\)\), "=", 
+        RowBox[{\(q \((h)\)\), "+", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^m)\)}]}]}]]],
+  ",  and  ",
+  Cell[BoxData[
+      \(r\  = \ min {m, n}\)]],
+  ".  Then\n\n",
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\) + g \((h)\)\), " ", "=", "  ", 
+        RowBox[{\(p \((h)\)\), " ", "+", " ", \(q \((h)\)\), " ", "+", "  ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^r)\)}]}]}]]],
+  ",   \n\t\n",
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      RowBox[{\(f \((h)\) g \((h)\)\), " ", "=", "  ", 
+        RowBox[{\(p \((h)\) q \((h)\)\), " ", "+", "  ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^r)\)}]}]}]]],
+  ",  \n\t\n",
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t\t",
+  Cell[BoxData[
+      RowBox[{
+        FractionBox[
+          StyleBox[\(f \((h)\)\),
+            FontSize->12], 
+          StyleBox[\(g \((h)\)\),
+            FontSize->12]], " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            StyleBox[\(\(\ \)\(p \((h)\)\)\),
+              FontSize->12], 
+            StyleBox[\(q \((h)\)\),
+              FontSize->12]], " ", "+", "  ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^r)\)}]}]}]]],
+  ",\n\nprovided that   ",
+  Cell[BoxData[
+      RowBox[{\(g \((h)\)\), "\[NotEqual]", 
+        RowBox[{"0", "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "q", \((h)\)}], "\[NotEqual]", 
+        "0"}]]],
+  ".  "
+}], "Text",
+  CellTags->"Big O Remainders for Series Approximations"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BigOProof.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BigOProof.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, g, h, m, n, P, Q];\)\ \ \), "\n", 
+    \(\(n = 3;\)\ \ \), "\n", 
+    \(\(P[h_]\  = \ Series[f[h], {h, 0, n - 1}];\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Q[h_]\  = \ Series[g[h], {h, 0, m - 1}];\)\ \ \), "\n", 
+    \(\(r\  = \ Min[n, m];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] = \>", P[h]];\)\ \ \), "\n", 
+    \(\(Print["\<       has order of approximation \>", 
+        O[h]\^n];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[h] = \>", Q[h]];\)\ \ \), "\n", 
+    \(\(Print["\<       has order of approximation \>", 
+        O[h]\^m];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r = min{\>", n, "\<,\>", m, "\<} = \>", r];\)\ \ \), "\n", 
+    \(\(Print["\<\n\>", "\<f[h]+g[h] = \>", P[h] + Q[h]];\)\ \ \), "\n", 
+    \(\(Print["\<            has order of approximation \>", 
+        O[h]\^r];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<f[h]g[h] = \>", P[h]*Q[h]];\)\ \ \), "\n", 
+    \(\(Print["\<           has order of approximation \>", 
+        O[h]\^r];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<\!\(f[h]\/g[h]\) = \>\"", 
+        P[h]\/Q[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<        has order of approximation \>", 
+        O[h]\^r];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tIt is instructive to consider",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(p \((x)\)\)]],
+  "  ",
+  StyleBox["to be the ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(n\^th\)]],
+  StyleBox[" degree Taylor polynomial approximation of",
+    FontFamily->"Times-Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox[";  then the remainder term is simply designated  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^\(n + 1\))\)}]}]]],
+  StyleBox[",  which stands for the presence of omitted terms starting with \
+the power  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(h\^\(n + 1\)\)]],
+  StyleBox[".  The remainder term converges to zero with the same rapidity \
+that",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(\ \ \)\(h\^\(n + 1\)\)\)\)]],
+  StyleBox["  converges to zero as ",
+    FontFamily->"Times-Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[" approaches zero, as expressed in the relationship\n\n\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^\(n + 1\))\)}], " ", "\[TildeTilde]",
+           " ", \(M\ h\^\(n + 1\)\)}], " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((n + 1)\),
+                  Derivative],
+                
+                MultilineFunction->None], \((c)\)}], \(\((n + 
+                  1)\)!\)], \(h\^\(n + 1\)\)}]}]]],
+  " ",
+  StyleBox["\n\nfor sufficiently small  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["h",
+    FontFamily->"Courier New"],
+  StyleBox[".  Hence the notation  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^\(n + 1\))\)}]}]]],
+  StyleBox["  stands in place of the quantity  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(M\ h\^\(n + 1\)\)]],
+  StyleBox[", where  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["M",
+    FontFamily->"Courier New"],
+  StyleBox["  is a constant or \[OpenCurlyDoubleQuote]behaves like a \
+constant.\[CloseCurlyDoubleQuote]",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["Taylor polynomial",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TaylorSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that the function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  and its derivatives  ",
+  Cell[BoxData[
+      RowBox[{\(f' \((x)\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(f'' \((x)\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", " ", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((n + 1)\),
+              Derivative],
+            MultilineFunction->None], \((x)\)}]}]]],
+  "  are all continuous on  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  ".  If  both  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x = x\_0 + h\)]],
+  "  lie in the interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  ",  and  ",
+  Cell[BoxData[
+      \(h = x - x\_0\)]],
+  "  then  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(f \((x\_0 + h)\)\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox[
+              UnderoverscriptBox["\[Sum]", 
+                StyleBox[\(k = 0\),
+                  FontSize->10], 
+                StyleBox["n",
+                  FontSize->10]],
+              FontSize->18], " ", 
+            RowBox[{
+              FractionBox[
+                StyleBox[
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((k)\),
+                        Derivative],
+                      MultilineFunction->None], \((x\_0)\)}],
+                  FontSize->12], 
+                StyleBox[\(k!\),
+                  FontSize->12]], \(h\^k\)}]}], " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^\(n + 1\))\)}]}]}]]],
+  ",  \n\t\nis the n-th degree ",
+  ButtonBox["Taylor polynomial",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TaylorSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " expansion of  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  about  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  ".  The Taylor polynomial of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  is \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(P\_n\) \((x)\)\), " ", "=", " ", 
+        RowBox[{
+          StyleBox[
+            UnderoverscriptBox["\[Sum]", 
+              StyleBox[\(k = 0\),
+                FontSize->10], 
+              StyleBox["n",
+                FontSize->10]],
+            FontSize->18], " ", 
+          RowBox[{
+            FractionBox[
+              StyleBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((k)\),
+                      Derivative],
+                    MultilineFunction->None], \((x\_0)\)}],
+                FontSize->12], 
+              StyleBox[\(k!\),
+                FontSize->12]], \(\((x - x\_0)\)\^k\)}]}]}]]],
+  "   \nand  \n\t",
+  Cell[BoxData[
+      RowBox[{\(f \((x)\)\), " ", "=", " ", 
+        RowBox[{\(\(P\_n\) \((x)\)\  + \ \(R\_n\) \((x)\)\), " ", "=", " ", 
+          RowBox[{\(\(P\_n\) \((x)\)\), " ", "+", " ", 
+            RowBox[{
+              StyleBox["O",
+                FontWeight->"Bold"], \((h\^\(n + 1\))\)}]}]}]}]]],
+  ".\n\nThe integral form of the remainder is  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(R\_n\) \((x)\)\), " ", "=", " ", 
+        RowBox[{\(1\/\(n!\)\), 
+          RowBox[{\(\[Integral]\_\(x\_0\)\%x\), 
+            RowBox[{\(\((x - t)\)\^n\), 
+              SuperscriptBox["f", 
+                TagBox[\((n + 1)\),
+                  Derivative],
+                
+                MultilineFunction->
+                  None], \((t)\), \(\[DifferentialD]t\)}]}]}]}]]],
+  ",\n\n and Lagrange's formula for the remainder is\n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(R\_n\) \((x)\)\), "=", 
+        RowBox[{
+          FractionBox[
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((n + 1)\),
+                  Derivative],
+                
+                MultilineFunction->None], \((c)\)}], \(\((n + 
+                  1)\)!\)], \(\((x - x\_0)\)\^\(n + 1\)\)}]}]]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{"=", 
+          RowBox[{
+            FractionBox[
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((n + 1)\),
+                    Derivative],
+                  
+                  MultilineFunction->None], \((c)\)}], \(\((n + 
+                    1)\)!\)], \(h\^\(n + 1\)\)}]}]}]]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{"=", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^\(n + 1\))\)}]}]}]]],
+  "\n\nwhere ",
+  Cell[BoxData[
+      \(c\)]],
+  " depends on ",
+  Cell[BoxData[
+      \(x\)]],
+  " and lies somewhere between  ",
+  Cell[BoxData[
+      RowBox[{\(x\_0\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", "x"}]]],
+  ".  "
+}], "Text",
+  CellTags->"Taylor's Polynomial with Integral Remainder"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BigOProof.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BigOProof.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, n, t, x];\)\ \), "\n", 
+    \(x = 0; \ Remove[x];\), "\[IndentingNewLine]", 
+    \(\(For[n = 1, 
+        n \[LessEqual] 9, \(n++\), \[IndentingNewLine]s[t_]\  = \ 
+          Series[f[t], {t, x\_0, 
+              n}]; \[IndentingNewLine]Print["\<\n\>", "\<f[x] = \>", \
+"\<P\>"\_n, "\< + O[\>", h\^\(n + 1\), "\<] = \>", s[x]\ ];\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider  ",
+  Cell[BoxData[
+      \(f \((x)\) = sin \((x)\)\)]],
+  "  and the Taylor polynomials of degree  ",
+  Cell[BoxData[
+      RowBox[{\(n = 3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "5", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman"], 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman"], 
+          StyleBox["  ",
+            FontFamily->"Times New Roman"], "7"}]}]]],
+  "  expanded about  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  ".  \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Taylor",
+          FontFamily->"Times New Roman"], 
+        StyleBox["   ",
+          FontFamily->"Times New Roman"], 
+        RowBox[{
+          StyleBox["Polynomial",
+            FontFamily->"Times New Roman"], 
+          StyleBox[":",
+            FontFamily->"Times New Roman"], 
+          "                             "}]}]]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(Order\ of\ \(\(approximation\)\(:\)\)\),
+        FontFamily->"Times New Roman"]]],
+  "\n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(P\_3\) \((x)\)\), " ", "=", " ", 
+        RowBox[{"x", "-", 
+          FractionBox[
+            StyleBox[\(x\^3\),
+              FontSize->12], 
+            StyleBox["6",
+              FontSize->12]], "                             "}]}]]],
+  "\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((x\^5)\)}], 
+        StyleBox[" ",
+          FontSize->12], "\[TildeTilde]", 
+        StyleBox[" ",
+          FontSize->12], 
+        FractionBox[
+          StyleBox[\(x\^5\),
+            FontSize->12], 
+          StyleBox["120",
+            FontSize->12]]}]]],
+  "  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(P\_5\) \((x)\)\), " ", "=", " ", 
+        RowBox[{"x", "-", 
+          FractionBox[
+            StyleBox[\(x\^3\),
+              FontSize->12], 
+            StyleBox["6",
+              FontSize->12]], "+", 
+          FractionBox[
+            StyleBox[\(x\^5\),
+              FontSize->12], 
+            StyleBox["120",
+              FontSize->12]], "                "}]}]]],
+  "\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((x\^7)\)}], " ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], " ", 
+        FractionBox[
+          StyleBox[\(x\^7\),
+            FontSize->12], 
+          StyleBox["5040",
+            FontSize->12]]}]]],
+  "  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(P\_7\) \((x)\)\), " ", "=", " ", 
+        RowBox[{"x", "-", 
+          FractionBox[
+            StyleBox[\(x\^3\),
+              FontSize->12], 
+            StyleBox["6",
+              FontSize->12]], "+", 
+          FractionBox[
+            StyleBox[\(x\^5\),
+              FontSize->12], 
+            StyleBox["120",
+              FontSize->12]], "-", 
+          FractionBox[
+            StyleBox[\(x\^7\),
+              FontSize->12], 
+            StyleBox["5040",
+              FontSize->12]]}]}]]],
+  "\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((x\^9)\)}], " ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], " ", 
+        FractionBox[
+          StyleBox[\(x\^9\),
+            FontSize->12], 
+          StyleBox["362880",
+            FontSize->12]]}]]],
+  "  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Show that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"\[VerticalSeparator]", 
+          
+          RowBox[{\(sin \((x)\)\  - \ \(P\_3\) \((x)\)\), 
+            "\[VerticalSeparator]", 
+            RowBox[{"<", 
+              RowBox[{"\[VerticalSeparator]", 
+                RowBox[{
+                  StyleBox[
+                    FractionBox[
+                      StyleBox[\(x\^5\),
+                        FontSize->12], 
+                      StyleBox["120",
+                        FontSize->12]],
+                    FontSize->12], "\[VerticalSeparator]"}]}]}]}]}], " "}]]],
+  " over  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(-2\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "2"}], "]"}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Clear[f, E3, maxerr, P3, x];\)\ \ \), "\n", 
+    \(\(f[x_] = Sin[x];\)\ \ \), "\n", 
+    \(\(P3[x_] = Normal[Series[f[x], {x, 0, 3}]];\)\ \ \), "\n", 
+    \(\(E3[x_] = x\^5\/\(5!\);\)\ \ \), "\n", 
+    \(\(maxerr = Abs[f[2.0] - P3[2.0]];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Plot[{Abs[f[x] - P3[x]], Abs[E3[x]]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, {0, \ maxerr}}, 
+        PlotStyle \[Rule] {Red, Blue}, AxesLabel \[Rule] {x, "\< \>"}, \n\t
+        PlotLabel \[Rule] \*"\"\<y = |f[x]-\!\(P\_3\)(x)|  and  y = |\!\(R\_3\
+\)[x]|\>\""];\)\ \ \), "\n", 
+    \(\(Print["\<f(x)  = \>", f[x]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<f(x)  = \>", Series[f[x], {x, 0, 3}]];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_3\)(x) = \>\"", P3[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<|sin(x) - \!\(P\_3\)(x)| \[LessEqual] \
+|\!\(x\^5\/\(5!\)\)|  over [-2,2],\>\""];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<over [-2,2] use |\!\(x\^5\/\(5!\)\)| \[LessEqual] \
+\!\(4\/15\) \[LessEqual] 0.266667 \>\""];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error over [-2,2] is:  \>", 
+        maxerr];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Show that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"\[VerticalSeparator]", 
+          
+          RowBox[{\(sin \((x)\)\  - \ \(P\_5\) \((x)\)\), 
+            "\[VerticalSeparator]", 
+            RowBox[{"<", 
+              RowBox[{"\[VerticalSeparator]", 
+                RowBox[{
+                  StyleBox[
+                    FractionBox[
+                      StyleBox[\(x\^7\),
+                        FontSize->12], 
+                      StyleBox["5040",
+                        FontSize->12]],
+                    FontSize->12], "\[VerticalSeparator]"}]}]}]}]}], " "}]]],
+  "   over  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(-2\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "2"}], "]"}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Clear[f, E5, maxerr, P5, x];\)\), "\n", 
+    \(\(f[x_] = Sin[x];\)\), "\n", 
+    \(\(P5[x_] = Normal[Series[f[x], {x, 0, 5}]];\)\), "\n", 
+    \(\(E5[x_] = x\^7\/\(7!\);\)\), "\n", 
+    \(\(maxerr = Abs[f[2.0] - P5[2.0]];\)\), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{Abs[f[x] - P5[x]], Abs[E5[x]]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, {0, maxerr}}, 
+        PlotStyle \[Rule] {Red, Blue}, AxesLabel \[Rule] {x, "\< \>"}, \n\t
+        PlotLabel \[Rule] \*"\"\<y = |f[x]-\!\(P\_5\)(x)|  and  y = |\!\(R\_5\
+\)[x]|\>\""];\)\), "\n", 
+    \(\(Print["\<f(x)  = \>", f[x]];\)\), "\n", 
+    \(\(Print["\<f(x)  = \>", Series[f[x], {x, 0, 5}]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_5\)(x) = \>\"", P5[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<|sin(x) - \!\(P\_5\)(x)| \[LessEqual] \
+|\!\(x\^7\/\(7!\)\)|  over [-2,2],\>\""];\)\), "\n", 
+    \(\(Print[\*"\"\<over [-2,2] use |\!\(x\^7\/\(7!\)\)| \[LessEqual] \
+\!\(8\/315\) \[LessEqual] 0.025397 \>\""];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error over [-2,2] is:  \>", 
+        maxerr];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Show that   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"\[VerticalSeparator]", 
+          
+          RowBox[{\(sin \((x)\)\  - \ \(P\_7\) \((x)\)\), 
+            "\[VerticalSeparator]", 
+            RowBox[{"<", 
+              RowBox[{"\[VerticalSeparator]", 
+                RowBox[{
+                  StyleBox[
+                    FractionBox[
+                      StyleBox[\(x\^9\),
+                        FontSize->12], 
+                      StyleBox["362880",
+                        FontSize->12]],
+                    FontSize->12], "\[VerticalSeparator]"}]}]}]}]}], " "}]]],
+  "   over  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(-2\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "2"}], "]"}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Clear[f, E7, maxerr, P7, x];\)\), "\n", 
+    \(\(f[x_] = Sin[x];\)\), "\n", 
+    \(\(P7[x_] = Normal[Series[f[x], {x, 0, 7}]];\)\), "\n", 
+    \(\(E7[x_] = x\^9\/\(9!\);\)\), "\n", 
+    \(\(maxerr = Abs[f[2.0] - P7[2.0]];\)\), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{Abs[f[x] - P7[x]], Abs[E7[x]]}, {x, \(-2\), 2}, 
+        PlotRange \[Rule] {{\(-2\), 2}, {0, maxerr}}, 
+        PlotStyle \[Rule] {Red, Blue}, AxesLabel \[Rule] {x, "\< \>"}, \n\t
+        PlotLabel \[Rule] \*"\"\<y = |f[x]-\!\(P\_7\)(x)|  and  y = |\!\(R\_7\
+\)[x]|\>\""];\)\), "\n", 
+    \(\(Print["\<f(x)  = \>", f[x]];\)\), "\n", 
+    \(\(Print["\<f(x)  = \>", Series[f[x], {x, 0, 7}]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_7\)(x) = \>\"", P7[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<|sin(x) - \!\(P\_7\)(x)| \[LessEqual] \
+|\!\(x\^9\/\(9!\)\)|  over [-2,2]9\>\""];\)\), "\n", 
+    \(\(Print[\*"\"\<over [-2,2] use |\!\(x\^9\/\(9!\)\)| \[LessEqual] \
+\!\(4\/2835\) \[LessEqual] 0.001411 \>\""];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum error over [-2,2] is:  \>", 
+        maxerr];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["\tThe following example illustrates the theorems above.  The \
+computations use the addition properties  \n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^p)\)}], " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^p)\)}]}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^p)\)}]}]]],
+  ",  ",
+  StyleBox["\n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^p)\)}], " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((h\^q)\)}]}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^r)\)}]}]]],
+  "   where   ",
+  Cell[BoxData[
+      \(r = min {p, q}\)]],
+  ",  ",
+  StyleBox["\n\n",
+    FontFamily->"Times-Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times-Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^p)\), 
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^q)\)}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["O",
+            FontWeight->"Bold"], \((h\^s)\)}]}]]],
+  "     where      ",
+  Cell[BoxData[
+      \(s = p + q\)]],
+  ".    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  First find Maclaurin expansions for  ",
+  Cell[BoxData[
+      \(f \((h)\) = \[ExponentialE]\^h\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(g \((h)\) = cos \((h)\)\)]],
+  "  of order  ",
+  Cell[BoxData[
+      \(n = 4\)]],
+  "  and   ",
+  Cell[BoxData[
+      \(m = 6\)]],
+  ",  respectively.\nThen experiment and find the order of approximation for \
+their sum, product and quotient.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[h, i, m, n, p, prod, P, Q, quot, sum];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 6;\)\ \ \), "\n", 
+    \(\(p = Min[n, m];\)\ \ \), "\n", 
+    \(\(f[h_] = \[ExponentialE]\^h;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[h_] = Cos[h];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[h_]\  = \ 
+        Series[\[ExponentialE]\^h, {h, 0, n - 1}];\)\ \ \), "\n", 
+    \(\(Q[h_]\  = \ Series[Cos[h], {h, 0, m - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] = \>", f[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[h] = \>", 
+        Normal[P[h]]\ \ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] = \>", Normal[P[h]], "\< + \>", 
+        O[h]\^n\ ];\)\ \ \), "\n", 
+    \(\(Print[
+        P[h]\  \[Equal] \ 
+          Normal[P[h]] + O[h]\^n\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[h] = \>", g[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[h] = \>", 
+        Normal[Q[h]]\ \ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] = \>", Normal[Q[h]], "\< + \>", 
+        O[h]\^m\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[Q[h]\  \[Equal] \ Normal[Q[h]] + O[h]\^m\ ];\)\)}], "Input"],
+
+Cell["Then find the series for their sum.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(sum\  = \ 
+        Series[\[ExponentialE]\^h + Cos[h], {h, 0, p - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<       f[h] = \>", P[h]];\)\ \ \), "\n", 
+    \(\(Print["\<       g[h] = \>", Q[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] + g[h] = (\>", Normal[P[h]], "\<) + (\>", 
+        Normal[Q[
+            h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, \
+"\<\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] + g[h] = (\>", 
+        Expand[Normal[P[h]] + Normal[Q[h]]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] + g[h] = \>", 
+        Expand[Normal[P[h]] + Normal[Q[h]]]\  + \ O[h]\^p];\)\ \ \), "\n", 
+    \(\(Print["\<            = \>", sum];\)\ \ \)}], "Input"],
+
+Cell["Then find the series for their product.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\n", 
+    \(\(prod = 
+        Series[\[ExponentialE]\^h\ Cos[h], {h, 0, p - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", P[h], "\<)(\>", 
+        Q[h], "\<)\>"];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", Normal[P[h]], "\<)(\>", 
+        Normal[Q[
+            h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, \
+"\<\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", 
+        Expand[Normal[P[h]] Normal[Q[h]]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\n", 
+    \(\(Print["\<Get\>"];\)\), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = \>", 
+        Expand[Normal[P[h]] Normal[Q[h]]]\  + \ O[h]\^p\ ];\)\ \ \), "\n", 
+    \(\(Print["\<            = \>", prod];\)\ \ \)}], "Input"],
+
+Cell["Then find the series for their quotient.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(quot = 
+        Series[\[ExponentialE]\^h\/Cos[h], {h, 0, 
+            p - 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * 1/(\>", 
+        Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", 
+        Normal[P[h]]/
+          Normal[Q[
+              h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, "\<\
+\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", 
+        Normal[P[h]]/Normal[Q[h]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]]/Normal[Q[h]]]\  + \ 
+          O[h]\^p];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      = \>", quot];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Interpret the quotient as the product of  ",
+  Cell[BoxData[
+      \(P[h]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(1\/Q[h]\)]],
+  "  and see what's happening.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * 1/(\>", 
+        Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * (\>", 
+        1/Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = (\>\"", Normal[P[h]], "\<)(\>", 
+        Normal[1/
+            Q[h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, "\<\
+\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = (\>\"", 
+        Expand[Normal[P[h]]], "\<)(\>", 
+        Normal[Series[1/Q[h], {h, 0, 7}]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]] Normal[Series[1/Q[h], {h, 0, 7}]]], "\< + \>", 
+        O[h]\^p\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\n", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]]/Normal[Q[h]]]\  + \ 
+          O[h]\^p];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<          = \>", quot];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  First find Maclaurin expansions for  ",
+  Cell[BoxData[
+      \(f \((h)\) = \[ExponentialE]\^h\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(g \((h)\) = cos \((h)\)\)]],
+  "  of order  ",
+  Cell[BoxData[
+      \(n = 5\)]],
+  "  and   ",
+  Cell[BoxData[
+      \(m = 7\)]],
+  ",  respectively.\nThen experiment and find the order of approximation for \
+their sum, product and quotient.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[h, i, m, n, p, prod, P, Q, quot, sum];\)\ \ \), "\n", 
+    \(\(n = 5;\)\ \ \), "\n", 
+    \(\(m = 7;\)\ \ \), "\n", 
+    \(\(p = Min[n, m];\)\ \ \), "\n", 
+    \(\(f[h_] = \[ExponentialE]\^h;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[h_] = Cos[h];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[h_]\  = \ 
+        Series[\[ExponentialE]\^h, {h, 0, n - 1}];\)\ \ \), "\n", 
+    \(\(Q[h_]\  = \ Series[Cos[h], {h, 0, m - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] = \>", f[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[h] = \>", 
+        Normal[P[h]]\ \ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] = \>", Normal[P[h]], "\< + \>", 
+        O[h]\^n\ ];\)\ \ \), "\n", 
+    \(\(Print[
+        P[h]\  \[Equal] \ 
+          Normal[P[h]] + O[h]\^n\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<g[h] = \>", g[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[h] = \>", 
+        Normal[Q[h]]\ \ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] = \>", Normal[Q[h]], "\< + \>", 
+        O[h]\^m\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[Q[h]\  \[Equal] \ Normal[Q[h]] + O[h]\^m\ ];\)\)}], "Input"],
+
+Cell["Then find the series for their sum.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(sum\  = \ 
+        Series[\[ExponentialE]\^h + Cos[h], {h, 0, p - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<       f[h] = \>", P[h]];\)\ \ \), "\n", 
+    \(\(Print["\<       g[h] = \>", Q[h]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] + g[h] = (\>", Normal[P[h]], "\<) + (\>", 
+        Normal[Q[
+            h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, \
+"\<\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] + g[h] = (\>", 
+        Expand[Normal[P[h]] + Normal[Q[h]]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[h] + g[h] = \>", 
+        Expand[Normal[P[h]] + Normal[Q[h]]]\  + \ O[h]\^p];\)\ \ \), "\n", 
+    \(\(Print["\<            = \>", sum];\)\ \ \)}], "Input"],
+
+Cell["Then find the series for their product.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\n", 
+    \(\(prod = 
+        Series[\[ExponentialE]\^h\ Cos[h], {h, 0, p - 1}];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", P[h], "\<)(\>", 
+        Q[h], "\<)\>"];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", Normal[P[h]], "\<)(\>", 
+        Normal[Q[
+            h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, \
+"\<\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = (\>", 
+        Expand[Normal[P[h]] Normal[Q[h]]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\n", 
+    \(\(Print["\<Get\>"];\)\), "\n", 
+    \(\(Print["\<f[h] \[Times] g[h] = \>", 
+        Expand[Normal[P[h]] Normal[Q[h]]]\  + \ O[h]\^p\ ];\)\ \ \), "\n", 
+    \(\(Print["\<            = \>", prod];\)\ \ \)}], "Input"],
+
+Cell["Then find the series for their quotient.  ", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(p = Min[n, m];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(quot = 
+        Series[\[ExponentialE]\^h\/Cos[h], {h, 0, 
+            p - 1}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * 1/(\>", 
+        Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", 
+        Normal[P[h]]/
+          Normal[Q[
+              h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, "\<\
+\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", 
+        Normal[P[h]]/Normal[Q[h]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]]/Normal[Q[h]]]\  + \ 
+          O[h]\^p];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      = \>", quot];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Interpret the quotient as the product of  ",
+  Cell[BoxData[
+      \(P[h]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(1\/Q[h]\)]],
+  "  and see what's happening.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * 1/(\>", 
+        Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f[h]\/g[h]\) = (\>\"", P[h], "\<) * (\>", 
+        1/Q[h], "\<)\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = (\>\"", Normal[P[h]], "\<)(\>", 
+        Normal[1/
+            Q[h]], "\<) + \>", "\<O[h]\>", "\<\>"\^"\<min{\>", "\<\>"\^n, "\<\
+\>"\^"\<,\>", "\<\>"\^m, "\<\>"\^"\<}\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = (\>\"", 
+        Expand[Normal[P[h]]], "\<)(\>", 
+        Normal[Series[1/Q[h], {h, 0, 7}]], "\<) + \>", 
+        O[h]\^p\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]] Normal[Series[1/Q[h], {h, 0, 7}]]], "\< + \>", 
+        O[h]\^p\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Use the fact that  \!\(h\^i\)\>\"", "\< + \>"\ , 
+        O[h]\^p\ , "\< = \>", O[h]\^p\ , "\<  when  i \[GreaterEqual] \>", 
+        p];\)\), "\n", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[h]\!\(1\/g[h]\) = \>\"", 
+        Expand[Normal[P[h]]/Normal[Q[h]]]\  + \ 
+          O[h]\^p];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<          = \>", quot];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Order of Convergence of a Sequence",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold"],
+  StyleBox["\n\tNumerical approximations are often arrived at by computing a \
+sequence of approximations that get closer and closer to the answer desired. \
+The definition of ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox["big Oh",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" for sequences was given in definition 2, and the definition of \
+order of convergence for a sequence is analogous to that given for functions \
+in Definition 3.",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Definition 4.",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Suppose that  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(lim\+\(n \[Rule] \[Infinity]\)\ x\_n\  = \ x\)]],
+  "  ",
+  StyleBox["and  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \({r\_n}\_\(n = 1\)\%\[Infinity]\)]],
+  "  ",
+  StyleBox["is a sequence with  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(lim\+\(n \[Rule] \[Infinity]\)\ r\_n\  = \ 0\)]],
+  StyleBox[".  We say that",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(\ \ \)\({x\_n}\_\(n = 1\)\%\[Infinity]\)\)\)]],
+  StyleBox["  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox["converges to ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["x",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Courier New",
+    FontColor->RGBColor[0, 0, 0.996109]],
+  StyleBox[" with the order of convergence  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((r\_n)\)}]]],
+  StyleBox[",  if there exists a constant  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(K > 0\)]],
+  "  ",
+  StyleBox["such that \n\n",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(x\_n - x\)\(|\)\)\/\(\(|\)\(r\_n\)\(|\)\)\  \[LessEqual] \ 
+        K\)]],
+  StyleBox["   ",
+    FontFamily->"Times-Roman"],
+  StyleBox["for ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Courier New"],
+  StyleBox[" sufficiently large",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox[".  \n\n",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["This is indicated by writing\n\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{\(x\_n\), " ", "=", " ", 
+        RowBox[{"x", " ", "+", " ", 
+          RowBox[{
+            StyleBox["O",
+              FontWeight->"Bold"], \((r\_n)\)}]}]}]]],
+  "\nor",
+  StyleBox["\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(x\_n\  \[Rule] \ x\)]],
+  StyleBox["  with order of convergence ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((r\_n)\)}]]],
+  StyleBox[".  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Bold",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Let  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(x\_n\  = \ Cos[n]\/n\^2\)]],
+  StyleBox["  and  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(y\_n\  = \ 1\/n\^2\)]],
+  StyleBox[";  then  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(lim\+\(n \[Rule] \[Infinity]\)\ x\_n\  = \ 0\)]],
+  "  ",
+  StyleBox["with a rate of convergence  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((1\/n\^2)\)}]]],
+  StyleBox[".  ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["This follows immediately from the relation \n\n\t\t",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(Cos[n]/n\^2\  - \ 0\)\(|\)\)\/\(\(|\)\(1/n\^2\)\(|\)\)\ \  = \
+\ \(\(|\)\(Cos[n]\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(1\)\)\)\)]],
+  "   for all ",
+  StyleBox[" ",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    Evaluatable->False,
+    AspectRatioFixed->True,
+    FontFamily->"Courier New"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[K, x, y, m, n];\)\), "\[IndentingNewLine]", 
+    \(\(x\_n_\  = \ Cos[n]\/n\^2;\)\), "\[IndentingNewLine]", 
+    \(\(y\_n_\  = \ 1\/n\^2;\)\), "\[IndentingNewLine]", 
+    \(\(C\&^\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(K = 1;\)\), "\[IndentingNewLine]", 
+    \(\(m\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(xpts = Table[x\_n, {n, 1, 10}];\)\), "\[IndentingNewLine]", 
+    \(\(ypts = Table[y\_n, {n, 1, 10}];\)\), "\[IndentingNewLine]", 
+    \(\(qpts = 
+        Table[Abs[\(x\_n - 0\)\/y\_n], {n, 1, 
+            20}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[Abs[ypts], PlotStyle \[Rule] {Blue, PointSize[0.016]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[Abs[xpts], PlotStyle \[Rule] {Red, PointSize[0.026]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, PlotRange \[Rule] {{0, 7}, {0, 1}}, 
+        Ticks \[Rule] {Range[1, 10, 1], Range[0, 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(x\_n\) = \>\"", 
+        x\_\(\(n\)\(\ \)\), "\<}   the red dots\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(y\_n\) = \>\"", 
+        y\_\(\(n\)\(\ \)\), "\<}   the blue dots\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< {\!\(x\_n\)} = O({\!\(y\_n\)})\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Because\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(x\_n\)| \[LessEqual] \!\(C\&^\) |\!\(y\_n\)]|   for \
+N \[LessEqual] n\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<choose  \!\(C\&^\) = \>\"", C\&^, "\<  and  N = \>", 
+        m, "\<  and get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(x\_n\)| \[LessEqual] \>\"", 
+        C\&^, \*"\"\< |\!\(y\_n\)]|   for \>\"", \ 
+        m\ , "\< \[LessEqual] n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        ListPlot[qpts, PlotStyle \[Rule] {Blue, PointSize[0.016]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(gr4 = 
+        Plot[C\&^, {x, 0, 20}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\n", 
+    \(\(Show[gr3, gr4, PlotRange \[Rule] {{0, 20}, {0, 1}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(\(x\_n - x\)\/y\_n\)| \[LessEqual] K\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(\(x\_n - 0\)\/y\_n\)| \[LessEqual] \>\"", 
+        K];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|\>", \(x\_n - 0\)\/y\_n, "\<| \[LessEqual] \>", 
+        K];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["A Scenarios and Animations related to this module.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Taylor and Maclaurin Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Taylor and Maclaurin Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Series/Series.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/BigOBib.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Big O Truncation Error",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BigOBib.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1010, 651},
+WindowMargins->{{-1, Automatic}, {Automatic, 0}},
+ShowCellLabel->False
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{
+  "Big O Remainders for Series Approximations"->{
+    Cell[18768, 582, 2445, 79, 229, "Text",
+      CellTags->"Big O Remainders for Series Approximations"]},
+  "Taylor's Polynomial with Integral Remainder"->{
+    Cell[25754, 797, 5527, 178, 425, "Text",
+      CellTags->"Taylor's Polynomial with Integral Remainder"]}
+  }
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{
+  {"Big O Remainders for Series Approximations", 69322, 2059},
+  {"Taylor's Polynomial with Integral Remainder", 69481, 2062}
+  }
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 179, 4, 35, "Text"],
+Cell[1958, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3437, 111, 972, 27, 90, "Text"],
+Cell[4412, 140, 1336, 50, 71, "Text"],
+Cell[5751, 192, 774, 27, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[6550, 223, 101, 2, 33, "Text"],
+Cell[6654, 227, 1323, 44, 109, "Text"],
+Cell[7980, 273, 1104, 20, 218, "Input"],
+Cell[9087, 295, 65, 0, 33, "Text"],
+Cell[9155, 297, 1508, 25, 314, "Input"]
+}, Closed]],
+Cell[10678, 325, 1443, 41, 53, "Text"],
+Cell[12124, 368, 1377, 51, 71, "Text"],
+Cell[13504, 421, 702, 24, 37, "Text"],
+
+Cell[CellGroupData[{
+Cell[14231, 449, 101, 2, 33, "Text"],
+Cell[14335, 453, 1858, 34, 404, "Input"]
+}, Closed]],
+Cell[16208, 490, 490, 19, 30, "Text"],
+Cell[16701, 511, 1324, 46, 133, "Text"],
+Cell[18028, 559, 737, 21, 52, "Text"],
+Cell[18768, 582, 2445, 79, 229, "Text",
+  CellTags->"Big O Remainders for Series Approximations"],
+Cell[21216, 663, 590, 18, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[21831, 685, 102, 2, 33, "Text"],
+Cell[21936, 689, 1390, 25, 406, "Input"]
+}, Closed]],
+Cell[23341, 717, 2410, 78, 151, "Text"],
+Cell[25754, 797, 5527, 178, 425, "Text",
+  CellTags->"Taylor's Polynomial with Integral Remainder"],
+Cell[31284, 977, 590, 18, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[31899, 999, 102, 2, 33, "Text"],
+Cell[32004, 1003, 380, 7, 112, "Input"]
+}, Closed]],
+Cell[32399, 1013, 3559, 126, 200, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[35983, 1143, 101, 2, 33, "Text"],
+Cell[36087, 1147, 886, 29, 39, "Text",
+  Evaluatable->False],
+Cell[36976, 1178, 1212, 20, 341, "Input"],
+Cell[38191, 1200, 890, 29, 39, "Text",
+  Evaluatable->False],
+Cell[39084, 1231, 1159, 20, 341, "Input"],
+Cell[40246, 1253, 894, 29, 39, "Text",
+  Evaluatable->False],
+Cell[41143, 1284, 1160, 20, 341, "Input"]
+}, Closed]],
+Cell[42318, 1307, 1936, 69, 144, "Text"],
+Cell[44257, 1378, 521, 19, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[44803, 1401, 101, 2, 33, "Text"],
+Cell[44907, 1405, 1217, 24, 351, "Input"],
+Cell[46127, 1431, 75, 1, 33, "Text",
+  Evaluatable->False],
+Cell[46205, 1434, 1086, 19, 213, "Input"],
+Cell[47294, 1455, 79, 1, 33, "Text",
+  Evaluatable->False],
+Cell[47376, 1458, 997, 19, 193, "Input"],
+Cell[48376, 1479, 80, 1, 33, "Text",
+  Evaluatable->False],
+Cell[48459, 1482, 923, 18, 234, "Input"],
+Cell[49385, 1502, 215, 9, 38, "Text",
+  Evaluatable->False],
+Cell[49603, 1513, 1335, 23, 286, "Input"]
+}, Closed]],
+Cell[50953, 1539, 521, 19, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[51499, 1562, 101, 2, 33, "Text"],
+Cell[51603, 1566, 1217, 24, 351, "Input"],
+Cell[52823, 1592, 75, 1, 33, "Text",
+  Evaluatable->False],
+Cell[52901, 1595, 1086, 19, 213, "Input"],
+Cell[53990, 1616, 79, 1, 33, "Text",
+  Evaluatable->False],
+Cell[54072, 1619, 997, 19, 193, "Input"],
+Cell[55072, 1640, 80, 1, 33, "Text",
+  Evaluatable->False],
+Cell[55155, 1643, 923, 18, 234, "Input"],
+Cell[56081, 1663, 215, 9, 38, "Text",
+  Evaluatable->False],
+Cell[56299, 1674, 1335, 23, 286, "Input"]
+}, Closed]],
+Cell[57649, 1700, 1050, 31, 87, "Text",
+  Evaluatable->False],
+Cell[58702, 1733, 3374, 121, 209, "Text",
+  Evaluatable->False],
+Cell[62079, 1856, 1075, 40, 36, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[63179, 1900, 101, 2, 33, "Text"],
+Cell[63283, 1904, 613, 20, 80, "Text",
+  Evaluatable->False],
+Cell[63899, 1926, 2758, 53, 623, "Input"]
+}, Closed]],
+Cell[66672, 1982, 156, 3, 32, "Text"],
+Cell[66831, 1987, 822, 24, 33, "Text"],
+Cell[67656, 2013, 158, 3, 35, "Text"],
+Cell[67817, 2018, 533, 14, 33, "Text"],
+Cell[68353, 2034, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

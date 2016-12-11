@@ -1,0 +1,3532 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    112729,       3365]*)
+(*NotebookOutlinePosition[    113587,       3394]*)
+(*  CellTagsIndexPosition[    113543,       3390]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Fast Fourier Transform (FFT)",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Piecewise Continuous",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PiecewiseContinuous.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is ",
+  StyleBox["piecewise continuous",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " on the closed interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ",  if there exists values  ",
+  Cell[BoxData[
+      RowBox[{\(x\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_n\)}]]],
+  "  with  ",
+  Cell[BoxData[
+      \(a = \(\(x\_0 < x\_1 <  ... \) < x\_n = b\)\)]],
+  "  such that  f  is continuous in each of the open intervals  ",
+  Cell[BoxData[
+      \(x\_\(k - 1\) < x < x\_k\)]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  "  and has left-hand and right-hand limits at each of the values  ",
+  Cell[BoxData[
+      \(x\_k\)]],
+  ",  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Fourier Series",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/FourierSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is periodic with period  ",
+  Cell[BoxData[
+      \(2  L\)]],
+  "  and is piecewise continuous on  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ",  then the ",
+  StyleBox["Fourier Series",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is\n\n\t\t",
+  Cell[BoxData[
+      \(S \((x)\)\  = \ 
+        a\_0\/2 + \[Sum]\+\(j = 1\)\%\[Infinity]\((\(a\_j\) 
+                  cos \((j  \[Pi]\/L\ x)\) + \(b\_j\) 
+                  sin \((j  \[Pi]\/L\ x)\))\)\)]],
+  ",\n\nwhere the coefficients  ",
+  Cell[BoxData[
+      RowBox[{\(a\_j\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(b\_j\)}]]],
+  "  are given by the so-called ",
+  StyleBox["Euler's formulae",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  ":  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(a\_j\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(1\/L\), 
+              RowBox[{\(\[Integral]\_0\%\(2  L\)\), 
+                RowBox[{
+                "  ", "f", \((x)\), 
+                  "cos", \((j  \[Pi]\/L\ x)\), \(\[DifferentialD]x\), "   ", 
+                  StyleBox["for",
+                    FontFamily->"Times New Roman"], "  ", "j"}]}]}], "=", 
+            "0"}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  ",  \nand  \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(b\_j\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(1\/L\), 
+              RowBox[{\(\[Integral]\_0\%\(2  L\)\), 
+                RowBox[{
+                "  ", "f", \((x)\), 
+                  "sin", \((j  \[Pi]\/L\ x)\), \(\[DifferentialD]x\), "   ", 
+                  StyleBox["for",
+                    FontFamily->"Times New Roman"], "  ", "j"}]}]}], "=", 
+            "1"}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Theorem (Fourier Expansion).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  "  is the Fourier Series for  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ".   If  ",
+  Cell[BoxData[
+      RowBox[{"f", \((x)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(f'\), \((x)\)}]]],
+  "  are piecewise continuous on  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ",  then  ",
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  "  is convergent for all  ",
+  Cell[BoxData[
+      \(x\ \[Epsilon][0, 2  L]\)]],
+  ".  \n\nThe relation  ",
+  Cell[BoxData[
+      \(f \((x)\) = S \((x)\)\)]],
+  "  holds for all  ",
+  Cell[BoxData[
+      \(x\ \[Epsilon][0, 2  L]\)]],
+  " where  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is continuous.  If  ",
+  Cell[BoxData[
+      \(x = a\)]],
+  "  is a point of discontinuity of  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ",  then\n\n \t\t",
+  Cell[BoxData[
+      \(S \((a)\) = \(f \((\(a\^-\))\)\  + \ f \((\(a\^+\))\)\)\/2\)]],
+  ",  \n \n where  ",
+  Cell[BoxData[
+      \(f \((\(a\^-\))\)\ \ and\ \ f \((\(a\^+\))\)\)]],
+  "  denote the left-hand and right-hand limits, respectively.  With this \
+understanding, we have the Fourier Series expansion:\n \n\t\t",
+  Cell[BoxData[
+      \(f \((x)\)\  = \ 
+        a\_0\/2 + \[Sum]\+\(j = 1\)\%\[Infinity]\((\(a\_j\) 
+                  cos \((j\ \(\[Pi]\/L\) x)\) + \(b\_j\) 
+                  sin \((j  \[Pi]\/L\ x)\))\)\)]],
+  " .  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FourierSeriesProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FourierSeriesProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Fourier Polynomial).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is periodic with period  ",
+  Cell[BoxData[
+      \(2  L\)]],
+  "  and is piecewise continuous on  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ",  then the ",
+  StyleBox["Fourier Polynomial",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  Cell[BoxData[
+      \(S \((x)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  of degree m is\n\n\t\t",
+  Cell[BoxData[
+      \(S \((x)\)\  = \ 
+        a\_0\/2 + \[Sum]\+\(j = 1\)\%m\((\(a\_j\) 
+                  cos \((j  \[Pi]\/L\ x)\) + \(b\_j\) 
+                  sin \((j  \[Pi]\/L\ x)\))\)\)]],
+  ",\n\nwhere the coefficients  ",
+  Cell[BoxData[
+      RowBox[{\(a\_j\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(b\_j\)}]]],
+  "  are given by the so-called ",
+  StyleBox["Euler's formulae",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  ":  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(a\_j\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(1\/L\), 
+              RowBox[{\(\[Integral]\_0\%\(2  L\)\), 
+                RowBox[{
+                "  ", "f", \((x)\), 
+                  "cos", \((j  \[Pi]\/L\ x)\), \(\[DifferentialD]x\), "   ", 
+                  StyleBox["for",
+                    FontFamily->"Times New Roman"], "  ", "j"}]}]}], "=", 
+            "0"}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ",  \nand  \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(b\_j\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(1\/L\), 
+              RowBox[{\(\[Integral]\_0\%\(2  L\)\), 
+                RowBox[{
+                "  ", "f", \((x)\), 
+                  "sin", \((j  \[Pi]\/L\ x)\), \(\[DifferentialD]x\), "   ", 
+                  StyleBox["for",
+                    FontFamily->"Times New Roman"], "  ", "j"}]}]}], "=", 
+            "1"}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["  ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Fourier Series",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+FourierSeries/FourierSeries/FourierSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fourier Series",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+FourierSeries/FourierSeries/FourierSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FourierSeriesProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FourierSeriesProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Assume that ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " is periodic with period  ",
+  Cell[BoxData[
+      \(2  \[Pi]\)]],
+  ",  i.e.  ",
+  Cell[BoxData[
+      \(f \((x + 2  \[Pi])\)\  = f \((x)\)\)]],
+  ",  and is defined by \n\t\t",
+  Cell[BoxData[
+      \(f \((x)\) = \(\(|\)\(x - \[Pi]\)\(|\)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] 2  \[Pi]\)]],
+  ".  \nFind the Fourier polynomial of degree n = 5.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+We need to define this function individually in each \
+sub-interval.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(L = \[Pi];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Abs[x - L];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        Plot[f[x], {x, 0, 2  L}, PlotStyle \[Rule] Blue, 
+          Ticks \[Rule] {Range[0, 2  L, L\/2], 
+              Range[0, L, L\/2]}];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<     for \>", 
+        0, "\< \[LessEqual] x \[LessEqual] \>", 
+        2  L, "\<.\>"];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Clear[c, d, j, k, t];\)\ \ \), "\n", 
+    \(\(c\_j_\  := \ \(1\/L\) \(\[Integral]\_0\%\(2  L\)f[t] 
+              Cos[j\ \[Pi]\/L\ t] \[DifferentialD]t\);\)\ \ \), "\n", 
+    \(\(d\_j_\  := \ \(1\/L\) \(\[Integral]\_0\%\(2  L\)f[t] 
+              Sin[j  \[Pi]\/L\ t] \[DifferentialD]t\);\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<   \!\(c\_k\) = \>\"", 
+        c\_k\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(c\_k\) = \>\"", 
+        Simplify[c\_k, 
+          k \[Element] Integers]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(d\_k\) = \>\"", 
+        d\_k];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(d\_k\) = \>\"", 
+        Simplify[d\_k, 
+          k \[Element] Integers]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S[x_]\  = 
+        c\_0\/2 + \[Sum]\+\(k = 1\)\%n\((\(c\_k\) 
+                  Cos[k  \[Pi]\/L\ x] + \(d\_k\) 
+                  Sin[k\ \(\[Pi]\/L\) x])\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S[x] = \>", S[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(s[x_]\  = 
+        Chop[N[c\_0]\/2 + \[Sum]\+\(k = 1\)\%n\((N[c\_k] 
+                    Cos[k  \[Pi]\/L\ x] + 
+                  N[d\_k] 
+                    Sin[k  \[Pi]\/L\ x])\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \)}], "Input"],
+
+Cell["Now plot the function and the Fourier polynomial.", "Text"],
+
+Cell[BoxData[{
+    \(\(gr2 = 
+        Plot[S[x], {x, 0, 2  L}, PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] 
+            Identity];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr2, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<     for \>", 
+        0, "\< \[LessEqual] x \[LessEqual] \>", 
+        2  L, "\<.\>"];\)\ \ \), "\n", 
+    \(\(Print["\<S[x] = \>", S[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "Observe that the Fourier polynomial has period  ",
+  Cell[BoxData[
+      \(2  L\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(gr3 = 
+        Plot[S[x], {x, \(-2\) L, 4  L}, 
+          PlotRange \[Rule] {{\(-2\) L, 4  L}, {0, L}}, 
+          PlotStyle \[Rule] Magenta, 
+          Ticks \[Rule] {Range[\(-2\) L, 4  L, L], 
+              Range[0, L, L\/2]}];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<S[x] = \>", S[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Numerical Integration calculation for the Fourier trigonometric \
+polynomial.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tAssume that  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is periodic with period  ",
+  Cell[BoxData[
+      \(2  L\)]],
+  "  and is piecewise continuous on  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ", we shall construct the Fourier trigonometric polynomial over ",
+  StyleBox["[0,2L]",
+    FontFamily->"Courier New"],
+  " of degree ",
+  StyleBox["m",
+    FontFamily->"Courier New"],
+  ".\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(P \((x)\)\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            StyleBox[\(a\_0\),
+              FontSize->12], 
+            StyleBox["2",
+              FontSize->12]], " ", "+", " ", 
+          RowBox[{
+            StyleBox[
+              UnderoverscriptBox["\[Sum]", 
+                StyleBox[\(j = 1\),
+                  FontSize->10], 
+                StyleBox["m",
+                  FontSize->10]],
+              FontSize->18], \((\ 
+              a\_j\ cos \((j  \[Pi]\/L\ x)\)\  + \ 
+                b\_j\ sin \((j  \[Pi]\/L\ x)\)\ )\)}]}]}]]],
+  ",   \n\nThere are ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " subintervals of equal width  ",
+  Cell[BoxData[
+      \(\[CapitalDelta]x = \(2  L\)\/n\)]],
+  "  based on  ",
+  Cell[BoxData[
+      \(x\_k\  = \ k \( 2  L\)\/n\)]],
+  ".  The coefficients are   \n\n\t\t",
+  Cell[BoxData[
+      \(a\_j = \ \(1\/L\) \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+            Cos[j  \[Pi]\/L\ x\_k] f \((x\_k)\) \[CapitalDelta]x\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(j = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  \nand\n\t\t",
+  Cell[BoxData[
+      \(b\_j = \ \(1\/L\) \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+            Sin[j  \[Pi]\/L\ x\_k] f \((x\_k)\) \[CapitalDelta]x\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(j = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  \n\nThe construction is possible provided that  ",
+  Cell[BoxData[
+      \(2  m + 1 \[LessEqual] n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The sums can be viewed as numerical integration of Euler's formulae when \
+",
+  StyleBox["[0,2L]",
+    FontFamily->"Courier New"],
+  " is divided into ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " subintervals.  The trapezoidal rule uses the weights ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  " for both the ",
+  Cell[BoxData[
+      \(f \((x\_0)\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(f \((x\_n)\)\)]],
+  ".  Since f(x) has period  ",
+  Cell[BoxData[
+      \(2  L\)]],
+  ",  it follows that ",
+  Cell[BoxData[
+      \(f \((x\_n)\) = f \((x\_0)\)\)]],
+  ". This permits us to use 1 for all the weights and the summation index \
+from  ",
+  Cell[BoxData[
+      RowBox[{"k", "=", 
+        RowBox[{
+          RowBox[{"0", 
+            StyleBox["   ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["to",
+              FontFamily->"Times New Roman"], 
+            StyleBox["  ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "k"}], " ", "=", 
+          " ", \(n - 1\)}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Assume that ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " is periodic with period  ",
+  Cell[BoxData[
+      \(2  \[Pi]\)]],
+  ",  i.e.  ",
+  Cell[BoxData[
+      \(f \((x + 2  \[Pi])\)\  = f \((x)\)\)]],
+  ",  and is defined by \n\t\t",
+  Cell[BoxData[
+      \(f \((x)\) = \(\(|\)\(x - \[Pi]\)\(|\)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] 2  \[Pi]\)]],
+  ".  \nFind the Fourier polynomial of degree n = 5  for the 12  equally \
+spaced points in the interval  ",
+  Cell[BoxData[
+      \(\([\(-\[Pi]\), \[Pi]]\)\)]],
+  ".  \nUse the \"numerical integration\" method for finding the \
+coefficients. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the function using the piecewise definition.", "Text"],
+
+Cell[BoxData[{
+    \(\(L = \[Pi];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Abs[x - L];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Enter the number of subintervals ",
+  StyleBox["n",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " and the degree ",
+  StyleBox["m",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " of the Fourier polynomial. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 12;\)\ \ \), "\n", 
+    \(\(m = 5;\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Construct the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ", ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  " and the ",
+  "Fourier polynomial. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[A, B, j, X];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"\[CapitalDelta]X", " ", "=", " ", 
+          FractionBox[
+            RowBox[{"2", 
+              StyleBox["L",
+                FontSize->12]}], 
+            StyleBox["n",
+              FontSize->12]]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(X\_k_\  = \ N[k\ \[CapitalDelta]X];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 0\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(A\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["1",
+                      FontSize->12], 
+                    StyleBox["L",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+                    Cos[j  \[Pi]\/L\ X\_k] f[X\_k] \[CapitalDelta]X\)}], " ", 
+                "]"}]}]}], " ", "]"}], ";"}], " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 1\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(B\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["1",
+                      FontSize->12], 
+                    StyleBox["L",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+                    Sin[j  \[Pi]\/L\ X\_k] f[X\_k] \[CapitalDelta]X\)}], " ", 
+                "]"}]}]}], " ", "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The coefficients are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Acoeff = Table[A\_j, {j, 0, m}];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Bcoeff = Table[B\_j, {j, 1, m}];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(a\_j\) = \>\"", Acoeff];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(b\_j\) = \>\"", Bcoeff];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  "Construct the Fourier polynomial using the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  "and ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P[x_] = 
+        A\_0\/2 + \[Sum]\+\(j = 1\)\%m\((\(A\_j\) 
+                  Cos[j \(\(\(\ \)\(\[Pi]\)\)\/L\) x] + 
+                B\_j\ Sin[
+                    j \(\(\(\ \)\(\[Pi]\)\)\/L\) 
+                      x])\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We are done ! 
+We can graph the situation for fun.  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(gr4 = 
+        Plot[P[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] 
+            Identity];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr4, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[\(-L\)\/2, L\/2, L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<     for \>", 
+        0, "\< \[LessEqual] x \[LessEqual] \>", L, "\<.\>"];\)\ \ \), "\n", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The coefficients are approximations to the ones found analytically using \
+symbolic integrations.  \nHowever, when only data points are used, the \
+numerical integration method must be used. \nAs we will see, the FFT is a \
+more efficient way to integrate."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(c\_1\) = \>\"", N[c\_1]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(c\_3\) = \>\"", N[c\_3]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(c\_5\) = \>\"", 
+        N[c\_5]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compare with\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\_1\) = \>\"", A\_1\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(A\_3\) = \>\"", A\_3\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(A\_5\) = \>\"", A\_5\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(gr5 = 
+        Plot[S[x], {x, 0, 2  L}, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] 
+            Identity];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Show[gr4, gr5, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \ \ \ \), "\n", 
+    \(\(Print["\<f[x] = \>", 
+        f[x], "\<     for \>", \(-L\), "\< \[LessEqual] x \[LessEqual] \>", 
+        L, "\<.\>"];\)\ \ \ \), "\n", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Fourier polynomial is close to FFT trig. poly.\>"];\)\ \
+\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  When creating the sums which define the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ", ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  " be sure to sum up only n terms ",
+  Cell[BoxData[
+      \(\[Sum]\+\(k = 0\)\%\(n - 1\)\)]],
+  ". \nRemember, \"numerical integration\" is being used and  ",
+  StyleBox["[0,2L]",
+    FontFamily->"Courier New"],
+  "  is subdivided into n subintervals, ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 1]],
+  " n+1 subintervals."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Fast Fourier Transform for data.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tThe FFT is used to find the trigonometric polynomial when only \
+data points are given.  We will demonstrate three ways to calculate the FFT.  \
+The first method involves computing sums, similar to \"numerical integration,\
+\" the second method involves \"curve fitting,\" the third method involves \
+\"complex numbers.\"  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computing the FFT with sums.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tGiven data points ",
+  Cell[BoxData[
+      \({\((x\_n, y\_n)\)}\)]],
+  " where ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  " and ",
+  Cell[BoxData[
+      \(x\_n = 2  L\)]],
+  " over ",
+  StyleBox["[0",
+    FontFamily->"Courier New"],
+  ",",
+  StyleBox["2L]",
+    FontFamily->"Courier New"],
+  " where ",
+  Cell[BoxData[
+      \(x\_k = \ k \( 2  L\)\/n\)]],
+  " for ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".   Also given that ",
+  Cell[BoxData[
+      \(y\_n = y\_0\)]],
+  ", to that the data is periodic with period ",
+  Cell[BoxData[
+      \(2  L\)]],
+  ".  We shall construct the FFT polynomial over ",
+  StyleBox["[0",
+    FontFamily->"Courier New"],
+  ",",
+  StyleBox["2L]",
+    FontFamily->"Courier New"],
+  " of degree ",
+  StyleBox["m",
+    FontFamily->"Courier New"],
+  ".\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(P \((x)\)\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            StyleBox[\(a\_0\),
+              FontSize->12], 
+            StyleBox["2",
+              FontSize->12]], " ", "+", " ", 
+          RowBox[{
+            StyleBox[
+              UnderoverscriptBox["\[Sum]", 
+                StyleBox[\(j = 1\),
+                  FontSize->10], 
+                StyleBox["m",
+                  FontSize->10]],
+              FontSize->18], \((\ 
+              a\_j\ cos \((j  \[Pi]\/L\ x)\)\  + \ 
+                b\_j\ sin \((j  \[Pi]\/L\ x)\)\ )\)}]}]}]]],
+  ",   \n\nThe abscissa's form  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " subintervals of equal width  ",
+  Cell[BoxData[
+      \(\[CapitalDelta]x = \(2  L\)\/n\)]],
+  "  based on  ",
+  Cell[BoxData[
+      \(x\_k = \ k \( 2  L\)\/n\)]],
+  ".  The coefficients are   \n\n\t\t",
+  Cell[BoxData[
+      \(a\_j = \ \(2\/n\) \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+            Cos[j  \[Pi]\/L\ x\_k] y\_k\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(j = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  "\nand\n\t\t",
+  Cell[BoxData[
+      \(b\_j = \ \(2\/n\) \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+            Sin[j  \[Pi]\/L\ x\_k] y\_k\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(j = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  \n\nThe construction is possible provided that  ",
+  Cell[BoxData[
+      \(2  m + 1 \[LessEqual] n\)]],
+  ".  \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Notice that the sums  ",
+  Cell[BoxData[
+      \(\[Sum]\+\(k = 0\)\%\(n - 1\)\)]],
+  "  involve only  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  ordinates  ",
+  Cell[BoxData[
+      \(y\_k\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Discrete Fourier series FFT",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+FourierSeries/FourierFFT/FourierFFT.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Discrete Fourier series FFT",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+FourierSeries/FourierFFT/FourierFFT.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Given the 12  equally spaced data points \n",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(2\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"\[Pi]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(7\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(4\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\(3\ \[Pi]\)\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(11\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}]}]]],
+  "\nwhich can be extended periodically over ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ", if we define",
+  Cell[BoxData[
+      RowBox[{\((x\_n, y\_n)\), "=", 
+        RowBox[{"(", 
+          RowBox[{\(2  \[Pi]\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}]}]]],
+  ".  \nFind the Fourier polynomial of degree n = 5  for the 12  equally \
+spaced points over interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ".  \nUse numerical sums to find the coefficients. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The data are computed using the function  ",
+  Cell[BoxData[
+      \(f[x] = Abs[x - \[Pi]]\)]],
+  ", which is the function that was used in examples 1 and 2.  "
+}], "Text"],
+
+Cell["Construct the data points to be used.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(n\  = \ 12;\), "  "}], "\n", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(f[x_] = Abs[x - L];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"data", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox[\(2  L\ k\),
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], ",", 
+                  RowBox[{"f", "[", 
+                    FractionBox[
+                      StyleBox[\(2  L\ k\),
+                        FontSize->12], 
+                      StyleBox["n",
+                        FontSize->12]], "]"}]}], " ", "}"}], 
+              ",", \({k, 0, n - 1}\)}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(dots = 
+          ListPlot[data, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+            DisplayFunction \[Rule] Identity];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"ndot", "=", 
+        RowBox[{"Graphics", "[", 
+          RowBox[{"{", 
+            RowBox[{"Pink", ",", \(PointSize[0.02]\), ",", 
+              RowBox[{"Point", "[", 
+                RowBox[{"{", 
+                  RowBox[{
+                    StyleBox[\(2  L\),
+                      FontSize->12], ",", 
+                    RowBox[{"f", "[", 
+                      StyleBox[\(2  L\),
+                        FontSize->12], "]"}]}], "}"}], "]"}]}], "}"}], 
+          "]"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Show[dots, ndot, 
+          Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+          DisplayFunction \[Rule] $DisplayFunction];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<n = \>", n];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[data];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  "The ordinates  ",
+  Cell[BoxData[
+      \(y\_k\)]],
+  " for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  " are used in computing the sums for constructing the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ", ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  " and the Fourier polynomial. It is convenient to store them in the array \
+",
+  StyleBox["Y",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  This can be accomplished by using the ",
+  StyleBox["Transpose",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " of the matrix of data points and selecting the second row.  Or ",
+  StyleBox["Y",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " can be constructed directly with the ",
+  StyleBox["Table",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " command. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Y\)\(=\)\(\(Transpose[
+            data]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\)\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{"Y", " ", "=", " ", 
+      RowBox[{"Table", "[", 
+        RowBox[{
+          RowBox[{"f", "[", 
+            FractionBox[
+              StyleBox[\(2  L\ k\),
+                FontSize->12], 
+              StyleBox["n",
+                FontSize->12]], "]"}], " ", ",", \({k, 0, n - 1}\)}], "]"}], 
+      "  "}]], "Input"],
+
+Cell[TextData[{
+  "We can adjust the subscript so that the math  ",
+  Cell[BoxData[
+      \(y\_k\)]],
+  " for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  " are used in computing the sums for constructing the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ", ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[X, Y, k];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(X\_k_\), " ", "=", " ", 
+          RowBox[{"N", "[", 
+            RowBox[{
+              FractionBox[
+                StyleBox[\(2  L\),
+                  FontSize->12], 
+                StyleBox["n",
+                  FontSize->12]], "k"}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Y\_k_\), " ", "=", " ", 
+          RowBox[{"N", "[", 
+            RowBox[{"f", "[", 
+              RowBox[{
+                FractionBox[
+                  StyleBox[\(2  L\),
+                    FontSize->12], 
+                  StyleBox["n",
+                    FontSize->12]], "k"}], "]"}], "]"}]}], ";"}], 
+      "  "}]}], "Input"],
+
+Cell[TextData[{
+  "Now construct the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ", ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[A, B, j, k];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(L = \[Pi];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 0\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(A\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["2",
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+                    Cos[j  \[Pi]\/L\ X\_k] Y\_k\)}], "]"}]}]}], " ", "]"}], 
+        ";"}], "  "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 1\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(B\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["2",
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%\(n - 1\)\ 
+                    Sin[j  \[Pi]\/L\ X\_k] Y\_k\)}], "]"}]}]}], " ", "]"}], 
+        ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The coefficients are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Acoeff = Table[A\_j, {j, 0, m}];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Bcoeff = Table[B\_j, {j, 1, m}];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(a\_j\) = \>\"", Acoeff];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(b\_j\) = \>\"", Bcoeff];\), "  "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Notice that precisely 12 data points are used in computing the \
+coefficients, and a point corresponding to ",
+  Cell[BoxData[
+      \(x\_n = 2  \[Pi]\)]],
+  " is ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 1]],
+  " used.   "
+}], "Text"],
+
+Cell[TextData[{
+  "Construct the Fourier polynomial using the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  "and ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(m = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_] = 
+        A\_0\/2 + \[Sum]\+\(j = 1\)\%m\((\(A\_j\) 
+                  Cos[j \(\(\(\ \)\(\[Pi]\)\)\/L\) x] + 
+                B\_j\ Sin[
+                    j \(\(\(\ \)\(\[Pi]\)\)\/L\) 
+                      x])\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr6 = 
+        Plot[P[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta\ , 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Show[dots, ndot, gr6, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Using the method of numerical sums, the FFT trig. poly. \
+is\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Since the data has period ",
+  Cell[BoxData[
+      StyleBox[\(2  L\),
+        FontSize->12]]],
+  ", if data points were used at both end of the interval ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(2  L\),
+            FontSize->12]}], 
+        StyleBox["]",
+          FontSize->12]}]]],
+  " then the \"numerical sums\" would weight the endpoints twice, whereas all \
+other function values would have weight 1.  If 13 data points were used which \
+included the right end point, then a wrong answer will result, and spurious \
+terms appear in the trigonometric polynomial. Look at the wrong answer. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  StyleBox["Wrong Answer.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Observe.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  The upper limit of summation has been changed from ",
+  Cell[BoxData[
+      \(n - 1\)]],
+  " to the ",
+  StyleBox["wrong",
+    FontColor->RGBColor[1, 0, 0]],
+  " value  ",
+  Cell[BoxData[
+      \(n\)]],
+  " ."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[A, B, j, k];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 0\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(A\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["2",
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%n\ 
+                    Cos[j  \[Pi]\/L\ X\_k] Y\_k\)}], "]"}]}]}], " ", "]"}], 
+        ";"}], "  "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          
+          RowBox[{\(j = 1\), ",", \(j \[LessEqual] m\), ",", \(j++\), ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{\(B\_j\), "=", 
+              RowBox[{"Chop", "[", " ", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox["2",
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], \(\[Sum]\+\(k = 0\)\%n\ 
+                    Sin[j  \[Pi]\/L\ X\_k] Y\_k\)}], "]"}]}]}], " ", "]"}], 
+        ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The coefficients are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Acoeff = Table[A\_j, {j, 0, m}];\), 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Bcoeff = Table[B\_j, {j, 1, m}];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(a\_j\) = \>\"", Acoeff];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(b\_j\) = \>\"", Bcoeff];\), "  "}]}], "Input"],
+
+Cell[BoxData[{
+    \(\(p[x_] = 
+        A\_0\/2 + \[Sum]\+\(j = 1\)\%m\((\(A\_j\) 
+                  Cos[j \(\(\(\ \)\(\[Pi]\)\)\/L\) x] + 
+                B\_j\ Sin[
+                    j \(\(\(\ \)\(\[Pi]\)\)\/L\) 
+                      x])\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr7 = 
+        Plot[p[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta\ , 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Show[dots, ndot, gr7, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, \(3  L\)\/2, L\/2]}, 
+        PlotRange \[Rule] All, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \ \), "\n", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<This is not the right answer, because\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<data at both endpoints cannot be used.\>"];\)\ \ \)}], \
+"Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Fitting a Fourier trigonometric polynomial to data.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tThe built in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " Fit subroutine can be used to perform the computation. \n\n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Do not include both endpoints of the interval."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Given the 12  equally spaced data points \n",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(2\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"\[Pi]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(7\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(4\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\(3\ \[Pi]\)\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(11\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}]}]]],
+  "\nwhich can be extended periodically over ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ", if we define  ",
+  Cell[BoxData[
+      RowBox[{\((x\_n, y\_n)\), "=", 
+        RowBox[{"(", 
+          RowBox[{\(2  \[Pi]\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}]}]]],
+  ".  \nFind the Fourier polynomial of degree n = 5  for the 12  equally \
+spaced points over interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ".  \nUse ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Fit subroutine to find the coefficients. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The data are computed using the function  ",
+  Cell[BoxData[
+      \(f[x] = Abs[x - \[Pi]]\)]],
+  ", which is the function that was used in examples 1 - 3.  "
+}], "Text"],
+
+Cell["Construct the data points to be used.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(n\  = \ 12;\), "  "}], "\n", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(f[x_] = Abs[x - L];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"data", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox[\(2  L\ k\),
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], ",", 
+                  RowBox[{"f", "[", 
+                    FractionBox[
+                      StyleBox[\(2  L\ k\),
+                        FontSize->12], 
+                      StyleBox["n",
+                        FontSize->12]], "]"}]}], " ", "}"}], 
+              ",", \({k, 0, n - 1}\)}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(dots = 
+          ListPlot[data, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+            DisplayFunction \[Rule] Identity];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"ndot", "=", 
+          RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+              RowBox[{"Pink", ",", \(PointSize[0.02]\), ",", 
+                RowBox[{"Point", "[", 
+                  RowBox[{"{", 
+                    RowBox[{
+                      StyleBox[\(2  L\),
+                        FontSize->12], ",", 
+                      RowBox[{"f", "[", 
+                        StyleBox[\(2  L\),
+                          FontSize->12], "]"}]}], "}"}], "]"}]}], "}"}], 
+            "]"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Show[dots, ndot, 
+          Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+          DisplayFunction \[Rule] $DisplayFunction];\), 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<n = \>", n];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[data];\), "   "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Notice that precisely 12 data points are used and a point corresponding \
+to ",
+  Cell[BoxData[
+      \(x = 2  \[Pi]\)]],
+  " is ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 1]],
+  " used.   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " procedure  ",
+  StyleBox["Fit",
+    FontWeight->"Bold"],
+  "  can be used to numerically compute the trigonometric polynomial. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(funs = {1, Cos[\(\[Pi]\/L\) x], Sin[\(\[Pi]\/L\) x], 
+          Cos[2 \( \[Pi]\/L\) x], Sin[2 \( \[Pi]\/L\) x], 
+          Cos[3 \( \[Pi]\/L\) x], Sin[3 \( \[Pi]\/L\) x], 
+          Cos[4 \( \[Pi]\/L\) x], Sin[4 \( \[Pi]\/L\) x], 
+          Cos[5 \( \[Pi]\/L\) x], 
+          Sin[5 \( \[Pi]\/L\) x]};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Q[x_]\  = \ 
+        Chop[\ Fit[\ data, funs, x\ ]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr8 = 
+        Plot[Q[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta\ , 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Show[\ gr8, dots, ndot, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Using least squares, the FFT trig. poly. is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compare with the previous solution using 'numerical \
+integration.'\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solutions Q[x] and P[x] are identical!\>"];\)\ \ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Thus we have two ways to calculate the FFT trig. \
+poly.\>"];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  The underlying function f(x) is even which requires that only cosine \
+terms be used for the Fourier trigonometric polynomial. \nSince f(x) has \
+period ",
+  Cell[BoxData[
+      StyleBox[\(2  L\),
+        FontSize->12]]],
+  ", if data points were used at both end of the interval ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(2  L\),
+            FontSize->12]}], 
+        StyleBox["]",
+          FontSize->12]}]]],
+  " then the \"least squares\" algorithm would weight the function value ",
+  Cell[BoxData[
+      \(f[2  \[Pi]]\  = f[0]\)]],
+  " twice, whereas all other function values would have weight 1.  If 13 data \
+points were used which included the right end point, then a wrong answer will \
+result, and spurious terms appear in the trigonometric polynomial. Look at \
+the wrong answer. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  StyleBox["Wrong Answer.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(n\  = \ 13;\), "  "}], "\n", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"xys", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox[\(2  L\ k\),
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], ",", 
+                  RowBox[{"f", "[", 
+                    FractionBox[
+                      StyleBox[\(2  L\ k\),
+                        FontSize->12], 
+                      StyleBox["n",
+                        FontSize->12]], "]"}]}], " ", "}"}], 
+              ",", \({k, 0, 11}\)}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Using n = \>", n, "\< instead of n = \>", 
+          n - 1, "\< results in\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<n = \>", n];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[N[xys]];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(q[x_] = Chop[\ Fit[\ xys, funs, x\ ]\ ];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(gr9 = 
+          Plot[q[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta\ , 
+            DisplayFunction \[Rule] Identity];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Show[dots, ndot, gr9, 
+          Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, \(3  L\)\/2, L\/2]}, 
+          PlotRange \[Rule] All, DisplayFunction \[Rule] $DisplayFunction];\),
+       "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x], "\<     for \>", 
+          0, "\< \[LessEqual] x \[LessEqual] \>", 2  L, "\<,\>"];\), 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<q[x]= \>", q[x]\ ];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<This is not the right answer, because\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<data at both endpoints should not be used.\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Notice how the curve is 'pulled' toward the endpoints.\
+\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The midpoint is not pulled enough.\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<This is a subtle error, because you \>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<might not look closely and see the error.\>"];\), 
+      "  "}]}], "Input"]
+}, Open  ]]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for using ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica's",
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["FFT",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/FastFourierTransform.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " \n\n\tTrigonometric curve fitting at discrete points is equivalent to \
+finding the ",
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/FastFourierTransform.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0, 0, 1]],
+  " (FFT) for a discrete data set. The coefficients of the trigonometric \
+polynomial can be obtained using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in \"Fourier\" procedure (FFT).  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  However, we first we need to use that part of the period function  ",
+  Cell[BoxData[
+      \(F[x]\)]],
+  "  defined in the interval  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ".  That's the way ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " expects us to see it !  Be sure to redefine  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  "  on the interval  ",
+  Cell[BoxData[
+      \(\([0, 2  L]\)\)]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Given the 12  equally spaced data points \n",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\[Pi]\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(2\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"\[Pi]", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(7\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/6\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(4\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(\(3\ \[Pi]\)\/2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Pi]\/2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(5\ \[Pi]\)\/3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(2\ \[Pi]\)\/3\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(\(11\ \[Pi]\)\/6\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\(5\ \[Pi]\)\/6\)}], ")"}]}]]],
+  "\nwhich can be extended periodically over ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ", if we define  ",
+  Cell[BoxData[
+      RowBox[{\((x\_n, y\_n)\), "=", 
+        RowBox[{"(", 
+          RowBox[{\(2  \[Pi]\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "\[Pi]"}], ")"}]}]]],
+  ".  \nFind the Fourier polynomial of degree n = 5  for the 12  equally \
+spaced points over interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"0", 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(2  \[Pi]\)}], "]"}]]],
+  ".  \nUse ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in ",
+  StyleBox["Fourier",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " subroutine to find the solution. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Next, make a table of the function values at first twelve points in the \
+partition of  ",
+  Cell[BoxData[
+      \(\([0, 2  \[Pi]]\)\)]],
+  ".  \nDo not include the right endpoint !  \nIf you do by mistake it will \
+create a mistake and you won't like those complex numbers showing up.  \nSo \
+use the table iteration limit of  11  ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 0]],
+  "  12.  A data set is being created using the counter k = 0,1,2,...,11. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The data are computed using the function  ",
+  Cell[BoxData[
+      \(f[x] = Abs[x - \[Pi]]\)]],
+  ", which is the function that was used in examples 1 - 3.  "
+}], "Text"],
+
+Cell["Construct the data points to be used.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(n\  = \ 12;\), "  "}], "\n", 
+    RowBox[{\(L = \[Pi];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(f[x_] = Abs[x - L];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Ydata", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{"f", "[", 
+                FractionBox[
+                  StyleBox[\(2  L\ k\),
+                    FontSize->12], 
+                  StyleBox["n",
+                    FontSize->12]], "]"}], " ", ",", \({k, 0, n - 1}\)}], 
+            "]"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"data", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{"{", 
+                RowBox[{
+                  FractionBox[
+                    StyleBox[\(2  L\ k\),
+                      FontSize->12], 
+                    StyleBox["n",
+                      FontSize->12]], ",", 
+                  RowBox[{"f", "[", 
+                    FractionBox[
+                      StyleBox[\(2  L\ k\),
+                        FontSize->12], 
+                      StyleBox["n",
+                        FontSize->12]], "]"}]}], " ", "}"}], 
+              ",", \({k, 0, n - 1}\)}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), "  "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(dots = 
+          ListPlot[data, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+            DisplayFunction \[Rule] Identity];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"ndot", "=", 
+          RowBox[{"Graphics", "[", 
+            RowBox[{"{", 
+              RowBox[{"Pink", ",", \(PointSize[0.02]\), ",", 
+                RowBox[{"Point", "[", 
+                  RowBox[{"{", 
+                    RowBox[{
+                      StyleBox[\(2  L\),
+                        FontSize->12], ",", 
+                      RowBox[{"f", "[", 
+                        StyleBox[\(2  L\),
+                          FontSize->12], "]"}]}], "}"}], "]"}]}], "}"}], 
+            "]"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Show[dots, ndot, 
+          Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, L, L\/2]}, 
+          DisplayFunction \[Rule] $DisplayFunction];\), 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<n = \>", n];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[Ydata];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<Note that only the ordinates will be used.\>"];\), 
+      "  "}]}], "Input"],
+
+Cell[TextData[{
+  "Then use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Fourier procedure, and multiply the result by ",
+  Cell[BoxData[
+      \(2\/\@n = 2\/\@12\)]],
+  ".  \n",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Inverse Fourier procedure is also adjusted by a constant.  \nWhy does \
+",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " do this ?  \nBecause the FFT is most often used for signal processing and \
+it is not necessary to use the precise multiples that would be used for curve \
+fitting.  \nWhen signal processing is done, then everything works out o.k. \
+when you transform and get the Fourier coefficients, and inverse transform \
+from the Fourier coefficients back to the signal."
+}], "Text"],
+
+Cell[BoxData[
+    \(FFTcoeff\  = \ \(\(2\/\@12\)\(\ \)\(Chop[\ 
+          Fourier[Ydata]\ ]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The real part of this list is the list for ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  " and the imaginary parts form the list for ",
+  Cell[BoxData[
+      \({b\_j}\)]],
+  ".\n\nUse the first ",
+  StyleBox["m+1",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " terms in the list. \n\nThis example involves only the coefficients ",
+  Cell[BoxData[
+      \({a\_j}\)]],
+  ". Thus we see that "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\({a\_j}\)\(\ \)\(\[Equal]\)\({3.14159, \(-1.30273\), 
+        0, \(-0.174533\), 0, \(-0.0935319\)}\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+These are the same values that we obtained earlier using \
+\"numerical integration,\" and \"least squares.\" \
+\>", "Text"],
+
+Cell[TextData[{
+  "If you are curious about the FFT, then go the Help menu and lookup ",
+  StyleBox["Fourier.",
+    FontWeight->"Bold"],
+  "  You will discover the following facts.\n\n",
+  StyleBox["Fourier[", "MR",
+    FontWeight->"Bold"],
+  StyleBox["list", "TI",
+    FontWeight->"Bold"],
+  StyleBox["]", "MR",
+    FontWeight->"Bold"],
+  " finds the discrete Fourier transform of a list of complex numbers. \n\nIn \
+",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ", the discrete Fourier transform  ",
+  Cell[BoxData[
+      \(v\_s\)]],
+  "  of a list  ",
+  Cell[BoxData[
+      \(u\_r\)]],
+  "  of length  ",
+  Cell[BoxData[
+      \(n\)]],
+  "  is by default defined to be  ",
+  Cell[BoxData[
+      RowBox[{\(1\/\@n\), 
+        RowBox[{
+          UnderoverscriptBox["\[Sum]", \(r = 1\), "n",
+            LimitsPositioning->True], \(\(u\_r\) 
+            e\^\(2  \[Pi]  i \((r - 1)\) \((s - 1)\)/n\)\)}]}]]],
+  " . \nThe computations involve complex numbers, and the derivation of this \
+formula is covered in a complex analysis course.\n\nAlso, this is an \
+introduction, so we have used an example that is easier to understand.  There \
+are more details to be mastered !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[A, B, j, k];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(m = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = Re[Take[FFTcoeff, m + 1]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B = Im[Take[FFTcoeff, m + 1]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(a\_j\)} = \>\"", 
+        A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(b\_j\)} = \>\"", B];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Since lists are used instead of a mathematical formula, we will \
+need to add one to the index of the coefficients when we form the sum. 
+Also, we will need to use the vector notation \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(m = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(F[x_] = 
+        A\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\/2 + \
+\[Sum]\+\(j = 1\)\%m\((\(A\_\(\(\[LeftDoubleBracket]\)\(j + 
+                        1\)\(\[RightDoubleBracket]\)\)\) 
+                  Cos[j \(\(\(\ \)\(\[Pi]\)\)\/L\) 
+                      x] + \(B\_\(\(\[LeftDoubleBracket]\)\(j + 
+                        1\)\(\[RightDoubleBracket]\)\)\) 
+                  Sin[j \(\(\(\ \)\(\[Pi]\)\)\/L\) 
+                      x])\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr10 = 
+        Plot[P[x], {x, 0, 2  L}, PlotStyle \[Rule] Magenta\ , 
+          DisplayFunction \[Rule] 
+            Identity];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Show[dots, ndot, gr10, 
+        Ticks \[Rule] {Range[0, 2  L, L\/2], Range[0, \[Pi], L\/2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Using Mathematica's built in FFT subroutine we get\>"];\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Compare with the previous methods.\>"];\)\ \ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Using 'numerical integration, the FFT trig. poly.is'\>"];\)\ \
+\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using least squares, the FFT trig. poly. is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Q[x] = \>", Q[x]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<All three solutions F[x], P[x] and Q[x] are \
+identical!\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Thus we have three ways to calculate the FFT trig. \
+poly.\>"];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trigonometric Polynomials-FFT",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/at.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trigonometric Polynomials-FFT",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/at.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FourierSeriesBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fast Fourier Transform",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FourierSeriesBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, 128}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 185, 4, 35, "Text"],
+Cell[1964, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3443, 111, 5543, 172, 68, "Text",
+  Evaluatable->False],
+Cell[8989, 285, 3418, 108, 195, "Text",
+  Evaluatable->False],
+Cell[12410, 395, 1599, 55, 211, "Text",
+  Evaluatable->False],
+Cell[14012, 452, 636, 21, 33, "Text"],
+Cell[14651, 475, 4755, 147, 195, "Text",
+  Evaluatable->False],
+Cell[19409, 624, 816, 24, 33, "Text"],
+Cell[20228, 650, 622, 20, 33, "Text"],
+Cell[20853, 672, 606, 22, 71, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[21484, 698, 101, 2, 33, "Text"],
+Cell[21588, 702, 92, 3, 33, "Text"],
+Cell[21683, 707, 563, 11, 124, "Input"],
+Cell[22249, 720, 1448, 28, 344, "Input"],
+Cell[23700, 750, 65, 0, 33, "Text"],
+Cell[23768, 752, 634, 13, 124, "Input"],
+Cell[24405, 767, 279, 11, 33, "Text"],
+Cell[24687, 780, 443, 9, 83, "Input"]
+}, Closed]],
+Cell[25145, 792, 4992, 154, 271, "Text"],
+Cell[30140, 948, 1571, 52, 55, "Text"],
+Cell[31714, 1002, 795, 27, 90, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[32534, 1033, 101, 2, 33, "Text"],
+Cell[32638, 1037, 66, 0, 33, "Text"],
+Cell[32707, 1039, 183, 3, 70, "Input"],
+Cell[32893, 1044, 265, 10, 34, "Text"],
+Cell[33161, 1056, 81, 2, 50, "Input"],
+Cell[33245, 1060, 180, 9, 33, "Text"],
+Cell[33428, 1071, 2238, 54, 337, "Input"],
+Cell[35669, 1127, 178, 8, 33, "Text"],
+Cell[35850, 1137, 332, 7, 73, "Input"],
+Cell[36185, 1146, 76, 3, 52, "Text"],
+Cell[36264, 1151, 568, 11, 104, "Input"],
+Cell[36835, 1164, 370, 8, 71, "Text"],
+Cell[37208, 1174, 730, 11, 210, "Input"],
+Cell[37941, 1187, 752, 15, 144, "Input"],
+Cell[38696, 1204, 582, 20, 52, "Text"]
+}, Closed]],
+Cell[39293, 1227, 473, 9, 87, "Text"],
+Cell[39769, 1238, 7199, 235, 334, "Text"],
+Cell[46971, 1475, 826, 24, 33, "Text"],
+Cell[47800, 1501, 9246, 262, 110, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[57071, 1767, 101, 2, 33, "Text"],
+Cell[57175, 1771, 272, 8, 33, "Text"],
+Cell[57450, 1781, 53, 0, 33, "Text"],
+Cell[57506, 1783, 2014, 49, 238, "Input"],
+Cell[59523, 1834, 2473, 79, 54, "Text"],
+Cell[61999, 1915, 153, 3, 31, "Input"],
+Cell[62155, 1920, 344, 10, 42, "Input"],
+Cell[62502, 1932, 1954, 62, 33, "Text"],
+Cell[64459, 1996, 802, 24, 97, "Input"],
+Cell[65264, 2022, 151, 8, 33, "Text"],
+Cell[65418, 2032, 1798, 43, 282, "Input"],
+Cell[67219, 2077, 346, 12, 33, "Text"],
+Cell[67568, 2091, 178, 8, 33, "Text"],
+Cell[67749, 2101, 384, 8, 95, "Input"],
+Cell[68136, 2111, 580, 10, 124, "Input"],
+Cell[68719, 2123, 801, 22, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[69545, 2149, 120, 5, 33, "Text"],
+Cell[69668, 2156, 324, 14, 33, "Text"],
+Cell[69995, 2172, 1783, 43, 278, "Input"],
+Cell[71781, 2217, 963, 19, 187, "Input"]
+}, Open  ]]
+}, Closed]],
+Cell[72771, 2240, 432, 12, 106, "Text"],
+Cell[73206, 2254, 9309, 265, 110, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[82540, 2523, 101, 2, 33, "Text"],
+Cell[82644, 2527, 270, 8, 33, "Text"],
+Cell[82917, 2537, 53, 0, 33, "Text"],
+Cell[82973, 2539, 2066, 50, 238, "Input"],
+Cell[85042, 2591, 312, 12, 33, "Text"],
+Cell[85357, 2605, 305, 11, 33, "Text"],
+Cell[85665, 2618, 1438, 26, 275, "Input"],
+Cell[87106, 2646, 999, 27, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[88130, 2677, 120, 5, 33, "Text"],
+Cell[88253, 2684, 2648, 55, 418, "Input"]
+}, Open  ]]
+}, Closed]],
+Cell[90928, 2743, 1106, 32, 87, "Text"],
+Cell[92037, 2777, 533, 20, 52, "Text"],
+Cell[92573, 2799, 9395, 269, 111, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[101993, 3072, 101, 2, 33, "Text"],
+Cell[102097, 3076, 494, 11, 90, "Text"],
+Cell[102594, 3089, 270, 8, 33, "Text"],
+Cell[102867, 3099, 53, 0, 33, "Text"],
+Cell[102923, 3101, 2607, 64, 292, "Input"],
+Cell[105533, 3167, 756, 19, 119, "Text"],
+Cell[106292, 3188, 116, 2, 48, "Input"],
+Cell[106411, 3192, 430, 15, 110, "Text"],
+Cell[106844, 3209, 144, 2, 30, "Input"],
+Cell[106991, 3213, 133, 3, 33, "Text"],
+Cell[107127, 3218, 1194, 35, 177, "Text"],
+Cell[108324, 3255, 424, 7, 130, "Input"],
+Cell[108751, 3264, 208, 4, 52, "Text"],
+Cell[108962, 3270, 622, 11, 95, "Input"],
+Cell[109587, 3283, 1365, 25, 304, "Input"]
+}, Closed]],
+Cell[110967, 3311, 721, 20, 30, "Text"],
+Cell[111691, 3333, 158, 3, 35, "Text"],
+Cell[111852, 3338, 577, 17, 33, "Text"],
+Cell[112432, 3357, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

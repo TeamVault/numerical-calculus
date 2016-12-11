@@ -1,0 +1,1022 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     31896,        921]*)
+(*NotebookOutlinePosition[     32590,        945]*)
+(*  CellTagsIndexPosition[     32546,        941]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Hyperbolic P.D.E.'s",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for Hyperbolic Equations",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Wave Equation",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["As an example of a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["hyperbolic partial differential equation",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/HyperbolicPartialDifferentialEquation.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", we consider the ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["wave equation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/WaveEquation.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox["  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(u\_tt\) \((x, t)\)\  = \ \(c\^2\) \(u\_xx\) \((x, t)\)\)]],
+  "   \n\t\t\nfor    ",
+  StyleBox["0 < x < a",
+    FontFamily->"Courier New"],
+  "   and   ",
+  StyleBox["0 < t < b",
+    FontFamily->"Courier New"],
+  ",  ",
+  StyleBox["with the boundary conditions  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {\(\(u \((0, 
+                  t)\)\)\(\ \)\(=\)\(\ \)\(0\)\(\ \ \ \ \ \ \ \)\), \(\(\ \ \
+\)\(for\)\(\ \ \)\), \(\(0 \[LessEqual] t \[LessEqual] b\)\(,\)\)},
+          {\(\(u \((a, 
+                  t)\)\)\(\ \)\(=\)\(\ \)\(0\)\(\ \ \ \ \ \ \ \)\), \(\(\ \ \
+\)\(for\)\(\ \ \)\), \(\(0 \[LessEqual] t \[LessEqual] b\)\(,\)\)},
+          {\(u \((x, 
+                  0)\)\ \ \  = \ \(\(f\) \((x)\)\(\ \)\)\), \(\(\ \ \)\(for\)\
+\(\ \ \)\), \(\(0 \[LessEqual] x \[LessEqual] a\)\(,\)\)},
+          {\(\(u\_t\) \((x, 0)\)\  = \ 
+              g \((t)\)\), \(\(\ \ \)\(for\)\(\ \ \)\), \(0 \[LessEqual] 
+              x \[LessEqual] \(\(a\)\(.\)\)\)}
+          }]]],
+  StyleBox["\n\nThe wave equation models the displacement ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["of a vibrating elastic string with fixed ends at  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["x=0",
+    FontFamily->"Courier New"],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["x=a",
+    FontFamily->"Courier New"],
+  StyleBox[".  Although analytic solutions to the wave equation can be \
+obtained with Fourier series, we use the problem as a prototype of a \
+hyperbolic\nequation.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/FiniteDifferencePDEProof.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FiniteDifferencePDEProof.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FiniteDifferencePDEProg.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FiniteDifferencePDEProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" (Finite-Difference Solution for the Wave Equation)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To approximate the solution of the wave equation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(u\_tt\) \((x, t)\) = \(c\^2\) \(u\_xx\) \((x, t)\)\)]],
+  "  ",
+  StyleBox["over the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, t)\) : 0 \[LessEqual] x \[LessEqual] a, 
+          0 \[LessEqual] t \[LessEqual] b}\)}]]],
+  "  with  ",
+  Cell[BoxData[
+      RowBox[{\(u \((0, t)\)\), "=", 
+        RowBox[{
+          RowBox[{"0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "u", \((a, t)\)}], "=", 
+          "0"}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] b\)]],
+  ",  and  ",
+  Cell[BoxData[
+      RowBox[{\(u \((x, 0)\)\), "=", 
+        RowBox[{
+          RowBox[{"f", \((x)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(u\_t\), \((0, x)\)}], 
+          "=", \(g \((x)\)\)}]}]]],
+  ",  for  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] x \[LessEqual] a\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(FDgrid[n_, 
+          m_] := \[IndentingNewLine]Module[{i}, \[IndentingNewLine]u\  = \ 
+            Table[0, {n}, {m}]; \ \[IndentingNewLine]For[\ i = 1, \ 
+            i \[LessEqual] 
+              n, \ \(i++\), \
+\[IndentingNewLine]\(u\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ f[i];\)\ ]; \ \[IndentingNewLine]For[\ 
+            i = 2, \ i \[LessEqual] 
+              n - 1, \ \(i++\), \[IndentingNewLine]\(u\_\(\(\
+\[LeftDoubleBracket]\)\(i, 2\)\(\[RightDoubleBracket]\)\)\  = \ \((1 - 
+                        r\^2)\)\ f[i] + 
+                  k\ \ g[i] + \(r\^2\/2\) \((f[i + 1] + 
+                        f[i - 1])\);\)\ ];\ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(FDsolve[n_, 
+          m_] := \[IndentingNewLine]Module[{i, 
+            j}, \[IndentingNewLine]\(For[\ j = 3, \ 
+              j \[LessEqual] 
+                m, \ \(j++\), \[IndentingNewLine]\(For[\ i = 2, \ 
+                  i \[LessEqual] 
+                    n - 1, \ \(i++\), \[IndentingNewLine]\(u\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\  = \ \((2 - 
+                              2\ r\^2)\)\ u\_\(\(\[LeftDoubleBracket]\)\(i, j \
+- 1\)\(\[RightDoubleBracket]\)\) + 
+                        r\^2\ \((u\_\(\(\[LeftDoubleBracket]\)\(i + 1, j - \
+1\)\(\[RightDoubleBracket]\)\) + 
+                              u\_\(\(\[LeftDoubleBracket]\)\(i - 1, j - 1\)\(\
+\[RightDoubleBracket]\)\))\) - 
+                        u\_\(\(\[LeftDoubleBracket]\)\(i, j - 2\)\(\
+\[RightDoubleBracket]\)\);\)\ ];\)\ ];\)\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the wave equation where  ",
+  Cell[BoxData[
+      \(c\^2 = \ 4\)]],
+  ".  The string at rest has length  ",
+  Cell[BoxData[
+      \(L = 1\)]],
+  ".  Assume that the initial position is \n\n\t\t",
+  Cell[BoxData[
+      \(u \((x, 0)\)\  = \ \(f \((x)\)\  = \ 
+          sin \((\[Pi]\ x)\) + \ sin \((2  \[Pi]\ x)\)\)\)]],
+  ".  \n\nUse the finite difference method to solve the wave equation over ",
+  StyleBox["the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, t)\) : 0 \[LessEqual] x \[LessEqual] 1, 
+          0 \[LessEqual] t \[LessEqual] 1}\)}]]],
+  ".  Compare the solution with the exact solution:  \n\n\t\t",
+  Cell[BoxData[
+      \(u \((x, t)\)\  = \ 
+        sin \((\[Pi]\ x)\) cos \((\[Pi]\ t)\) + \ 
+          sin \((2  \[Pi]\ x)\) cos \((4  \[Pi]\ t)\)\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We will be using  ",
+  Cell[BoxData[
+      \(c = 2, \ h = 0.2, \ k = 0.04\)]],
+  " .  This forces  ",
+  Cell[BoxData[
+      \(r\  = \ \(\(c\ k\)\/h\  = \(\(\(2\) \((0.05)\)\(\ \)\)\/0.1\  = \ 
+            1\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c\  = \ 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(n\  = \ 11;\)\ \), "\n", 
+    \(\(m\  = \ 21;\)\ \), "\[IndentingNewLine]", 
+    \(\(F[x_] = \ 
+        Sin[\[Pi]\ \ x] + Sin[2\ \[Pi]\ \ x];\)\ \), "\[IndentingNewLine]", 
+    \(\(G[x_] = \ 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(h\  = \ a\/\(n - 1\);\)\ \), "\n", 
+    \(\(k\  = \ b\/\(m - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(f[i_]\  = F[h\ \((i - 1)\)];\)\ \), "\n", 
+    \(\(g[j_]\  = G[k\ \((j - 1)\)];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Now set up the table of solutions.  Solve it.  Plot it.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(r\  = \ \(c\ k\)\/h;\)\ \), "\n", 
+    \(\(FDgrid[n, m];\)\ \), "\[IndentingNewLine]", 
+    \(\(FDsolve[n, m];\)\ \), "\[IndentingNewLine]", 
+    \(\(ListPlot3D[u, AxesLabel \[Rule] {"\<t(j)\>", "\<x(i)\>", "\<u\>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\< u(x,0) = f(x) = \>", F[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_t\)(0,x) = g(x) = \>\"", 
+        G[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<h = \>", h];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<k = \>", k];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(ck\/h\) = \>\"", \(c\ k\)\/h];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The numerical solution to the P.D.E. was computed on a \"grid\" in a \
+matrix.  Hence, we have \"lost\" the connection between the \"x\" and \"t\" \
+variables when plotting the solution.  This problem is independent of the \
+software used.  If \"tick marks\" corresponding to \"x\" and \"t\" are \
+necessary, then it would be necessary to rewrite these commands in the \
+software to handle this particular situation.  Otherwise, the automatic \
+graphing of lists of data will automatically decide what numbers to put on \
+the \"axes.\"  We don't have complete control of computers yet. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["Compare the numerical solution with the analytic solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(U[x_, t_] = 
+        Sin[\[Pi]\ x]\ Cos[2\ \[Pi]\ t] + 
+          Sin[2\ \[Pi]\ x]\ Cos[4\ \[Pi]\ t];\)\ \), "\[IndentingNewLine]", 
+    \(\(SetOptions[Plot3D, PlotPoints \[Rule] {m, n}];\)\ \), "\n", 
+    \(\(Plot3D[U[x, t], {t, 0, 1}, {x, 0, 1}, ViewPoint \[Rule] {4, 2, 3}, 
+        AxesLabel \[Rule] {"\<t\>", "\<x\>", "\<u\>"}, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\< u(x,0) = f(x) = \>", F[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_t\)(0,x) = g(x) = \>\"", 
+        G[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< u[x,t] = \>", U[x, t]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "To see the \"numerical approximations\" enter the command below.  \n",
+  StyleBox["Note.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  This command display values truncated to three decimal places.  If this \
+is not done then the table will be very wide and you would need to scroll a \
+long way to see the table entries.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\"", "\<\n\>"];\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[NumberForm[TableForm[Transpose[Chop[u]]], 3]];\)\ \)}], "Input",\
+
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the wave equation where  ",
+  Cell[BoxData[
+      \(c\^2 = 4\)]],
+  ".  ",
+  "The string at rest has length  ",
+  Cell[BoxData[
+      \(L = 1\)]],
+  ".",
+  "  Assume that the initial position \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(u \((x, 0)\)\), " ", "=", " ", 
+        RowBox[{\(f \((x)\)\), " ", "=", 
+          RowBox[{"{", GridBox[{
+                {"x", 
+                  RowBox[{
+                    RowBox[{
+                      StyleBox["for",
+                        FontFamily->"Times New Roman"], "   ", "0"}], " ", 
+                    "\[LessEqual]", " ", "x", " ", "\[LessEqual]", 
+                    FractionBox[
+                      StyleBox["3",
+                        FontSize->10], 
+                      StyleBox["5",
+                        FontSize->10]]}]},
+                {
+                  RowBox[{
+                    FractionBox[
+                      StyleBox["3",
+                        FontSize->12], 
+                      StyleBox["2",
+                        FontSize->12]], "-", 
+                    RowBox[{
+                      FractionBox[
+                        StyleBox["3",
+                          FontSize->12], 
+                        StyleBox["2",
+                          FontSize->12]], "x"}]}], 
+                  RowBox[{
+                    RowBox[{
+                      StyleBox["for",
+                        FontFamily->"Times New Roman"], "  ", 
+                      FractionBox[
+                        RowBox[{" ", 
+                          StyleBox["3",
+                            FontSize->10]}], 
+                        StyleBox["5",
+                          FontSize->10]]}], " ", "\[LessEqual]", " ", "x", 
+                    " ", "\[LessEqual]", " ", "1"}]}
+                }], 
+            StyleBox["}",
+              FontColor->GrayLevel[1]]}]}]}]]],
+  "  \n\nUse the finite difference method to solve the wave equation over ",
+  StyleBox["the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, t)\) : 0 \[LessEqual] x \[LessEqual] 1, 
+          0 \[LessEqual] t \[LessEqual] 1}\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We will be using  ",
+  Cell[BoxData[
+      \(c = 2, \ h = 0.2, \ k = 0.05\)]],
+  " .  This forces  ",
+  Cell[BoxData[
+      \(r\  = \ \(\(c\ k\)\/h\  = \(\(\(2\) \((0.05)\)\(\ \)\)\/0.1\  = \ 
+            1\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Clear the old \"rule\" for F, otherwise it will be hanging around.  The \
+piecewise definition of the function ",
+  Cell[BoxData[
+      \(\(\(\ \)\(f \((x)\)\)\)\)]],
+  " can be accomplished as follows. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[F];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{"0", "\[LessEqual]", "x", "\[LessEqual]", 
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]]}]}], "]"}], "=", "x"}], " ", ";"}], 
+      " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]], "<", "x", "\[LessEqual]", "1"}]}], " ", 
+            "]"}], "=", 
+          RowBox[{
+            FractionBox[
+              StyleBox["3",
+                FontSize->12], 
+              StyleBox["2",
+                FontSize->12]], "-", 
+            RowBox[{
+              FractionBox[
+                StyleBox["3",
+                  FontSize->12], 
+                StyleBox["2",
+                  FontSize->12]], "x"}]}]}], " ", ";"}], 
+      " "}], "\[IndentingNewLine]", \(Needs["\<Graphics`Colors`\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{\(Plot[F[x], {x, 0, 1}, PlotStyle \[Rule] Magenta];\), 
+      " "}]}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{\(a\  = \ 1.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b\  = \ 1.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(c\  = \ 2.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(n\  = \ 11;\), " "}], "\n", 
+    RowBox[{\(m\  = \ 21;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{"0", "\[LessEqual]", "x", "\[LessEqual]", 
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]]}]}], "]"}], "=", "x"}], " ", ";"}], 
+      " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]], "<", "x", "\[LessEqual]", "1"}]}], " ", 
+            "]"}], "=", 
+          RowBox[{
+            FractionBox[
+              StyleBox["3",
+                FontSize->12], 
+              StyleBox["2",
+                FontSize->12]], "-", 
+            RowBox[{
+              FractionBox[
+                StyleBox["3",
+                  FontSize->12], 
+                StyleBox["2",
+                  FontSize->12]], "x"}]}]}], " ", ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(G[x_] = \ 0.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(h\  = \ a\/\(n - 1\);\), " "}], "\n", 
+    RowBox[{\(k\  = \ b\/\(m - 1\);\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(f[i_]\  = F[h\ \((i - 1)\)];\), " "}], "\n", 
+    RowBox[{\(g[j_]\  = G[k\ \((j - 1)\)];\), " "}]}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Now set up the table of solutions.  Solve it.  Plot it.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(r\  = \ \(c\ k\)\/h;\)\ \), "\[IndentingNewLine]", 
+    \(\(FDgrid[n, m];\)\ \), "\[IndentingNewLine]", 
+    \(\(FDsolve[n, m];\)\ \), "\n", 
+    \(\(ListPlot3D[u, AxesLabel \[Rule] {"\<t(j)\>", "\<x(i)\>", "\<u\>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\< u(x,0) = f(x) = \>"];\)\), "\[IndentingNewLine]", 
+    \(\(?F\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_t\)(0,x) = g(x) = \>\"", 
+        G[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<h = \>", h];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<k = \>", k];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(ck\/h\) = \>\"", \(c\ k\)\/h];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Is  \!\(ck\/h\) \[LessEqual] 1 ?  \>\"", \(c\ k\)\/h \
+\[LessEqual] 1];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["To see the numerical values enter the command:", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\"", "\<\n\>"];\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[NumberForm[TableForm[Transpose[Chop[u]]], 3]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the wave equation where  ",
+  Cell[BoxData[
+      \(c\^2 = 4\)]],
+  ".  ",
+  "The string at rest has length  ",
+  Cell[BoxData[
+      \(L = 1\)]],
+  ".",
+  "  Assume that the initial position \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(u \((x, 0)\)\), " ", "=", " ", 
+        RowBox[{\(f \((x)\)\), " ", "=", 
+          RowBox[{"{", GridBox[{
+                {"x", 
+                  RowBox[{
+                    RowBox[{
+                      StyleBox["for",
+                        FontFamily->"Times New Roman"], "   ", "0"}], " ", 
+                    "\[LessEqual]", " ", "x", " ", "\[LessEqual]", 
+                    FractionBox[
+                      StyleBox["3",
+                        FontSize->10], 
+                      StyleBox["5",
+                        FontSize->10]]}]},
+                {
+                  RowBox[{
+                    FractionBox[
+                      StyleBox["3",
+                        FontSize->12], 
+                      StyleBox["2",
+                        FontSize->12]], "-", 
+                    RowBox[{
+                      FractionBox[
+                        StyleBox["3",
+                          FontSize->12], 
+                        StyleBox["2",
+                          FontSize->12]], "x"}]}], 
+                  RowBox[{
+                    RowBox[{
+                      StyleBox["for",
+                        FontFamily->"Times New Roman"], "  ", 
+                      FractionBox[
+                        RowBox[{" ", 
+                          StyleBox["3",
+                            FontSize->10]}], 
+                        StyleBox["5",
+                          FontSize->10]]}], " ", "\[LessEqual]", " ", "x", 
+                    " ", "\[LessEqual]", " ", "1"}]}
+                }], 
+            StyleBox["}",
+              FontColor->GrayLevel[1]]}]}]}]]],
+  "  \n\nUse the finite difference method to solve the wave equation over ",
+  StyleBox["the rectangle  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["R",
+          FontWeight->"Bold",
+          FontSlant->"Italic"], 
+        "=", \({\((x, t)\) : 0 \[LessEqual] x \[LessEqual] 1, 
+          0 \[LessEqual] t \[LessEqual] 1.02}\)}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We will be using  ",
+  Cell[BoxData[
+      \(c = 2, \ h = 0.2, \ k = 0.051\)]],
+  " .  This forces  ",
+  Cell[BoxData[
+      \(r\  = \ \(\(c\ k\)\/h\  = \(\(\(2\) \((0.051)\)\(\ \)\)\/0.1\  = \ 
+            1.02\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "Using the same functions as in Example 2, we increase the interval width \
+ever so slightly to be",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 1.02\)]],
+  ".  Notice the instability this produces which was predicted in advance in \
+our mathematical analysis discussed in the text."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{\(a\  = \ 1.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b\  = \ 1.02;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(c\  = \ 2.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(n\  = \ 11;\), " "}], "\n", 
+    RowBox[{\(m\  = \ 21;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{"0", "\[LessEqual]", "x", "\[LessEqual]", 
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]]}]}], "]"}], "=", "x"}], " ", ";"}], 
+      " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          RowBox[{"F", "[", " ", 
+            RowBox[{"x_", " ", "/;", 
+              RowBox[{
+                FractionBox[
+                  StyleBox["3",
+                    FontSize->10], 
+                  StyleBox["5",
+                    FontSize->10]], "<", "x", "\[LessEqual]", "1"}]}], " ", 
+            "]"}], "=", 
+          RowBox[{
+            FractionBox[
+              StyleBox["3",
+                FontSize->12], 
+              StyleBox["2",
+                FontSize->12]], "-", 
+            RowBox[{
+              FractionBox[
+                StyleBox["3",
+                  FontSize->12], 
+                StyleBox["2",
+                  FontSize->12]], "x"}]}]}], " ", ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(G[x_] = \ 0.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(h\  = \ a\/\(n - 1\);\), " "}], "\n", 
+    RowBox[{\(k\  = \ b\/\(m - 1\);\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(f[i_]\  = F[h\ \((i - 1)\)];\), " "}], "\n", 
+    RowBox[{\(g[j_]\  = G[k\ \((j - 1)\)];\), " "}]}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Now set up the table of solutions.  Solve it.  Plot it.  ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(r\  = \ \(c\ k\)\/h;\)\ \), "\n", 
+    \(\(FDgrid[n, m];\)\ \), "\n", 
+    \(\(FDsolve[n, m];\)\ \), "\n", 
+    \(\(ListPlot3D[u, AxesLabel \[Rule] {"\<t(j)\>", "\<x(i)\>", "\<u\>"}, 
+        ViewPoint \[Rule] {4, 2, 3}, 
+        ColorFunction \[Rule] Hue];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical solution to the P.D.E.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_tt\)(x,t) = 4 \!\(u\_xx\)(x,t)\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<h = \>", h];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<k = \>", k];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(ck\/h\) = \>\"", \(c\ k\)\/h];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Is  \!\(ck\/h\) > 1 ?  \>\"", \(c\ k\)\/h > 
+          1];\)\)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FiniteDifferencePDEBib.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Finite Difference Method for PDE's",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FiniteDifferencePDEBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 172, 4, 35, "Text"],
+Cell[1951, 59, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3430, 111, 2682, 73, 336, "Text"],
+Cell[6115, 186, 663, 22, 33, "Text"],
+Cell[6781, 210, 658, 21, 33, "Text"],
+Cell[7442, 233, 1454, 45, 52, "Text"],
+Cell[8899, 280, 740, 14, 168, "Input"],
+Cell[9642, 296, 910, 17, 114, "Input"],
+Cell[10555, 315, 1092, 32, 147, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[11672, 351, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[11825, 357, 336, 12, 36, "Text"],
+Cell[12164, 371, 643, 13, 256, "Input"],
+Cell[12810, 386, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[12935, 390, 981, 18, 276, "Input"],
+Cell[13919, 410, 755, 14, 71, "Text",
+  Evaluatable->False],
+Cell[14677, 426, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[14802, 430, 870, 16, 170, "Input"],
+Cell[15675, 448, 423, 10, 52, "Text",
+  Evaluatable->False],
+Cell[16101, 460, 318, 7, 70, "Input"]
+}, Closed]],
+Cell[16434, 470, 2393, 68, 134, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[18852, 542, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[19005, 548, 336, 12, 36, "Text"],
+Cell[19344, 562, 366, 11, 33, "Text",
+  Evaluatable->False],
+Cell[19713, 575, 1406, 41, 133, "Input"],
+Cell[21122, 618, 1818, 48, 299, "Input"],
+Cell[22943, 668, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[23068, 672, 1139, 22, 330, "Input"],
+Cell[24210, 696, 110, 2, 33, "Text",
+  Evaluatable->False],
+Cell[24323, 700, 290, 5, 70, "Input"]
+}, Closed]],
+Cell[24628, 708, 2396, 68, 134, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[27049, 780, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[27202, 786, 341, 12, 36, "Text"],
+Cell[27546, 800, 424, 11, 33, "Text",
+  Evaluatable->False],
+Cell[27973, 813, 1819, 48, 299, "Input"],
+Cell[29795, 863, 122, 2, 33, "Text",
+  Evaluatable->False],
+Cell[29920, 867, 885, 18, 270, "Input"]
+}, Closed]],
+Cell[30820, 888, 158, 3, 32, "Text"],
+Cell[30981, 893, 615, 18, 33, "Text"],
+Cell[31599, 913, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

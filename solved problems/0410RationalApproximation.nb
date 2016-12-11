@@ -1,0 +1,3426 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    113054,       3051]*)
+(*NotebookOutlinePosition[    113911,       3080]*)
+(*  CellTagsIndexPosition[    113867,       3076]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for ",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Rational Approximation",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tA rational approximation to ",
+  StyleBox["f(x)",
+    FontFamily->"Courier New"],
+  " on the interval ",
+  StyleBox["[a,b]",
+    FontFamily->"Courier New"],
+  " is obtained by forming the quotient of two polynomials ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(\(Q\_m\) \((x)\)\)]],
+  " of degrees n and m, respectively.  We use the notation ",
+  Cell[BoxData[
+      \(\(R\_\(n, m\)\) \((x)\)\)]],
+  " to denote this quotient: \n\n\t\t",
+  Cell[BoxData[
+      \(\(R\_\(n, 
+              m\)\) \((x)\)\  = \ \(\(P\_n\) \((x)\)\)\/\(\(Q\_m\) \
+\((x)\)\)\)]],
+  ".  \n\nThe polynomials used in the construction are: \n\n\t\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\  = \ \(\(\[Sum]\+\(i = 0\)\%n\( p\_i\) 
+              x\^i\)\(\ \)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(\(p\_0 + \(p\_1\) x + \(p\_2\) x\^2 +  ... \) + \(p\_n\) x\^n\)]],
+  " \n\tand\n\t\t",
+  Cell[BoxData[
+      \(\(Q\_m\) \((x)\)\  = \ \(\(1 + \ \[Sum]\+\(i = 1\)\%m\( q\_i\) 
+                x\^i\)\(\ \)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(\(1 + \(q\_1\) x + \(q\_2\) x\^2 +  ... \) + \(q\_m\) x\^m\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RationalApproxProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RationalApproxProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["Pade",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/PadeApproximant.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " approximation is a form of rational approximation which is analogous to \
+the ",
+  ButtonBox["Taylor",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TaylorSeries.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " approximation because it is based on the derivatives of  ",
+  StyleBox["f(x)",
+    FontFamily->"Courier New"],
+  " at ",
+  StyleBox["x=0",
+    FontFamily->"Courier New"],
+  ".  The Pad\[EAcute] approximation is very accurate near the center of \
+expansion.  However, the error increases as one moves away from the center of \
+expansion.  More accurate rational approximations are obtained if \
+\"interpolation nodes\" are used, and we permit the error to be spread out \
+more evenly over the entire interval.  The process is similar to Lagrange and \
+Chebyshev interpolation. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/RationalApproxProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RationalApproxProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the rational approximation ",
+  Cell[BoxData[
+      \(\(R\_\(2, 2\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)],
+    AspectRatioFixed->True],
+  " over the interval ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ". \n",
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use equally spaced interpolation nodes. \n",
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Chebyshev interpolation nodes. \n",
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in  ",
+  StyleBox["MiniMaxApproximation",
+    FontFamily->"Courier New"],
+  "  procedure. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(2, 2\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\n", 
+    \(\(n = 2;\)\ \ \), "\n", 
+    \(\(m = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the equally spaced ",
+  "values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        Table[a + \(i\/\(m + n\)\) \((b - a)\), {i, 0, 
+            m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = R[x] \[Equal] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] \
+\[Equal] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = NSolve[eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its rational approximation over the \
+interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< e[x]  =  f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|e[x]| = |f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 5 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 4 requires 5 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(4\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 4}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 2, 2}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Pade Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(2, 2\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\n", 
+    \(\(n = 2;\)\ \ \), "\n", 
+    \(\(m = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " Chebyshev interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\n", 
+    \(\(b = 1.0;\)\ \), "\n", 
+    \(\(X = 
+        Table[N[Cos[\(\((2 \((m + n)\) + 1 - 2  i)\)\ \[Pi]\)\/\(2 \((m + \
+n)\) + 2\)]], {i, 0, m + n}];\)\ \), "\n", 
+    \(\(Print["\<nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = R[x] \[Equal] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] \
+\[Equal] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = NSolve[eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the Chebyshev rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Chebyshev rational \
+approximation over the interval  [-1,1].  But we will draw the graphs over \
+[-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 5 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 4 requires 5 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(4\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 4}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 2, 2}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Pade Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Solve for the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(2, 2\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 2;\)\ \ \), "\n", 
+    \(\(m = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<NumericalMath`Approximations`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(solset = 
+        MiniMaxApproximation[
+          f[x], {x, {\(-1\), 1}, n, m}];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\);\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u[x] = \>", u[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its minimax rational approximation \
+over the interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], u[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u[x] = \>", u[x]\ ];\)\ \)}], "Input"],
+
+Cell["Find the error  over the interval  [-1,1].  ", "Text"],
+
+Cell[BoxData[{
+    \(\(e4[x_] = f[x] - u[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr4 = Abs[e4[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - u[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - u[x]  = \>", 
+        f[x] - u[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - u[x]| \[LessEqual] \>", maxerr4\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 5 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 4 requires 5 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(4\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 4}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the MiniMax \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - u[x]  = \>", 
+        e4[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - u[x]| \[LessEqual] \>", 
+        maxerr4\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the MiniMax rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error MiniMax Rational Approximation\>"\/"\<Maximum \
+Error Taylor Approximation\>", "\< = \>", \(\(maxerr4\)\(\ \
+\)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["\<\
+Just what is this MiniMax rational approximation minimizing ? 
+Plot the quotient \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[u[x]\/f[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Pink];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u[x]\/f[x]\) = \>\"", u[x]\/f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[1\  - u[x]\/f[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Brown];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<1 - \!\(u[x]\/f[x]\)  = \>\"", 
+        1\  - u[x]\/f[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+So we see that the MiniMax rational approximation is minimizing the \
+\"relative error.\"  The nodes are selected in an iterative process so that \
+the maximum of the absolute value of the relative error is minimum, and the \
+extrema occur at six points in this example. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the rational approximation ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)],
+    AspectRatioFixed->True],
+  " over the interval ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ". \n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use equally spaced interpolation nodes. \n",
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Chebyshev interpolation nodes. \n",
+  StyleBox["2 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in  ",
+  StyleBox["MiniMaxApproximation",
+    FontFamily->"Courier New"],
+  "  procedure. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the equally spaced values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        Table[a + \(i\/\(m + n\)\) \((b - a)\), {i, 0, 
+            m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = NSolve[eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its rational approximation over the \
+interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< e[x]  =  f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|e[x]| = |f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\<= \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Pade Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " Chebyshev interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\n", 
+    \(\(b = 1.0;\)\ \), "\n", 
+    \(\(X = 
+        Table[N[Cos[\(\((2 \((m + n)\) + 1 - 2  i)\)\ \[Pi]\)\/\(2 \((m + \
+n)\) + 2\)]], {i, 0, m + n}];\)\ \), "\n", 
+    \(\(Print["\<nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = NSolve[eqns, vars];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the Chebyshev rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Chebyshev rational \
+approximation over the interval  [-1,1].  But we will draw the graphs over \
+[-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Pade Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Solve for the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<NumericalMath`Approximations`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(solset = 
+        MiniMaxApproximation[
+          f[x], {x, {\(-1\), 1}, n, m}];\)\), "\[IndentingNewLine]", 
+    \(\(u[x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, \
+1\)\(\[RightDoubleBracket]\)\);\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u[x] = \>", u[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its minimax rational approximation \
+over the interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], u[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<u[x] = \>", u[x]\ ];\)\ \)}], "Input"],
+
+Cell["Find the error  over the interval  [-1,1].  ", "Text"],
+
+Cell[BoxData[{
+    \(\(e4[x_] = f[x] - u[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr4 = Abs[e4[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f[x] - u[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - u[x]  = \>", 
+        f[x] - u[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - u[x]| \[LessEqual] \>", maxerr4\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the MiniMax \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - u[x]  = \>", 
+        e4[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - u[x]| \[LessEqual] \>", 
+        maxerr4\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the MiniMax rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error MiniMax Rational Approximation\>"\/"\<Maximum \
+Error Taylor Approximation\>", "\< = \>", \(\(maxerr4\)\(\ \
+\)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["\<\
+Just what is this MiniMax rational approximation minimizing ? 
+Plot the quotient. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[u[x]\/f[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Pink];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u[x]\/f[x]\) = \>\"", u[x]\/f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[1\  - u[x]\/f[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Brown];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<1 - \!\(u[x]\/f[x]\)  = \>\"", 
+        1\  - u[x]\/f[x]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+So we see that the MiniMax rational approximation is minimizing the \
+\"relative error.\"  The nodes are selected in an iterative process so that \
+the maximum of the absolute value of the relative error is minimum, and the \
+extrema occur at ten points in this example. \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the rational approximation ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = Cos[\[Pi]\/2\ x]\)],
+    AspectRatioFixed->True],
+  "  over the interval ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  \n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use equally spaced interpolation nodes. \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Chebyshev interpolation nodes. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Cos[\[Pi]\/2\ x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the equally spaced values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        Table[a + \(i\/\(m + n\)\) \((b - a)\), {i, 0, 
+            m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its rational approximation over the \
+interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< e[x]  =  f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|e[x]| = |f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Pade Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Cos[\[Pi]\/2\ x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " Chebyshev interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\n", 
+    \(\(b = 1.0;\)\ \), "\n", 
+    \(\(X = 
+        Table[N[Cos[\(\((2 \((m + n)\) + 1 - 2  i)\)\ \[Pi]\)\/\(2 \((m + \
+n)\) + 2\)]], {i, 0, m + n}];\)\ \), "\n", 
+    \(\(Print["\<nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the Chebyshev rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Chebyshev rational \
+approximation over the interval  [-1,1].  But we will draw the graphs over \
+[-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Pade Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the rational approximation ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = Tan[x]\)],
+    AspectRatioFixed->True],
+  "  over the interval ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  \n",
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use equally spaced interpolation nodes. \n",
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Chebyshev interpolation nodes. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Tan[x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the equally spaced values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        Table[a + \(i\/\(m + n\)\) \((b - a)\), {i, 0, 
+            m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "   Since  ",
+  StyleBox["Tan[x]",
+    FontFamily->"Courier New"],
+  "  is an odd function we will add the equation  ",
+  Cell[BoxData[
+      \(p\_0 \[Equal] 0\)]],
+  " to the list. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = Prepend[eqns, p\_0 \[Equal] 0];\)\), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its rational approximation over the \
+interval  [-1,1].  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< e[x]  =  f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|e[x]| = |f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Pade Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\<= \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = Tan[x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " Chebyshev interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\n", 
+    \(\(b = 1.0;\)\ \), "\n", 
+    \(\(X = 
+        Table[N[Cos[\(\((2 \((m + n)\) + 1 - 2  i)\)\ \[Pi]\)\/\(2 \((m + \
+n)\) + 2\)]], {i, 0, m + n}];\)\ \), "\n", 
+    \(\(Print["\<nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. \n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "   Since  ",
+  StyleBox["Tan[x]",
+    FontFamily->"Courier New"],
+  "  is an odd function we will add the equation  ",
+  Cell[BoxData[
+      \(p\_0 \[Equal] 0\)]],
+  " to the list. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = Prepend[eqns, p\_0 \[Equal] 0];\)\), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the Chebyshev rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Chebyshev rational \
+approximation over the interval  [-1,1].  But we will draw the graphs over \
+[-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-1\), 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-1\), \ 1}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Pade Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the rational approximation ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  "for ",
+  Cell[BoxData[
+      \(f[x] = ArcTan[x]\)],
+    AspectRatioFixed->True],
+  "  over the interval ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  \n",
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use equally spaced interpolation nodes. \n",
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Chebyshev interpolation nodes. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the equally spaced values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = 
+        Table[a + \(i\/\(m + n\)\) \((b - a)\), {i, 0, 
+            m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its rational approximation over the \
+interval  [-1,1].  But we will draw the graphs over [-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< e[x]  =  f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|e[x]| = |f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the rational \
+approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the rational approximation?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Pade Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Rational Approximation\>"\/"\<Maximum Error \
+Taylor Approximation\>", "\< = \>", \(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], \
+"Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Set up the formula for  ",
+  Cell[BoxData[
+      \(\(R\_\(4, 4\)\) \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, f, k, m, n, p, q, R, Q, P, 
+        x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\n", 
+    \(\(n = 4;\)\ \ \), "\n", 
+    \(\(m = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(P[x_]\  = \ \[Sum]\+\(i = 0\)\%n p\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(Q[x_]\  = \ 1\  + \ \[Sum]\+\(i = 1\)\%m q\_i\ x\^i;\)\ \ \), "\n", 
+    \(\(R[x_]\  = \ P[x]\/Q[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Union[Table[p\_i, {i, 0, n}], 
+          Table[q\_i, {i, 1, m}]];\)\ \ \), "\n", 
+    \(\(Print["\<f(x) = \>", f[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R(x) = \>", R[x]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<where\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_n\)(x) = \>\"", P[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(Q\_m\)(x) = \>\"", Q[x]\ ];\)\ \ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Calculate the values for the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " Chebyshev interpolation nodes.   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(a = \(-1.0\);\)\ \), "\n", 
+    \(\(b = 1.0;\)\ \), "\n", 
+    \(\(X = 
+        Table[N[Cos[\(\((2 \((m + n)\) + 1 - 2  i)\)\ \[Pi]\)\/\(2 \((m + \
+n)\) + 2\)]], {i, 0, m + n}];\)\ \), "\n", 
+    \(\(Print["\<nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " ordinates.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Y = f[X]\)], "Input"],
+
+Cell[TextData[{
+  "Form the set of  ",
+  Cell[BoxData[
+      \(m + n + 1\)]],
+  " equations to solve and find the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqn\  = 
+        Numerator[R[x]] \[Equal] 
+          Denominator[R[x]] y\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = Table[0, {i, 0, m + n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m + n + 1, \(i++\), \[IndentingNewLine]\(eqns\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            Numerator[
+                R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]] \[Equal] 
+              Denominator[
+                  R[X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]] Y\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\)\ ];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = Chop[NSolve[eqns, vars]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The rational form is  \>", 
+        eqn];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The equations to solve are\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[eqns, 
+          TableSpacing \[Rule] {3, 1}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<The solution is\>", "\<\n\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+          TableSpacing \[Rule] {3, 1}]];\)\)}], "Input"],
+
+Cell["Form the Chebyshev rational approximation. ", "Text"],
+
+Cell[BoxData[{
+    \(\(r[x_] = 
+        ReplaceAll[R[x], 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell["\<\
+Plot graphs of the function and its Chebyshev rational \
+approximation over the interval  [-1,1].  But we will draw the graphs over \
+[-2,2]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], r[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<r[x] = \>", r[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Nodes = \>", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Find the error  over the interval  ",
+  StyleBox["[-1,1]",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - r[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1 = 
+        Abs[\(FindMinimum[e1[x], {x, 0.8}]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Comparison with the Taylor approximation.  \n\nThere were 9 coefficients \
+to determine for the rational approximation, and a Maclaurin polynomial of \
+degree 8 requires 9 coefficients. \nCompare with the error in a ",
+  Cell[BoxData[
+      \(8\^th\)]],
+  " degree Maclaurin polynomial over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_] = 
+        Normal[Series[f[x], {x, 0, 8}]];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], s[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - s[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2 = Abs[e2[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Taylor approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", maxerr2\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e2[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"],
+
+Cell["Comparison with the Pad\[EAcute] approximation.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Calculus`Pade`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(p[x_] = 
+        Pade[f[x], {x, 0, 4, 4}];\)\ \ \ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \ \(-2\), \ 2}, 
+        PlotStyle \[Rule] \ {Red, Blue}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - p[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3 = Abs[e3[1.0]];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1\), 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - p[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Error bound for the Pade approximation\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - p[x]| \[LessEqual] \>", maxerr3\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can determine how much smaller the error is for the Chebyshev \
+rational approximation. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< f[x] - s[x]  = \>", 
+        e3[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f[x] - r[x]  = \>", 
+        e1[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - s[x]| \[LessEqual] \>", 
+        maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|f[x] - r[x]| \[LessEqual] \>", 
+        maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<How much better is the Chebyshev rational \
+approximation?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Pade Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Also, we have seen that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Maximum Error Chebyshev Rational \
+Approximation\>"\/"\<Maximum Error Taylor Approximation\>", "\< = \>", \
+\(\(maxerr1\)\(\ \)\)\/maxerr2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/RationalApproxBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Rational Approximation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RationalApproxBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, -1}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 319, 11, 35, "Text"],
+Cell[2098, 66, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3577, 118, 1251, 37, 248, "Text"],
+Cell[4831, 157, 639, 22, 33, "Text"],
+Cell[5473, 181, 987, 24, 71, "Text"],
+Cell[6463, 207, 611, 19, 33, "Text"],
+Cell[7077, 228, 888, 33, 90, "Text"],
+
+Cell[CellGroupData[{
+Cell[7990, 265, 105, 2, 33, "Text"],
+Cell[8098, 269, 117, 5, 33, "Text"],
+Cell[8218, 276, 926, 17, 332, "Input"],
+Cell[9147, 295, 152, 6, 33, "Text"],
+Cell[9302, 303, 288, 6, 104, "Input"],
+Cell[9593, 311, 100, 5, 33, "Text"],
+Cell[9696, 318, 41, 1, 30, "Input"],
+Cell[9740, 321, 137, 5, 33, "Text"],
+Cell[9880, 328, 1127, 23, 211, "Input"],
+Cell[11010, 353, 49, 0, 33, "Text"],
+Cell[11062, 355, 363, 7, 90, "Input"],
+Cell[11428, 364, 154, 3, 33, "Text"],
+Cell[11585, 369, 393, 6, 110, "Input"],
+Cell[11981, 377, 129, 5, 33, "Text"],
+Cell[12113, 384, 551, 10, 111, "Input"],
+Cell[12667, 396, 391, 10, 90, "Text"],
+Cell[13061, 408, 421, 7, 110, "Input"],
+Cell[13485, 417, 521, 9, 130, "Input"],
+Cell[14009, 428, 105, 3, 33, "Text"],
+Cell[14117, 433, 656, 13, 145, "Input"],
+Cell[14776, 448, 65, 0, 33, "Text"],
+Cell[14844, 450, 484, 8, 130, "Input"],
+Cell[15331, 460, 519, 9, 130, "Input"],
+Cell[15853, 471, 105, 3, 33, "Text"],
+Cell[15961, 476, 906, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[16904, 498, 105, 2, 30, "Text"],
+Cell[17012, 502, 117, 5, 33, "Text"],
+Cell[17132, 509, 926, 17, 332, "Input"],
+Cell[18061, 528, 141, 5, 33, "Text"],
+Cell[18205, 535, 266, 6, 106, "Input"],
+Cell[18474, 543, 100, 5, 33, "Text"],
+Cell[18577, 550, 41, 1, 30, "Input"],
+Cell[18621, 553, 137, 5, 33, "Text"],
+Cell[18761, 560, 1127, 23, 211, "Input"],
+Cell[19891, 585, 59, 0, 33, "Text"],
+Cell[19953, 587, 363, 7, 90, "Input"],
+Cell[20319, 596, 166, 4, 33, "Text"],
+Cell[20488, 602, 393, 6, 110, "Input"],
+Cell[20884, 610, 129, 5, 33, "Text"],
+Cell[21016, 617, 524, 9, 111, "Input"],
+Cell[21543, 628, 391, 10, 90, "Text"],
+Cell[21937, 640, 421, 7, 110, "Input"],
+Cell[22361, 649, 521, 9, 130, "Input"],
+Cell[22885, 660, 115, 3, 33, "Text"],
+Cell[23003, 665, 676, 13, 145, "Input"],
+Cell[23682, 680, 65, 0, 33, "Text"],
+Cell[23750, 682, 484, 8, 130, "Input"],
+Cell[24237, 692, 519, 9, 130, "Input"],
+Cell[24759, 703, 115, 3, 33, "Text"],
+Cell[24877, 708, 936, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[25850, 730, 105, 2, 30, "Text"],
+Cell[25958, 734, 120, 5, 33, "Text"],
+Cell[26081, 741, 621, 13, 170, "Input"],
+Cell[26705, 756, 164, 4, 33, "Text"],
+Cell[26872, 762, 328, 5, 90, "Input"],
+Cell[27203, 769, 60, 0, 33, "Text"],
+Cell[27266, 771, 439, 7, 110, "Input"],
+Cell[27708, 780, 391, 10, 90, "Text"],
+Cell[28102, 792, 421, 7, 110, "Input"],
+Cell[28526, 801, 521, 9, 130, "Input"],
+Cell[29050, 812, 113, 3, 33, "Text"],
+Cell[29166, 817, 672, 13, 145, "Input"],
+Cell[29841, 832, 105, 3, 52, "Text"],
+Cell[29949, 837, 223, 3, 80, "Input"],
+Cell[30175, 842, 250, 4, 80, "Input"],
+Cell[30428, 848, 295, 5, 52, "Text"]
+}, Closed]],
+Cell[30738, 856, 888, 33, 87, "Text"],
+
+Cell[CellGroupData[{
+Cell[31651, 893, 105, 2, 33, "Text"],
+Cell[31759, 897, 117, 5, 33, "Text"],
+Cell[31879, 904, 926, 17, 332, "Input"],
+Cell[32808, 923, 146, 5, 33, "Text"],
+Cell[32957, 930, 288, 6, 104, "Input"],
+Cell[33248, 938, 100, 5, 33, "Text"],
+Cell[33351, 945, 41, 1, 30, "Input"],
+Cell[33395, 948, 137, 5, 33, "Text"],
+Cell[33535, 955, 1318, 29, 211, "Input"],
+Cell[34856, 986, 49, 0, 33, "Text"],
+Cell[34908, 988, 363, 7, 90, "Input"],
+Cell[35274, 997, 154, 3, 33, "Text"],
+Cell[35431, 1002, 393, 6, 110, "Input"],
+Cell[35827, 1010, 129, 5, 33, "Text"],
+Cell[35959, 1017, 551, 10, 111, "Input"],
+Cell[36513, 1029, 391, 10, 90, "Text"],
+Cell[36907, 1041, 421, 7, 110, "Input"],
+Cell[37331, 1050, 521, 9, 130, "Input"],
+Cell[37855, 1061, 105, 3, 33, "Text"],
+Cell[37963, 1066, 655, 13, 145, "Input"],
+Cell[38621, 1081, 65, 0, 33, "Text"],
+Cell[38689, 1083, 484, 8, 130, "Input"],
+Cell[39176, 1093, 519, 9, 130, "Input"],
+Cell[39698, 1104, 105, 3, 33, "Text"],
+Cell[39806, 1109, 906, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[40749, 1131, 105, 2, 30, "Text"],
+Cell[40857, 1135, 117, 5, 33, "Text"],
+Cell[40977, 1142, 926, 17, 332, "Input"],
+Cell[41906, 1161, 141, 5, 33, "Text"],
+Cell[42050, 1168, 266, 6, 106, "Input"],
+Cell[42319, 1176, 100, 5, 33, "Text"],
+Cell[42422, 1183, 41, 1, 30, "Input"],
+Cell[42466, 1186, 137, 5, 33, "Text"],
+Cell[42606, 1193, 1318, 29, 211, "Input"],
+Cell[43927, 1224, 59, 0, 33, "Text"],
+Cell[43989, 1226, 363, 7, 90, "Input"],
+Cell[44355, 1235, 166, 4, 33, "Text"],
+Cell[44524, 1241, 393, 6, 110, "Input"],
+Cell[44920, 1249, 129, 5, 33, "Text"],
+Cell[45052, 1256, 524, 9, 111, "Input"],
+Cell[45579, 1267, 391, 10, 90, "Text"],
+Cell[45973, 1279, 421, 7, 110, "Input"],
+Cell[46397, 1288, 521, 9, 130, "Input"],
+Cell[46921, 1299, 115, 3, 33, "Text"],
+Cell[47039, 1304, 676, 13, 145, "Input"],
+Cell[47718, 1319, 65, 0, 33, "Text"],
+Cell[47786, 1321, 484, 8, 130, "Input"],
+Cell[48273, 1331, 519, 9, 130, "Input"],
+Cell[48795, 1342, 115, 3, 33, "Text"],
+Cell[48913, 1347, 936, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[49886, 1369, 105, 2, 30, "Text"],
+Cell[49994, 1373, 120, 5, 33, "Text"],
+Cell[50117, 1380, 621, 13, 170, "Input"],
+Cell[50741, 1395, 164, 4, 33, "Text"],
+Cell[50908, 1401, 328, 5, 90, "Input"],
+Cell[51239, 1408, 60, 0, 33, "Text"],
+Cell[51302, 1410, 439, 7, 110, "Input"],
+Cell[51744, 1419, 391, 10, 90, "Text"],
+Cell[52138, 1431, 421, 7, 110, "Input"],
+Cell[52562, 1440, 521, 9, 130, "Input"],
+Cell[53086, 1451, 113, 3, 33, "Text"],
+Cell[53202, 1456, 672, 13, 145, "Input"],
+Cell[53877, 1471, 106, 3, 52, "Text"],
+Cell[53986, 1476, 223, 3, 80, "Input"],
+Cell[54212, 1481, 250, 4, 80, "Input"],
+Cell[54465, 1487, 295, 5, 52, "Text"]
+}, Closed]],
+Cell[54775, 1495, 638, 23, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[55438, 1522, 105, 2, 33, "Text"],
+Cell[55546, 1526, 117, 5, 33, "Text"],
+Cell[55666, 1533, 924, 17, 344, "Input"],
+Cell[56593, 1552, 146, 5, 33, "Text"],
+Cell[56742, 1559, 288, 6, 104, "Input"],
+Cell[57033, 1567, 100, 5, 33, "Text"],
+Cell[57136, 1574, 41, 1, 30, "Input"],
+Cell[57180, 1577, 137, 5, 33, "Text"],
+Cell[57320, 1584, 1324, 29, 211, "Input"],
+Cell[58647, 1615, 49, 0, 33, "Text"],
+Cell[58699, 1617, 363, 7, 90, "Input"],
+Cell[59065, 1626, 154, 3, 33, "Text"],
+Cell[59222, 1631, 393, 6, 110, "Input"],
+Cell[59618, 1639, 129, 5, 33, "Text"],
+Cell[59750, 1646, 551, 10, 111, "Input"],
+Cell[60304, 1658, 391, 10, 90, "Text"],
+Cell[60698, 1670, 421, 7, 110, "Input"],
+Cell[61122, 1679, 521, 9, 130, "Input"],
+Cell[61646, 1690, 105, 3, 33, "Text"],
+Cell[61754, 1695, 656, 13, 145, "Input"],
+Cell[62413, 1710, 65, 0, 33, "Text"],
+Cell[62481, 1712, 484, 8, 130, "Input"],
+Cell[62968, 1722, 519, 9, 130, "Input"],
+Cell[63490, 1733, 105, 3, 33, "Text"],
+Cell[63598, 1738, 906, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[64541, 1760, 105, 2, 30, "Text"],
+Cell[64649, 1764, 117, 5, 33, "Text"],
+Cell[64769, 1771, 924, 17, 344, "Input"],
+Cell[65696, 1790, 141, 5, 33, "Text"],
+Cell[65840, 1797, 266, 6, 106, "Input"],
+Cell[66109, 1805, 100, 5, 33, "Text"],
+Cell[66212, 1812, 41, 1, 30, "Input"],
+Cell[66256, 1815, 137, 5, 33, "Text"],
+Cell[66396, 1822, 1324, 29, 211, "Input"],
+Cell[67723, 1853, 59, 0, 33, "Text"],
+Cell[67785, 1855, 363, 7, 90, "Input"],
+Cell[68151, 1864, 166, 4, 33, "Text"],
+Cell[68320, 1870, 393, 6, 110, "Input"],
+Cell[68716, 1878, 129, 5, 33, "Text"],
+Cell[68848, 1885, 524, 9, 111, "Input"],
+Cell[69375, 1896, 391, 10, 90, "Text"],
+Cell[69769, 1908, 421, 7, 110, "Input"],
+Cell[70193, 1917, 521, 9, 130, "Input"],
+Cell[70717, 1928, 115, 3, 33, "Text"],
+Cell[70835, 1933, 676, 13, 145, "Input"],
+Cell[71514, 1948, 65, 0, 33, "Text"],
+Cell[71582, 1950, 484, 8, 130, "Input"],
+Cell[72069, 1960, 519, 9, 130, "Input"],
+Cell[72591, 1971, 115, 3, 33, "Text"],
+Cell[72709, 1976, 936, 17, 201, "Input"]
+}, Closed]],
+Cell[73660, 1996, 627, 23, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[74312, 2023, 105, 2, 33, "Text"],
+Cell[74420, 2027, 117, 5, 33, "Text"],
+Cell[74540, 2034, 914, 17, 332, "Input"],
+Cell[75457, 2053, 146, 5, 33, "Text"],
+Cell[75606, 2060, 288, 6, 104, "Input"],
+Cell[75897, 2068, 100, 5, 33, "Text"],
+Cell[76000, 2075, 41, 1, 30, "Input"],
+Cell[76044, 2078, 407, 15, 52, "Text"],
+Cell[76454, 2095, 1400, 30, 231, "Input"],
+Cell[77857, 2127, 49, 0, 33, "Text"],
+Cell[77909, 2129, 363, 7, 90, "Input"],
+Cell[78275, 2138, 113, 3, 33, "Text"],
+Cell[78391, 2143, 393, 6, 110, "Input"],
+Cell[78787, 2151, 129, 5, 33, "Text"],
+Cell[78919, 2158, 551, 10, 111, "Input"],
+Cell[79473, 2170, 391, 10, 90, "Text"],
+Cell[79867, 2182, 421, 7, 110, "Input"],
+Cell[80291, 2191, 521, 9, 130, "Input"],
+Cell[80815, 2202, 105, 3, 33, "Text"],
+Cell[80923, 2207, 656, 13, 145, "Input"],
+Cell[81582, 2222, 65, 0, 33, "Text"],
+Cell[81650, 2224, 484, 8, 130, "Input"],
+Cell[82137, 2234, 519, 9, 130, "Input"],
+Cell[82659, 2245, 105, 3, 33, "Text"],
+Cell[82767, 2250, 905, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[83709, 2272, 105, 2, 30, "Text"],
+Cell[83817, 2276, 117, 5, 33, "Text"],
+Cell[83937, 2283, 914, 17, 332, "Input"],
+Cell[84854, 2302, 141, 5, 33, "Text"],
+Cell[84998, 2309, 266, 6, 106, "Input"],
+Cell[85267, 2317, 100, 5, 33, "Text"],
+Cell[85370, 2324, 41, 1, 30, "Input"],
+Cell[85414, 2327, 407, 15, 52, "Text"],
+Cell[85824, 2344, 1400, 30, 231, "Input"],
+Cell[87227, 2376, 59, 0, 33, "Text"],
+Cell[87289, 2378, 363, 7, 90, "Input"],
+Cell[87655, 2387, 166, 4, 33, "Text"],
+Cell[87824, 2393, 393, 6, 110, "Input"],
+Cell[88220, 2401, 129, 5, 33, "Text"],
+Cell[88352, 2408, 524, 9, 111, "Input"],
+Cell[88879, 2419, 391, 10, 90, "Text"],
+Cell[89273, 2431, 419, 7, 110, "Input"],
+Cell[89695, 2440, 521, 9, 130, "Input"],
+Cell[90219, 2451, 115, 3, 33, "Text"],
+Cell[90337, 2456, 676, 13, 145, "Input"],
+Cell[91016, 2471, 65, 0, 33, "Text"],
+Cell[91084, 2473, 484, 8, 130, "Input"],
+Cell[91571, 2483, 519, 9, 130, "Input"],
+Cell[92093, 2494, 115, 3, 33, "Text"],
+Cell[92211, 2499, 936, 17, 201, "Input"]
+}, Closed]],
+Cell[93162, 2519, 630, 23, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[93817, 2546, 105, 2, 33, "Text"],
+Cell[93925, 2550, 117, 5, 33, "Text"],
+Cell[94045, 2557, 917, 17, 332, "Input"],
+Cell[94965, 2576, 146, 5, 33, "Text"],
+Cell[95114, 2583, 288, 6, 104, "Input"],
+Cell[95405, 2591, 100, 5, 33, "Text"],
+Cell[95508, 2598, 41, 1, 30, "Input"],
+Cell[95552, 2601, 137, 5, 33, "Text"],
+Cell[95692, 2608, 1324, 29, 211, "Input"],
+Cell[97019, 2639, 49, 0, 33, "Text"],
+Cell[97071, 2641, 363, 7, 90, "Input"],
+Cell[97437, 2650, 154, 3, 33, "Text"],
+Cell[97594, 2655, 393, 6, 110, "Input"],
+Cell[97990, 2663, 129, 5, 33, "Text"],
+Cell[98122, 2670, 551, 10, 111, "Input"],
+Cell[98676, 2682, 391, 10, 90, "Text"],
+Cell[99070, 2694, 421, 7, 110, "Input"],
+Cell[99494, 2703, 521, 9, 130, "Input"],
+Cell[100018, 2714, 105, 3, 33, "Text"],
+Cell[100126, 2719, 656, 13, 145, "Input"],
+Cell[100785, 2734, 65, 0, 33, "Text"],
+Cell[100853, 2736, 484, 8, 130, "Input"],
+Cell[101340, 2746, 519, 9, 130, "Input"],
+Cell[101862, 2757, 105, 3, 33, "Text"],
+Cell[101970, 2762, 906, 17, 201, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[102913, 2784, 105, 2, 30, "Text"],
+Cell[103021, 2788, 117, 5, 33, "Text"],
+Cell[103141, 2795, 917, 17, 332, "Input"],
+Cell[104061, 2814, 141, 5, 33, "Text"],
+Cell[104205, 2821, 266, 6, 106, "Input"],
+Cell[104474, 2829, 100, 5, 33, "Text"],
+Cell[104577, 2836, 41, 1, 30, "Input"],
+Cell[104621, 2839, 137, 5, 33, "Text"],
+Cell[104761, 2846, 1324, 29, 211, "Input"],
+Cell[106088, 2877, 59, 0, 33, "Text"],
+Cell[106150, 2879, 363, 7, 90, "Input"],
+Cell[106516, 2888, 166, 4, 33, "Text"],
+Cell[106685, 2894, 393, 6, 110, "Input"],
+Cell[107081, 2902, 129, 5, 33, "Text"],
+Cell[107213, 2909, 524, 9, 111, "Input"],
+Cell[107740, 2920, 391, 10, 90, "Text"],
+Cell[108134, 2932, 421, 7, 110, "Input"],
+Cell[108558, 2941, 521, 9, 130, "Input"],
+Cell[109082, 2952, 115, 3, 33, "Text"],
+Cell[109200, 2957, 676, 13, 145, "Input"],
+Cell[109879, 2972, 65, 0, 33, "Text"],
+Cell[109947, 2974, 484, 8, 130, "Input"],
+Cell[110434, 2984, 519, 9, 130, "Input"],
+Cell[110956, 2995, 115, 3, 33, "Text"],
+Cell[111074, 3000, 936, 17, 201, "Input"]
+}, Closed]],
+Cell[112025, 3020, 158, 3, 32, "Text"],
+Cell[112186, 3025, 568, 16, 33, "Text"],
+Cell[112757, 3043, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

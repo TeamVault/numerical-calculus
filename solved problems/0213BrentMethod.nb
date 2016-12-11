@@ -1,0 +1,2561 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     78262,       2324]*)
+(*NotebookOutlinePosition[     78945,       2348]*)
+(*  CellTagsIndexPosition[     78901,       2344]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Brent's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe start by reviewing the secant method and then extend it to the \
+inverse quadratic interpolation method.  Mueller's proposed a method using \
+successive bisection and inverse quadratic interpolation which was extended \
+by Brent's and others.  It uses a combination of the bisection, regula falsi, \
+and inverse quadratic interpolation methods."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SecantMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^2\),
+            FontWeight->"Bold"], "[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      RowBox[{"p", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If   ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), "  ", "=", "  ", 
+        RowBox[{"g", 
+          RowBox[{"(", 
+            RowBox[{\(p\_\(k - 1\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman"], \(p\_k\)}], ")"}]}]}]]],
+  "   \n\n\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\ \  = \ \ p\_k\  - \ 
+          f \((p\_k)\) \(p\_k - p\_\(k - 1\)\)\/\(f \((p\_k)\) - f \((p\_\(k \
+- 1\))\)\)\)]],
+  "    \n\nfor  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "..."}]]],
+  "  will converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for certain initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        RowBox[{\(p\_1\), "\[Element]", 
+          RowBox[{"[", 
+            RowBox[{\(p - \[Delta]\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman"], \(p + \[Delta]\)}], 
+            "]"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Brent's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BrentMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SecantMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "Find a root of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given two initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman"], "  ", \(p\_1\)}]]],
+  "  using the iteration  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(p\_k\), " ", "-", " ", 
+          RowBox[{
+            StyleBox["f",
+              FontSize->12], 
+            StyleBox[\((p\_k)\),
+              FontSize->12], 
+            FractionBox[
+              RowBox[{
+                StyleBox[\(p\_k\),
+                  FontSize->12], " ", "-", "  ", 
+                StyleBox[\(p\_\(k - 1\)\),
+                  FontSize->12]}], 
+              RowBox[{
+                StyleBox[\(f \((p\_k)\)\),
+                  FontSize->12], " ", "-", "  ", 
+                StyleBox[\(f \((p\_\(k - 1\))\)\),
+                  FontSize->12]}]]}]}]}]]],
+  "   for    ",
+  Cell[BoxData[
+      \(\(\(k\  = \ 
+        1\)\(,\)\(2\)\(,\)\(\[CenterEllipsis]\)\(\ \)\(,\)\(m\)\(\ \)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " ",
+  StyleBox[ButtonBox["Secant Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/SecantMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Secant Method).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[x0_, x1_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{p0\  = \ N[x0], 
+          p1\  = \ N[x1], 
+          k}, \[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 
+            16]\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = \>\"", 
+          PaddedForm[p1, {16, 16}], \*"\"\<,   f[\!\(p\_1\)] = \>\"", 
+          NumberForm[f[p1], 16]\ ]; \ \ \[IndentingNewLine]p2\  = \ 
+          p1; \ \ p1\  = \ p0; \ \[IndentingNewLine]k\  = \ 
+          1; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ p1; \ \ p1\  = \ 
+            p2; \ \[IndentingNewLine]p2\  = \ 
+            p1\  - f[
+                  p1]\ \(p1 - p0\)\/\(f[p1] - f[p0]\); \ \[IndentingNewLine]k\
+\  = \ k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p2, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p2], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \ \[IndentingNewLine]Print[\*"\"\<Starting with the \
+initial points \!\(p\_0\) = \>\"", x0, \*"\"\<,  and  \!\(p\_1\) = \>\"", 
+          x1]; \[IndentingNewLine]Print["\<The final result from the Secant \
+Method is\>"]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+          NumberForm[p2, 
+            17]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", 
+          Min[{Abs[p2 - p1], 
+              Abs[p2 - p0]}]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p2], 17]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the secant method to find the three roots of the cubic polynomial  \
+",
+  Cell[BoxData[
+      \(f[x]\  = \ 4\ x\^3 - 16  x\^2 + 17  x - 4\)],
+    AspectRatioFixed->False],
+  ".  \nShow details of the computations for the starting value  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"3", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "2.8"}]}]]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the function.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The secant iteration formula  ",
+  Cell[BoxData[
+      \(g[x\_0, x\_1]\)]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x1, x2];\)\ \), "\[IndentingNewLine]", 
+    \(p = 0; \ Remove[p];\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_]\  = \ 
+        x1 - \(f[x1] \((x1 - x0)\)\)\/\(f[x1] - f[x0]\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The secant iteration formula is\>", "\<\n\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \!\(p\_1\) - \
+\!\(\(f[p\_1] \((p\_1 - p\_0)\)\)\/\(f[p\_1] - f[p\_0]\)\)\>\"", "\<\n\>"];\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1], "\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_] = \ 
+        Simplify[\ g[x0, x1]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\)] = \>\"", 
+        g[p\_0, p\_1]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Hopefully, the iteration  ",
+  Cell[BoxData[
+      \(p\_\(n + 1\) = g[p\_\(n - 1\), p\_n]\)]],
+  "  will converge to a root of  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "Graph the function  ",
+  Cell[BoxData[
+      \(y = f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {\(-5\), 8}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 3, 0.5], 
+            Range[\(-4\), 8, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["There are three real root. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Root (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Starting with the values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"3.0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "2.8"}]}]]],
+  ".  \n\nUse the secant method to find a numerical approximation to the \
+root.  \n\nFirst, do the iteration one step at a time.  \n\nType each of the \
+following commands in a separate cell and execute them one at a time."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(p0\)\(=\)\(3.0\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p1\)\(=\)\(2.8\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p2\)\(=\)\(g[p0, p1]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p3\)\(=\)\(g[p1, p2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p4\)\(=\)\(g[p2, p3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p5\)\(=\)\(g[p3, p4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p6\)\(=\)\(g[p4, p5]\)\(\ \)\)\)], "Input"],
+
+Cell["Now use the subroutine. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[0.0, 1.0, 9];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "From the graph we see that there are two other real roots. \n\n",
+  StyleBox["Root (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the starting values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"0.6", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "0.5"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[0.6, 0.5, 9];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Root (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the starting values ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{"1.0", "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  "}]}]]],
+  Cell[BoxData[
+      \(\(\(p\_1\)\(=\)\(1.1\)\(\ \)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[1.0, 1.1, 7];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in numerical root finder."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = NSolve[f[x] \[Equal] 0, x];\)\ \), "\[IndentingNewLine]", 
+    \(NumberForm[TableForm[solset], 17]\ \)}], "Input"],
+
+Cell["Let's see how good they are.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(x1 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x1  = \>", 
+        NumberForm[x1, 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x1] = \>", f[x1]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x2 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x2  = \>", 
+        NumberForm[x2, 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x2] = \>", f[x2]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(x3 = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(3, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  x3  = \>", 
+        NumberForm[x3, 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x3] = \>", f[x3]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can also solve for the roots symbolically."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(solset = Solve[f[x] \[Equal] 0, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<0 = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[solset]];\)\ \)}], "Input"],
+
+Cell["The answers can be manipulated into real expressions.", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[MapAll[ComplexExpand, solset]]];\)\(\ \)\)\)], "Input"],
+
+Cell["The answers can be expressed in decimal form.", "Text"],
+
+Cell[BoxData[
+    \(\(\(NumberForm[TableForm[Chop[N[solset]]], 17]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+These answers are in agreement with the ones we found with the secant method. \
+ \
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Theorem (Inverse Quadratic Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^2\),
+            FontWeight->"Bold"], "[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      RowBox[{"p", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ g \((p\_\(k - 2\), p\_\(k - 1\), p\_k)\)\)]],
+  " \n\t  \n\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ 
+        p\_\(k - 1\) - 
+          f \((p\_\(k - 1\))\)\ \(\(\ \)\(\(\((f \((p\_\(k - 2\))\))\)\^2\) \
+\((p\_k - p\_\(k - 1\))\) + f \((p\_\(k - 2\))\)\ f \((p\_\(k - 1\))\) \((p\_\
+\(k - 1\) - p\_k)\) + \((f \((p\_\(k - 1\))\) - f \((p\_k)\))\)\ f \((p\_k)\) \
+\((p\_\(k - 2\) - p\_\(k - 1\))\)\)\)\/\(\((f \((p\_\(k - 1\))\) - f \
+\((p\_\(k - 2\))\))\)\ \((f \((p\_k)\) - f \((p\_\(k - 2\))\))\)\ \((f \
+\((p\_k)\) - f \((p\_\(k - 1\))\))\)\)\)]],
+  "  \n\nfor  ",
+  Cell[BoxData[
+      RowBox[{\(k = 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "..."}]]],
+  "  will converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for certain initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(p\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        RowBox[{\(p\_2\), "\[Element]", 
+          RowBox[{"[", 
+            RowBox[{\(p - \[Delta]\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman"], \(p + \[Delta]\)}], 
+            "]"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Brent's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BrentMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Inverse Quadratic Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/BrentsMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "Find a root of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given three initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        RowBox[{\(p\_1\), "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  ", \(p\_2\)}]}]]],
+  "  using the iteration  \n\n\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ 
+        p\_\(k - 1\) - 
+          f \((p\_\(k - 1\))\)\ \(\(\ \)\(\(\((f \((p\_\(k - 2\))\))\)\^2\) \
+\((p\_k - p\_\(k - 1\))\) + f \((p\_\(k - 2\))\)\ f \((p\_\(k - 1\))\) \((p\_\
+\(k - 1\) - p\_k)\) + \((f \((p\_\(k - 1\))\) - f \((p\_k)\))\)\ f \((p\_k)\) \
+\((p\_\(k - 2\) - p\_\(k - 1\))\)\)\)\/\(\((f \((p\_\(k - 1\))\) - f \
+\((p\_\(k - 2\))\))\)\ \((f \((p\_k)\) - f \((p\_\(k - 2\))\))\)\ \((f \
+\((p\_k)\) - f \((p\_\(k - 1\))\))\)\)\)]],
+  "   \n\nfor    ",
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "\[CenterEllipsis]", " ", ",", "m", 
+        " "}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Inverse Quadratic Method).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(QuadraticMethod[x0_, x1_, x2_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{p0\  = \ N[x0], 
+          p1\  = \ N[x1], p2\  = \ N[x2], 
+          k}, \[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 
+            16]\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = \>\"", 
+          PaddedForm[p1, {16, 16}], \*"\"\<,   f[\!\(p\_1\)] = \>\"", 
+          NumberForm[f[p1], 
+            16]\ ]; \ \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_2\) = \>\"", 
+          PaddedForm[p2, {16, 16}], \*"\"\<,   f[\!\(p\_2\)] = \>\"", 
+          NumberForm[f[p2], 16]\ ]; \ \ \[IndentingNewLine]p3\  = \ p2; \ 
+        p2\  = \ p1; \ 
+        p1\  = \ p0; \ \[IndentingNewLine]k\  = \ 
+          2; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ p1; \ p1\  = \ p2; \ 
+          p2\  = \ p3; \ \[IndentingNewLine]p3\  = \ 
+            p1 - f[p1]\ \(\(\ \)\(\(f[p0]\^2\) \((p2 - p1)\) + f[p0]\ f[p1] \
+\((p1 - p2)\) + \((f[p1] - f[p2])\)\ f[p2] \((p0 - p1)\)\)\)\/\(\((f[p1] - \
+f[p0])\)\ \((f[p2] - f[p0])\)\ \((f[p2] - f[p1])\)\); \ \[IndentingNewLine]k\ \
+ = \ k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p3, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p3], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \ \[IndentingNewLine]Print[\*"\"\<Starting with the \
+initial points \!\(p\_0\) = \>\"", x0, \*"\"\<, \!\(p\_1\) = \>\"", 
+          x1, \*"\"\<, and \!\(p\_2\) = \>\"", 
+          x2]; \[IndentingNewLine]Print["\<The final result from the Inverse \
+Quadratic Interpolation Method is\>"]; \ \[IndentingNewLine]Print["\<  p  = \
+\>", NumberForm[p3, 
+            17]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", 
+          Min[{Abs[p3 - p2], Abs[p3 - p1], 
+              Abs[p3 - p0]}]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p3], 17]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "\tThe computation of  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(p\_3\), "  ", 
+          StyleBox["from",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(p\_0\)}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(p\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(p\_2\)}]]],
+  "  is seen to require 12 function evaluations (because ",
+  Cell[BoxData[
+      \(p\_i\)]],
+  " occurs 13 times).  This number can be reduced to 3 function evaluations \
+per iteration by using the following \"algebraic trick.\"   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Inverse Quadratic Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/BrentsMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "Find a root of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given three initial approximations  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], 
+        RowBox[{\(p\_1\), "  ", 
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  ", \(p\_2\)}]}]]],
+  "  iteration.  When the code in the above subroutine is executed the \
+computation of  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(p\_3\), "  ", 
+          StyleBox["from",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(p\_0\)}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(p\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], \(p\_2\)}]]],
+  "  is seen to require 13 function evaluations.   (because ",
+  Cell[BoxData[
+      \(p\_i\)]],
+  " occurs 13 times).  The number of function evaluations can by using the \
+following scheme.  \n\n\t",
+  Cell[BoxData[{
+      \(\ \ \ \ \ \ R\  = \ f \((p\_\(k - 1\))\)/f \((p\_k)\)\), "\n", 
+      \(\ \ \ \ \ \ S\  = \ f \((p\_\(k - 1\))\)/f \((p\_\(k - 2\))\)\), 
+    "\n", 
+      \(\ \ \ \ \ \ T\  = \ f \((p\_\(k - 2\))\)/f \((p\_k)\)\), "\n", 
+      \(\ \ \ \ \ \ P\  = \ 
+        S\ \((T \((R - T)\) \((p\_k - p\_\(k - 1\))\) - \((1 - 
+                    R)\) \((p\_\(k - 1\) - p\_\(k - 2\))\)\ )\)\), "\n", 
+      \(\ \ \ \ \ \ Q\  = \ \((T - 1)\) \((R - 1)\) \((S - 1)\)\), "\n", 
+      \(p\_\(k + 1\)\  = \ \ p\_\(k - 1\)\  + \ P/Q\)}]],
+  "  \n\t\n\tfor    ",
+  Cell[BoxData[
+      RowBox[{\(k\  = \ 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "\[CenterEllipsis]", " ", ",", "m", 
+        " "}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Inverse Quadratic Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Efficient version that uses only 3 function evaluations per iteration. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(QuadraticMethod2[x0_, x1_, x2_, 
+        max_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{p0\  = \ N[x0], 
+          p1\  = \ N[x1], p2\  = \ N[x2], 
+          k}, \[IndentingNewLine]Print[\*"\"\<\!\(p\_0\) = \>\"", 
+          PaddedForm[p0, {16, 16}], \*"\"\<,   f[\!\(p\_0\)] = \>\"", 
+          NumberForm[f[p0], 
+            16]\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = \>\"", 
+          PaddedForm[p1, {16, 16}], \*"\"\<,   f[\!\(p\_1\)] = \>\"", 
+          NumberForm[f[p1], 
+            16]\ ]; \ \ \[IndentingNewLine]Print[\*"\"\<\!\(p\_2\) = \>\"", 
+          PaddedForm[p2, {16, 16}], \*"\"\<,   f[\!\(p\_2\)] = \>\"", 
+          NumberForm[f[p2], 16]\ ]; \ \ \[IndentingNewLine]p3\  = \ p2; \ 
+        p2\  = \ p1; \ 
+        p1\  = \ p0; \ \[IndentingNewLine]k\  = \ 
+          2; \ \[IndentingNewLine]While[\ 
+          k < max, \[IndentingNewLine]p0\  = \ p1; \ p1\  = \ p2; \ 
+          p2\  = \ p3; \ \[IndentingNewLine]f0 = f[p0]; \ f1 = f[p1]; \ 
+          f2 = f[p2]; \ \[IndentingNewLine]R = f1\/f2; \ \ S = 
+            f1\/f0; \ \ T = f0\/f2; \ \[IndentingNewLine]P = 
+            S \((T \((R - T)\) \((p2 - p1)\) - \((1 - R)\) \((p1 - 
+                        p0)\))\); \ \[IndentingNewLine]Q = \((T - 1)\) \((R - 
+                  1)\) \((S - 1)\); \ \[IndentingNewLine]p3\  = \ 
+            p1\  + \ P\/Q; \ \[IndentingNewLine]k = 
+            k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[p3, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[p3], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \ \[IndentingNewLine]Print[\*"\"\<Starting with the \
+initial points \!\(p\_0\) = \>\"", x0, \*"\"\<, \!\(p\_1\) = \>\"", 
+          x1, \*"\"\<, and \!\(p\_2\) = \>\"", 
+          x2]; \[IndentingNewLine]Print["\<The final result from the Inverse \
+Quadratic Interpolation Method is\>"]; \ \[IndentingNewLine]Print["\<  p  = \
+\>", NumberForm[p3, 
+            17]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]p  = \
+\[PlusMinus]\>", Abs[p3 - p2]\ ]; \ \[IndentingNewLine]Print["\<f[p] = \>", 
+          NumberForm[f[p3], 17]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the inverse quadratic method to find the three roots of the cubic \
+polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ 4\ x\^3 - 16  x\^2 + 17  x - 4\)],
+    AspectRatioFixed->False],
+  ".  \nShow details of the computations for the starting value  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0 = 3\), ",", " ", 
+        RowBox[{\(p\_1\), "=", 
+          RowBox[{
+            RowBox[{"2.8", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", \(p\_2\)}], "=", 
+            "2.6"}]}]}]]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the function.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The inverse quadratic iteration formula  ",
+  Cell[BoxData[
+      \(g[x\_0, x\_1, x\_2]\)]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x0, x1, x2];\)\ \), "\[IndentingNewLine]", 
+    \(p = 0; \ Remove[p];\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The inverse quadratic interpolation formula is\>", "\<\n\
+\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\) = g[\!\(p\_0\),\!\(p\_1\),\!\(p\_2\)] = \!\(p\
+\_1\) - f[\!\(p\_1\)] \!\(\(\(f[p\_0]\^2\) \((p\_2 - p\_1)\) + f[p\_0] \
+f[p\_1] \((p\_1 - p\_2)\) + \((f[p\_1] - f[p\_2])\) f[p\_2] \((p\_0 - p\_1)\)\
+\)\/\(\((f[p\_1] - f[p\_0])\) \((f[p\_2] - f[p\_0])\) \((f[p\_2] - f[p\_1])\)\
+\)\)\>\"", "\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x0_, x1_, x2_]\  = \ 
+        x1 - f[x1]\ \(\(f[x0]\^2\) \((x2 - x1)\) + f[x0]\ f[x1] \((x1 - x2)\) \
++ \((f[x1] - f[x2])\)\ f[x2] \((x0 - x1)\)\)\/\(\((f[x1] - f[x0])\)\ \((f[x2] \
+- f[x0])\)\ \((f[x2] - f[x1])\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\) = g[\!\(p\_0\),\!\(p\_1\),\!\(p\_2\)] = \
+\>\"", g[p\_0, p\_1, p\_2]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Hopefully, the iteration  ",
+  Cell[BoxData[
+      \(p\_\(n + 1\) = g[p\_\(n - 2\), p\_\(n - 1\), p\_n]\)]],
+  "  will converge to a root of  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "Graph the function  ",
+  Cell[BoxData[
+      \(y = f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {\(-5\), 8}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 3, 0.5], 
+            Range[\(-4\), 8, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["There are three real root. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Root (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Starting with the values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0\), "=", 
+        RowBox[{
+          RowBox[{"3.0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(p\_1\)}], "=", 
+          "2.8"}]}]]],
+  ".  Use the inverse quadratic interpolation method to find a numerical \
+approximation to the root.  First, do the iteration one step at a time.  Type \
+each of the following commands in a separate cell and execute them one at a \
+time."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(p0\)\(=\)\(3.0\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p1\)\(=\)\(2.8\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p2\)\(=\)\(2.6\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p3\)\(=\)\(g[p0, p1, p2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p4\)\(=\)\(g[p1, p2, p3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p5\)\(=\)\(g[p2, p3, p4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p6\)\(=\)\(g[p3, p4, p5]\)\(\ \)\)\)], "Input"],
+
+Cell["Now use the subroutine for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod[3.0, 2.8, 2.6, 8]\)], "Input"],
+
+Cell["The efficient version for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod2[3.0, 2.8, 2.6, 8]\)], "Input"],
+
+Cell["Compare with the slower secant method.", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[3.0, 2.8, 9];\)\(\ \)\)\)], "Input"],
+
+Cell["From the graph we see that there are two other real roots. ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Root (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the starting values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0 = 0.6\), ",", 
+        RowBox[{\(p\_1\), "=", 
+          RowBox[{
+            RowBox[{"0.5", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", \(p\_2\)}], "=", 
+            "0.4"}]}]}]]],
+  ", and the subroutine for the inverse quadratic method.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod[0.6, 0.5, 0.4, 8]\)], "Input"],
+
+Cell["The efficient version for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod2[0.6, 0.5, 0.4, 8]\)], "Input"],
+
+Cell["Compare with the slower secant method.", "Text"],
+
+Cell[BoxData[
+    \(SecantMethod[0.6, 0.5, 9]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Root (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the starting values ",
+  Cell[BoxData[
+      RowBox[{\(p\_0 = 0.9\), ",", 
+        RowBox[{\(p\_1\), "=", 
+          RowBox[{"1.0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  "}]}]}]]],
+  Cell[BoxData[
+      \(\(\(p\_2\)\(=\)\(1.1\)\(\ \)\)\)]],
+  ", and the subroutine for the inverse quadratic method.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod[0.9, 1.0, 1.1, 9]\)], "Input"],
+
+Cell["The efficient version for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod2[0.9, 1.0, 1.1, 9]\)], "Input"],
+
+Cell["Compare with the secant method.", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[0.9, 1.0, 8];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Conclusion.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  There is only a slight advantage to using the inverse quadratic \
+interpolation over the secant method.  \nBrent's method makes further \
+improvements that are necessary to take full advantage of inverse \
+interpolation. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compare the secant method with the inverse quadratic method for finding \
+the roots of the cubic polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ x\^3 - 3\ x + 2\)],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["3 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate fast convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - 3\ x + 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Graph the function.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3\), 3}, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-10\), 10}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], 
+            Range[\(-10\), 10, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fast Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate fast convergence at the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  ",  using the starting values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0 = \(-3.0\)\), ",", "  ", 
+        RowBox[{\(p\_1\), "=", 
+          RowBox[{
+            RowBox[{\(-2.8\), "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "  ", \(p\_2\)}], 
+            "=", \(-2.6\)}]}]}]]],
+  " "
+}], "Text"],
+
+Cell["Use the subroutine for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod[\(-3.0\), \(-2.8\), \(-2.6\), 8]\)], "Input"],
+
+Cell["\<\
+Use the efficient version for the inverse quadratic method.  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod2[\(-3.0\), \(-2.8\), \(-2.6\), 8]\)], "Input"],
+
+Cell["Compare with the slower secant method.", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[\(-3.0\), \(-2.8\), 9];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["3 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate slow convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^3 - 3\ x + 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["Graph the function.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, \(-3\), 3}, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-10\), 10}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], 
+            Range[\(-10\), 10, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   y = f[x] = \>", f[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Slow Convergence.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate slow convergence at the double root  ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ",  using the starting values  ",
+  Cell[BoxData[
+      RowBox[{\(p\_0 = 2.0\), ",", 
+        RowBox[{\(p\_1\), "=", 
+          RowBox[{
+            RowBox[{"1.8", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "  ", \(p\_2\)}], "=", 
+            "1.6"}]}]}]]]
+}], "Text"],
+
+Cell["Use the subroutine for the inverse quadratic method.  ", "Text"],
+
+Cell[BoxData[
+    \(QuadraticMethod[2.0, 1.8, 1.6, 34]\)], "Input"],
+
+Cell["Compare with the slightly slower secant method.", "Text"],
+
+Cell[BoxData[
+    \(\(\(SecantMethod[2.0, 1.8, 40];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["More Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe will now review some root bracketing methods.  ",
+  StyleBox["The regula falsi method usually converge faster than the \
+bisection method bisection.  However, examples can be found when the \
+bisection method converges faster.  To speed things up, Brent included \
+inverse quadratic interpolation and his method combines the root bracketing",
+    FontFamily->"Times New Roman"],
+  " methods: bisection, regula falsi; and inverse quadratic interpolation \
+methods.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Bisection Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Bisection.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox["C",
+            FontWeight->"Bold"], "[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "b"}], "]"}]}]]],
+  " and that there exists a number ",
+  Cell[BoxData[
+      RowBox[{"r", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "b"}], "]"}]}]]],
+  " such that ",
+  Cell[BoxData[
+      \(f \((r)\) = 0\)]],
+  ".  If  ",
+  Cell[BoxData[
+      RowBox[{"f", \((a)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", "f", \((b)\)}]]],
+  " have opposite signs, and ",
+  Cell[BoxData[
+      \({c\_n}\)]],
+  " represents the sequence of midpoints generated by the bisection process, \
+then  \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(|\)\(r - 
+          c\_n\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\(b\  - \ 
+                a\)\/2\^\(n + 1\)\)\)\)\)]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(n = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  ",\n\nand the sequence ",
+  Cell[BoxData[
+      \({c\_n}\)]],
+  " converges to the zero  ",
+  Cell[BoxData[
+      \(x = r\)]],
+  ".  \n\nThat is,  \t",
+  Cell[BoxData[
+      \(lim\+\(k\  \[Rule] \ \[Infinity]\)\ c\_n\  = \ r\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["Bisection Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BisectionProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Bisection Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BisectionProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Bisection Method).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Bisection[a0_, b0_, 
+        m_]\)\(\ \)\(:=\)\(\[IndentingNewLine]\)\(Module[{a\  = \ N[a0], 
+          b\  = \ N[b0], 
+          k}, \[IndentingNewLine]c\  = \ \(a\  + \ b\)\/2; \ \
+\[IndentingNewLine]Print["\<p\>"\_0, "\< = \>", 
+          PaddedForm[c, {16, 16}], "\<,   f[\>", "\<p\>"\_0, "\<] = \>", 
+          NumberForm[f[c], 16]\ ]; \ \[IndentingNewLine]k\  = \ 
+          0; \ \[IndentingNewLine]While[\ 
+          k\  < \ m, \[IndentingNewLine]If[\ 
+            Sign[f[b]]\  \[Equal] \ Sign[f[c]], \ 
+            b\  = \ c, \ \(a\  = \ 
+                c;\)\ ]; \ \[IndentingNewLine]c\  = \ \(a\  + \ b\)\/2; \ \
+\[IndentingNewLine]k\  = \ 
+            k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[c, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[c], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \ \[IndentingNewLine]Print["\<Starting with the initial \
+interval [a,b] = [\>", a0, "\<,\>", 
+          b0, "\<]\>"]; \[IndentingNewLine]Print["\<The final result from the \
+Bisection Method is\>"]; \ \[IndentingNewLine]Print["\<  c  = \>", 
+          NumberForm[c, 
+            16]\ ]; \ \[IndentingNewLine]Print["\< \[CapitalDelta]c  = \
+\[PlusMinus]\>", \(b - a\)\/2]; \ \[IndentingNewLine]Print["\<f[c] = \>", 
+          NumberForm[f[c], 16]\ ];\ ]\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Regula Falsi Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MethodofFalsePosition.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox["C",
+            FontWeight->"Bold"], "[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "b"}], "]"}]}]]],
+  " and that there exists a number ",
+  Cell[BoxData[
+      RowBox[{"r", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "b"}], "]"}]}]]],
+  " such that ",
+  Cell[BoxData[
+      \(f \((r)\) = 0\)]],
+  ".  \nIf  ",
+  Cell[BoxData[
+      RowBox[{"f", \((a)\), " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", "f", \((b)\)}]]],
+  " have opposite signs, and \n\n\t\t",
+  Cell[BoxData[
+      \(c\_n\  = \ \(a\_n\ f \((b\_n)\)\  - \ b\_n\ f \((a\_n)\)\)\/\(f \
+\((b\_n)\)\  - \ f \((a\_n)\)\)\)]],
+  "  \n\nrepresents the sequence of points generated by the Regula Falsi \
+process, then the sequence ",
+  Cell[BoxData[
+      \({c\_n}\)]],
+  " converges to the zero  ",
+  Cell[BoxData[
+      \(x = r\)]],
+  ".  \n\nThat is,  \t",
+  Cell[BoxData[
+      \(lim\+\(k\  \[Rule] \ \[Infinity]\)\ c\_n\  = \ r\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " ",
+  StyleBox[ButtonBox["False Position or Regula Falsi Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RegulaFalsiProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " ",
+  StyleBox[ButtonBox["False Position or Regula Falsi Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RegulaFalsiProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Regula Falsi Method).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(RegulaFalsi[a0_, b0_, 
+        m_]\)\(\ \)\(:=\)\(\[IndentingNewLine]\)\(Module[{a\  = \ N[a0], 
+          b\  = \ N[b0], 
+          k}, \[IndentingNewLine]c\  = \ \(a\ f[b] - b\ f[a]\)\/\(f[b] - f[a]\
+\); \ \[IndentingNewLine]Print["\<p\>"\_0, "\< = \>", 
+          PaddedForm[c, {16, 16}], "\<,   f[\>", "\<p\>"\_0, "\<] = \>", 
+          NumberForm[f[c], 16]\ ]; \ \[IndentingNewLine]k\  = \ 
+          0; \ \ \[IndentingNewLine]While[\ 
+          k\  < \ m, \[IndentingNewLine]If[\ 
+            Sign[f[b]]\  \[Equal] \ Sign[f[c]], \ 
+            b\  = \ c, \ \(a\  = \ 
+                c;\)\ ]; \ \[IndentingNewLine]c\  = \ \(a\ f[b] - b\ f[a]\)\/\
+\(f[b] - f[a]\); \ \[IndentingNewLine]k\  = \ 
+            k + 1; \ \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+            PaddedForm[c, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+            NumberForm[f[c], 
+              16]\ ];\ ]; \ \[IndentingNewLine]Print["\<f[x] = \>", 
+          f[x]\ ]; \ \[IndentingNewLine]Print["\<Starting with the initial \
+interval [a,b] = [\>", a0, "\<,\>", 
+          b0, "\<]\>"]; \[IndentingNewLine]Print["\<The final result from the \
+Regula Falsi Method is\>"]; \ \[IndentingNewLine]Print["\<  c  = \>", 
+          NumberForm[c, 16]\ ]; \ \[IndentingNewLine]Print["\<f[c] = \>", 
+          NumberForm[f[c], 16]\ ];\ ]\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Brent's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe secant method and inverse quadratic interpolation method can be \
+used to find a root  ",
+  Cell[BoxData[
+      RowBox[{"p", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  "  of the function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ".  Combining these methods and making variations which include inverse \
+interpolation have been presented by ",
+  StyleBox["A. van Wijngaarden, J. A. Zonneveld and E. W. Dijkstra (1963), ",
+    FontFamily->"Times New Roman"],
+  "J. H. Wilkinson",
+  StyleBox[" (1967), G. Peters and J. H. Wilkinson (1969), T. J. Dekker \
+(1969) and were improved by R. P. Brent (1971).  ",
+    FontFamily->"Times New Roman"],
+  "\n\n\tBrent's method can be used to find a root  ",
+  Cell[BoxData[
+      RowBox[{"p", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{"a", 
+            StyleBox[",",
+              FontFamily->"Times New Roman"], "b"}], "]"}]}]]],
+  "  provided that  ",
+  Cell[BoxData[
+      RowBox[{"f", \((a)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "f", \((b)\)}]]],
+  "  have opposite signs.  At a typical step we have three points  ",
+  Cell[BoxData[
+      RowBox[{"a", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "b", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "c"}]}]]],
+  "  such that  ",
+  Cell[BoxData[
+      \(f \((b)\) f \((c)\) \[LessEqual] 0\)]],
+  ",  and the point  ",
+  StyleBox["a",
+    FontFamily->"Courier New"],
+  "  may coincide with the point  ",
+  StyleBox["c",
+    FontFamily->"Courier New"],
+  ".  The points  ",
+  Cell[BoxData[
+      RowBox[{"a", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "b", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "c"}]}]]],
+  "  change during the algorithm, and the root always lies in either  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"b", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], 
+          StyleBox["c",
+            FontFamily->"Times New Roman"]}], "]"}]]],
+  "  or  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"c", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  ".  The value  b  is the best approximation to the root and  ",
+  StyleBox["a",
+    FontFamily->"Courier New"],
+  "  is the previous value of  ",
+  StyleBox["b",
+    FontFamily->"Courier New"],
+  ".  The method uses a combination of three methods: bisection, regula \
+falsi, and inverse quadratic interpolation.  It is difficult to see how each \
+of these ideas are incorporated into the subroutine.  To assist with locating \
+the lines that must be used in logical sequence some of the lines have been \
+color coded.  But some lines are used in more than one method so look \
+carefully at the subroutine and the portions listed below.  \n\t\n\tThe Brent \
+subroutine will find the root  ",
+  Cell[BoxData[
+      \(p\)]],
+  "  of the function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  in the interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  "  to within a tolerance  ",
+  Cell[BoxData[
+      \(6\ \[Epsilon] | x | \ \(+\ 2\) \[Delta]\)]],
+  "  where  ",
+  Cell[BoxData[
+      \(\[Delta]\)]],
+  "  is a positive tolerance and  ",
+  Cell[BoxData[
+      \(\[Epsilon]\  = \ $MachineEpsilon\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Brent's Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk"],
+  "Find a root  ",
+  StyleBox["p",
+    FontFamily->"Courier New"],
+  "  of  ",
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  "  given initial bracketing interval  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"a", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  "  where  ",
+  Cell[BoxData[
+      RowBox[{"f", \((a)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", "f", \((b)\)}]]],
+  " must have opposite signs.  At a typical step we have three points  ",
+  Cell[BoxData[
+      RowBox[{"a", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "b", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "c"}]}]]],
+  "  such that  ",
+  Cell[BoxData[
+      \(f \((b)\) f \((c)\) \[LessEqual] 0\)]],
+  ",  and  ",
+  StyleBox["a",
+    FontFamily->"Courier New"],
+  "  may coincide with  ",
+  StyleBox["c",
+    FontFamily->"Courier New"],
+  ".  The points ",
+  Cell[BoxData[
+      RowBox[{"a", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "b", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", "c"}]}]]],
+  "  change during the algorithm, and the root always lies in either  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"b", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], 
+          StyleBox["c",
+            FontFamily->"Times New Roman"]}], "]"}]]],
+  "  or  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{"c", 
+          StyleBox[",",
+            FontFamily->"Times New Roman"], "b"}], "]"}]]],
+  ".  The value  b  is the best approximation to the root and  ",
+  StyleBox["a",
+    FontFamily->"Courier New"],
+  "  is the previous value of  ",
+  StyleBox["b",
+    FontFamily->"Courier New"],
+  ".  The iteration uses a combination of  techniques:  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(i)",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["   The Bisection Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ \(b + c\)\/2\)]],
+  ",  or  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(ii)",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  Regula Falsi Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ \(c\ f \((b)\) - b\ f \((c)\)\)\/\(f \((b)\) - f \
+\((c)\)\)\)]],
+  ",  or  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(iii)",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" Quadratic Interpolation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ \ \ \ m = \(c - b\)\/2\), "\n", 
+      \(\ \ \ \ \ \ s = \(f \((b)\)\)\/\(f \((a)\)\)\), "\n", 
+      \(\ \ \ \ \ \ q = \(f \((a)\)\)\/\(f \((c)\)\)\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ r = \(f \((b)\)\)\/\(f \((c)\)\)\), "\n", 
+      \(\ \ \ \ \ \ p = 
+        s \((2  m\ q \((q - r)\) - \((b - a)\) \((r - 1)\))\)\), "\n", 
+      \(\ \ \ \ \ \ q = \((q - 1)\) \((r - 1)\) \((s - 1)\)\), "\n", 
+      \(\ \ \ \ \ \ d = p\/q\), "\n", 
+      \(p\_\(k + 1\) = b + d\)}]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Derivations",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Brent's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BrentMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Brent's Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{\(BrentMethod[a0_, b0_, \[Delta]_]\), " ", ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Module", "[", 
+        RowBox[{\({a = N[a0], b = N[b0], k}\), ",", "\[IndentingNewLine]", 
+          
+          RowBox[{\(fa = f[a]\), ";", "  ", \(fb = f[b]\), ";", "  ", 
+            "\[IndentingNewLine]", \(k\  = \ 0\), ";", " ", 
+            "\[IndentingNewLine]", \(Label[int]\), ";", "  ", 
+            "\[IndentingNewLine]", 
+            StyleBox[\(c = a\),
+              FontColor->RGBColor[1, 0, 1]], 
+            StyleBox[";",
+              FontColor->RGBColor[1, 0, 1]], 
+            StyleBox["  ",
+              FontColor->RGBColor[1, 0, 1]], 
+            StyleBox[\(fc = fa\),
+              FontColor->RGBColor[1, 0, 1]], 
+            StyleBox[";",
+              FontColor->RGBColor[1, 0, 1]], "  ", \(d = \(e\  = \ b - a\)\), 
+            ";", "  ", "\[IndentingNewLine]", \(Label[ext]\), ";", " ", 
+            "\[IndentingNewLine]", 
+            RowBox[{"If", "[", " ", 
+              RowBox[{\(Abs[fc] < Abs[fb]\), ",", " ", 
+                RowBox[{\(a = b\), ";", "  ", \(b = c\), ";", "  ", 
+                  StyleBox[\(c = a\),
+                    FontColor->RGBColor[1, 0, 1]], 
+                  StyleBox[";",
+                    FontColor->RGBColor[1, 0, 1]], "  ", \(fa = fb\), ";", 
+                  "  ", \(fb = fc\), ";", "  ", 
+                  StyleBox[\(fc = fa\),
+                    FontColor->RGBColor[1, 0, 1]]}]}], " ", "]"}], ";", "  ", 
+            "\[IndentingNewLine]", \(tol = 
+              2\ $MachineEpsilon\ Abs[b]\  + \ \[Delta]\), ";", "  ", 
+            StyleBox[\(m = \(c - b\)\/2\),
+              FontColor->RGBColor[1, 0, 1]], 
+            StyleBox[";",
+              FontColor->RGBColor[1, 0, 1]], "  ", 
+            "\[IndentingNewLine]", \(Print["\<p\>"\_k, "\< = \>", 
+              PaddedForm[b, {16, 16}], "\<,   f[\>", "\<p\>"\_k, "\<] = \>", 
+              NumberForm[fb, 16]\ ]\), ";", "\[IndentingNewLine]", 
+            RowBox[{"If", "[", " ", 
+              
+              RowBox[{\(Abs[m] > tol\  \[And] \ fb =!= 0\), " ", ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{
+                  RowBox[{"Module", "[", 
+                    RowBox[{\({}\), ",", " ", 
+                      StyleBox[\( (*\ Bisection\ Method\ Step\ *) \),
+                        FontColor->RGBColor[0.500008, 0, 0.250004]], "   ", 
+                      "\[IndentingNewLine]", 
+                      RowBox[{
+                        RowBox[{"If", "[", " ", 
+                          
+                          RowBox[{\(Abs[e] < tol\  \[Or] \ 
+                              Abs[fa] \[LessEqual] Abs[fb]\), " ", ",", 
+                            "\[IndentingNewLine]", 
+                            StyleBox[\(d = \(e = m\)\),
+                              FontColor->RGBColor[0.500008, 0, 0.250004]], 
+                            ",", "\[IndentingNewLine]", 
+                            RowBox[{
+                              RowBox[{"Module", "[", 
+                                RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+                                  RowBox[{
+                                    StyleBox[\(s = fb\/fa\),
+                                      FontColor->RGBColor[0, 0, 1]], 
+                                    StyleBox[";",
+                                      FontColor->RGBColor[0, 0, 1]], "  ", 
+                                    "\[IndentingNewLine]", 
+                                    RowBox[{"If", "[", " ", 
+                                      RowBox[{
+                                        StyleBox[\(a \[Equal] c\),
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox[",",
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox[" ",
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        
+                                        StyleBox[\( (*\ 
+                                        Regula\ Falsi\ or\ Linear\ \
+Interpolation\ Step\ *) \),
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox["  ",
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox["\[IndentingNewLine]",
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        
+                                        StyleBox[\(p = 2  m\ s; \ \ q = 
+                                        1 - s;\),
+                                        FontColor->RGBColor[0, 0, 1]], "  ", 
+                                        "\[IndentingNewLine]", ",", " ", 
+                                        
+                                        StyleBox[\( (*\ 
+                                        Inverse\ Quadratic\ Interpolation\ \
+Step\ *) \),
+                                        FontColor->RGBColor[0, 1, 0]], 
+                                        StyleBox["  ",
+                                        FontColor->RGBColor[0, 1, 0]], 
+                                        StyleBox["\[IndentingNewLine]",
+                                        FontColor->RGBColor[0, 1, 0]], 
+                                        
+                                        StyleBox[\(q = fa\/fc; \ \ r = 
+                                        fb\/fc; \ \ p = 
+                                        s \((2  m\ q \((q - r)\) - \((b - 
+                                        a)\) \((r - 1)\))\); \ \ q = \((q - 
+                                        1)\) \((r - 1)\) \((s - 1)\);\),
+                                        FontColor->RGBColor[0, 1, 0]]}], "  ",
+                                       "]"}], ";", "  ", 
+                                    "\[IndentingNewLine]", \(If[\ p > 0, \ 
+                                      q = \(-q\), \ p = \(-p\)\ ]\), ";", 
+                                    "  ", "\[IndentingNewLine]", \(s = e\), 
+                                    ";", "  ", \(e = d\), ";", "  ", 
+                                    "\[IndentingNewLine]", 
+                                    RowBox[{"If", "[", " ", 
+                                      
+                                      RowBox[{\(2  p < 
+                                        3  m\ q - Abs[tol\ q]\  \[And] \ 
+                                        p < Abs[0.5  s\ q]\), " ", ",", "  ", 
+                                        
+                                        StyleBox[\(d = p\/q\),
+                                        FontColor->RGBColor[1, 0, 1]], 
+                                        StyleBox[",",
+                                        FontColor->RGBColor[1, 0, 1]], 
+                                        " ", \(d = \(e = m\)\)}], "  ", "]"}],
+                                     ";"}]}], "  ", "]"}], ";"}]}], "  ", 
+                          "]"}], ";", "  ", "\[IndentingNewLine]", \(a = b\), 
+                        ";", "  ", \(fa = fb\), ";", "  ", 
+                        "\[IndentingNewLine]", \(b = 
+                          b\  + \ 
+                            If[\ Abs[d] > tol, \ d, \ 
+                              If[\ m > 0, tol, \(-tol\)\ ]\ ]\), ";", "  ", 
+                        "\[IndentingNewLine]", \(fb = f[b]\), ";", "  ", 
+                        "\[IndentingNewLine]", \(k = k + 1\), ";", 
+                        "\[IndentingNewLine]", \(If[\ 
+                          fb > 0\  === \ fc > 0\ \ , \ Goto[int], \ 
+                          Goto[ext]\ ]\), ";"}]}], "  ", "]"}], ";"}]}], "  ",
+               "]"}], ";", " ", "\[IndentingNewLine]", \(zero = b\), ";", " ",
+             "\[IndentingNewLine]", \(Print["\<f[x] = \>", f[x]\ ]\), ";", 
+            " ", "\[IndentingNewLine]", \(Print["\<Starting with the initial \
+interval [a,b] = [\>", a0, "\<,\>", b0, "\<]\>"]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<The final result from Brent's \
+Method is\>"]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print["\<  b  = \>", 
+              NumberForm[b, 16]\ ]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print["\< \[CapitalDelta]b  = \
+\[PlusMinus]\>", Abs[b - c]]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print["\<f[b] = \>", 
+              NumberForm[f[b], 16]\ ]\), ";", 
+            "\[IndentingNewLine]", \(Return[zero]\), ";"}]}], " ", "]"}], 
+      " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Brent's Method to find the three roots of the cubic polynomial  ",
+  Cell[BoxData[
+      \(f[x]\  = \ 4\ x\^3 - 16  x\^2 + 17  x - 4\)],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the function.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        4\ x\^3 - 16  x\^2 + 17  x - 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Graph the function  ",
+  Cell[BoxData[
+      \(y = f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {\(-5\), 8}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 3, 0.5], 
+            Range[\(-4\), 8, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Root (i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Brent's Method to find the root that lies in the interval  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)],
+    AspectRatioFixed->False],
+  "  with an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(BrentMethod[0.0, 1.0, 10\^\(-15\)];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Regula Falsi Method which is slower and takes about 36 \
+iterations to achieve an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(RegulaFalsi[0.0, 1.0, 36]\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Bisection Method which is slower and takes about 50 \
+iterations to achieve",
+  " an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Bisection[0.0, 1.0, 50];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Root (ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Brent's Method to find the root that lies in the interval  ",
+  Cell[BoxData[
+      \(\([1, 2]\)\)],
+    AspectRatioFixed->False],
+  "  with an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(BrentMethod[1.0, 2.0, 10\^\(-15\)];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Regula Falsi Method which is slower and takes about 8 \
+iterations to achieve an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(RegulaFalsi[1.0, 2.0, 8]\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Bisection Method which is slower and takes about 47 \
+iterations to achieve an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Bisection[1.0, 2.0, 47];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Root (iii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Brent's Method to find the root that lies in the interval  ",
+  Cell[BoxData[
+      \(\([2, 3]\)\)],
+    AspectRatioFixed->False],
+  "  with an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(BrentMethod[2.0, 3.0, 10\^\(-15\)];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Regula Falsi Method which is slower and takes about 50 \
+iterations to achieve an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(RegulaFalsi[2.0, 3.0, 50]\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Bisection Method which is slower and takes about 50 \
+iterations to achieve",
+  " an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Bisection[2.0, 3.0, 50];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Brent's Method to find the solution to the equation  ",
+  Cell[BoxData[
+      \(Tan[x]\  = \ 2  x\)]],
+  "  that lies in the interval  ",
+  Cell[BoxData[
+      \(\([0.5, 1.5]\)\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "To set up an equivalent root finding problem use the function    ",
+  Cell[BoxData[
+      \(f[x]\  = \ Tan[x] - 2  x\)]],
+  ".  Enter the function.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Tan[x] - 2  x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Graph the function  ",
+  Cell[BoxData[
+      \(y = f[x]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 1.5}, PlotRange \[Rule] {{0, 1.5}, {\(-0.6\), 12}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 1.5, 0.5], 
+            Range[0, 12, 2]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use Brent's Method to compute the root that lies in the interval ",
+  Cell[BoxData[
+      \(\([0.5, 1.5]\)\)]],
+  " to an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(BrentMethod[0.5, 1.5, 10\^\(-15\)];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Bisection Method which is slower and takes about 50 \
+iterations to achieve",
+  " an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Bisection[0.5, 1.5, 50];\)\)], "Input"],
+
+Cell[TextData[{
+  "Compare with the Regula Falsi Method which is extremely and takes about \
+243 iterations to achieve an accuracy of  ",
+  Cell[BoxData[
+      \(\(\[PlusMinus]10\^\(-15\)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(RegulaFalsi[0.5, 1.5, 243]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The Regula Falsi Method is slow because the right endpoint becomes \
+stationary and the graph of the function flattens out near the root. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Brent's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/BrentMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Numerical Analysis & Numerical Methods Project",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{974, 661},
+WindowMargins->{{1, Automatic}, {Automatic, 0}},
+Magnification->1
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 192, 5, 35, "Text"],
+Cell[1971, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3119, 101, 469, 9, 87, "Text"],
+Cell[3591, 112, 2285, 77, 172, "Text"],
+Cell[5879, 191, 325, 12, 33, "Text"],
+Cell[6207, 205, 1642, 50, 76, "Text"],
+Cell[7852, 257, 350, 12, 33, "Text"],
+Cell[8205, 271, 143, 2, 33, "Text"],
+Cell[8351, 275, 1655, 29, 370, "Input"],
+Cell[10009, 306, 628, 20, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[10662, 330, 101, 2, 33, "Text"],
+Cell[10766, 334, 37, 0, 33, "Text"],
+Cell[10806, 336, 185, 4, 50, "Input"],
+Cell[10994, 342, 115, 5, 33, "Text"],
+Cell[11112, 349, 858, 16, 202, "Input"],
+Cell[11973, 367, 202, 8, 33, "Text"],
+Cell[12178, 377, 98, 5, 33, "Text"],
+Cell[12279, 384, 363, 6, 70, "Input"],
+Cell[12645, 392, 43, 0, 33, "Text"],
+Cell[12691, 394, 584, 15, 147, "Text"],
+Cell[13278, 411, 61, 1, 30, "Input"],
+Cell[13342, 414, 61, 1, 30, "Input"],
+Cell[13406, 417, 67, 1, 30, "Input"],
+Cell[13476, 420, 67, 1, 30, "Input"],
+Cell[13546, 423, 67, 1, 30, "Input"],
+Cell[13616, 426, 67, 1, 30, "Input"],
+Cell[13686, 429, 67, 1, 30, "Input"],
+Cell[13756, 432, 40, 0, 33, "Text"],
+Cell[13799, 434, 73, 1, 30, "Input"],
+Cell[13875, 437, 436, 14, 71, "Text"],
+Cell[14314, 453, 73, 1, 30, "Input"],
+Cell[14390, 456, 369, 13, 33, "Text"],
+Cell[14762, 471, 73, 1, 30, "Input"],
+Cell[14838, 474, 148, 5, 33, "Text"],
+Cell[14989, 481, 146, 2, 50, "Input"],
+Cell[15138, 485, 46, 0, 33, "Text"],
+Cell[15187, 487, 292, 6, 70, "Input"],
+Cell[15482, 495, 292, 6, 70, "Input"],
+Cell[15777, 503, 292, 6, 70, "Input"],
+Cell[16072, 511, 127, 4, 33, "Text"],
+Cell[16202, 517, 207, 3, 70, "Input"],
+Cell[16412, 522, 69, 0, 33, "Text"],
+Cell[16484, 524, 104, 2, 30, "Input"],
+Cell[16591, 528, 61, 0, 33, "Text"],
+Cell[16655, 530, 89, 1, 30, "Input"],
+Cell[16747, 533, 105, 3, 33, "Text"]
+}, Closed]],
+Cell[16867, 539, 2263, 69, 171, "Text"],
+Cell[19133, 610, 325, 12, 33, "Text"],
+Cell[19461, 624, 1703, 47, 117, "Text"],
+Cell[21167, 673, 154, 2, 33, "Text"],
+Cell[21324, 677, 2091, 35, 394, "Input"],
+Cell[23418, 714, 810, 22, 52, "Text"],
+Cell[24231, 738, 2538, 69, 240, "Text"],
+Cell[26772, 809, 243, 5, 33, "Text"],
+Cell[27018, 816, 2215, 36, 483, "Input"],
+Cell[29236, 854, 694, 21, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[29955, 879, 101, 2, 33, "Text"],
+Cell[30059, 883, 37, 0, 33, "Text"],
+Cell[30099, 885, 185, 4, 50, "Input"],
+Cell[30287, 891, 132, 5, 33, "Text"],
+Cell[30422, 898, 983, 15, 170, "Input"],
+Cell[31408, 915, 216, 8, 33, "Text"],
+Cell[31627, 925, 98, 5, 33, "Text"],
+Cell[31728, 932, 356, 6, 70, "Input"],
+Cell[32087, 940, 43, 0, 33, "Text"],
+Cell[32133, 942, 599, 16, 52, "Text"],
+Cell[32735, 960, 61, 1, 30, "Input"],
+Cell[32799, 963, 61, 1, 30, "Input"],
+Cell[32863, 966, 61, 1, 30, "Input"],
+Cell[32927, 969, 71, 1, 30, "Input"],
+Cell[33001, 972, 71, 1, 30, "Input"],
+Cell[33075, 975, 71, 1, 30, "Input"],
+Cell[33149, 978, 71, 1, 30, "Input"],
+Cell[33223, 981, 74, 0, 33, "Text"],
+Cell[33300, 983, 66, 1, 30, "Input"],
+Cell[33369, 986, 73, 0, 33, "Text"],
+Cell[33445, 988, 67, 1, 30, "Input"],
+Cell[33515, 991, 54, 0, 33, "Text"],
+Cell[33572, 993, 73, 1, 30, "Input"],
+Cell[33648, 996, 75, 0, 33, "Text"],
+Cell[33726, 998, 470, 14, 33, "Text"],
+Cell[34199, 1014, 66, 1, 30, "Input"],
+Cell[34268, 1017, 73, 0, 33, "Text"],
+Cell[34344, 1019, 67, 1, 30, "Input"],
+Cell[34414, 1022, 54, 0, 33, "Text"],
+Cell[34471, 1024, 58, 1, 30, "Input"],
+Cell[34532, 1027, 468, 14, 33, "Text"],
+Cell[35003, 1043, 66, 1, 30, "Input"],
+Cell[35072, 1046, 73, 0, 33, "Text"],
+Cell[35148, 1048, 67, 1, 30, "Input"],
+Cell[35218, 1051, 47, 0, 33, "Text"],
+Cell[35268, 1053, 73, 1, 30, "Input"],
+Cell[35344, 1056, 340, 8, 52, "Text"]
+}, Closed]],
+Cell[35699, 1067, 369, 12, 30, "Text",
+  Evaluatable->False],
+Cell[36071, 1081, 211, 8, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[36307, 1093, 105, 2, 33, "Text"],
+Cell[36415, 1097, 157, 3, 50, "Input"],
+Cell[36575, 1102, 35, 0, 33, "Text"],
+Cell[36613, 1104, 387, 7, 70, "Input"],
+Cell[37003, 1113, 778, 23, 33, "Text"],
+Cell[37784, 1138, 70, 0, 33, "Text"],
+Cell[37857, 1140, 81, 1, 30, "Input"],
+Cell[37941, 1143, 85, 2, 33, "Text"],
+Cell[38029, 1147, 82, 1, 30, "Input"],
+Cell[38114, 1150, 54, 0, 33, "Text"],
+Cell[38171, 1152, 83, 1, 30, "Input"]
+}, Closed]],
+Cell[38269, 1156, 206, 8, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[38500, 1168, 105, 2, 33, "Text"],
+Cell[38608, 1172, 157, 3, 50, "Input"],
+Cell[38768, 1177, 35, 0, 33, "Text"],
+Cell[38806, 1179, 387, 7, 70, "Input"],
+Cell[39196, 1188, 749, 22, 33, "Text"],
+Cell[39948, 1212, 70, 0, 33, "Text"],
+Cell[40021, 1214, 67, 1, 30, "Input"],
+Cell[40091, 1217, 63, 0, 33, "Text"],
+Cell[40157, 1219, 74, 1, 30, "Input"]
+}, Closed]],
+Cell[40246, 1223, 595, 12, 106, "Text"],
+Cell[40844, 1237, 3209, 103, 169, "Text"],
+Cell[44056, 1342, 363, 13, 33, "Text"],
+Cell[44422, 1357, 350, 12, 33, "Text"],
+Cell[44775, 1371, 146, 2, 33, "Text"],
+Cell[44924, 1375, 1445, 26, 376, "Input"],
+Cell[46372, 1403, 2297, 72, 171, "Text"],
+Cell[48672, 1477, 386, 13, 33, "Text"],
+Cell[49061, 1492, 373, 12, 33, "Text"],
+Cell[49437, 1506, 149, 2, 33, "Text"],
+Cell[49589, 1510, 1396, 24, 346, "Input"],
+Cell[50988, 1536, 5263, 154, 280, "Text"],
+Cell[56254, 1692, 3786, 119, 71, "Text"],
+Cell[60043, 1813, 356, 12, 74, "Text"],
+Cell[60402, 1827, 403, 13, 76, "Text"],
+Cell[60808, 1842, 809, 21, 238, "Text"],
+Cell[61620, 1865, 331, 12, 33, "Text"],
+Cell[61954, 1879, 162, 5, 33, "Text"],
+Cell[62119, 1886, 8538, 149, 794, "Input"],
+Cell[70660, 2037, 343, 11, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[71028, 2052, 101, 2, 33, "Text"],
+Cell[71132, 2056, 37, 0, 33, "Text"],
+Cell[71172, 2058, 185, 4, 50, "Input"],
+Cell[71360, 2064, 98, 5, 33, "Text"],
+Cell[71461, 2071, 363, 6, 70, "Input"],
+Cell[71827, 2079, 344, 12, 33, "Text"],
+Cell[72174, 2093, 82, 1, 31, "Input"],
+Cell[72259, 2096, 210, 6, 33, "Text"],
+Cell[72472, 2104, 58, 1, 30, "Input"],
+Cell[72533, 2107, 213, 7, 33, "Text"],
+Cell[72749, 2116, 61, 1, 30, "Input"],
+Cell[72813, 2119, 345, 12, 33, "Text"],
+Cell[73161, 2133, 82, 1, 31, "Input"],
+Cell[73246, 2136, 209, 6, 33, "Text"],
+Cell[73458, 2144, 57, 1, 30, "Input"],
+Cell[73518, 2147, 207, 6, 33, "Text"],
+Cell[73728, 2155, 61, 1, 30, "Input"],
+Cell[73792, 2158, 346, 12, 33, "Text"],
+Cell[74141, 2172, 82, 1, 31, "Input"],
+Cell[74226, 2175, 210, 6, 33, "Text"],
+Cell[74439, 2183, 58, 1, 30, "Input"],
+Cell[74500, 2186, 213, 7, 33, "Text"],
+Cell[74716, 2195, 61, 1, 30, "Input"]
+}, Closed]],
+Cell[74792, 2199, 358, 13, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[75175, 2216, 101, 2, 33, "Text"],
+Cell[75279, 2220, 181, 5, 33, "Text"],
+Cell[75463, 2227, 159, 3, 50, "Input"],
+Cell[75625, 2232, 98, 5, 33, "Text"],
+Cell[75726, 2239, 369, 6, 70, "Input"],
+Cell[76098, 2247, 233, 8, 33, "Text"],
+Cell[76334, 2257, 82, 1, 31, "Input"],
+Cell[76419, 2260, 213, 7, 33, "Text"],
+Cell[76635, 2269, 61, 1, 30, "Input"],
+Cell[76699, 2272, 214, 6, 33, "Text"],
+Cell[76916, 2280, 59, 1, 30, "Input"],
+Cell[76978, 2283, 253, 6, 33, "Text"]
+}, Closed]],
+Cell[77246, 2292, 158, 3, 32, "Text"],
+Cell[77407, 2297, 302, 8, 33, "Text"],
+Cell[77712, 2307, 250, 7, 33, "Text"],
+Cell[77965, 2316, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

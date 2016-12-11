@@ -1,0 +1,4756 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    157145,       4357]*)
+(*NotebookOutlinePosition[    157839,       4381]*)
+(*  CellTagsIndexPosition[    157795,       4377]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Chebyshev Polynomials",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for the Chebyshev approximation polynomial.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  \n\n\tWe now turn our attention to polynomial interpolation for \
+ f(x)  over  [-1,1]  based on the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["nodes",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(-1\) \[LessEqual] x\_0 \[LessEqual] 
+            x\_2 \[LessEqual]  ... \) \[LessEqual] x\_n \[LessEqual] 1\)]],
+  StyleBox[".  Both the Lagrange and Newton polynomials satisfy  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\  = \ \(P\_n\) \((x)\)\  + \ \(R\_n\) \((x)\)\)]],
+  StyleBox[",  ",
+    FontFamily->"Times New Roman"],
+  "\n\nwhere t",
+  StyleBox["he remainder term  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  StyleBox["  has the form\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\  = \ \(\(\(f\^\((n + 1)\)\) \((c)\)\)\/\(\((n\  + \ 
+                    1)\)!\)\) Q \((x)\)\)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(Q \((x)\)\)]],
+  StyleBox["  is the polynomial of degree",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  "  given by  ",
+  StyleBox["  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(Q \((x)\)\  = \ \(\((x\  - \ x\_0)\) \((x\  - \ 
+                  x\_1)\) ... \) \((x\  - \ x\_n)\)\)]],
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["Using the relationship\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_n\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(1\/\(\
+\((n\  + \ 1)\)!\)\)\)\)\)]],
+  " ",
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)]],
+  Cell[BoxData[
+      \(\(\(*\)\(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(Q \((x)\)\)\(|\)}\)\)\)]],
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["our task is to determine how to ",
+    FontFamily->"Times New Roman"],
+  StyleBox["select the set of nodes",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({x\_k}\_\(k = 0\)\%n\)]],
+  "  that",
+  StyleBox[" minimizes  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(Q \
+\((x)\)\)\(|\)}\)]],
+  StyleBox[".  Research investigating the minimum error in polynomial \
+interpolation is attributed to the ",
+    FontFamily->"Times New Roman"],
+  "Russian mathematician",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Pafnuty Lvovich Chebyshev",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Chebyshev.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1821-1894). "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Table of ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1],
+    Background->None],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/ChebyshevPolynomialoftheFirstKind.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[".  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1],
+    Background->None],
+  StyleBox["\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {\(\(T\_0\) \((x)\)\), 
+            "=", \(\(1\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)},
+          {\(\(T\_1\) \((x)\)\), 
+            "=", \(\(x\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)},
+          {\(\(T\_2\) \((x)\)\), 
+            "=", \(\(2\ x\^2\)\(-\)\(1\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)},
+          {\(\(T\_3\) \((x)\)\), 
+            "=", \(4\ x\^3 - \(\(3\)\(\ \)\(x\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)\)},
+          {\(\(T\_4\) \((x)\)\), 
+            "=", \(\(8\ x\^4\)\(-\)\(8\ x\^2\)\(+\)\(1\)\(\ \ \ \ \ \ \ \ \ \ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)},
+          {\(\(T\_5\) \((x)\)\), 
+            "=", \(16\ x\^5 - 
+              20\ x\^3 + \(\(5\)  \(x\)\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\)\
+\)},
+          {\(\(T\_6\) \((x)\)\), 
+            "=", \(\(32\ x\^6\)\(-\)\(48\ x\^4\)\(+\)\(18\ x\^2\)\(-\)\(1\)\(\
+\ \ \ \ \ \)\)},
+          {\(\(T\_7\) \((x)\)\), 
+            "=", \(64\ x\^7 - 112\ x\^5 + 56\ x\^3 - 7\ x\)},
+          {
+            StyleBox[\(\(\[IndentingNewLine]\)\(TABLE\)\),
+              FontFamily->"Times New Roman",
+              FontWeight->"Bold"], "  ", 
+            StyleBox[\(\(\[IndentingNewLine]\)\(Chebyshev\ polynomials\)\),
+              FontFamily->"Times New Roman"]}
+          }]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Recursive Relationship.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1],
+    Background->None],
+  "The Chebyshev polynomials can be generated recursively in the following \
+way.  First, set \n\n\t\t",
+  Cell[BoxData[{
+      \(\(T\_0\) \((x)\) = 1\), "\n", 
+      \(\(T\_1\) \((x)\) = x\ \)}]],
+  "  \n\n  and use the recurrence relation \n\n\t\t",
+  Cell[BoxData[
+      \(\(T\_k\) \((x)\) = 
+        2\ x\ \(T\_\(k - 1\)\) \((x)\) - \(T\_\(k - 2\)\) \((x)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "This is a \"classic example\" of recursion programming. Enter the \
+following lines into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to recursively define Chebyshev polynomials.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(T[0, x_] = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(T[1, x_] = x;\)\ \), "\[IndentingNewLine]", 
+    \(T[k_, x_] := 2\ x\ T[k - 1, x] - T[k - 2, x]\)}], "Input"],
+
+Cell["Now check it out and see how recursion works. ", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(T\_2\)[x] = \>\"", 
+        T[2, x]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_3\)[x] = \>\"", 
+        T[3, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_3\)[x] = \>\"", 
+        Expand[T[3, x]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_4\)[x] = \>\"", 
+        T[4, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_4\)[x] = \>\"", 
+        Expand[T[4, x]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_5\)[x] = \>\"", 
+        T[5, x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_5\)[x] = \>\"", 
+        Expand[T[5, x]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_6\)[x] = \>\"", 
+        T[6, x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_6\)[x] = \>\"", 
+        Expand[T[6, x]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_7\)[x] = \>\"", 
+        T[7, x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_7\)[x] = \>\"", 
+        Expand[T[7, x]]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Relation to trigonometric functions.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1],
+  Background->None]], "Text"],
+
+Cell[TextData[{
+  "\tThe signal property of Chebyshev polynomials is the trigonometric \
+representation on [-1,1]. \n\nConsider the following expansion using the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command \"FunctionExpand.\""
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(T\_2\)[x] = Cos[2 ArcCos[x]]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(T\_2\)[x] = \>\"", 
+        FunctionExpand[Cos[2\ ArcCos[x]]]\ ];\)\ \)}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+We are interested in the polynomial form of  Cos[n ArcCos[x]],  however we \
+will restrict our analysis to [-1,1]. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[Cos[2\ ArcCos[x]], {x, \(-1\), 1}, 
+        Ticks \[Rule] {Range[\(-1\), 1, 1], Range[\(-1\), 1, 1]}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(T\_2\)[x] = \>\"", Cos[2\ ArcCos[x]], "\< = \>", 
+        FunctionExpand[Cos[2\ ArcCos[x]]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Plot[Cos[2\ ArcCos[x]], {x, \(-2\), 2}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-1\), 7, 1]}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(T\_2\)[x] = \>\"", Cos[2\ ArcCos[x]], "\< = \>", 
+        FunctionExpand[Cos[2\ ArcCos[x]]]\ ];\)\ \)}], "Input"],
+
+Cell["Here is a list of several expansions.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[n = 1, 
+        n \[LessEqual] 7, \(n++\), \[IndentingNewLine]Tn = 
+          Expand[FunctionExpand[
+              Cos[n\ ArcCos[x]]]]; \ \[IndentingNewLine]Plot[
+          Tn, {x, \(-1\), 1}, PlotStyle \[Rule] Magenta, 
+          Ticks \[Rule] {Range[\(-1\), 1, 1], 
+              Range[\(-1\), 1, 
+                1]}]; \ \[IndentingNewLine]Print["\<\t\>", "\<T\>"\_n, "\<[x] \
+= \>", Cos[
+            n\ ArcCos[
+                x]]\ ]; \[IndentingNewLine]Print["\<\t\>", "\<T\>"\_n, "\<[x] \
+= \>", Tn\ ];\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tThese celebrated",
+  StyleBox[" ",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Chebyshev polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/ChebyshevPolynomialoftheFirstKind.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " are readily available in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " and called under the reserved name \"ChebyshevT[n,x].\"  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[Evaluate[Table[ChebyshevT[n, x], {n, 1, 5}]], {x, \(-1\), 1}, 
+        PlotStyle \[Rule] {Red, Yellow, Green, Blue, 
+            Violet}];\)\ \), "\[IndentingNewLine]", 
+    \(\(For[n = 1, 
+        n \[LessEqual] 
+          5, \(n++\), \[IndentingNewLine]\(Print["\<\t\t\t\>", "\<T\>"\_n, \
+"\<[x] = \>", ChebyshevT[n, x]\ ];\)\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Roots of the ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1],
+    Background->None],
+  StyleBox["Chebyshev polynomials",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe roots of  ",
+  Cell[BoxData[
+      \(\(T\_\(n + 1\)\) \((x)\)\)]],
+  "  are  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          
+          RowBox[{\(Cos[\(\((2  n\  + \ 1\  - \ 2  k)\)\ \[Pi]\)\/\(2  n\  + \
+\ 2\)]\), "  ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], "  ", "k"}], "=", "0"}], ",", 
+        "1", ",", "...", ",", "n"}]]],
+  ".  These will be the nodes for polynomial approximation of degree n.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(ChebyshevRoots[n_] := 
+        Module[{}, \[IndentingNewLine]Print["\<T\>"\_\(n + 1\), "\<[x] = \>", 
+            ChebyshevT[n + 1, x], "\< = 0\>", \[IndentingNewLine]"\<\n\>", 
+            Solve[ChebyshevT[n + 1, x] \[Equal] 0, 
+              x], \[IndentingNewLine]"\<\n\>", 
+            N[Solve[ChebyshevT[n + 1, x] \[Equal] 0, 
+                x]], \[IndentingNewLine]"\<\n\n\>", "\<Cos[\>", \(\((2  n + 1 \
+- 2  k)\)\ \[Pi]\)\/\(2  n + 2\), "\<] for k=0,...,\>", 
+            n, \[IndentingNewLine]"\<\n\>", 
+            Table[Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)], {k, 0, 
+                n}], \[IndentingNewLine]"\<\n\>", 
+            N[Table[Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)], {k, 
+                  0, n}]]\ ]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[1]\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[2]\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[3]\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[4]\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[5]\)], "Input"],
+
+Cell[BoxData[
+    \(ChebyshevRoots[6]\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["The Minimax Problem",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1],
+  Background->None]], "Text"],
+
+Cell[TextData[{
+  "\tAn upper bound for the absolute value of the ",
+  StyleBox["remainder term,",
+    FontFamily->"Times New Roman"],
+  " ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_n\) \((x)\)\)\(|\)\)\)]],
+  ",  is the product of  ",
+  Cell[BoxData[
+      \(\(1\/\(\((n\  + \ 
+                  1)\)!\)\) \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \
+\ 1\)\ {\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)]],
+  "  and   ",
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(Q \
+\((x)\)\)\(|\)}\)]],
+  ".  To minimize the factor  ",
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(Q \
+\((x)\)\)\(|\)}\)]],
+  ",  Chebyshev discovered that  ",
+  Cell[BoxData[
+      \(x\_0, x\_2,  ... , x\_n\)]],
+  "  must be chosen so that  ",
+  Cell[BoxData[
+      \(Q \((x)\) = \(1\/2\^n\) \(T\_\(n + 1\)\) \((x)\)\)]],
+  ", which is stated in the following result.   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Minimax Property).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["   Assume that  n  is fixed.  Among all possible choices for  \
+Q(x)  and thus among all possible choices for the distinct nodes  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({x\_k}\_\(k = 0\)\%n\)]],
+  StyleBox["  in  [-1,1],  \n\nthe polynomial  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(T \((x)\) = \(1\/2\^n\) \(T\_\(n + 1\)\) \((x)\)\)]],
+  StyleBox["  is the unique choice which has the property \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(T \
+\((x)\)\)\(|\)}\  \[LessEqual] \ 
+        max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(Q \
+\((x)\)\)\(|\)}\)]],
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["Moreover,\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(max\+\(\(-1\)\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(T \
+\((x)\)\)\(|\)}\  = \ 1\/2\^n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/ChebyshevPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ChebyshevPolyProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Exploration for the theorem.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Construct Q(x) of degree n using the n+1 ",
+  StyleBox["Chebyshev nodes",
+    FontColor->RGBColor[1, 0, 1]],
+  " and compare it to ",
+  Cell[BoxData[
+      \(\(T\_\(n + 1\)\) \((x)\)\)]],
+  "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Construct Q(x) of degree n using the n+1 ",
+  StyleBox["Chebyshev nodes",
+    FontColor->RGBColor[1, 0, 1]],
+  " and compare it to ",
+  Cell[BoxData[
+      \(\(T\_\(n + 1\)\) \((x)\)\)]],
+  ".\n\n",
+  StyleBox["Case (i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Using 2 nodes. "
+}], "Text"],
+
+Cell[BoxData[
+    \(Q2 = \(\((x - Cos[\[Pi]\/4])\)\(\ \)\((x - 
+            Cos[\(3\ \[Pi]\)\/4])\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[Q2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(1\/2\) \(ChebyshevT[2, x]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[\(1\/2\) ChebyshevT[2, x]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Using 3 nodes. "
+}], "Text"],
+
+Cell[BoxData[
+    \(Q3 = \(\((x - Cos[\[Pi]\/6])\)\(\ \)\((x - Cos[\[Pi]\/2])\)\(\ \)\((x - 
+            Cos[\(5\ \[Pi]\)\/6])\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[Q3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(1\/2\^2\) \(ChebyshevT[3, x]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[\(1\/2\^2\) ChebyshevT[3, x]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Case (iii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Using 4 nodes. "
+}], "Text"],
+
+Cell[BoxData[
+    \(Q4 = \(\((x - Cos[\[Pi]\/8])\)\(\ \)\((x - 
+            Cos[\(3\ \[Pi]\)\/8])\)\(\ \)\((x - 
+            Cos[\(5\ \[Pi]\)\/8])\)\(\ \)\((x - 
+            Cos[\(7\ \[Pi]\)\/8])\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[Q4]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+The symbolic manipulation required to simplify the above polynomial is \
+overwhelming.  However we can simplify the list of coefficients. \
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(CoefficientList[Expand[Q4], x]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(c\)\(=\)\(MapAll[FullSimplify, 
+        CoefficientList[Expand[Q4], x]]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(c . {1, x, x\^2, x\^3, x\^4}\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(1\/2\^3\) \(ChebyshevT[4, x]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Expand[\(1\/2\^3\) ChebyshevT[4, x]]\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Rule of Thumb.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " \n\n\tThe \"best a priori choice\" of interpolation nodes for the \
+interval [-1,1] are the n+1 nodes that are zeros of the Chebyshev polynomial  \
+",
+  Cell[BoxData[
+      \(\(T\_\(n + 1\)\) \((x)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Here is a visual analysis of ",
+  StyleBox["equally spaced nodes",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "verses ",
+  StyleBox["Chebyshev nodes",
+    FontColor->RGBColor[1, 0, 1]],
+  " on [-1,1], and their affect on the magnitude of Q(x) in the remainder \
+term  ",
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[i, j, k, n, q, Q, t, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(q[n_, 
+          x_] := \[Product]\+\(i = 0\)\%\(n - 1\)\((x - \((\(-1\) + \(2  \
+i\)\/\(n - 1\))\))\);\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_\(k_, n_\) = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Q[n_, x_] := 
+        N[\[Product]\+\(i = 0\)\%\(n - 1\)\((x - 
+                t\_\(i, n - 1\))\)];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(j = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{q[j, x], Q[j, x]}, {x, \(-1\), 1}, PlotPoints \[Rule] 55, 
+        PlotStyle \[Rule] {Blue, Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[\>", j, "\<,x] = \>", 
+        q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[\>", j, "\<,x] = \>", 
+        Q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(j = 6;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{q[j, x], Q[j, x]}, {x, \(-1\), 1}, PlotPoints \[Rule] 55, 
+        PlotStyle \[Rule] {Blue, Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[\>", j, "\<,x] = \>", 
+        q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[\>", j, "\<,x] = \>", Q[j, x]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(j = 9;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{q[j, x], Q[j, x]}, {x, \(-1\), 1}, PlotPoints \[Rule] 55, 
+        PlotRange \[Rule] {{\(-1\), 1}, {\(-0.02\), 0.02}}, 
+        PlotStyle \[Rule] {Blue, Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[\>", j, "\<,x] = \>", 
+        q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[\>", j, "\<,x] = \>", Q[j, x]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The magnitude of Q(x) is less when the Chebyshev nodes are used and \
+larger when equally spaced notes are used.  This becomes more pronounced when \
+the degree is larger."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(j = 12;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{q[j, x], Q[j, x]}, {x, \(-1\), 1}, PlotPoints \[Rule] 55, 
+        PlotRange \[Rule] {{\(-1\), 1}, {\(-0.006\), 0.001}}, 
+        PlotStyle \[Rule] {Blue, Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[\>", j, "\<,x] = \>", 
+        q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[\>", j, "\<,x] = \>", Q[j, x]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(j = 15;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{q[j, x], Q[j, x]}, {x, \(-1\), 1}, PlotPoints \[Rule] 55, 
+        PlotRange \[Rule] {{\(-1\), 1}, {\(-0.002\), 0.002}}, 
+        PlotStyle \[Rule] {Blue, Magenta}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<q[\>", j, "\<,x] = \>", 
+        q[j, x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q[\>", j, "\<,x] = \>", Q[j, x]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Are you convinced that using the ",
+  StyleBox["Chebyshev nodes",
+    FontColor->RGBColor[1, 0, 1]],
+  " on [-1,1], will decrease the magnitude of the term Q(x) in the remainder \
+term  ",
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  "?  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Transforming the Interval for Interpolation",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "\tSometimes it is necessary to take a problem stated on an interval  [a,b] \
+ and reformulate the problem on the interval  [c,d]  where the solution is \
+known.  \n\nIf the approximation  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  "  to  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  "  is to be obtained on the interval  [a,b],  then we change the variable \
+so that the problem is reformulated on  [-1,1]:\n\n\t",
+  Cell[BoxData[
+      \(x\  = \ \(\(b\  - \ a\)\/2\) t\  + \ \(a\  + \ b\)\/2\)]],
+  "  or  ",
+  Cell[BoxData[
+      \(t\  = \ 2 \( x\  - \ a\)\/\(b\  - \ a\) - 1\)]],
+  ",\n\nwhere  ",
+  Cell[BoxData[
+      RowBox[{"a", "\[LessEqual]", "x", "\[LessEqual]", 
+        RowBox[{
+          RowBox[{"b", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"]}], "  ", "-", "1"}], 
+        "\[LessEqual]", "t", "\[LessEqual]", "1"}]]],
+  ".  The required Chebyshev nodes of  ",
+  Cell[BoxData[
+      \(\(T\_\(n + 1\)\) \((x)\)\)]],
+  "  on  [-1,1]  are \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(t\_k\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{
+            "cos", \((\(\(2  n\  + \ 1\  - \ 2  k\)\/\(2  n\  + \ 
+                        2\)\) \[Pi])\), "  ", 
+              StyleBox["for",
+                FontFamily->"Times New Roman"], "  ", "k"}], "=", "0"}]}], 
+        ",", "1", ",", "...", ",", "n", " "}]]],
+  ",  \n\nand the interpolating nodes  ",
+  Cell[BoxData[
+      \({x\_k}\_\(k = 0\)\%n\)]],
+  "  on  [a,b]  are obtained using the change of variable  ",
+  Cell[BoxData[
+      \(x\_k\  = \ \(\(b\  - \ a\)\/2\) t\_k\  + \ \(a\  + \ b\)\/2\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(\(\(k = 0\)\(,\)\(1\)\(,\)\(...\)\(,\)\(n\)\(\ \)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Lagrange-Chebyshev Approximation).",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  "  ",
+  StyleBox["is the Lagrange polynomial that is based on the Chebyshev ",
+    FontFamily->"Times New Roman"],
+  "interpolating nodes  ",
+  Cell[BoxData[
+      \({x\_k}\_\(k = 0\)\%n\)]],
+  "  on  [a,b]  ",
+  StyleBox["mentioned above.  \n\nIf  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(f \((x)\)\), "\[Element]", 
+        RowBox[{
+          SuperscriptBox[
+            StyleBox["C",
+              FontWeight->"Bold"], \(n + 1\)], "[", \(a, b\), "]"}]}]]],
+  "  ",
+  StyleBox["then \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((b\  - \ a)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(a\  \[LessEqual] \ x\  \[LessEqual] \ b\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  \n\nholds for all",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(x \[Element] \([a, b]\)\)]],
+  ".   ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/ChebyshevPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ChebyshevPolyProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (Lagrange-",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Chebyshev Approximation",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ChebyshevApproximationFormula.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  The Chebyshev approximation polynomial  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  StyleBox["  of  degree  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(\[LessEqual]\)\(n\)\)\)]],
+  "  ",
+  StyleBox["for  f(x)  over  [",
+    FontFamily->"Times New Roman"],
+  StyleBox["-",
+    FontFamily->"Times New Roman",
+    FontSize->14],
+  StyleBox["1,1]  can be written as a sum of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({\(T\_j\) \((x)\)}\)]],
+  StyleBox[":  \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  "\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(f \((x)\)\), " ", 
+          StyleBox["\[TildeTilde]",
+            FontSize->14], " ", \(\(P\_n\) \((x)\)\)}], " ", "=", 
+        " ", \(\[Sum]\+\(j = 0\)\%n\( c\_j\) \(T\_j\) \((x)\)\)}]]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["The coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({c\_j}\)]],
+  "  ",
+  StyleBox["are computed with the formulas  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\_0\  = \ 
+        1\/\(n + 1\)\ \(\[Sum]\+\(k = 0\)\%n 
+              f \((x\_k)\) \(T\_0\) \((x\_k)\)\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(\(=\)\(\ \)\(1\/\(n + 1\)\ \(\[Sum]\+\(k = 0\)\%n 
+              f \((x\_k)\)\)\)\)\)\)]],
+  ",  \nand  \n\n\t",
+  Cell[BoxData[
+      \(c\_j\  = \ 
+        2\/\(n + 1\)\ \(\[Sum]\+\(k = 0\)\%n 
+              f \((x\_k)\) \(T\_j\) \((x\_k)\)\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(\(=\)\(\ \)\(2\/\(n + 1\)\ \(\[Sum]\+\(k = 0\)\%n 
+              f \((x\_k)\) 
+              cos \((j \(\( 2  k\  + \ 1\)\/\(2  n\  + \ 
+                        2\)\) \[Pi])\)\)\)\)\)\)]],
+  ",  \n\nfor  ",
+  Cell[BoxData[
+      \(j = 1, 2,  ... , n\)]],
+  "  where  ",
+  Cell[BoxData[
+      \(x\_k = cos \((\(\(2  k + \ 1\)\/\(2  n\  + \ 2\)\) \[Pi])\)\)]],
+  " for  ",
+  Cell[BoxData[
+      \(k = 0, 1, 2,  ... , n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/ChebyshevPolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ChebyshevPolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Chebyshev Polynomial Approximation",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \nThe first subroutine \"Chebyshev\" uses recursion to construct the \
+Chebyshev Approximation Polynomial.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Chebyshev[n_] := 
+        Module[{j, k, sum, Z}, 
+          Clear[X, Y, c, T]; \ \[IndentingNewLine]X\  = \ 
+            N[Table[Cos[\[Pi] \( 2\ k + 1\)\/\(2\ n + 2\)], {k, 0, 
+                  n}]]; \ \[IndentingNewLine]Y\  = \ 
+            f[X]; \ \[IndentingNewLine]c\  = \ 
+            Table[0, {k, 0, 
+                n}]; \ \[IndentingNewLine]c\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\) = \(1\/\(n\  + \ 
+                    1\)\) \(\[Sum]\+\(k = 0\)\%n \
+Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\); \ \
+\[IndentingNewLine]For[j = 1, 
+            j \[LessEqual] 
+              n, \(j++\), \ \
+\[IndentingNewLine]\(c\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\
+\[RightDoubleBracket]\)\) = \(2\/\(n\  + \ 
+                        1\)\) \(\[Sum]\+\(k = 0\)\%n Y\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\ Cos[
+                        j\ \[Pi] \( 2\ k + 1\)\/\(2\ n + 2\)]\);\)\ ]; \ \
+\[IndentingNewLine]T[0, x_] = 1; \ \[IndentingNewLine]T[1, x_] = 
+            x; \ \[IndentingNewLine]T[k_, x_] := 
+            Expand[2\ x\ T[k - 1, x] - 
+                T[k - 2, 
+                  x]]; \ \[IndentingNewLine]Cpoly\  = \ \[Sum]\+\(j = 0\)\%n \
+c\_\(\(\[LeftDoubleBracket]\)\(j + 1\)\(\[RightDoubleBracket]\)\)\ T[j, 
+                  x]; \ \[IndentingNewLine]Return[
+            Expand[Cpoly]];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "\tThe following subroutine \"ChebyshevPoly\" version uses ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built-in functions to construct the Chebyshev approximation polynomial. \
+ \nIn the construction, vector operations are used to assist the \
+computations, since, similar terms occur in the summation for each of the \
+coefficients.\nBoth give the same results."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Chebyshev Approximation",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\tThe following subroutine \"ChebyshevPoly\" version uses ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built-in functions to construct the Chebyshev approximation polynomial. \
+ \nIn the construction, vector operations are used to assist the \
+computations, since, similar terms occur in the summation for each of the \
+coefficients.\nBoth give the same results."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(ChebyshevPoly[n_] := 
+        Module[{h, j, k}, 
+          Clear[c, j, X, Y]; \ \[IndentingNewLine]X\  = \ 
+            N[Table[Cos[\[Pi] \( 2\ k + 1\)\/\(2\ n + 2\)], {k, 0, 
+                  n}]]; \ \[IndentingNewLine]Y\  = \ 
+            f[X]; \ \[IndentingNewLine]c\  = \ 
+            Table[0, {k, 0, n}]; \ \[IndentingNewLine]For[\ k = 0, \ 
+            k \[LessEqual] n, \ \(k++\), \ \[IndentingNewLine]cosZ\  = \ 
+              N[Table[Cos[\((j - 
+                          1)\)\ \[Pi] \( 2\ k + 1\)\/\(2\ n + 2\)], {j, 1, 
+                    n + 1}]]; \ \[IndentingNewLine]c\  = \ 
+              c\  + \ Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\ cosZ\ ]; \ \[IndentingNewLine]c\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            1\/2\ c\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\); \ \[IndentingNewLine]c\  = \ \(2\/\(n + 1\)\) 
+              c; \ \[IndentingNewLine]CP\  = \ \[Sum]\+\(j = 0\)\%n c\_\(\(\
+\[LeftDoubleBracket]\)\(j + 1\)\(\[RightDoubleBracket]\)\)\ ChebyshevT[j, 
+                  x]; \ \[IndentingNewLine]Return[
+            Expand[CP]];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "First, generate some Chebyshev polynomials with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in function."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(T\_4\)(x) = \>\"", 
+        ChebyshevT[4, x]];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(T\_5\)(x) = \>\"", 
+        ChebyshevT[5, x]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["   ",
+    FontWeight->"Bold"],
+  "Form several Chebyshev polynomials of degree  n = 1,2, 3, 4, and 5  for \
+the function  ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)],
+    AspectRatioFixed->False],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)],
+    AspectRatioFixed->False],
+  "  using Chebyshev's nodes. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_1[x]\)]],
+  ",  of degree n = 1."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \), "\n", 
+    \(\(n = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_1[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", P\_1[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_1[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.5\), 1.5}, {0.0, 4.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", P\_1[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \), "\n", 
+    \(\(n = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_2[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", P\_2[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_2[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.5\), 1.5}, {0.0, 4.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", P\_2[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ", of degree n = 3."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \), "\n", 
+    \(\(n = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_3[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", P\_3[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_3[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.5\), 1.5}, {0.0, 4.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", P\_3[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ", of degree n = 4."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \), "\n", 
+    \(\(n = 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_4[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", P\_4[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_4[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.5\), 1.5}, {0.0, 4.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", P\_4[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ", of degree n = 5."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \), "\n", 
+    \(\(n = 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_5[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", P\_5[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_5[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.5\), 1.5}, {0.0, 4.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", P\_5[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Error Analysis.  Investigate the error for the Chebyshev polynomial \
+approximations in Example 1."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - P\_1[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, \(-1.0\), 1.0}, 
+        PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", 
+        P\_1[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [-1.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_1\)[x] = \
+f[x]-\!\(P\_1\)[x]\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[e1[x], {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1\  = \ Max[Abs[{min1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_1\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| \[LessEqual] \>\"", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(1\/\(\((n\  + \ 1)\)!\)\ \ \(max\+\(\(-1\)\  \
+\[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(\(f\^\((n + 
+                              1)\)\) \((x)\)\)\(|\)} 1\/2\^n\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 1;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| = |f(x) - \>\"", 
+        P\_n, "\<(x)| \[LessEqual] \>", 
+        N[\(1\/\(\((n\  + \ 1)\)!\)\) \(\[ExponentialE]\^1\) 
+            1\/2\^n]];\)\ \)}], "Input"],
+
+Cell["\<\
+The error bound is about 2.6 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - P\_2[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, \(-1.0\), 1.0}, 
+        PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", 
+        P\_2[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_2\)[x] = \
+f[x]-\!\(P\_2\)[x]\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[e2[x], {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ \(-FindMinimum[\(-e2[
+                x]\), {x, \(-0.5\)}]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2\  = \ Max[Abs[{max1, min1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_2\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_2\)[x]| \[LessEqual] \>\"", 
+        maxerr2\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(1\/\(\((n\  + \ 1)\)!\)\ \ \(max\+\(\(-1\)\  \
+\[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(\(f\^\((n + 
+                              1)\)\) \((x)\)\)\(|\)} 1\/2\^n\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| = |f(x) - \>\"", 
+        P\_n, "\<(x)| \[LessEqual] \>", 
+        N[\(1\/\(\((n\  + \ 1)\)!\)\) \(\[ExponentialE]\^1\) 
+            1\/2\^n]];\)\ \)}], "Input"],
+
+Cell["\<\
+The error bound is about 2.3 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ",  of degree n = 3."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - P\_3[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, \(-1.0\), 1.0}, 
+        PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", 
+        P\_3[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_3\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e3[x]\), {x, 0.0}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[e3[x], {x, \(-0.8\)}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e3[x], {x, 0.8}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3\  = \ 
+        Max[Abs[{min1, max1, min2}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_3\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_3\)[x]| \[LessEqual] \>\"", 
+        maxerr3\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(1\/\(\((n\  + \ 1)\)!\)\ \ \(max\+\(\(-1\)\  \
+\[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(\(f\^\((n + 
+                              1)\)\) \((x)\)\)\(|\)} 1\/2\^n\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 3;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| = |f(x) - \>\"", 
+        P\_n, "\<(x)| \[LessEqual] \>", 
+        N[\(1\/\(\((n\  + \ 1)\)!\)\) \(\[ExponentialE]\^1\) 
+            1\/2\^n]];\)\ \)}], "Input"],
+
+Cell["\<\
+The error bound is about 2.3 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ",  of degree n = 4."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e4[x_] = f[x] - P\_4[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e4[x], {x, \(-1.0\), 1.0}, 
+        PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", 
+        P\_4[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_4\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e4[
+              x]\), {x, \(-0.8\)}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e4[x]\), {x, 0.4}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e4[x], {x, \(-0.3\)}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e4[x], {x, 0.8}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1, max2, 
+          min2};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr4\  = \ 
+        Max[Abs[{max1, min1, max2, min2}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_4\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_4\)[x]| \[LessEqual] \>\"", 
+        maxerr4\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(1\/\(\((n\  + \ 1)\)!\)\ \ \(max\+\(\(-1\)\  \
+\[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(\(f\^\((n + 
+                              1)\)\) \((x)\)\)\(|\)} 1\/2\^n\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 4;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| = |f(x) - \>\"", 
+        P\_n, "\<(x)| \[LessEqual] \>", 
+        N[\(1\/\(\((n\  + \ 1)\)!\)\) \(\[ExponentialE]\^1\) 
+            1\/2\^n]];\)\ \)}], "Input"],
+
+Cell["\<\
+The error bound is about 2.3 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ",  of degree n = 5."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e5[x_] = f[x] - P\_5[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e5[x], {x, \(-1.0\), 1.0}, 
+        PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", 
+        P\_5[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_5\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e5[
+              x]\), {x, \(-0.5\)}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e5[x], {x, \(-0.9\)}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e5[x], {x, 0.0}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema5\  = \ 
+        FindMinimum[e5[x], {x, 0.9}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min3 = 
+        extrema5\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2, max2, 
+          min3};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr5\  = \ 
+        Max[Abs[{min1, max1, min2, max2, 
+              min3}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_5\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_5\)[x]| \[LessEqual] \>\"", 
+        maxerr5\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(1\/\(\((n\  + \ 1)\)!\)\ \ \(max\+\(\(-1\)\  \
+\[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(\(f\^\((n + 
+                              1)\)\) \((x)\)\)\(|\)} 1\/2\^n\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| = |f(x) - \>\"", 
+        P\_n, "\<(x)| \[LessEqual] \>", 
+        N[\(1\/\(\((n\  + \ 1)\)!\)\) \(\[ExponentialE]\^1\) 
+            1\/2\^n]];\)\ \)}], "Input"],
+
+Cell["\<\
+The error bound is about 2.3 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["   ",
+    FontWeight->"Bold"],
+  "Form several Chebyshev polynomials of degree  n = 1,2, 3, 4, and 5  for \
+the function  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)],
+    AspectRatioFixed->False],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)],
+    AspectRatioFixed->False],
+  "  using Chebyshev's abscissas. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_1[x]\)]],
+  ",  of degree n = 1."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        1\/2 + \(1\/2\) 
+            Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_1[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", P\_1[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_1[x]}, {x, \(-1.0\), 2.0}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-0.5\), 1.5}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", P\_1[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        1\/2 + \(1\/2\) 
+            Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_2[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", P\_2[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_2[x]}, {x, \(-1.0\), 2.0}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-0.5\), 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", P\_2[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ", of degree n = 3."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        1\/2 + \(1\/2\) 
+            Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_3[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", P\_3[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_3[x]}, {x, \(-1.0\), 2.0}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-0.5\), 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", P\_3[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ", of degree n = 4."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        1\/2 + \(1\/2\) 
+            Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_4[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", P\_4[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_4[x]}, {x, \(-1.0\), 2.0}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-0.5\), 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", P\_4[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ", of degree n = 5."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_k_ = 
+        1\/2 + \(1\/2\) 
+            Cos[\(\((2  n + 1 - 2  k)\)\ \[Pi]\)\/\(2  n + 2\)];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, 
+            n}\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(P\_5[x_] = 
+        Expand[InterpolatingPolynomial[XY, 
+            x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", P\_5[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], P\_5[x]}, {x, \(-1.0\), 2.0}, 
+          PlotStyle \[Rule] {Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr1, dots, PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-0.5\), 1.0}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Chebyshev knots = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for approximation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", P\_5[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Error Analysis.  Investigate the error for the Chebyshev polynomial \
+approximations in Example 3."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e1[x_] = f[x] - P\_1[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e1[x], {x, 0.0, 1.0}, PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_1\)[x] = \>\"", 
+        P\_1[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_1\)[x] = \
+f[x]-\!\(P\_1\)[x]\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e1[x]\), {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr1\  = \ Max[Abs[{max1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_1\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| \[LessEqual] \>\"", 
+        maxerr1\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((1\  - \ 0)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(0\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(n = 1;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], ",", \({x, 0, 1}\), 
+          ",", \(PlotStyle \[Rule] \ Orange\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Graph of the derivative  \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[x] = \>\"", ",", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", 
+            "\"\<(x)| \[LessEqual] \!\(\(2 \((1 - 0)\)\^\(n + \
+1\)\)\/\(\(4\^\(n + 1\)\) \(\((n + 1)\)!\)\)\)Abs[\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[0]] = \>\"", ",", 
+            RowBox[{"N", "[", 
+              
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", "\"\<(x)| \[LessEqual] \>\"", ",", 
+            RowBox[{"N", "[", 
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}]}], "Input"],
+
+Cell["\<\
+The error bound is about 1.15 times as large as the maximum error.  This is \
+to be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e2[x_] = f[x] - P\_2[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e2[x], {x, 0.0, 1.0}, PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_2\)[x] = \>\"", 
+        P\_2[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_2\)[x] = \
+f[x]-\!\(P\_2\)[x]\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e2[x]\), {x, 0.2}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[e2[x], {x, 0.8}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr2\  = \ Max[Abs[{max1, min1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_2\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_2\)[x]| \[LessEqual] \>\"", 
+        maxerr2\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((1\  - \ 0)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(0\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(n = 2;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], ",", \({x, 0, 1}\), 
+          ",", \(PlotStyle \[Rule] \ Orange\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Graph of the derivative  \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[x] = \>\"", ",", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", 
+            "\"\<(x)| \[LessEqual] \!\(\(2 \((1 - 0)\)\^\(n + \
+1\)\)\/\(\(4\^\(n + 1\)\) \(\((n + 1)\)!\)\)\)Abs[\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[1]] = \>\"", ",", 
+            RowBox[{"N", "[", 
+              
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "1", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", "\"\<(x)| \[LessEqual] \>\"", ",", 
+            RowBox[{"N", "[", 
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "1", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}]}], "Input"],
+
+Cell["\<\
+The error bound is about 1.6 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ",  of degree n = 3."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e3[x_] = f[x] - P\_3[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e3[x], {x, 0.0, 1.0}, PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_3\)[x] = \>\"", 
+        P\_3[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_3\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e3[x]\), {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[e3[x], {x, 0.1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e3[x], {x, 0.9}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr3\  = \ 
+        Max[Abs[{min1, max1, min2}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_3\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_3\)[x]| \[LessEqual] \>\"", 
+        maxerr3\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((1\  - \ 0)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(0\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(n = 3;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], ",", \({x, 0, 1}\), 
+          ",", \(PlotStyle \[Rule] \ Orange\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Graph of the derivative  \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[x] = \>\"", ",", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", 
+            "\"\<(x)| \[LessEqual] \!\(\(2 \((1 - 0)\)\^\(n + \
+1\)\)\/\(\(4\^\(n + 1\)\) \(\((n + 1)\)!\)\)\)Abs[\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[0]] = \>\"", ",", 
+            RowBox[{"N", "[", 
+              
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", "\"\<(x)| \[LessEqual] \>\"", ",", 
+            RowBox[{"N", "[", 
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}]}], "Input"],
+
+Cell["\<\
+The error bound is about 1.11 times as large as the maximum error.  This is \
+to be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ",  of degree n = 4."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e4[x_] = f[x] - P\_4[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e4[x], {x, 0.0, 1.0}, PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_4\)[x] = \>\"", 
+        P\_4[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_4\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e4[x]\), {x, 0.4}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e4[x]\), {x, 0.9}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e4[x], {x, 0.1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e4[x], {x, 0.6}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2, 
+          max2};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr4\  = \ 
+        Max[Abs[{min1, max1, min2, max2}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_4\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_4\)[x]| \[LessEqual] \>\"", 
+        maxerr4\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((1\  - \ 0)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(0\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(n = 4;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], ",", \({x, 0, 1}\), 
+          ",", \(PlotStyle \[Rule] \ Orange\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Graph of the derivative  \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[x] = \>\"", ",", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", 
+            "\"\<(x)| \[LessEqual] \!\(\(2 \((1 - 0)\)\^\(n + \
+1\)\)\/\(\(4\^\(n + 1\)\) \(\((n + 1)\)!\)\)\)Abs[\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[1]] = \>\"", ",", 
+            RowBox[{"N", "[", 
+              
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "1", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", "\"\<(x)| \[LessEqual] \>\"", ",", 
+            RowBox[{"N", "[", 
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "1", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}]}], "Input"],
+
+Cell["\<\
+The error bound is about 1.6 times as large as the maximum error.  This is to \
+be expected, after all it is an \"error bound.\"\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate the error for the Chebyshev interpolation polynomial ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ",  of degree n = 5."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e5[x_] = f[x] - P\_5[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[e5[x], {x, 0.0, 1.0}, PlotStyle \[Rule] {Blue}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(P\_5\)[x] = \>\"", 
+        P\_5[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error f[x]-\!\(P\_5\)[x]\>\""];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.5}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.9}];\)\ \), "\[IndentingNewLine]", 
+    \(\(max3 = \(-extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e5[x], {x, 0.3}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema5\  = \ 
+        FindMinimum[e5[x], {x, 0.7}];\)\ \), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema5\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1, max2, min2, 
+          max3};\)\ \), "\[IndentingNewLine]", 
+    \(\(maxerr5\  = \ 
+        Max[Abs[{max1, min1, max2, min2, 
+              max3}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_5\)[x]; \>\"", 
+        extrema\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_5\)[x]| \[LessEqual] \>\"", 
+        maxerr5\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Compare the maximum error with the theoretical error bound:\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  Cell[BoxData[
+      \(\(\(|\)\(f \((x)\)\  - \ \(P\_n\) \((x)\)\)\(|\)\(\ \
+\)\(\(\[LessEqual]\)\(\ \)\(\(2 \((1\  - \ 0)\)\^\(n + 1\)\)\/\(4\^\(n + 1\)\ \
+\(\((n\  + \ 1)\)!\)\)\ \ \(max\+\(0\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ \
+{\(|\)\(\(f\^\((n + 1)\)\) \((x)\)\)\(|\)}\)\)\)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(n = 5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], ",", \({x, 0, 1}\), 
+          ",", \(PlotStyle \[Rule] \ Orange\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<Graph of the derivative  \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[x] = \>\"", ",", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((n + 1)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}]}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", 
+            "\"\<(x)| \[LessEqual] \!\(\(2 \((1 - 0)\)\^\(n + \
+1\)\)\/\(\(4\^\(n + 1\)\) \(\((n + 1)\)!\)\)\)Abs[\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((n + 1)\),
+Derivative],
+MultilineFunction->None]\)[0]] = \>\"", ",", 
+            RowBox[{"N", "[", 
+              
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<|\>\"", ",", \(e\_n\), ",", "\"\<[x]| = |f(x) - \>\"", 
+            ",", \(P\_n\), ",", "\"\<(x)| \[LessEqual] \>\"", ",", 
+            RowBox[{"N", "[", 
+              RowBox[{\(\(2 \((1 - 0)\)\^\(n + 1\)\)\/\(\(4\^\(n + 
+                            1\)\) \(\((n + 1)\)!\)\)\), 
+                RowBox[{"Abs", "[", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((n + 1)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+              "]"}]}], "]"}], ";"}], " "}]}], "Input"],
+
+Cell["\<\
+The error bound is about 1.11 times as large as the maximum error.  This is \
+to be expected, after all it is an \"error bound.\"\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "What is the maximum over the interval  [0, 1]  for each of the quantities, \
+where  ",
+  Cell[BoxData[
+      \(P\_k[x]\)]],
+  "  is the Chebyshev polynomial.\n",
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(f[x] - 
+              P\_1[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(f[x] - 
+              P\_2[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(f[x] - 
+              P\_3[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(f[x] - 
+              P\_4[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["5 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1\)\ {\(|\)\(f[x] - 
+              P\_5[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["5 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compare the result with the error bounds for the Lagrange polynomial \
+based on equally spaced points."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (a-e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The error bounds for the Chebyshev polynomials are:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<On the interval [0,1] we have  |\!\(e\_1\)[x]| \
+\[LessEqual] \>\"", maxerr1\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<On the interval [0,1] we have  |\!\(e\_2\)[x]| \
+\[LessEqual] \>\"", maxerr2\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<On the interval [0,1] we have  |\!\(e\_3\)[x]| \
+\[LessEqual] \>\"", maxerr3\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<On the interval [0,1] we have  |\!\(e\_4\)[x]| \
+\[LessEqual] \>\"", maxerr4\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<On the interval [0,1] we have  |\!\(e\_5\)[x]| \
+\[LessEqual] \>\"", maxerr5\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  "The error bounds for the Lagrange polynomial based on equally spaced \
+abscissas were"
+}], "Text"],
+
+Cell[TextData[{
+  "\n\t",
+  Cell[BoxData[{
+      RowBox[{
+        InterpretationBox[\("On the interval [0,1] we have  |\!\(e\_1\)[x]| \
+\[LessEqual] "\[InvisibleSpace]0.10765225724154104`\),
+          SequenceForm[ 
+          "On the interval [0,1] we have  |\!\(e\_1\)[x]| \[LessEqual] ", \
+.10765225724154104],
+          Editable->False], "\[IndentingNewLine]"}], "\n", 
+      RowBox[{
+        InterpretationBox[\("On the interval [0,1] we have  |\!\(e\_2\)[x]| \
+\[LessEqual] "\[InvisibleSpace]0.0042913334691182525`\),
+          SequenceForm[ 
+          "On the interval [0,1] we have  |\!\(e\_2\)[x]| \[LessEqual] ", \
+.0042913334691182525],
+          Editable->False], "\[IndentingNewLine]"}], "\n", 
+      RowBox[{
+        InterpretationBox[\("On the interval [0,1] we have  |\!\(e\_3\)[x]| \
+\[LessEqual] "\[InvisibleSpace]0.00046341275654215863`\),
+          SequenceForm[ 
+          "On the interval [0,1] we have  |\!\(e\_3\)[x]| \[LessEqual] ", \
+.00046341275654215863],
+          Editable->False], "\[IndentingNewLine]"}], "\n", 
+      RowBox[{
+        InterpretationBox[\("On the interval [0,1] we have  |\!\(e\_4\)[x]| \
+\[LessEqual] "\[InvisibleSpace]0.000015771287804722256`\),
+          SequenceForm[ 
+          "On the interval [0,1] we have  |\!\(e\_4\)[x]| \[LessEqual] ", \
+.000015771287804722256],
+          Editable->False], "\[IndentingNewLine]"}], "\n", 
+      InterpretationBox[\("On the interval [0,1] we have  |\!\(e\_5\)[x]| \
+\[LessEqual] "\[InvisibleSpace]1.349992356458607`*^-6\),
+        SequenceForm[ 
+        "On the interval [0,1] we have  |\!\(e\_5\)[x]| \[LessEqual] ", \
+.13499923564586069*^-5],
+        Editable->False]}],
+    GeneratedCell->False,
+    CellAutoOverwrite->False],
+  "  \n\nThe error bound for the Chebyshev polynomial is smaller than the \
+error bound for the Lagrange polynomial using equally spaced abscissas."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for Chebyshev \
+Polynomials.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonPoly[
+          XY_] := \[IndentingNewLine]Module[{d, j, k, n, X, 
+            Y}, \[IndentingNewLine]X\  = \ \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \[IndentingNewLine]Y\ \
+ = \ \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\
+\)\); \[IndentingNewLine]n\  = \ Length[XY] - 1; \[IndentingNewLine]d\  = \ 
+            Table["\<\>", {n + 1}, {n + 
+                  1}\ ]; \[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(\
+All, 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            Y\_\(\(\[LeftDoubleBracket]\)\(All\)\(\[RightDoubleBracket]\)\); \
+\[IndentingNewLine]For[\ j = 1, \ 
+            j \[LessEqual] 
+              n, \ \(j++\), \[IndentingNewLine]\(For[\ k = j, \ 
+                k \[LessEqual] 
+                  n, \ \(k++\), \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(k + 1, j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \(d\_\(\(\[LeftDoubleBracket]\)\(k + 1, j\)\(\
+\[RightDoubleBracket]\)\)\  - \ d\_\(\(\[LeftDoubleBracket]\)\(k, j\)\(\
+\[RightDoubleBracket]\)\)\)\/\(X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ X\_\(\(\[LeftDoubleBracket]\)\(k + 1 - j\)\(\
+\[RightDoubleBracket]\)\)\)\ ];\)\ ]; \[IndentingNewLine]For[\ k = 0, \ 
+            k \[LessEqual] 
+              n, \ \(k++\), \[IndentingNewLine]p[k + 1, 
+                x_]\  = \ \[Product]\+\(j = 1\)\%k\((x - 
+                    X\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\))\)\ ]; \[IndentingNewLine]Return[\ \ \[Sum]\+\(k = 0\)\%n d\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1, k + 1\)\(\[RightDoubleBracket]\)\)\ p[k + 1, 
+                  x]\ ];\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \@x\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ", ",
+  Cell[BoxData[
+      \(\([0, 8]\)\)]],
+  ", and ",
+  Cell[BoxData[
+      \(\([0, 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 
+        2.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \[IndentingNewLine]Print["\
+\<f[x] = \>", f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev04/Chebyshevdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev04/Chebyshevdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 8.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 
+        8.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev05/Chebyshevee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev05/Chebyshevee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 
+        10.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev06/Chebyshevff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev06/Chebyshevff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\@\(1 - x\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1.5\), 0.95]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\@\(1 - x\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 8.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-1.5\); \[IndentingNewLine]bb = 
+        0.95; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, \(-1.5\),  .9999}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 5, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 7.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev07/Chebyshevgg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev07/Chebyshevgg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\(1\  + \ 10  x\^2\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\(1 + 10  x\^2\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-1.0\); \[IndentingNewLine]bb = 
+        1.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 8.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev08/Chebyshevhh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev08/Chebyshevhh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Log[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([0.02, 2]\)\)]],
+  ", and ",
+  Cell[BoxData[
+      \(\([0.02, 4]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.02; \[IndentingNewLine]bb = 
+        2.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-5\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 9.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev09/Chebyshevii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev09/Chebyshevii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.02; \[IndentingNewLine]bb = 
+        4.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-6\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 10.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev10/Chebyshevjj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev10/Chebyshevjj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Sin[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 2, 
+      i \[LessEqual] 6, \(i++\), \[IndentingNewLine]n = 
+        2  i + 4; \[IndentingNewLine]t\_kk_ = \(a + b\)\/2 + \(\(b - a\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 12.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev12/Chebyshevll.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev12/Chebyshevll.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 3, 
+      i \[LessEqual] 6, \(i++\), \[IndentingNewLine]n = 
+        2  i; \[IndentingNewLine]t\_kk_ = \(a + b\)\/2 + \(\(b - a\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 13.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev13/Chebyshevmm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev13/Chebyshevmm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Tan[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1.45\), 1.45]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Tan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-\[Pi]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.45\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.45;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-1.45\); \[IndentingNewLine]bb \
+= 1.45; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, a, \(-\[Pi]\)\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[f[x], {x, \(-\[Pi]\)\/2, \[Pi]\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph3 = 
+        Plot[f[x], {x, \[Pi]\/2, b}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph4 = 
+        Plot[P[x], {x, \(-\[Pi]\), \[Pi]}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, graph3, graph4, Cdot, Rends, 
+        PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]\/2], 
+            Range[\(-6\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 14.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev14/Chebyshevnn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev14/Chebyshevnn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-5\), 5]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 20.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-5.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 1, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]t\_kk_ = \(a + b\)\/2 + \(\(b - 
+                  a\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-2\), 3, 1], Range[0, 20, 5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]figure = 
+        Show[graph1, Cdot, Rends, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 15.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev15/Chebyshevoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev15/Chebyshevoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = ArcTan[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-2\), 2]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.6\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.6;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-2.0\); \[IndentingNewLine]bb = 
+        2.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+              Range[\(-\[Pi]\)\/4, \[Pi]\/4, \[Pi]\/4]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 18.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev18/Chebyshevrr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev18/Chebyshevrr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 15.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = ArcSin[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 15.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcSin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-2.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 2.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-1.0\); \[IndentingNewLine]bb = 
+        1.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Expand[NewtonPoly[XY]]; \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, \(-0.9999\), 0.9999}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+            Range[\(-\[Pi]\)\/2, \[Pi]\/2, \[Pi]\/4]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 19.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev19/Chebyshevss.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev19/Chebyshevss.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 16.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = BesselJ[0, x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 16.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-10.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 10.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.8\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-11\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 11;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 5, 
+      n \[LessEqual] 
+        8, \(n++\), \[IndentingNewLine]aa = \(-10\); \[IndentingNewLine]bb = 
+        10; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Chop[Expand[NewtonPoly[XY]]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-10\), 10, 2], Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 20.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev20/Chebyshevtt.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev20/Chebyshevtt.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 17.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-3\), 3]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 17.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.15\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 0.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-3.0\); \[IndentingNewLine]bb = 
+        3.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.011]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Chop[Expand[NewtonPoly[XY]]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.4, 0.1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 22.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev22/Chebyshevvv.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev22/Chebyshevvv.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 18.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Chebyshev polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/2\  + 1\/2\ Erf[x\/\@2]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-3\), 3]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 18.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/2\  + 1\/2\ Erf[x\/\@2];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.25\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4. \);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-3.0\); \[IndentingNewLine]bb = 
+        3.0; \[IndentingNewLine]t\_kk_ = \(aa + bb\)\/2 + \(\(bb - aa\)\/2\) 
+            Cos[\(\((2  n + 1 - 2  kk)\)\ \[Pi]\)\/\(2  n + 2\)]; \
+\[IndentingNewLine]XY = 
+        Table[N[{t\_k, f[t\_k]}], {k, 0, n}\ ]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.011]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        Chop[Expand[NewtonPoly[XY]]]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.8, 0.25]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x]]; \[IndentingNewLine]Print["\<P[x] = \>", 
+        P[x]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 23.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev23/Chebyshevww.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev23/Chebyshevww.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Chebyshev/Chebyshev.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/ch.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/ch.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/ChebyshevPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Chebyshev Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/ChebyshevPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 178, 4, 35, "Text"],
+Cell[1957, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3436, 111, 3530, 107, 391, "Text"],
+Cell[6969, 220, 2045, 52, 233, "Text"],
+Cell[9017, 274, 523, 15, 164, "Text"],
+
+Cell[CellGroupData[{
+Cell[9565, 293, 104, 2, 33, "Text"],
+Cell[9672, 297, 226, 6, 33, "Text"],
+Cell[9901, 305, 185, 3, 70, "Input"],
+Cell[10089, 310, 62, 0, 33, "Text"],
+Cell[10154, 312, 103, 2, 30, "Input"],
+Cell[10260, 316, 199, 4, 50, "Input"],
+Cell[10462, 322, 199, 4, 50, "Input"],
+Cell[10664, 328, 201, 4, 50, "Input"],
+Cell[10868, 334, 201, 4, 50, "Input"],
+Cell[11072, 340, 201, 4, 50, "Input"]
+}, Closed]],
+Cell[11288, 347, 146, 3, 30, "Text"],
+Cell[11437, 352, 261, 6, 71, "Text"],
+Cell[11701, 360, 217, 4, 50, "Input"],
+
+Cell[CellGroupData[{
+Cell[11943, 368, 104, 2, 33, "Text"],
+Cell[12050, 372, 139, 3, 33, "Text"],
+Cell[12192, 377, 408, 6, 70, "Input"],
+Cell[12603, 385, 338, 5, 50, "Input"],
+Cell[12944, 392, 55, 0, 33, "Text"],
+Cell[13002, 394, 627, 13, 130, "Input"]
+}, Closed]],
+Cell[13644, 410, 483, 15, 30, "Text"],
+Cell[14130, 427, 445, 8, 90, "Input"],
+Cell[14578, 437, 265, 9, 33, "Text"],
+Cell[14846, 448, 490, 15, 37, "Text"],
+
+Cell[CellGroupData[{
+Cell[15361, 467, 104, 2, 33, "Text"],
+Cell[15468, 471, 801, 13, 193, "Input"],
+Cell[16272, 486, 50, 1, 30, "Input"],
+Cell[16325, 489, 50, 1, 30, "Input"],
+Cell[16378, 492, 50, 1, 30, "Input"],
+Cell[16431, 495, 50, 1, 30, "Input"],
+Cell[16484, 498, 50, 1, 30, "Input"],
+Cell[16537, 501, 50, 1, 30, "Input"]
+}, Closed]],
+Cell[16602, 505, 129, 3, 30, "Text"],
+Cell[16734, 510, 945, 27, 60, "Text"],
+Cell[17682, 539, 1350, 38, 160, "Text"],
+Cell[19035, 579, 632, 21, 33, "Text"],
+Cell[19670, 602, 328, 11, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[20023, 617, 104, 2, 33, "Text"],
+Cell[20130, 621, 333, 12, 71, "Text"],
+Cell[20466, 635, 120, 2, 42, "Input"],
+Cell[20589, 639, 57, 1, 30, "Input"],
+Cell[20649, 642, 72, 1, 42, "Input"],
+Cell[20724, 645, 80, 1, 42, "Input"],
+Cell[20807, 648, 132, 5, 33, "Text"],
+Cell[20942, 655, 149, 2, 42, "Input"],
+Cell[21094, 659, 57, 1, 30, "Input"],
+Cell[21154, 662, 75, 1, 42, "Input"],
+Cell[21232, 665, 83, 1, 42, "Input"],
+Cell[21318, 668, 133, 5, 33, "Text"],
+Cell[21454, 675, 218, 4, 42, "Input"],
+Cell[21675, 681, 57, 1, 30, "Input"],
+Cell[21735, 684, 162, 3, 33, "Text"],
+Cell[21900, 689, 77, 1, 30, "Input"],
+Cell[21980, 692, 118, 2, 30, "Input"],
+Cell[22101, 696, 75, 1, 31, "Input"],
+Cell[22179, 699, 75, 1, 42, "Input"],
+Cell[22257, 702, 83, 1, 42, "Input"]
+}, Closed]],
+Cell[22355, 706, 332, 10, 68, "Text"],
+Cell[22690, 718, 424, 15, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[23139, 737, 104, 2, 33, "Text"],
+Cell[23246, 741, 473, 10, 149, "Input"],
+Cell[23722, 753, 481, 9, 130, "Input"],
+Cell[24206, 764, 440, 7, 110, "Input"],
+Cell[24649, 773, 499, 8, 110, "Input"],
+Cell[25151, 783, 291, 7, 33, "Text"],
+Cell[25445, 792, 502, 8, 110, "Input"],
+Cell[25950, 802, 502, 8, 110, "Input"],
+Cell[26455, 812, 273, 9, 33, "Text"]
+}, Closed]],
+Cell[26743, 824, 133, 2, 30, "Text"],
+Cell[26879, 828, 1760, 48, 234, "Text"],
+Cell[28642, 878, 1409, 43, 164, "Text"],
+Cell[30054, 923, 632, 21, 33, "Text"],
+Cell[30689, 946, 2646, 86, 237, "Text"],
+Cell[33338, 1034, 786, 24, 33, "Text"],
+Cell[34127, 1060, 618, 20, 33, "Text"],
+Cell[34748, 1082, 501, 13, 52, "Text"],
+Cell[35252, 1097, 1444, 28, 339, "Input"],
+Cell[36699, 1127, 458, 10, 71, "Text",
+  Evaluatable->False],
+Cell[37160, 1139, 762, 18, 90, "Text"],
+Cell[37925, 1159, 1219, 21, 317, "Input"],
+Cell[39147, 1182, 207, 7, 33, "Text",
+  Evaluatable->False],
+Cell[39357, 1191, 110, 2, 30, "Input"],
+Cell[39470, 1195, 110, 2, 30, "Input"],
+Cell[39583, 1199, 513, 18, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[40121, 1221, 101, 2, 33, "Text"],
+Cell[40225, 1225, 274, 10, 33, "Text",
+  Evaluatable->False],
+Cell[40502, 1237, 614, 14, 164, "Input"],
+Cell[41119, 1253, 87, 2, 33, "Text"],
+Cell[41209, 1257, 843, 16, 170, "Input"],
+Cell[42055, 1275, 273, 10, 33, "Text",
+  Evaluatable->False],
+Cell[42331, 1287, 614, 14, 164, "Input"],
+Cell[42948, 1303, 87, 2, 33, "Text"],
+Cell[43038, 1307, 843, 16, 170, "Input"],
+Cell[43884, 1325, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[44159, 1337, 614, 14, 164, "Input"],
+Cell[44776, 1353, 87, 2, 33, "Text"],
+Cell[44866, 1357, 843, 16, 170, "Input"],
+Cell[45712, 1375, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[45987, 1387, 614, 14, 164, "Input"],
+Cell[46604, 1403, 87, 2, 33, "Text"],
+Cell[46694, 1407, 843, 16, 170, "Input"],
+Cell[47540, 1425, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[47815, 1437, 614, 14, 164, "Input"],
+Cell[48432, 1453, 87, 2, 33, "Text"],
+Cell[48522, 1457, 843, 16, 170, "Input"]
+}, Closed]],
+Cell[49380, 1476, 256, 8, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[49661, 1488, 101, 2, 33, "Text"],
+Cell[49765, 1492, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[50057, 1504, 1066, 21, 250, "Input"],
+Cell[51126, 1527, 552, 13, 67, "Text"],
+Cell[51681, 1542, 257, 5, 65, "Input"],
+Cell[51941, 1549, 152, 3, 33, "Text"],
+Cell[52096, 1554, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[52388, 1566, 1320, 26, 290, "Input"],
+Cell[53711, 1594, 552, 13, 67, "Text"],
+Cell[54266, 1609, 257, 5, 65, "Input"],
+Cell[54526, 1616, 152, 3, 33, "Text"],
+Cell[54681, 1621, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[54973, 1633, 1528, 31, 330, "Input"],
+Cell[56504, 1666, 552, 13, 67, "Text"],
+Cell[57059, 1681, 257, 5, 65, "Input"],
+Cell[57319, 1688, 152, 3, 33, "Text"],
+Cell[57474, 1693, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[57766, 1705, 1792, 37, 370, "Input"],
+Cell[59561, 1744, 552, 13, 67, "Text"],
+Cell[60116, 1759, 257, 5, 65, "Input"],
+Cell[60376, 1766, 152, 3, 33, "Text"],
+Cell[60531, 1771, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[60823, 1783, 2039, 43, 410, "Input"],
+Cell[62865, 1828, 552, 13, 67, "Text"],
+Cell[63420, 1843, 257, 5, 65, "Input"],
+Cell[63680, 1850, 152, 3, 33, "Text"]
+}, Closed]],
+Cell[63847, 1856, 500, 18, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[64372, 1878, 101, 2, 33, "Text"],
+Cell[64476, 1882, 274, 10, 33, "Text",
+  Evaluatable->False],
+Cell[64753, 1894, 631, 15, 164, "Input"],
+Cell[65387, 1911, 87, 2, 33, "Text"],
+Cell[65477, 1915, 847, 16, 170, "Input"],
+Cell[66327, 1933, 273, 10, 33, "Text",
+  Evaluatable->False],
+Cell[66603, 1945, 631, 15, 164, "Input"],
+Cell[67237, 1962, 87, 2, 33, "Text"],
+Cell[67327, 1966, 847, 16, 170, "Input"],
+Cell[68177, 1984, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[68452, 1996, 631, 15, 164, "Input"],
+Cell[69086, 2013, 87, 2, 33, "Text"],
+Cell[69176, 2017, 847, 16, 170, "Input"],
+Cell[70026, 2035, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[70301, 2047, 631, 15, 164, "Input"],
+Cell[70935, 2064, 87, 2, 33, "Text"],
+Cell[71025, 2068, 847, 16, 170, "Input"],
+Cell[71875, 2086, 272, 10, 33, "Text",
+  Evaluatable->False],
+Cell[72150, 2098, 631, 15, 164, "Input"],
+Cell[72784, 2115, 87, 2, 33, "Text"],
+Cell[72874, 2119, 847, 16, 170, "Input"]
+}, Closed]],
+Cell[73736, 2138, 256, 8, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[74017, 2150, 101, 2, 33, "Text"],
+Cell[74121, 2154, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[74413, 2166, 1052, 19, 250, "Input"],
+Cell[75468, 2187, 559, 13, 69, "Text"],
+Cell[76030, 2202, 2399, 62, 150, "Input"],
+Cell[78432, 2266, 153, 3, 33, "Text"],
+Cell[78588, 2271, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[78880, 2283, 1284, 24, 290, "Input"],
+Cell[80167, 2309, 559, 13, 69, "Text"],
+Cell[80729, 2324, 2399, 62, 150, "Input"],
+Cell[83131, 2388, 152, 3, 33, "Text"],
+Cell[83286, 2393, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[83578, 2405, 1509, 30, 330, "Input"],
+Cell[85090, 2437, 559, 13, 69, "Text"],
+Cell[85652, 2452, 2399, 62, 150, "Input"],
+Cell[88054, 2516, 153, 3, 33, "Text"],
+Cell[88210, 2521, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[88502, 2533, 1753, 35, 370, "Input"],
+Cell[90258, 2570, 559, 13, 69, "Text"],
+Cell[90820, 2585, 2399, 62, 150, "Input"],
+Cell[93222, 2649, 152, 3, 33, "Text"],
+Cell[93377, 2654, 289, 10, 33, "Text",
+  Evaluatable->False],
+Cell[93669, 2666, 2001, 40, 410, "Input"],
+Cell[95673, 2708, 559, 13, 69, "Text"],
+Cell[96235, 2723, 2399, 62, 150, "Input"],
+Cell[98637, 2787, 153, 3, 33, "Text"]
+}, Closed]],
+Cell[98805, 2793, 1657, 56, 144, "Text"],
+
+Cell[CellGroupData[{
+Cell[100487, 2853, 101, 2, 33, "Text"],
+Cell[100591, 2857, 167, 5, 33, "Text"],
+Cell[100761, 2864, 666, 10, 110, "Input"],
+Cell[101430, 2876, 205, 7, 33, "Text"],
+Cell[101638, 2885, 1881, 41, 240, "Text"]
+}, Closed]],
+Cell[103534, 2929, 167, 4, 32, "Text"],
+Cell[103704, 2935, 1692, 28, 345, "Input"],
+Cell[105399, 2965, 381, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[105805, 2986, 105, 2, 33, "Text"],
+Cell[105913, 2990, 1703, 31, 468, "Input"],
+Cell[107619, 3023, 815, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[108471, 3054, 105, 2, 30, "Text"],
+Cell[108579, 3058, 1714, 32, 468, "Input"],
+Cell[110296, 3092, 815, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[111148, 3123, 105, 2, 30, "Text"],
+Cell[111256, 3127, 1718, 32, 468, "Input"],
+Cell[112977, 3161, 815, 26, 33, "Text"]
+}, Closed]],
+Cell[113807, 3190, 301, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[114133, 3205, 101, 2, 33, "Text"],
+Cell[114237, 3209, 1881, 33, 486, "Input"],
+Cell[116121, 3244, 815, 26, 33, "Text"]
+}, Closed]],
+Cell[116951, 3273, 305, 11, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[117281, 3288, 101, 2, 33, "Text"],
+Cell[117385, 3292, 1776, 32, 459, "Input"],
+Cell[119164, 3326, 815, 26, 33, "Text"]
+}, Closed]],
+Cell[119994, 3355, 341, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[120360, 3373, 105, 2, 33, "Text"],
+Cell[120468, 3377, 1886, 33, 466, "Input"],
+Cell[122357, 3412, 815, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[123209, 3443, 105, 2, 30, "Text"],
+Cell[123317, 3447, 1886, 33, 466, "Input"],
+Cell[125206, 3482, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[126037, 3511, 291, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[126353, 3526, 102, 2, 33, "Text"],
+Cell[126458, 3530, 1879, 35, 466, "Input"],
+Cell[128340, 3567, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[129171, 3596, 291, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[129487, 3611, 102, 2, 33, "Text"],
+Cell[129592, 3615, 1877, 35, 466, "Input"],
+Cell[131472, 3652, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[132303, 3681, 295, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[132623, 3696, 102, 2, 33, "Text"],
+Cell[132728, 3700, 2243, 39, 552, "Input"],
+Cell[134974, 3741, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[135805, 3770, 301, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[136131, 3785, 102, 2, 33, "Text"],
+Cell[136236, 3789, 1718, 32, 426, "Input"],
+Cell[137957, 3823, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[138788, 3852, 292, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[139105, 3867, 102, 2, 33, "Text"],
+Cell[139210, 3871, 1796, 33, 479, "Input"],
+Cell[141009, 3906, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[141840, 3935, 292, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[142157, 3950, 102, 2, 33, "Text"],
+Cell[142262, 3954, 1951, 35, 478, "Input"],
+Cell[144216, 3991, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[145047, 4020, 298, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[145370, 4035, 102, 2, 33, "Text"],
+Cell[145475, 4039, 1898, 35, 486, "Input"],
+Cell[147376, 4076, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[148207, 4105, 337, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[148569, 4120, 102, 2, 33, "Text"],
+Cell[148674, 4124, 1935, 37, 506, "Input"],
+Cell[150612, 4163, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[151443, 4192, 309, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[151777, 4207, 102, 2, 33, "Text"],
+Cell[151882, 4211, 1896, 35, 506, "Input"],
+Cell[153781, 4248, 816, 26, 33, "Text"]
+}, Closed]],
+Cell[154612, 4277, 786, 24, 30, "Text"],
+Cell[155401, 4303, 705, 20, 33, "Text"],
+Cell[156109, 4325, 158, 3, 35, "Text"],
+Cell[156270, 4330, 575, 17, 33, "Text"],
+Cell[156848, 4349, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

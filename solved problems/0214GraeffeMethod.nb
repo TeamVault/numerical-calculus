@@ -1,0 +1,2692 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     92473,       2470]*)
+(*NotebookOutlinePosition[     93157,       2494]*)
+(*  CellTagsIndexPosition[     93113,       2490]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Graeffe's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\t\n\tWe use the following important result from the study of the theory \
+of equations. \n\n",
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Vieta's Formulas",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/VietasFormulas.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   Consider a polynomial of  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  "  of degree  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  with roots  ",
+  Cell[BoxData[
+      \({r\_i}\_\(i = 1\)\%n\)]],
+  "   \n\n\t\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\ \  = \ \ \ \(\[Product]\+\(i = 1\)\%n\ \((x - 
+                r\_i)\)\ \  = \ \ \(\((x - r\_1)\)\ \((x - r\_2)\)\ \((x - 
+                    r\_3)\) ... \)\ \((x - r\_\(n - 1\))\)\ \((x - 
+                r\_n)\)\)\)]],
+  ",  \n\t\t\n\t\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\ \  = \ \ \ \(\[Sum]\+\(i = 0\)\%n\ \(a\_\(i + 1\)\) 
+              x\^i\ \ \  = \ \ \ \(a\_1 + \(a\_2\) x\  + \(a\_3\) 
+                  x\^2\  + \(a\_4\) x\^3\  +  ... \) + \(a\_n\) 
+              x\^\(n - 1\)\  + \(\(a\_\(n + 1\)\) \(x\^n\)\(\ \)\)\)\)]],
+  ".  \n\t\t\nLet  ",
+  Cell[BoxData[
+      \(s\_i\)]],
+  "  be the  ",
+  Cell[BoxData[
+      StyleBox[\(i\^th\),
+        FontFamily->"Times New Roman",
+        FontSize->12,
+        FontSlant->"Plain",
+        FontColor->GrayLevel[0],
+        FontVariations->{"Underline"->False,
+        "StrikeThrough"->False}]]],
+  " ",
+  ButtonBox["elementary symmetric function",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricPolynomial.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " or ",
+  ButtonBox["symmetric polynomial",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricPolynomial.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " for the variables ",
+  Cell[BoxData[
+      \({r\_i}\_\(i = 1\)\%n\)]],
+  ",    \n\n\t\t",
+  Cell[BoxData[
+      \(s\_0\  = \ 1\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(s\_1\  = \ \(\[Sum]\+\(i = 1\)\%n\ 
+            r\_i\ \  = \ \ \(r\_1 + r\_2 + r\_3 +  ... \) + r\_\(n - 1\) + 
+            r\_n\)\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      RowBox[{\(s\_2\), " ", "=", " ", 
+        RowBox[{
+          UnderoverscriptBox["\[Sum]", GridBox[{
+                {"1"},
+                {\(i, j\)},
+                {\(i < j\)}
+                }], "n"], " ", \(\(r\_i\) r\_j\)}]}]]],
+  "  \n\t\t",
+  Cell[BoxData[
+      RowBox[{\(s\_3\), " ", "=", " ", 
+        RowBox[{
+          UnderoverscriptBox["\[Sum]", GridBox[{
+                {"1"},
+                {\(i, j, k\)},
+                {\(i < j < k\)}
+                }], "n"], " ", \(\(r\_i\) \(r\_j\) r\_k\)}]}]]],
+  "  \n\t\t",
+  StyleBox["...",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(s\_n\  = \ \[Sum]\+\(i = 1\)\%n\ \(\(\(r\_1\) \(r\_2\) r\_3 ... \) \
+\(r\_\(n - 1\)\) r\_n\)\/r\_i\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(s\_n\  = \ \(\[Product]\+\(i = 1\)\%n r\_i\  = \ \(\(r\_1\) \(r\_2\) 
+                r\_3 ... \) \(r\_\(n - 1\)\) r\_n\)\)]],
+  "  \nthen \n\t\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\ \  = \ \ \(\[Sum]\+\(i = 0\)\%n\ \(a\_\(i + 1\)\) 
+              x\^i\ \  = \ \ \[Sum]\+\(i = 0\)\%n\(\((\(-1\))\)\^\(n - 
+                    i\)\) \(s\_\(n - i\)\) x\^i\)\)]],
+  ".  \n\nMoreover, we have the important identities relating the \
+coefficients of  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      \(a\_\(i + 1\)\ \  = \ \ \(\((\(-1\))\)\^\(n - i\)\) s\_\(n - i\)\)]],
+  "    for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Exploration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Separated Roots",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\t\n\tIf the roots of  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  "  are widely separated in magnitude, then they can be approximated using \
+ratios of the coefficients of  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  ".  This is the heart of the Graeffe method.  \n\t\n",
+  StyleBox["Theorem (Separated Real Roots).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\ \  = \ \ \(\[Product]\+\(i = 1\)\%n\ \((x - 
+                r\_i)\) = \ \[Sum]\+\(i = 0\)\%n\ \(a\_\(i + 1\)\) 
+              x\^i\)\)]],
+  "  is a polynomial with real roots that are widely separated in magnitude  \
+\n\n\t\t",
+  Cell[BoxData[
+      \(\(\(|\)\(r\_1\)\(|\)\) >> \(\(|\)\(r\_2\)\(|\)\) >>  ...  >> \
+\(\(|\)\(r\_\(n - 1\)\)\(|\)\) >> \(\(|\)\(r\_n\)\(|\)\)\)]],
+  " \nthen\n\t\t",
+  Cell[BoxData[
+      \(r\_i\  \[TildeTilde] \ \(-\ a\_\(n + 1 - i\)\)/a\_\(n + 2 - i\)\)]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Exploration",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Approximate the roots of the following polynomials using the separated \
+root theorem.  \n\n",
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^12\  + \ 9.90099`*^11\ x\  - \ 9.9019901`*^9\ x\^2\  - \ 
+          990099\ x\^3\  + \ x\^4\)]],
+  " \n\n",
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^18\  + \ 9.99000999`*^17\ x\  - \ 9.99001999001`*^14\ x\^2\  - \ 
+          9.99000999`*^8\ x\^3\  + \ x\^4\)]],
+  "  \n\n",
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^24\  + \ 9.99900009999`*^23\ x\  - \ 
+          9.999000199990002`*^19\ x\^2\  - \ 9.99900009999`*^11\ x\^3\  + \ 
+          x\^4\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Approximate the roots of   ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^12\  + \ 9.90099`*^11\ x\  - \ 9.9019901`*^9\ x\^2\  - \ 
+          990099\ x\^3\  + \ x\^4\)]],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {1000000, \(-10000\), 100, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]];\)\), "\[IndentingNewLine]", 
+    \(\(P[x_] = Expand[P[x]];\)\), "\[IndentingNewLine]", 
+    \(\(A = CoefficientList[P[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", N[P[x]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the separated root theorem\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Print["\<\n\>", "\<r\>"\_i, "\< = \
+\>", R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ , "\< \
+\[TildeTilde] \>", \(-\("\<a\>"\_\(n + 1 - i\)\/"\<a\>"\_\(n + 2 - i\)\)\)]; \
+\[IndentingNewLine]Print["\<r\>"\_i, "\< \[TildeTilde] \>", "\<-(\>", 
+          ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)]\/ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\
+\)\(\[RightDoubleBracket]\)\)], "\<) = \>", 
+          NumberForm[
+            N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)], 17]\ ];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Approximate the roots of   ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^18\  + \ 9.99000999`*^17\ x\  - \ 9.99001999001`*^14\ x\^2\  - \ 
+          9.99000999`*^8\ x\^3\  + \ x\^4\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {1000000000, \(-1000000\), 
+          1000, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]];\)\), "\[IndentingNewLine]", 
+    \(\(P[x_] = Expand[P[x]];\)\), "\[IndentingNewLine]", 
+    \(\(A = CoefficientList[P[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", N[P[x]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the separated root theorem\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Print["\<\n\>", "\<r\>"\_i, "\< = \
+\>", R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ , "\< \
+\[TildeTilde] \>", \(-\("\<a\>"\_\(n + 1 - i\)\/"\<a\>"\_\(n + 2 - i\)\)\)]; \
+\[IndentingNewLine]Print["\<r\>"\_i, "\< \[TildeTilde] \>", "\<-(\>", 
+          ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)]\/ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\
+\)\(\[RightDoubleBracket]\)\)], "\<) = \>", 
+          NumberForm[
+            N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)], 17]\ ];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Approximate the roots of   ",
+  Cell[BoxData[
+      \(P[x]\  = \ 
+        10\^24\  + \ 9.99900009999`*^23\ x\  - \ 
+          9.999000199990002`*^19\ x\^2\  - \ 9.99900009999`*^11\ x\^3\  + \ 
+          x\^4\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {1000000000000, \(-100000000\), 
+          10000, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", P[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(P[x_] = Expand[P[x]];\)\), "\[IndentingNewLine]", 
+    \(\(A = CoefficientList[P[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<P[x] = \>", N[P[x]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the separated root theorem\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Print["\<\n\>", "\<r\>"\_i, "\< = \
+\>", R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ , "\< \
+\[TildeTilde] \>", \(-\("\<a\>"\_\(n + 1 - i\)\/"\<a\>"\_\(n + 2 - i\)\)\)]; \
+\[IndentingNewLine]Print["\<r\>"\_i, "\< \[TildeTilde] \>", "\<-(\>", 
+          ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)]\/ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\
+\)\(\[RightDoubleBracket]\)\)], "\<) = \>", 
+          NumberForm[
+            N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)], 17]\ ];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\tIn order to get a good approximation  ",
+  Cell[BoxData[
+      \(r\_i\  \[TildeTilde] \ \(-\(a\_\(n + 1 - i\)\/a\_\(n + 2 - \
+i\)\)\)\)]],
+  ",  the roots must be widely separated in magnitude.  The approximation is \
+better when  ",
+  Cell[BoxData[
+      \(\(\(|\)\(r\_i\)\(|\)\)\/\(\(|\)\(r\_\(i + 1\)\)\(|\)\) >> \ 1000\)]],
+  "  for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  ".  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Graeffe Root Squaring Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe root-finding method was popular in the 19th and 20th centuries.  \
+It was invented independently by ",
+  ButtonBox["Karl Heinrich Gr\[ADoubleDot]ffe",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Graffe.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (1799-1873), ",
+  ButtonBox["Germinal Pierre Dandelin",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Dandelin.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (1794-1847), and  ",
+  ButtonBox["Nikolai Ivanovich Lobachevsky",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Lobachevsky.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (1792-1856)  (See the article ",
+  StyleBox[ButtonBox["Dandelin, Lobacevskii, or Graeffe",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0002-9890%28195906%2F07%2966%3A6%\
+3C464%3ADLOG%3E2.0.CO%3B2-H"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  by Alston S. Householder,   The American Mathematical Monthly, Vol. 66, \
+No. 6. (Jun. - Jul., 1959), pp. 464-466, Jstor. )  Graeffe's method has the \
+shortcoming that it proceeds to calculations where the exponents exceed the \
+maximum allowed by floating-point arithmetic computation of most software \
+packages.  The extended precision in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is adequate to investigate the method.  \n\n\tA necessary condition for \
+the  separated root theorem produce a good approximation  ",
+  Cell[BoxData[
+      \(r\_i\  \[TildeTilde] \ \(-\(a\_\(n + 1 - i\)\/a\_\(n + 2 - \
+i\)\)\)\)]],
+  ",  is that the roots must be widely separated in magnitude, we would need \
+the separation to be more than  ",
+  Cell[BoxData[
+      \(\(\(|\)\(r\_i\)\(|\)\)\/\(\(|\)\(r\_\(i + 1\)\)\(|\)\) >> \ 1000\)]],
+  "  for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 1\)}]]],
+  ".  The heart of the Graeffe method is to start with \"mildly\" separated \
+roots and construct a related polynomial with sufficiently widely separated \
+roots.  This leads into the topic of root squaring. \n\n",
+  StyleBox["Theorem (Root Squaring).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Given the polynomial  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " in factored form  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\  = \ \[Product]\+\(i = 1\)\%n\((x - r\_i)\)\)]],
+  "  with roots  ",
+  Cell[BoxData[
+      \({r\_i}\_\(i = 1\)\%n\)]],
+  ".  Then  ",
+  Cell[BoxData[
+      \(\(f\_1\) \((x)\)\)]],
+  "  is defined by  \n\t\n\t",
+  Cell[BoxData[
+      \(\(f\_1\) \((x)\)\  = \ \(\(\((\(-1\))\)\^n\) \(f\_0\) \((\@x)\) \
+\(f\_0\) \((\(-\@x\))\)\ \  = \ \ \[Product]\+\(i = 1\)\%n\((x - 
+                r\_i\%2)\)\)\)]],
+  ".  \n\nis a polynomial of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " with roots  ",
+  Cell[BoxData[
+      \({r\_i\%2}\_\(i = 1\)\%n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the polynomial  \n\n\t",
+  Cell[BoxData[
+      \(f\_0[
+          x]\ \  = \ \ \(\((x - 4)\)\ \((x + 3)\) \((x - 2)\)\ \((x + 
+                1)\)\ \  = \ \ 24 + 14\ x - 13\ x\^2 - 2\ x\^3 + x\^4\)\)]],
+  "   \n\nExplore the process of root squaring for ",
+  Cell[BoxData[
+      \(f\_0[x]\)]],
+  "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the roots and construct  ",
+  Cell[BoxData[
+      \(f\_0[x]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {4, \(-3\), 2, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_0[x_]\  = \ Expand[P[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        Solve[\ f\_0[x] \[Equal] 0, x\ ];\)\), "\[IndentingNewLine]", 
+    \(\(F\_0[x_]\  = \ Factor[f\_0[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_0[x], {x, \(-4\), 5}, 
+        PlotRange \[Rule] {{\(-4\), 5}, {\(-25\), 100}}, 
+        Ticks \[Rule] {R, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    0 = \>", f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    0 = \>", F\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<And the roots\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[solset]];\)\)}], "Input"],
+
+Cell["\<\
+We will explore several steps of root squaring and since the process is \
+repetitive, we will use the following subroutine to perform the computations. \
+ \
+\>", "Text"],
+
+Cell[BoxData[
+    \(RootSquare[v0_]\  := \ 
+      Module[{}, \[IndentingNewLine]v = 
+          v0; \[IndentingNewLine]Print["\<f\>"\_\(v - 1\), "\<[x] = \>", 
+          f\_\(v - 1\)[x], "\<\n\>"\ ]; \[IndentingNewLine]f\_v[
+            x_]\  = \ \(\((\(-1\))\)\^n\) 
+            ReplaceAll[Expand[f\_\(v - 1\)[x] f\_\(v - 1\)[\(-x\)]], 
+              x\^k_\  \[Rule] \ x\^\(k/2\)]; \[IndentingNewLine]solset = 
+          Solve[\ f\_v[x] \[Equal] 0, x\ ]; \[IndentingNewLine]F\_v[x_]\  = \ 
+          Factor[f\_v[
+              x]]; \[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = Replace[\>", \
+"\<f\>"\_\(v - 1\), "\<[x]\>", "\<f\>"\_\(v - 1\), "\<[-x]\>", \*"\"\<], \
+\!\(x\^2\) \[Rule] x]\>\""]; \[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = \
+Replace[(\>", f\_\(v - 1\)[x], "\<)(\>", 
+          f\_\(v - 1\)[\(-x\)], \*"\"\<)], \!\(x\^2\) \[Rule] x]\>\""]; \
+\[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = Replace[(\>", 
+          Expand[f\_\(v - 1\)[x] 
+              f\_\(v - 1\)[\(-x\)]], \*"\"\<)], \!\(x\^2\) \[Rule] x]\>\""]; \
+\[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = \>", 
+          f\_v[x]\ ]; \[IndentingNewLine]Print["\<Solve\>"]; \ \
+\[IndentingNewLine]Print["\<    0 = \>", 
+          f\_v[x]\ ]; \[IndentingNewLine]Print["\<Get the roots\>"]; \ \
+\[IndentingNewLine]Print[TableForm[solset]];\ ]\)], "Input"],
+
+Cell[TextData[{
+  "The first iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_1[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^1\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(RootSquare[1]\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_1[x], {x, 0, 16.5}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {R\^2, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_1, "\<[x] = \>", f\_1[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The second iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_2[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^2\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(RootSquare[2]\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_2[x], {x, 0, 257}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {R\^4, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_2, "\<[x] = \>", 
+        f\_2[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_2[x], {x, 0, 82}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {R\^4, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_2, "\<[x] = \>", f\_2[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The third iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_3[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^3\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[{
+    \(RootSquare[3]\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_3[x], {x, 0, 66000}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {{65536, 6561}, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_3, "\<[x] = \>", 
+        f\_3[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_3[x], {x, 0, 6600}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {{65536, 6561, 256}, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_3, "\<[x] = \>", 
+        f\_3[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Plot[f\_3[x], {x, 0, 257}, PlotRange \[Rule] All, 
+        Ticks \[Rule] {R\^8, Automatic}, 
+        PlotStyle \[Rule] Magenta];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_3, "\<[x] = \>", f\_3[x]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The fourth iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_4[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^4\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[
+    \(RootSquare[4]\)], "Input"],
+
+Cell[TextData[{
+  "The fifth iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_5[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^5\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[
+    \(RootSquare[5]\)], "Input"],
+
+Cell[TextData[{
+  "The sixth iteration of root-squaring will create a polynomial  ",
+  Cell[BoxData[
+      \(f\_6[x]\)]],
+  " whose roots are   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^6\)}\_\(i = 1\)\%n\)]],
+  "   "
+}], "Text"],
+
+Cell[BoxData[
+    \(RootSquare[6]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_6[z]\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = CoefficientList[f\_v[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Z = Table[0, {ii, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_v, "\<[x] = \>", 
+        f\_v[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the separated root theorem\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)]; \[IndentingNewLine]Print["\<\n\>", \
+"\<z\>"\_i, "\< = \>", \((R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\))\)\^\(2\^v\)\ , "\< \[TildeTilde] \>", \(-\("\<a\>"\
+\_\(n + 1 - i\)\/"\<a\>"\_\(n + 2 - i\)\)\)]; \
+\[IndentingNewLine]Print["\<z\>"\_i, "\< \[TildeTilde] \>", "\<-(\>", 
+          ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)]\/ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\
+\)\(\[RightDoubleBracket]\)\)], "\<) = \>", 
+          NumberForm[
+            Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+            17]\ ];\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M = Z;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)]; \
+\[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\) = \((Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\^\(1/\
+2\^v\); \[IndentingNewLine]Print["\<\n\>", "\<|\>", "\<x\>"\_i, "\<| = \>", 
+          Abs[R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ \
+], "\< \[TildeTilde] \>", \(("\<z\>"\_i)\)\^\(1/2\^v\), "\< = \>", \
+"\<m\>"\_i]; \[IndentingNewLine]Print["\<|\>", "\<x\>"\_i, "\<| \[TildeTilde] \
+\>", "\<(\>", 
+          Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<)\
+\>"\^\("\<1\>"/2\^v\), "\< = \>", 
+          NumberForm[
+            M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+            17]\ ];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^5\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell[TextData[{
+  "For this example we have found approximations to the roots to be ",
+  Cell[BoxData[
+      \({m\_1, \(-m\_2\), m\_3, \(-m\_4\)}\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), \(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        P[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Goal",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIf the roots of  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " are real and distinct then successive root squaring will generate a \
+sequence of polynomials  ",
+  Cell[BoxData[
+      \({\(f\_k\) \((x)\)}\_\(k = 1\)\%v\)]],
+  ",  where each polynomial  ",
+  Cell[BoxData[
+      \(\(f\_k\) \((x)\)\)]],
+  "  has degree  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  ".  The roots of  ",
+  Cell[BoxData[
+      \(\(f\_v\) \((x)\)\)]],
+  "  are  ",
+  Cell[BoxData[
+      \({r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  " ,  and if  ",
+  StyleBox["v",
+    FontFamily->"Courier New"],
+  "  is large enough, then the roots of  ",
+  Cell[BoxData[
+      \(\(f\_v\) \((x)\)\)]],
+  "  will be widely separated.  The roots  ",
+  Cell[BoxData[
+      \({r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "  of  ",
+  Cell[BoxData[
+      \(\(f\_v\) \((x)\)\)]],
+  "  are all positive.  The roots of  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " can be obtained by taking a root  ",
+  Cell[BoxData[
+      \(r\_i\  = \ \(\[PlusMinus]\@\(r\_i\%\(2\^v\)\)\%\(2\^v\)\)\)]],
+  ", where the appropriate sign can be determined by evaluating  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((r\_i)\)\)]],
+  ".    The goal is to separate roots! "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/GraeffesMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Given the polynomial  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " with real distinct roots  ",
+  Cell[BoxData[
+      \({r\_i}\_\(i = 1\)\%n\)]],
+  ".  Define the sequence  ",
+  Cell[BoxData[
+      \({\(f\_k\) \((x)\)}\_\(k = 1\)\%v\)]],
+  "  as follows:\n\t\n\t\t",
+  Cell[BoxData[
+      \(\(f\_k\) \((x)\)\  = \ \(\((\(-1\))\)\^n\) \(f\_\(k - 
+                1\)\) \((\@x)\) \(f\_\(k - 1\)\) \((\(-\@x\))\)\)]],
+  "\n\nis a polynomial of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " with roots  ",
+  Cell[BoxData[
+      \({r\_i\%\(2\^k\)}\_\(i = 1\)\%n\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "v"}]]],
+  ".  Furthermore, the roots of  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " are approximated by \n\n\t\t ",
+  Cell[BoxData[
+      \(r\_i\  \[TildeTilde] \ \(\[PlusMinus]\@\(r\_i\%\(2\^v\)\)\%\(2\^v\)\)\
+\)]],
+  "  for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman"], "n"}]]],
+  ".  \n\nWhere the appropriate sign can be determined by evaluating  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((r\_i)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Graeffe's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find ",
+    FontFamily->"New Century Schlbk"],
+  "all the roots of  the polynomial  ",
+  Cell[BoxData[
+      \(\(f\_0\) \((x)\)\)]],
+  " of degree ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " which has real distinct roots  ",
+  Cell[BoxData[
+      \({r\_i}\_\(i = 1\)\%n\)]],
+  ".  Use the Graeffe iteration \n\n\t\t",
+  Cell[BoxData[
+      \(\(f\_k\) \((x)\)\  = \ \(\((\(-1\))\)\^n\) \(f\_\(k - 
+                1\)\) \((\@x)\) \(f\_\(k - 1\)\) \((\(-\@x\))\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method ",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Graeffe's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(Graeffe[\[Epsilon]_, v0_]\  := \ 
+      Module[{i, j, k, t}, \[IndentingNewLine]v = v0; \[IndentingNewLine]c = 
+          CoefficientList[f\_0[x], x]; \ \[IndentingNewLine]n = 
+          Length[c] - 
+            1; \[IndentingNewLine]A = \(T = \(Z = {}\)\); \
+\[IndentingNewLine]A = 
+          Append[A, c]; \[IndentingNewLine]t = \(z = 
+            Table[0, {i, n}]\); \[IndentingNewLine]tol = 
+          1; \[IndentingNewLine]T = \(Z = 
+            Append[Z, 
+              z]\); \[IndentingNewLine]Print["\<f\>"\_0, "\<[x] = \>", 
+          f\_0[x]\ ]; \[IndentingNewLine]k = 1; \[IndentingNewLine]While[\ 
+          And[tol > \[Epsilon], 
+            k \[LessEqual] v], \[IndentingNewLine]f\_k[
+              x_]\  = \ \(\((\(-1\))\)\^n\) 
+              ReplaceAll[Expand[f\_\(k - 1\)[x] f\_\(k - 1\)[\(-x\)]], 
+                x\^j_\  \[Rule] \ 
+                  x\^\(j/2\)]; \[IndentingNewLine]Print["\<f\>"\_k, "\<[x] = \
+\>", N[f\_k[x]]\ ]; \[IndentingNewLine]c = 
+            N[CoefficientList[f\_k[x], x]]; \ \[IndentingNewLine]A = 
+            Append[A, c]; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              n, \(i++\), \
+\[IndentingNewLine]\(z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = Abs[\(-\(c\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/c\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)];\)\ ]; \[IndentingNewLine]t = \@z\%\(2\^k\); \
+\[IndentingNewLine]Z = Append[Z, z]; \[IndentingNewLine]T = 
+            Append[T, 
+              t]; \[IndentingNewLine]tol = \@\(\((T\_\(\(\[LeftDoubleBracket]\
+\)\(-2\)\(\[RightDoubleBracket]\)\) - T\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\
+\[RightDoubleBracket]\)\))\) . \((T\_\(\(\[LeftDoubleBracket]\)\(-2\)\(\
+\[RightDoubleBracket]\)\) - T\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\
+\[RightDoubleBracket]\)\))\)\); \[IndentingNewLine]\ 
+          k = k + 1;\ ]; \[IndentingNewLine]v = 
+          k - 1; \[IndentingNewLine]Print["\<\n\>", "\<Using Graeffe's method \
+for\>"]; \[IndentingNewLine]Print["\<f\>"\_0, "\<[x] = \>", 
+          f\_0[x], "\<\n\>"\ ]; \[IndentingNewLine]Print["\<The magnitudes \
+for the roots are\>"]; \[IndentingNewLine]Print[
+          NumberForm[t, 17]]; \[IndentingNewLine]\ Return[t];]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[x]\  = \ 24 + 14\ x - 13\ x\^2 - 2\ x\^3 + x\^4\)]],
+  ".  \nShow each step in the process. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {4, \(-3\), 2, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_0[x_]\  = \ Expand[P[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell["\<\
+The following subroutine will perform one step in the Graeffe iteration. \
+\>", "Text"],
+
+Cell[BoxData[
+    \(GraeffeStep[v0_] := 
+      Module[{}, \[IndentingNewLine]v = 
+          v0; \[IndentingNewLine]Print["\<f\>"\_\(v - 1\), "\<[x] = \>", 
+          f\_\(v - 1\)[x], "\<\n\>"\ ]; \[IndentingNewLine]f\_v[x_]\  = \ 
+          ReplaceAll[Expand[f\_\(v - 1\)[x] f\_\(v - 1\)[\(-x\)]], 
+            x\^k_\  \[Rule] \ 
+              x\^\(k/2\)]; \[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = \
+Replace[\>", "\<f\>"\_\(v - 1\), "\<[x]\>", "\<f\>"\_\(v - 1\), "\<[-x]\>", \
+\*"\"\<], \!\(x\^2\) \[Rule] x]\>\""]; \[IndentingNewLine]Print["\<f\>"\_v, "\
+\<[x] = Replace[(\>", f\_\(v - 1\)[x], "\<)(\>", 
+          f\_\(v - 1\)[\(-x\)], \*"\"\<)], \!\(x\^2\) \[Rule] x]\>\""]; \
+\[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = Replace[(\>", 
+          Expand[f\_\(v - 1\)[x] 
+              f\_\(v - 1\)[\(-x\)]], \*"\"\<)], \!\(x\^2\) \[Rule] x]\>\""]; \
+\[IndentingNewLine]Print["\<f\>"\_v, "\<[x] = \>", 
+          f\_v[x]\ ]; \[IndentingNewLine]c\  = 
+          CoefficientList[f\_v[x], x]; \[IndentingNewLine]n = 
+          Length[c] - 
+            1; \ \[IndentingNewLine]Print["\<\n\>", "\<Estimates for the \
+magnitude of the roots of\>"]; \[IndentingNewLine]Print["\<f\>"\_0, "\<[x] = \
+\>", f\_0[x]\ ]; \[IndentingNewLine]For[i = n, 
+          1 \[LessEqual] 
+            i, \(i--\), \[IndentingNewLine]\(Print["\<|\>", "\<r\>"\_\(n + 1 \
+- i\), "\<| = \>", "\<(\>", 
+              ToString[
+                  Abs[c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]]/
+                ToString[
+                  Abs[c\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\)]], "\<)\>"\^\("\<1\>"/2\^v\), "\< = \>", 
+              NumberForm[
+                N[\@\(Abs[c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)/c\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\)]\)\%\(2\^v\)], 12]\ ];\)\ ];\ ]\)], "Input"],
+
+Cell["\<\
+The first six iterations are computed consecutively using the subroutine. \
+\>", "Text"],
+
+Cell[BoxData[
+    \(GraeffeStep[1]\)], "Input"],
+
+Cell[BoxData[
+    \(GraeffeStep[2]\)], "Input"],
+
+Cell[BoxData[
+    \(GraeffeStep[3]\)], "Input"],
+
+Cell[BoxData[
+    \(GraeffeStep[4]\)], "Input"],
+
+Cell[BoxData[
+    \(GraeffeStep[5]\)], "Input"],
+
+Cell[BoxData[
+    \(GraeffeStep[6]\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_6[z]\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = CoefficientList[f\_v[x], x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Z = Table[0, {ii, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_v, "\<[x] = \>", 
+        f\_v[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the separated root theorem\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)]; \[IndentingNewLine]Print["\<\n\>", \
+"\<z\>"\_i, "\< = \>", \((R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\))\)\^\(2\^v\)\ , "\< \[TildeTilde] \>", \(-\("\<a\>"\
+\_\(n + 1 - i\)\/"\<a\>"\_\(n + 2 - i\)\)\)]; \
+\[IndentingNewLine]Print["\<z\>"\_i, "\< \[TildeTilde] \>", "\<-(\>", 
+          ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)]\/ToString[A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\
+\)\(\[RightDoubleBracket]\)\)], "\<) = \>", 
+          NumberForm[
+            Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+            17]\ ];\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M = Z;\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          n, \(i++\), \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          N[\(-\(A\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)]; \
+\[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\) = \((Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\^\(1/\
+2\^v\); \[IndentingNewLine]Print["\<\n\>", "\<|\>", "\<x\>"\_i, "\<| = \>", 
+          Abs[R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ \
+], "\< \[TildeTilde] \>", \(("\<z\>"\_i)\)\^\(1/2\^v\), "\< = \>", \
+"\<m\>"\_i]; \[IndentingNewLine]Print["\<|\>", "\<x\>"\_i, "\<| \[TildeTilde] \
+\>", "\<(\>", 
+          Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<)\
+\>"\^\("\<1\>"/2\^v\), "\< = \>", 
+          NumberForm[
+            M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+            17]\ ];\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^6\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell[TextData[{
+  "For this example we have found approximations to the roots to be ",
+  Cell[BoxData[
+      \({m\_1, \(-m\_2\), m\_3, \(-m\_4\)}\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), \(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[x]\  = \ 24 + 14\ x - 13\ x\^2 - 2\ x\^3 + x\^4\)]],
+  ".  \nUse the subroutine ",
+  StyleBox["Graeffe",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {4, \(-3\), 2, \(-1\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_0[x_]\  = \ Expand[P[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe[10\^\(-12\), 6];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations enables us to make the following choice of \
+signs. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), \(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\nIf one wants to know how the magnitude of the roots progressed \
+throughout the iteration, the following command will provide the \
+information."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\({row, col} = Dimensions[T];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Take[T, 1 - row], 
+        TableHeadings \[Rule] {None, Table["\<|r|\>"\_i, {i, 1, col}]}], 
+      17]\)}], "Input"],
+
+Cell["\<\
+It appears that convergence is quadratic for each root (fast convergence).\
+\>", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[
+          x]\  = \ \[InvisibleSpace]\(-3\) - \(109\ x\)\/10 + \(129\ \
+x\^2\)\/5 + \(119\ x\^3\)\/5 - \(71\ x\^4\)\/5 - \(33\ x\^5\)\/10 + x\^6\)]],
+  ".  \nUse the subroutine ",
+  StyleBox["Graeffe",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "This example emphasizes that separated means that the roots of  ",
+  Cell[BoxData[
+      \(f\_v[x]\)]],
+  "  satisfy  ",
+  Cell[BoxData[
+      \(\(\(|\)\(z\_i\)\(|\)\)\/\(\(|\)\(z\_\(i + 1\)\)\(|\)\) >> \ 1000\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {5, \(-3\), 2, \(-1\), 
+          1\/2, \(-\(1\/5\)\)};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_0[x_]\  = \ Expand[P[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe[10\^\(-12\), 6];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations enables us to make the following choice of \
+signs. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), \(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  The roots of ",
+  Cell[BoxData[
+      \(f\_v[x]\)]],
+  " are separated in the sense that they satisfy  ",
+  Cell[BoxData[
+      \(\(\(|\)\(z\_i\)\(|\)\)\/\(\(|\)\(z\_\(i + 1\)\)\(|\)\) >> \ 1000\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\({row, col} = Dimensions[Z];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Take[Z, 1 - row], 
+        TableHeadings \[Rule] {None, Table["\<z\>"\_i, {i, 1, col}]}], 
+      17]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Extending Graeffe's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe literature on Graeffe's method contains a myriad of rules for \
+treating cases other than distinct, separated real roots.  The rules involve \
+detailed study of the behavior of the coefficients of   ",
+  Cell[BoxData[
+      \({\(f\_k\) \((x)\)}\_\(k = 1\)\%v\)]],
+  ", which are to be listed in rows, and the coefficients of the powers of x \
+in columns.  ",
+  StyleBox[ButtonBox["Hutchinson",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0002-9890%28193503%2942%3A3%3C149%\
+3AOGMFTN%3E2.0.CO%3B2-0"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " lists 11 rules for special cases, and his list was later refined by ",
+  StyleBox[ButtonBox["Cronvich",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0002-9890%28193904%2946%3A4%3C185%\
+3AOTGMOS%3E2.0.CO%3B2-J"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  ".  There are special cases for distinct real roots, double roots, triple \
+roots, one pair of imaginary roots, two pairs of imaginary roots, a pair of \
+imaginary roots whose modulus is equal to the absolute value of a real root, \
+etc.  It is not our purpose to study these cases and leave them for the \
+reader to investigate.  We will look at two of the easier cases which give a \
+glimpse of what might happen. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Repeated Real Roots",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe standard Graeffe iteration given in the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine is robust enough to treat the case of repeated real roots.  \
+However, knowing that a double root appears is essential information that \
+will be used.   If  ",
+  Cell[BoxData[
+      \(x\_i\)]],
+  "  is a root of order  ",
+  StyleBox["j",
+    FontFamily->"Courier New"],
+  ",  then  ",
+  Cell[BoxData[
+      \(x\_i = \(x\_\(i + 1\) = \ \(\(...\)\(\ \)\(=\)\(x\_\(i + j - 
+                  1\)\)\)\)\)]],
+  "  and the magnitude of the repeated roots are given by the following \
+computation.   After v iterations the polynomial ",
+  Cell[BoxData[
+      \(\(f\_v\) \((x)\)\)]],
+  " is constructed \n\t\n\t",
+  Cell[BoxData[
+      \(\(f\_v\) \((x)\)\ \  = \ \ \[Sum]\+\(i = 0\)\%n\ \(c\_\(i + 1\)\) 
+            x\^i\)]],
+  " \n\nThe magnitude of the multiple root  ",
+  Cell[BoxData[
+      \(x\_i\)]],
+  "  of order  ",
+  StyleBox["j",
+    FontFamily->"Courier New"],
+  ",  is computed with the formula\n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(x\_i\)\(|\)\)\ \  = \ \ \((\(|\)\(-\(c\_\(n + 2 - i - j\)\/c\
+\_\(n + 2 - i\)\)\)\(|\))\)\^\(1/\((2\^\(j - 1\)*2\^v)\)\)\)]],
+  "  .  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Repeated Real Roots",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[x]\  = \ \(-50\) + 45\ x + 13\ x\^2 - 9\ x\^3 + x\^4\)]],
+  ". \nAs in the case of Newton's method, the iteration will proceed linearly \
+for the repeated root and quadratically for the simple roots.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f\_0[x_]\  = \ \(-50\) + 45\ x + 13\ x\^2 - 9\ x\^3 + 
+          x\^4;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe[10\^\(-12\), 15];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations enables us to make the following choice of \
+signs. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \(-M\_\(\
+\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)}]\ \
+];\)\ \)}], "Input"],
+
+Cell["The list of iterations is", "Text"],
+
+Cell[BoxData[{
+    \(\({row, col} = Dimensions[T];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Take[T, 1 - row], 
+        TableHeadings \[Rule] {None, Table["\<|r|\>"\_i, {i, 1, col}]}], 
+      17]\)}], "Input"],
+
+Cell["\<\
+Observe that convergence for the larger repeated root is linear and the two \
+smaller roots is quadratic.  The following computation will improve the \
+situation. \
+\>", "Text"],
+
+Cell[TextData[{
+  "Knowing that a double root appears is useful information.   If  ",
+  Cell[BoxData[
+      \(x\_i\)]],
+  "  is a root of order  ",
+  StyleBox["j",
+    FontFamily->"Courier New"],
+  ",  then  ",
+  Cell[BoxData[
+      \(x\_i = \(x\_\(i + 1\) = \ \(\(...\)\(\ \)\(=\)\(x\_\(i + j - 
+                  1\)\)\)\)\)]],
+  "  and the magnitude of the repeated roots are given by the following \
+computation. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(i = 1;\)\), "\[IndentingNewLine]", 
+    \(\(j = 2;\)\), "\[IndentingNewLine]", 
+    \(For[ii = i, 
+      ii \[LessEqual] 
+        i + j - 1, \(ii++\), \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\
+\(ii\)\(\[RightDoubleBracket]\)\)\  = \ \((Abs[\(-\(c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - i - j\)\(\[RightDoubleBracket]\)\)\/c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - \
+i\)\(\[RightDoubleBracket]\)\)\)\)])\)\^\(1/\((2\^\(j - 1\)*2\^v)\)\); \ \
+\[IndentingNewLine]Print["\<|\>", "\<x\>"\_ii, "\<| = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(ii\)\(\[RightDoubleBracket]\)\)\ ];\ ]\
+\)}], "Input"],
+
+Cell["Now we have the more accurate computation: ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \(-M\_\(\
+\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)}]\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n\tNotice the size of the coefficients grows exponentially.  Without \
+the extended precision in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " this example would be impossible (which is the case for most computer \
+software packages).  If we did not use the formula for repeated roots, then \
+many more iterations would be required and the growth of the coefficients \
+would be more severe.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Graeffe[10\^\(-12\), 20];\)\)], "Input"],
+
+Cell["The list of iterations is", "Text"],
+
+Cell[BoxData[{
+    \(\({row, col} = Dimensions[T];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Take[T, 1 - row], 
+        TableHeadings \[Rule] {None, Table["\<|r|\>"\_i, {i, 1, col}]}], 
+      17]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Repeated Real Roots",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[x]\  = \ 54 + 27\ x - 27\ x\^2 + x\^3 + x\^4\)]],
+  ". \nAs in the case of Newton's method, the iteration will proceed linearly \
+for the repeated root and quadratically for the simple roots.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f\_0[x_]\  = \ 
+        54 + 27\ x - 27\ x\^2 + x\^3 + x\^4;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe[10\^\(-12\), 15];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations enables us to make the following choice of \
+signs. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{-\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell["The list of iterations is", "Text"],
+
+Cell[BoxData[{
+    \(\({row, col} = Dimensions[T];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Take[T, 1 - row], 
+        TableHeadings \[Rule] {None, Table["\<|r|\>"\_i, {i, 1, col}]}], 
+      17]\)}], "Input"],
+
+Cell["\<\
+Observe that convergence for the repeated root is linear and the two other \
+roots is quadratic.  The following computation will improve the situation. \
+\>", "Text"],
+
+Cell[TextData[{
+  "Knowing that a double root appears is useful information.   If  ",
+  Cell[BoxData[
+      \(x\_i\)]],
+  "  is a root of order  ",
+  StyleBox["j",
+    FontFamily->"Courier New"],
+  ",  then  ",
+  Cell[BoxData[
+      \(x\_i = \(x\_\(i + 1\) = \ \(\(...\)\(\ \)\(=\)\(x\_\(i + j - 
+                  1\)\)\)\)\)]],
+  "  and the magnitude of the repeated roots are given by the following \
+computation. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(i = 2;\)\), "\[IndentingNewLine]", 
+    \(\(j = 2;\)\), "\[IndentingNewLine]", 
+    \(For[ii = i, 
+      ii \[LessEqual] 
+        i + j - 1, \(ii++\), \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\
+\(ii\)\(\[RightDoubleBracket]\)\)\  = \ \((Abs[\(-\(c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - i - j\)\(\[RightDoubleBracket]\)\)\/c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - \
+i\)\(\[RightDoubleBracket]\)\)\)\)])\)\^\(1/\((2\^\(j - 1\)*2\^v)\)\); \ \
+\[IndentingNewLine]Print["\<|\>", "\<x\>"\_ii, "\<| = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(ii\)\(\[RightDoubleBracket]\)\)\ ];\ ]\
+\)}], "Input"],
+
+Cell["Now we have the more accurate computation: ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{-\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n\tNotice the size of the coefficients grows exponentially until we \
+arrive at ",
+  Cell[BoxData[
+      \(f\_v[x]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print["\<f\>"\_v, "\<[x] = \>", N[f\_v[x]]\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  "Without the extended precision in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " this example would be impossible (which is the case for most computer \
+software packages). "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Efficient Graeffe Subroutine",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIt can be observed that the functions  ",
+  Cell[BoxData[
+      \({\(f\_v\) \((x)\)}\)]],
+  "  are never used in Graeffe's method, only their coefficients.  So it is \
+an unnecessary step to form the polynomials.  The following streamlined \
+version of the subroutine uses only the coefficients.  Also, this version can \
+be used with decimal entries for the coefficients, where the previous version \
+will not.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Graeffe's Method ",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Graeffe's Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[")",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(Graeffe2[\[Epsilon]_, v0_]\  := \ 
+      Module[{ii, j, k, t}, \[IndentingNewLine]v = v0; \[IndentingNewLine]c = 
+          N[CoefficientList[f\_0[x], x]]; \ \[IndentingNewLine]n = 
+          Length[c] - 
+            1; \[IndentingNewLine]T = {}; \[IndentingNewLine]t = \(z = 
+            Table[0, {ii, n}]\); \[IndentingNewLine]tol = 
+          1; \[IndentingNewLine]T = 
+          Append[T, t]; \[IndentingNewLine]Print["\<f\>"\_0, "\<[x]:  \>", 
+          N[c]\ ]; \[IndentingNewLine]k = 1; \[IndentingNewLine]While[\ 
+          And[tol > \[Epsilon], 
+            k \[LessEqual] v], \[IndentingNewLine]a = \(b = 
+              c\); \[IndentingNewLine]Do[\ 
+            b\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) = \
+\(-b\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\), \ {j, 2, 
+              n + 1, 2}\ ]; \[IndentingNewLine]a = 
+            Flatten[Append[a, Table[0, {n}]]]; \[IndentingNewLine]b = 
+            Flatten[Append[b, Table[0, {n}]]]; \[IndentingNewLine]For[j = 1, 
+            j \[LessEqual] 
+              n + 1, \(j++\), \
+\[IndentingNewLine]\(c\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\)\  = \ \[Sum]\+\(i = 1\)\%\(2  j - \
+1\)\(a\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\) 
+                    b\_\(\(\[LeftDoubleBracket]\)\(2  j - i\)\(\
+\[RightDoubleBracket]\)\);\)]; \[IndentingNewLine]Print["\<f\>"\_k, "\<[x]:  \
+\>", N[c]\ ]; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              n, \(i++\), \
+\[IndentingNewLine]\(z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = Abs[\(-\(c\_\(\(\[LeftDoubleBracket]\)\(n + 1 - i\)\(\
+\[RightDoubleBracket]\)\)\/c\_\(\(\[LeftDoubleBracket]\)\(n + 2 - i\)\(\
+\[RightDoubleBracket]\)\)\)\)];\)\ ]; \[IndentingNewLine]t = \@z\%\(2\^k\); \
+\[IndentingNewLine]T = 
+            Append[T, 
+              t]; \[IndentingNewLine]tol = \@\(\((T\_\(\(\[LeftDoubleBracket]\
+\)\(-2\)\(\[RightDoubleBracket]\)\) - T\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\
+\[RightDoubleBracket]\)\))\) . \((T\_\(\(\[LeftDoubleBracket]\)\(-2\)\(\
+\[RightDoubleBracket]\)\) - T\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\
+\[RightDoubleBracket]\)\))\)\); \[IndentingNewLine]\ 
+          k = k + 1;\ ]; \[IndentingNewLine]v = 
+          k - 1; \[IndentingNewLine]Print["\<\n\>", "\<Using Graeffe's method \
+for\>"]; \[IndentingNewLine]Print["\<f\>"\_0, "\<[x] = \>", 
+          f\_0[x], "\<\n\>"\ ]; \[IndentingNewLine]Print["\<The magnitudes \
+for the roots are\>"]; \[IndentingNewLine]Print[
+          NumberForm[N[t], 17]]; \[IndentingNewLine]\ Return[t];]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[
+          x]\  = \ \[InvisibleSpace]1 - \(32\ x\)\/5 - \(4467\ x\^2\)\/100 + \
+\(7923\ x\^3\)\/100 + \(7923\ x\^4\)\/100 - \(4467\ x\^5\)\/100 - \(32\ \
+x\^6\)\/5 + x\^7\)]],
+  ".  \nUse the subroutine ",
+  StyleBox["Graeffe",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(R = {10, \(-5\), 2, \(-1\), 1\/2, \(-\(1\/5\)\), 
+          1\/10};\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[R];\)\), "\[IndentingNewLine]", 
+    \(\(P[
+          x_] = \[Product]\+\(i = 1\)\%n\((x - 
+              R\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\))\)\
+;\)\ \), "\[IndentingNewLine]", 
+    \(\(f\_0[x_]\  = \ Expand[P[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe2[10\^\(-12\), 10];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations enables us to make the following choice of \
+signs. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(7\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\), \(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(7\)\(\[RightDoubleBracket]\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(7\)\(\[RightDoubleBracket]\)\)}]\ \
+];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Unequal Real Roots of Equal Magnitude",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " Use Graeffe's root squaring method to find the roots of  ",
+  Cell[BoxData[
+      \(f\_0[x]\  = \ 50 + 25\ x - 27\ x\^2 - x\^3 + x\^4\)]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f\_0[x_]\  = \ 
+        50 + 25\ x - 27\ x\^2 - x\^3 + x\^4;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", f\_0[x]\ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(Graeffe2[10\^\(-12\), 15];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now we can apply the separated root theorem to get the roots of  ",
+  Cell[BoxData[
+      \(f\_v[z]\)]],
+  "\n",
+  "Since root squaring produced the positive roots   ",
+  Cell[BoxData[
+      \({z\_i\  = \ r\_i\%\(2\^v\)}\_\(i = 1\)\%n\)]],
+  "   we will need to calculate ",
+  Cell[BoxData[
+      \(f[\(\[PlusMinus]m\_i\)]\)]],
+  " to see which sign to use. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = \((z)\)\^\(1/2\^v\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        n, \(i++\), \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<+m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[+\>\"", 
+        NumberForm[
+          M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), 
+          17], "\<] = \>", 
+        f\_0[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]Print["\<f\>"\_0, "\<[\>", "\<-m\>"\_i, \*"\"\<] = \
+\!\(f\_0\)[-\>\"", 
+        M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] = \
+\>", f\_0[\(-M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]]\
+;]\)}], "Input"],
+
+Cell["\<\
+Looking at the above calculations we might not know what to do for roots with \
+the larger magnitudes, because neither sign choice computes to be close to \
+zero. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{-\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell[TextData[{
+  "The techniques of  ",
+  StyleBox[ButtonBox["Hutchinson",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0002-9890%28193503%2942%3A3%3C149%\
+3AOGMFTN%3E2.0.CO%3B2-0"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " and ",
+  StyleBox[ButtonBox["Cronvich",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0002-9890%28193904%2946%3A4%3C185%\
+3AOTGMOS%3E2.0.CO%3B2-J"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  " could be used, but they are tedious to apply.  For this situation we \
+suspect that there are two roots with the same magnitude.  Let us try this \
+assumption and see what happens. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(i = 1;\)\), "\[IndentingNewLine]", 
+    \(\(j = 2;\)\), "\[IndentingNewLine]", 
+    \(For[ii = i, 
+      ii \[LessEqual] 
+        i + j - 1, \(ii++\), \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\
+\(ii\)\(\[RightDoubleBracket]\)\)\  = \ \((Abs[\(-\(c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - i - j\)\(\[RightDoubleBracket]\)\)\/c\_\(\(\
+\[LeftDoubleBracket]\)\(n + 2 - \
+i\)\(\[RightDoubleBracket]\)\)\)\)])\)\^\(1/\((2\^\(j - 1\)*2\^v)\)\); \ \
+\[IndentingNewLine]Print["\<|\>", "\<x\>"\_ii, "\<| = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(ii\)\(\[RightDoubleBracket]\)\)\ ];\ ]\
+\)}], "Input"],
+
+Cell["Now we can form the answers: ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<f\>"\_0, "\<[x] = \>", 
+        f\_0[x]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f\>"\_0, \*"\"\<[{-\!\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\),\!\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)\),-\!\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\)\)}] = \>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ "\<f\>"\_0, "\<[\>", 
+        NumberForm[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}, 
+          17], "\<] = \>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        f\_0[{\(-M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\), M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)\)}]\ ];\)\ \
+\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n\tGraeffe's method is limited because of the 11 possible outcomes that \
+might need to be tested when trying to determine the roots from the magnitude \
+of the roots.  We have not attempted a solution for complex roots and leave \
+these further investigations to the reader."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Graeffe's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GraeffeMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1011, 642},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 194, 5, 35, "Text"],
+Cell[1973, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3121, 101, 5261, 158, 545, "Text"],
+Cell[8385, 261, 327, 11, 33, "Text"],
+Cell[8715, 274, 1944, 56, 187, "Text"],
+Cell[10662, 332, 327, 11, 33, "Text"],
+Cell[10992, 345, 994, 34, 147, "Text"],
+
+Cell[CellGroupData[{
+Cell[12011, 383, 101, 2, 33, "Text"],
+Cell[12115, 387, 293, 10, 33, "Text"],
+Cell[12411, 399, 1420, 25, 289, "Input"],
+Cell[13834, 426, 310, 10, 33, "Text"],
+Cell[14147, 438, 1437, 26, 289, "Input"],
+Cell[15587, 466, 332, 11, 33, "Text"],
+Cell[15922, 479, 1445, 26, 289, "Input"],
+Cell[17370, 507, 1336, 40, 78, "Text"]
+}, Closed]],
+Cell[18721, 550, 4021, 110, 331, "Text"],
+Cell[22745, 662, 321, 11, 33, "Text"],
+Cell[23069, 675, 425, 13, 109, "Text"],
+
+Cell[CellGroupData[{
+Cell[23519, 692, 101, 2, 33, "Text"],
+Cell[23623, 696, 109, 5, 33, "Text"],
+Cell[23735, 703, 1263, 23, 333, "Input"],
+Cell[25001, 728, 179, 4, 33, "Text"],
+Cell[25183, 734, 1327, 22, 296, "Input"],
+Cell[26513, 758, 237, 8, 36, "Text"],
+Cell[26753, 768, 364, 6, 91, "Input"],
+Cell[27120, 776, 238, 8, 36, "Text"],
+Cell[27361, 786, 618, 11, 132, "Input"],
+Cell[27982, 799, 237, 8, 36, "Text"],
+Cell[28222, 809, 901, 16, 171, "Input"],
+Cell[29126, 827, 238, 8, 36, "Text"],
+Cell[29367, 837, 46, 1, 30, "Input"],
+Cell[29416, 840, 237, 8, 36, "Text"],
+Cell[29656, 850, 46, 1, 30, "Input"],
+Cell[29705, 853, 237, 8, 36, "Text"],
+Cell[29945, 863, 46, 1, 30, "Input"],
+Cell[29994, 866, 312, 11, 71, "Text"],
+Cell[30309, 879, 1268, 23, 227, "Input"],
+Cell[31580, 904, 1112, 20, 156, "Input"],
+Cell[32695, 926, 274, 8, 36, "Text"],
+Cell[32972, 936, 765, 16, 110, "Input"],
+Cell[33740, 954, 161, 4, 33, "Text"],
+Cell[33904, 960, 1196, 19, 90, "Input"]
+}, Closed]],
+Cell[35115, 982, 1329, 45, 110, "Text"],
+Cell[36447, 1029, 1952, 64, 191, "Text"],
+Cell[38402, 1095, 321, 11, 33, "Text"],
+Cell[38726, 1108, 897, 28, 71, "Text"],
+Cell[39626, 1138, 354, 12, 33, "Text"],
+Cell[39983, 1152, 459, 14, 33, "Text"],
+Cell[40445, 1168, 2295, 40, 629, "Input"],
+Cell[42743, 1210, 299, 8, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[43067, 1222, 101, 2, 33, "Text"],
+Cell[43171, 1226, 439, 8, 133, "Input"],
+Cell[43613, 1236, 97, 2, 33, "Text"],
+Cell[43713, 1240, 1881, 34, 325, "Input"],
+Cell[45597, 1276, 98, 2, 33, "Text"],
+Cell[45698, 1280, 47, 1, 30, "Input"],
+Cell[45748, 1283, 47, 1, 30, "Input"],
+Cell[45798, 1286, 47, 1, 30, "Input"],
+Cell[45848, 1289, 47, 1, 30, "Input"],
+Cell[45898, 1292, 47, 1, 30, "Input"],
+Cell[45948, 1295, 47, 1, 30, "Input"],
+Cell[45998, 1298, 134, 4, 33, "Text"],
+Cell[46135, 1304, 1268, 23, 227, "Input"],
+Cell[47406, 1329, 1112, 20, 156, "Input"],
+Cell[48521, 1351, 274, 8, 36, "Text"],
+Cell[48798, 1361, 765, 16, 110, "Input"],
+Cell[49566, 1379, 161, 4, 33, "Text"],
+Cell[49730, 1385, 1199, 19, 90, "Input"]
+}, Closed]],
+Cell[50944, 1407, 373, 12, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[51342, 1423, 101, 2, 33, "Text"],
+Cell[51446, 1427, 439, 8, 133, "Input"],
+Cell[51888, 1437, 61, 1, 31, "Input"],
+Cell[51952, 1440, 390, 12, 53, "Text"],
+Cell[52345, 1454, 827, 17, 131, "Input"],
+Cell[53175, 1473, 110, 3, 33, "Text"],
+Cell[53288, 1478, 1199, 19, 90, "Input"],
+Cell[54490, 1499, 266, 7, 71, "Text"],
+Cell[54759, 1508, 230, 5, 50, "Input"],
+Cell[54992, 1515, 98, 2, 33, "Text"]
+}, Closed]],
+Cell[55105, 1520, 470, 14, 54, "Text"],
+
+Cell[CellGroupData[{
+Cell[55600, 1538, 101, 2, 33, "Text"],
+Cell[55704, 1542, 253, 8, 40, "Text"],
+Cell[55960, 1552, 471, 9, 146, "Input"],
+Cell[56434, 1563, 61, 1, 31, "Input"],
+Cell[56498, 1566, 390, 12, 53, "Text"],
+Cell[56891, 1580, 827, 17, 131, "Input"],
+Cell[57721, 1599, 110, 3, 33, "Text"],
+Cell[57834, 1604, 1632, 25, 90, "Input"],
+Cell[59469, 1631, 416, 15, 78, "Text"],
+Cell[59888, 1648, 228, 5, 50, "Input"]
+}, Closed]],
+Cell[60131, 1656, 1502, 32, 144, "Text"],
+Cell[61636, 1690, 1322, 38, 236, "Text"],
+Cell[62961, 1730, 522, 13, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[63508, 1747, 101, 2, 33, "Text"],
+Cell[63612, 1751, 190, 3, 50, "Input"],
+Cell[63805, 1756, 62, 1, 31, "Input"],
+Cell[63870, 1759, 390, 12, 53, "Text"],
+Cell[64263, 1773, 827, 17, 131, "Input"],
+Cell[65093, 1792, 110, 3, 33, "Text"],
+Cell[65206, 1797, 1199, 19, 90, "Input"],
+Cell[66408, 1818, 41, 0, 33, "Text"],
+Cell[66452, 1820, 230, 5, 50, "Input"],
+Cell[66685, 1827, 187, 4, 33, "Text"],
+Cell[66875, 1833, 430, 13, 52, "Text"],
+Cell[67308, 1848, 624, 12, 138, "Input"],
+Cell[67935, 1862, 59, 0, 33, "Text"],
+Cell[67997, 1864, 1199, 19, 90, "Input"],
+Cell[69199, 1885, 520, 12, 90, "Text"],
+Cell[69722, 1899, 62, 1, 31, "Input"],
+Cell[69787, 1902, 41, 0, 33, "Text"],
+Cell[69831, 1904, 230, 5, 50, "Input"]
+}, Closed]],
+Cell[70076, 1912, 514, 13, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[70615, 1929, 101, 2, 33, "Text"],
+Cell[70719, 1933, 180, 3, 50, "Input"],
+Cell[70902, 1938, 62, 1, 31, "Input"],
+Cell[70967, 1941, 390, 12, 53, "Text"],
+Cell[71360, 1955, 827, 17, 131, "Input"],
+Cell[72190, 1974, 110, 3, 33, "Text"],
+Cell[72303, 1979, 1212, 20, 90, "Input"],
+Cell[73518, 2001, 41, 0, 33, "Text"],
+Cell[73562, 2003, 230, 5, 50, "Input"],
+Cell[73795, 2010, 176, 3, 33, "Text"],
+Cell[73974, 2015, 430, 13, 52, "Text"],
+Cell[74407, 2030, 624, 12, 138, "Input"],
+Cell[75034, 2044, 59, 0, 33, "Text"],
+Cell[75096, 2046, 1212, 20, 90, "Input"],
+Cell[76311, 2068, 241, 9, 71, "Text"],
+Cell[76555, 2079, 83, 1, 30, "Input"],
+Cell[76641, 2082, 217, 6, 33, "Text"]
+}, Closed]],
+Cell[76873, 2091, 557, 12, 87, "Text"],
+Cell[77433, 2105, 354, 12, 33, "Text"],
+Cell[77790, 2119, 459, 14, 33, "Text"],
+Cell[78252, 2135, 2617, 44, 675, "Input"],
+Cell[80872, 2181, 496, 15, 57, "Text"],
+
+Cell[CellGroupData[{
+Cell[81393, 2200, 101, 2, 33, "Text"],
+Cell[81497, 2204, 479, 9, 146, "Input"],
+Cell[81979, 2215, 63, 1, 31, "Input"],
+Cell[82045, 2218, 390, 12, 53, "Text"],
+Cell[82438, 2232, 827, 17, 131, "Input"],
+Cell[83268, 2251, 110, 3, 33, "Text"],
+Cell[83381, 2256, 1854, 28, 90, "Input"]
+}, Closed]],
+Cell[85250, 2287, 394, 12, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[85669, 2303, 101, 2, 33, "Text"],
+Cell[85773, 2307, 180, 3, 50, "Input"],
+Cell[85956, 2312, 63, 1, 31, "Input"],
+Cell[86022, 2315, 390, 12, 53, "Text"],
+Cell[86415, 2329, 827, 17, 131, "Input"],
+Cell[87245, 2348, 187, 4, 33, "Text"],
+Cell[87435, 2354, 1212, 20, 90, "Input"],
+Cell[88650, 2376, 758, 20, 52, "Text"],
+Cell[89411, 2398, 624, 12, 138, "Input"],
+Cell[90038, 2412, 45, 0, 33, "Text"],
+Cell[90086, 2414, 1212, 20, 90, "Input"],
+Cell[91301, 2436, 390, 8, 90, "Text"]
+}, Closed]],
+Cell[91706, 2447, 158, 3, 32, "Text"],
+Cell[91867, 2452, 306, 8, 33, "Text"],
+Cell[92176, 2462, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

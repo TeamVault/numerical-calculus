@@ -1,0 +1,2045 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     62147,       1877]*)
+(*NotebookOutlinePosition[     63005,       1906]*)
+(*  CellTagsIndexPosition[     62961,       1902]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Nonlinear Curve Fitting",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Data Linearization Method for ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Exponential Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/LeastSquaresFittingExponential.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tFit the curve  ",
+  Cell[BoxData[
+      \(y = c\ \[ExponentialE]\^\(a\ x\)\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{\((x\_1, y\_1)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_2, y\_2)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_n, y\_n)\)}]]],
+  ".  \n\nTaking the logarithm of both sides we obtain  ",
+  Cell[BoxData[
+      \(ln \((y)\) = \(\(ln \((c\ \[ExponentialE]\^\(a\ x\))\)\)\(=\)\(\ \)\)\
+\)]],
+  Cell[BoxData[
+      \(ln \((c)\) + ln \((\[ExponentialE]\^\(a\ x\))\) = 
+        ln \((c)\) + a\ x\)]],
+  ",  thus\n\n\t\t",
+  Cell[BoxData[
+      \(ln \((y)\) = a\ x + ln \((c)\)\)]],
+  ".  \n\nIntroduce the change of variable  ",
+  Cell[BoxData[
+      RowBox[{"X", "=", 
+        RowBox[{
+          RowBox[{"x", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "Y"}], 
+          "=", \(ln \((y)\)\)}]}]]],
+  ".  Then the previous equation becomes  \n\n\t\t",
+  Cell[BoxData[
+      \(Y = a\ X + ln \((c)\)\)]],
+  "  \n\nwhich is a linear equation in the variables X and Y.  \n"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "\tUse the change of variables  ",
+  Cell[BoxData[
+      RowBox[{"X", "=", 
+        RowBox[{
+          RowBox[{"x", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], 
+            StyleBox[
+              RowBox[{
+                StyleBox[" ",
+                  FontFamily->"Times New Roman"], " "}]], "Y"}], 
+          "=", \(ln \((y)\)\)}]}]]],
+  "  on all the data points and obtain\n\n\t\t",
+  Cell[BoxData[
+      \(X\_k = \(x\_k\ \ \ and\ \ \ Y\_k = ln \((y\_k)\)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(k = 1, 2,  ... , n\)]],
+  ".  \n\n",
+  StyleBox["Fit the points",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(X\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_1\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(X\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(X\_n\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_n\)}], ")"}]}]]],
+  "  with a \"",
+  StyleBox["least squares line",
+    FontColor->RGBColor[0, 0, 1]],
+  "\" of the form  ",
+  Cell[BoxData[
+      \(Y = A\ X + B\)]],
+  ".  \n\nComparing the equations  ",
+  Cell[BoxData[
+      RowBox[{"Y", "=", 
+        RowBox[{
+          RowBox[{\(A\ X\), "+", 
+            RowBox[{"B", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox[
+                RowBox[{
+                  StyleBox[" ",
+                    FontFamily->"Times New Roman"], " "}]], "Y"}]}], 
+          "=", \(a\ X + ln \((c)\)\)}]}]]],
+  "  we see that  ",
+  Cell[BoxData[
+      RowBox[{"A", "=", 
+        RowBox[{
+          RowBox[{"a", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "B"}], 
+          "=", \(ln \((c)\)\)}]}]]],
+  ".  Thus\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{"a", "=", 
+        RowBox[{
+          RowBox[{"A", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "c"}], " ", 
+          "=", \(\[ExponentialE]\^B\)}]}]]],
+  " \n\nare used to construct the coefficients which are then used to \"fit \
+the curve\"  \n\n\t\t  ",
+  Cell[BoxData[
+      \(y = c\ \[ExponentialE]\^\(a\ x\)\)]],
+  "  \n\nto the given data points  ",
+  Cell[BoxData[
+      RowBox[{\((x\_1, y\_1)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_2, y\_2)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_n, y\_n)\)}]]],
+  "  in the xy-plane. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NonLinearCurveFitProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/NonLinearCurveFitProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NonLinearCurveFitProg.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/NonLinearCurveFitProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Fit the curve  ",
+  Cell[BoxData[
+      \(y = c\ \[ExponentialE]\^\(a\ x\)\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"0.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "1.5"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"1.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "2.5"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "3.5"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "5.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "7.5"}], ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold"]], "Text",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[TextData[{
+  "Enter the point into a two dimensional array ",
+  StyleBox["xys",
+    FontWeight->"Bold"],
+  " which stores points in the xy-plane.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(xys\  = \ {\ {0.0, \ 1.5}, {1.0, \ 2.5}, {2.0, \ 3.5}, {3.0, \ 
+            5.0}, {4.0, \ 7.5}\ };\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \)}], "Input"],
+
+Cell["Look at the transpose of this \"list of lists.\"", "Text",
+  Evaluatable->False],
+
+Cell[BoxData[
+    \(\(\(tr\)\(\ \)\(=\)\(\ \)\(Transpose[xys]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The two portions of this data structure are separated by  breaking off the \
+first and second parts of the \"list of lists\"  ",
+  Cell[BoxData[
+      StyleBox[\(tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\),
+        FontWeight->"Bold"]]],
+  "  and  ",
+  Cell[BoxData[
+      StyleBox[\(tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\)\),
+        FontWeight->"Bold"]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(xs\  = \ 
+        tr\_\(\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\(\ \
+\)\);\)\), "\[IndentingNewLine]", 
+    \(\(ys\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\ \
+;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", 
+        xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", ys];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We want to use the same abscissas, and take the logarithm of the \
+ordinates.  Notice that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses  ",
+  StyleBox["Log[x]",
+    FontWeight->"Bold"],
+  "  for the natural logarithm  ",
+  StyleBox["ln(x)",
+    FontWeight->"Bold"],
+  "  this is because ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " has programmed the notation used in \"Complex Variables\" i.e. the \
+terminology  ",
+  StyleBox["Log[x]",
+    FontWeight->"Bold"],
+  "  is used in advanced mathematics and works both with real and complex \
+numbers. \n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  None of the abscissas should be 0 because Log[0] is not defined, and all \
+the abscissas \"should\" be positive, unless you are willing to \"cope\" with \
+computations that might involve complex numbers."
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(Xs\  = \ xs;\)\ \), "\n", 
+    \(\(Ys\  = \ Log[ys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", 
+        xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", 
+        ys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_k\) = \!\(x\_k\)\>\""];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_k\) = Log[\!\(x\_k\)]\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(X\_k\)} = \>\"", 
+        Xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(Y\_k\)} = \>\"", Ys];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now \"glue together\" the transformed parts to form the pairs  ",
+  Cell[BoxData[
+      \({\((X\_k, Y\_k)\)}\)]],
+  "  and store them in the two dimensional array XY",
+  StyleBox["s",
+    FontWeight->"Bold"],
+  " which stores points in the XY-plane.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(XYs\  = \ Transpose[{Xs, Ys}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", XYs];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " procedure  ",
+  StyleBox["Fit",
+    FontWeight->"Bold"],
+  "  to get the least squares line in the XY-plane.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(g[X_]\  = \ Fit[XYs, {1, X}, X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", 
+        XYs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<In the  XY - plane\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now plot the \"least squares line\"  ",
+  Cell[BoxData[
+      \(Y\  = \ \(g[X]\  = \ A\ X\  + \ B\)\)]],
+  "  in the XY-plane."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(graph\  = \ 
+        Plot[g[X], {X, 0, 4}, PlotRange \[Rule] {0, 2.1}, 
+          PlotStyle \[Rule] Orange, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[XYs, PlotStyle \[Rule] {Brown, PointSize[0.025]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph, dots, AxesLabel \[Rule] {"\<X\>", "\<Y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", XYs];\)\ \), "\n", 
+    \(\(Print["\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "To get back to the xy-plane we could copy the coefficients from  ",
+  StyleBox["g",
+    FontWeight->"Bold"],
+  "  or we could go looking inside ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to see where they are kept.  \nThe data structure of  ",
+  StyleBox["g",
+    FontWeight->"Bold"],
+  "  looks like:"
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[
+    \(\(\(TreeForm[g[x]]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "So the coefficients  A  is located at ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\)\)]],
+  " and  B  is located at ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(A\  = \ \(g[x]\)\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(B\  = \ \(g[x]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", B];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now we are in business, we use  ",
+  Cell[BoxData[
+      \(c\  = \[ExponentialE]\^B\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(a\  = A\)]],
+  "  to get the coefficients of  ",
+  Cell[BoxData[
+      StyleBox[\(y = \(f\_1[x] = c\ \[ExponentialE]\^\(a\ x\)\)\),
+        FontWeight->"Plain"]],
+    FontWeight->"Bold"],
+  "  back in the original  xy-plane."
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(c\  = \[ExponentialE]\^B;\)\ \), "\n", 
+    \(\(a\  = \ A;\)\ \), "\n", 
+    \(\(f\_1[x_]\  = 
+        c\ \[ExponentialE]\^\(a\ x\)\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<In the  xy - plane\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<a = \>", a];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = c \!\(\[ExponentialE]\^\(a\\\ \
+x\)\)\>\"", "\<\n\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", f\_1[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now graph the function  ",
+  Cell[BoxData[
+      \(y = f\_1[x]\)]],
+  "  in the xy-plane. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph1\  = \ 
+        Plot[f\_1[x], {x, \(-0.2\), 4.2}, PlotRange \[Rule] {0, 8.4}, 
+          PlotStyle \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Blue, PointSize[0.025]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", f\_1[x]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Data Linearization Method for a ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Power Function Curve Fitting",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LeastSquaresFittingPowerLaw.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tFit the curve  ",
+  Cell[BoxData[
+      \(y = c\ x\^a\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{\((x\_1, y\_1)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_2, y\_2)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_n, y\_n)\)}]]],
+  ".  \n\nTaking the logarithm of both sides we obtain  ",
+  Cell[BoxData[
+      \(ln \((y)\) = \(\(ln \((c\ x\^a)\)\)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(ln \((c)\) + ln \((x\^a)\) = ln \((c)\) + a\ ln \((x)\)\)]],
+  ",  thus\n\n\t\t",
+  Cell[BoxData[
+      \(ln \((y)\) = a\ ln \((x)\) + ln \((c)\)\)]],
+  ".  \n\nIntroduce the change of variable  ",
+  Cell[BoxData[
+      RowBox[{"X", "=", 
+        RowBox[{
+          RowBox[{"ln", \((x)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "Y"}], 
+          "=", \(ln \((y)\)\)}]}]]],
+  ".  Then the previous equation becomes  \n\n\t\t",
+  Cell[BoxData[
+      \(Y = a\ X + ln \((c)\)\)]],
+  "  \n\nwhich is a linear equation in the variables X and Y.  \n"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "\tUse the change of variables  ",
+  Cell[BoxData[
+      RowBox[{"X", "=", 
+        RowBox[{
+          RowBox[{"ln", \((x)\), "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], 
+            StyleBox[
+              RowBox[{
+                StyleBox[" ",
+                  FontFamily->"Times New Roman"], " "}]], "Y"}], 
+          "=", \(ln \((y)\)\)}]}]]],
+  "  on all the data points and obtain\n\n\t\t",
+  Cell[BoxData[
+      \(X\_k = \(ln \((x\_k)\)\ \ and\ \ Y\_k = ln \((y\_k)\)\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      \(k = 1, 2,  ... , n\)]],
+  ".  \n\n",
+  StyleBox["Fit the points",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(X\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_1\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(X\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_2\)}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{\(X\_n\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(Y\_n\)}], ")"}]}]]],
+  "  with a \"",
+  StyleBox["least squares line",
+    FontColor->RGBColor[0, 0, 1]],
+  "\" of the form  ",
+  Cell[BoxData[
+      \(Y = A\ X + B\)]],
+  ".  \n\nComparing the equations  ",
+  Cell[BoxData[
+      RowBox[{"Y", "=", 
+        RowBox[{
+          RowBox[{\(A\ X\), "+", 
+            RowBox[{"B", "  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox[
+                RowBox[{
+                  StyleBox[" ",
+                    FontFamily->"Times New Roman"], " "}]], "Y"}]}], 
+          "=", \(a\ X + ln \((c)\)\)}]}]]],
+  "  we see that  ",
+  Cell[BoxData[
+      RowBox[{"A", "=", 
+        RowBox[{
+          RowBox[{"a", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "B"}], 
+          "=", \(ln \((c)\)\)}]}]]],
+  ".  Thus\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{"a", "=", 
+        RowBox[{
+          RowBox[{"A", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", "c"}], " ", 
+          "=", \(\[ExponentialE]\^B\)}]}]]],
+  " \n\nare used to construct the coefficients which are then used to \"fit \
+the curve\"  \n\n\t\t  ",
+  Cell[BoxData[
+      \(y = c\ x\^a\)]],
+  "  \n\nto the given data points  ",
+  Cell[BoxData[
+      RowBox[{\((x\_1, y\_1)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_2, y\_2)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \((x\_n, y\_n)\)}]]],
+  "  in the xy-plane. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NonLinearCurveFitProof.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/NonLinearCurveFitProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[" 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Fit the curve  ",
+  Cell[BoxData[
+      \(y = c\ x\^a\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "1.1"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{"(", 
+          RowBox[{"2.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "2.8"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "5.2"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "8.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "11.1"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold"]], "Text",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[TextData[{
+  "Enter the point into a two dimensional array ",
+  StyleBox["xys",
+    FontWeight->"Bold"],
+  " which stores points in the xy-plane.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(xys\  = \ {\ {1.0, \ 1.1}, \ {2.0, \ 2.8}, {3.0, \ 5.2}, {4.0, \ 
+            8.0}, {5.0, \ 11.1}\ };\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell["Look at the transpose of this \"list of lists.\"", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(tr\)\(\ \)\(=\)\(\ \)\(Transpose[xys]\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The two portions of this data structure are separated by  breaking off the \
+first and second parts of the \"list of lists\"  ",
+  Cell[BoxData[
+      StyleBox[\(tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)\),
+        FontWeight->"Bold"]]],
+  "  and  ",
+  Cell[BoxData[
+      StyleBox[\(tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\)\),
+        FontWeight->"Bold"]]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(xs\  = \ 
+        tr\_\(\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\(\ \
+\)\);\)\), "\[IndentingNewLine]", 
+    \(\(ys\  = \ 
+        tr\_\(\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\(\ \
+\)\);\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", 
+        xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", ys];\)\ \)}], "Input"],
+
+Cell["\<\
+We want to use the logarithm of the abscissas and the logarithm of the \
+ordinates. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Xs\  = \ Log[xs];\)\ \), "\n", 
+    \(\(Ys\  = \ Log[ys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", 
+        xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(y\_k\)} = \>\"", 
+        ys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_k\) = Log[\!\(x\_k\)]\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(Y\_k\) = Log[\!\(x\_k\)]\>\""];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(X\_k\)} = \>\"", 
+        Xs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(Y\_k\)} = \>\"", Ys];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now \"glue together\" the transformed parts to form the pairs  ",
+  Cell[BoxData[
+      \({\((X\_k, Y\_k)\)}\)]],
+  "  and store them in the two dimensional array XY",
+  StyleBox["s",
+    FontWeight->"Bold"],
+  " which stores points in the XY-plane.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(XYs\  = \ Transpose[{Xs, Ys}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", XYs];\)\ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Now use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " procedure  ",
+  StyleBox["Fit",
+    FontWeight->"Bold"],
+  "  to get the least squares line in the XY-plane.  Then we shall graph this \
+line in the transformed XY-plane."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(g[X_]\  = \ Fit[XYs, {1, X}, X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", 
+        XYs];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<In the  XY - plane\>"];\)\ \), "\n", 
+    \(\(Print["\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "Now plot the \"least squares line\"  ",
+  Cell[BoxData[
+      \(Y\  = \ \(g[X]\  = \ A\ X\  + \ B\)\)]],
+  "  in the XY-plane."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        Plot[g[X], {X, 0, 1.8}, PlotRange \[Rule] {0, 2.5}, 
+          PlotStyle \[Rule] Orange, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[XYs, PlotStyle \[Rule] {Brown, PointSize[0.025]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph, dots, AxesLabel \[Rule] {"\<X\>", "\<Y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", XYs];\)\ \), "\n", 
+    \(\(Print["\<Y = g[X] = \>", g[X]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "To get back to xy space we could copy the coefficients from  ",
+  StyleBox["g",
+    FontWeight->"Bold"],
+  "  or we could go looking inside ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to see where they are kept. The data structure of  ",
+  StyleBox["g",
+    FontWeight->"Bold"],
+  "  looks like:"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(TreeForm[g[x]]\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "So the coefficients  A  is located at ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\)\)]],
+  " and  B  is located at ",
+  Cell[BoxData[
+      \(\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[BoxData[{
+    \(\(A\  = \ \(g[x]\)\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(B\  = \ \(g[x]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", B];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now we are in business, we use  ",
+  Cell[BoxData[
+      \(c\  = \[ExponentialE]\^B\)]],
+  "  and a = A to get the coefficients of  ",
+  Cell[BoxData[
+      StyleBox[\(y = \(f\_2[x] = c\ x\^a\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  back in the original  xy-plane."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(c\  = \[ExponentialE]\^B;\)\ \), "\n", 
+    \(\(a\  = \ A;\)\ \), "\n", 
+    \(\(f\_2[x_]\  = c\ x\^a\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<In the  xy - plane\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<a = \>", a];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_2\)[x] = c \!\(x\^a\)\>\"", "\<\n\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(f\_2\)[x] = \>\"", f\_2[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now graph the function  ",
+  Cell[BoxData[
+      \(y = f\_2[x]\)]],
+  "  in the xy-plane."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(graph1\  = \ 
+        Plot[f\_2[x], {x, 0, 5.2}, PlotRange \[Rule] {0, 11.4}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Red, PointSize[0.025]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, AxesLabel \[Rule] {"\<x\>", "\<y\>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_2\)[x] = \>\"", f\_2[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example  3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Often times a  scientist must decide which formula \"fits\" the data \
+best.\n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find both the \"exponential fit\" and \"power fit\" for the data points  \
+",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "2.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "4.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "8.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "13.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "21.0"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Discuss how this was accomplished and what transformations were used in \
+the process.\n",
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Determine which curve fits the data best."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold"]], "Text",
+  FontColor->RGBColor[1, 0, 1]],
+
+Cell[TextData[{
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Fit the curve  ",
+  Cell[BoxData[
+      \(y = c\ \[ExponentialE]\^\(a\ x\)\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "2.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "4.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "8.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "13.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "21.0"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(xys\  = \ {\ {1.0, \ 2.0}, {2.0, \ 4.0}, {3.0, \ 8.0}, {4.0, \ 
+            13.0}, {5.0, \ 21.0}\ };\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell["\<\
+Find the logarithm of the ordinates and form list of transformed points.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(tr\  = \ Transpose[xys];\)\ \ \), "\n", 
+    \(\(xs\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \ \
+\), "\n", 
+    \(\(ys\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \ \
+\), "\n", 
+    \(\(Xs\  = \ xs;\)\ \ \), "\n", 
+    \(\(Ys\  = \ Log[ys];\)\ \ \), "\n", 
+    \(\(XYs\  = \ Transpose[{Xs, Ys}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", 
+        XYs];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Compute the coefficients of the linear system and get the coefficients  A  \
+and  B, and compute the coefficients  a and  c  and the exponential fit.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(g[X_]\  = \ Fit[XYs, {1, X}, X];\)\ \), "\n", 
+    \(\(A\  = \ \(g[X]\)\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(B\  = \ \(g[X]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(c\  = \ \[ExponentialE]\^B;\)\ \), "\n", 
+    \(\(a\  = \ A;\)\ \), "\n", 
+    \(\(f\_1[x_]\  = \ 
+        c\ \[ExponentialE]\^\(a\ x\)\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Y = g[X] = \>", 
+        g[X]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<y = \!\(f\_1\)[x] = \>\"", 
+        f\_1[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(graph1\  = \ 
+        Plot[f\_1[x], {x, 0, 5}, PlotRange \[Rule] {0, 22}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>"}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph1, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), "\n", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", f\_1[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Fit the curve  ",
+  Cell[BoxData[
+      \(y = c\ x\^a\)]],
+  "  to the data points  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{"1.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "2.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"2.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "4.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"3.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "8.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"4.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "13.0"}], ")"}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{"(", 
+          RowBox[{"5.0", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], " ", "21.0"}], ")"}]}]],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(xys\  = \ {\ {1.0, \ 2.0}, {2.0, \ 4.0}, {3.0, \ 8.0}, {4.0, \ 
+            13.0}, {5.0, \ 21.0}\ };\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \)}], "Input",\
+
+  AspectRatioFixed->False],
+
+Cell["\<\
+Find the logarithm of both the abscissas and ordinates and form lists of \
+transformed points.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(tr\  = \ Transpose[xys];\)\ \), "\n", 
+    \(\(xs\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\ \ \
+\), "\n", 
+    \(\(ys\  = \ 
+        tr\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\n", 
+    \(\(Xs\  = \ Log[xs];\)\ \), "\n", 
+    \(\(Ys\  = \ Log[ys];\)\ \), "\n", 
+    \(\(XYs\  = \ Transpose[{Xs, Ys}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", 
+        xys];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<{(\!\(X\_k\),\!\(Y\_k\))} = \>\"", 
+        XYs];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell["\<\
+Compute the coefficients of the linear system and get the coefficients  A  \
+and  B, and compute the coefficients  a and  c  and the power fit.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(g[X_]\  = \ Fit[XYs, {1, X}, X];\)\ \), "\n", 
+    \(\(A\  = \ \(g[X]\)\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(B\  = \ \(g[X]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(c\  = \ \[ExponentialE]\^B;\)\ \), "\n", 
+    \(\(a\  = \ A;\)\ \), "\n", 
+    \(\(f\_2[x_]\  = \ c\ x\^a;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Y = g[X] = \>", 
+        g[X]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<y = \!\(f\_2\)[x] = \>\"", 
+        f\_2[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(graph2\  = \ 
+        Plot[f\_2[x], {x, 0, 5}, PlotRange \[Rule] {0, 22}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>"}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[graph2, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_2\)[x] = \>\"", f\_2[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3  (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Determine which curve  ",
+  Cell[BoxData[
+      \(y = \(f\_1[x] = c\ \[ExponentialE]\^\(a\ x\)\)\)]],
+  "  or  ",
+  Cell[BoxData[
+      \(y = \(f\_2[x] = c\ x\^a\)\)]],
+  "  is the better fit to the data points."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "First, consider ",
+  Cell[BoxData[
+      \(y = \(f\_1[x] = c\ \[ExponentialE]\^\(a\ x\)\)\)]],
+  "  and the sum of the squares of the residuals  ",
+  Cell[BoxData[
+      \(r\_1 = \[Sum]\+\(k = 1\)\%n\((y\_k - f\_1[x\_k])\)\^2\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = Length[xs];\)\), "\n", 
+    \(\(r\_1 = \[Sum]\+\(k = 1\)\%n\((ys\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\) - f\_1[xs\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)])\)\^2;\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<\!\(f\_1\)[x] = \>\"", f\_1[x]]\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(r\_1\) = \>\"", r\_1];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Second, consider ",
+  Cell[BoxData[
+      \(y = \(f\_2[x] = c\ x\^a\)\)]],
+  "  and the sum of the squares of the residuals  ",
+  Cell[BoxData[
+      \(r\_2 = \[Sum]\+\(k = 1\)\%n\((y\_k - f\_2[x\_k])\)\^2\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = Length[xs];\)\), "\n", 
+    \(\(r\_2 = \[Sum]\+\(k = 1\)\%n\((ys\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\) - f\_2[xs\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)])\)\^2;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(f\_2\)[x] = \>\"", 
+        f\_2[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<   \!\(r\_2\) = \>\"", r\_2];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since  ",
+  Cell[BoxData[
+      \(r\_1 = \(4.52766\  < \ 9.02945 = r\_2\)\)]],
+  ",  it appears that the fit  ",
+  Cell[BoxData[
+      \(y = \(f\_1[x] = c\ \[ExponentialE]\^\(a\ x\)\)\)]],
+  "  is best."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(dots\  = \ 
+        ListPlot[xys, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[graph1, graph2, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{(\!\(x\_k\),\!\(y\_k\))} = \>\"", xys];\)\ \), "\n", 
+    \(\(Print[\*"\"\<y = \!\(f\_1\)[x] = \>\"", 
+        f\_1[x], "\<    and  \>", \*"\"\<\!\(\[Sum]\+\(k = \
+1\)\%n\)(\!\(y\_k\)-\!\(f\_1\)[\!\(x\_k\)]\!\(\()\^2\)\) = \>\"", 
+        r\_1\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y = \!\(f\_2\)[x] = \>\"", 
+        f\_2[x], "\<      and  \>", \*"\"\<\!\(\[Sum]\+\(k = \
+1\)\%n\)(\!\(y\_k\)-\!\(f\_2\)[\!\(x\_k\)]\!\(\()\^2\)\) = \>\"", 
+        r\_2\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/cf.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk",
+    FontSize->12,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/cf.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NonLinearCurveFitBib.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Nonlinear Curve Fitting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/NonLinearCurveFitBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, 128}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 176, 4, 35, "Text"],
+Cell[1955, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3434, 111, 2357, 71, 277, "Text",
+  Evaluatable->False],
+Cell[5794, 184, 4908, 150, 299, "Text",
+  Evaluatable->False],
+Cell[10705, 336, 646, 22, 33, "Text"],
+Cell[11354, 360, 632, 21, 33, "Text"],
+Cell[11989, 383, 3196, 94, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[15210, 481, 101, 2, 33, "Text"],
+Cell[15314, 485, 165, 5, 33, "Text"],
+Cell[15482, 492, 232, 3, 50, "Input"],
+Cell[15717, 497, 86, 1, 33, "Text",
+  Evaluatable->False],
+Cell[15806, 500, 84, 1, 30, "Input"],
+Cell[15893, 503, 466, 14, 33, "Text",
+  Evaluatable->False],
+Cell[16362, 519, 422, 9, 90, "Input"],
+Cell[16787, 530, 930, 27, 71, "Text",
+  Evaluatable->False],
+Cell[17720, 559, 607, 13, 170, "Input"],
+Cell[18330, 574, 305, 9, 33, "Text",
+  Evaluatable->False],
+Cell[18638, 585, 164, 2, 50, "Input"],
+Cell[18805, 589, 235, 9, 33, "Text",
+  Evaluatable->False],
+Cell[19043, 600, 320, 5, 90, "Input"],
+Cell[19366, 607, 207, 7, 33, "Text",
+  Evaluatable->False],
+Cell[19576, 616, 675, 13, 130, "Input"],
+Cell[20254, 631, 371, 12, 52, "Text",
+  Evaluatable->False],
+Cell[20628, 645, 61, 1, 30, "Input"],
+Cell[20692, 648, 309, 9, 33, "Text",
+  Evaluatable->False],
+Cell[21004, 659, 347, 6, 92, "Input"],
+Cell[21354, 667, 404, 14, 33, "Text",
+  Evaluatable->False],
+Cell[21761, 683, 672, 12, 190, "Input"],
+Cell[22436, 697, 122, 5, 33, "Text"],
+Cell[22561, 704, 651, 12, 110, "Input"]
+}, Closed]],
+Cell[23227, 719, 2306, 68, 277, "Text",
+  Evaluatable->False],
+Cell[25536, 789, 4902, 150, 299, "Text",
+  Evaluatable->False],
+Cell[30441, 941, 646, 22, 33, "Text"],
+Cell[31090, 965, 3312, 99, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[34427, 1068, 101, 2, 33, "Text"],
+Cell[34531, 1072, 165, 5, 33, "Text"],
+Cell[34699, 1079, 264, 5, 50, "Input"],
+Cell[34966, 1086, 113, 2, 33, "Text",
+  Evaluatable->False],
+Cell[35082, 1090, 111, 2, 30, "Input"],
+Cell[35196, 1094, 466, 14, 33, "Text",
+  Evaluatable->False],
+Cell[35665, 1110, 430, 9, 90, "Input"],
+Cell[36098, 1121, 157, 5, 33, "Text",
+  Evaluatable->False],
+Cell[36258, 1128, 617, 13, 170, "Input"],
+Cell[36878, 1143, 305, 9, 33, "Text",
+  Evaluatable->False],
+Cell[37186, 1154, 193, 4, 50, "Input"],
+Cell[37382, 1160, 322, 11, 33, "Text",
+  Evaluatable->False],
+Cell[37707, 1173, 330, 6, 90, "Input"],
+Cell[38040, 1181, 207, 7, 33, "Text",
+  Evaluatable->False],
+Cell[38250, 1190, 721, 14, 130, "Input"],
+Cell[38974, 1206, 391, 13, 33, "Text",
+  Evaluatable->False],
+Cell[39368, 1221, 88, 2, 30, "Input"],
+Cell[39459, 1225, 309, 9, 33, "Text",
+  Evaluatable->False],
+Cell[39771, 1236, 347, 6, 92, "Input"],
+Cell[40121, 1244, 355, 11, 33, "Text",
+  Evaluatable->False],
+Cell[40479, 1257, 619, 11, 190, "Input"],
+Cell[41101, 1270, 121, 5, 33, "Text"],
+Cell[41225, 1277, 674, 13, 110, "Input"]
+}, Closed]],
+Cell[41914, 1293, 3698, 108, 87, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[45637, 1405, 101, 2, 33, "Text"],
+Cell[45741, 1409, 3250, 96, 33, "Text",
+  Evaluatable->False],
+Cell[48994, 1507, 263, 5, 50, "Input"],
+Cell[49260, 1514, 145, 4, 33, "Text",
+  Evaluatable->False],
+Cell[49408, 1520, 666, 15, 170, "Input"],
+Cell[50077, 1537, 222, 5, 33, "Text",
+  Evaluatable->False],
+Cell[50302, 1544, 670, 14, 172, "Input"],
+Cell[50975, 1560, 648, 12, 110, "Input"],
+Cell[51626, 1574, 3229, 96, 33, "Text",
+  Evaluatable->False],
+Cell[54858, 1672, 263, 5, 50, "Input"],
+Cell[55124, 1679, 167, 5, 33, "Text",
+  Evaluatable->False],
+Cell[55294, 1686, 663, 15, 170, "Input"],
+Cell[55960, 1703, 216, 5, 33, "Text",
+  Evaluatable->False],
+Cell[56179, 1710, 638, 13, 172, "Input"],
+Cell[56820, 1725, 664, 13, 110, "Input"],
+Cell[57487, 1740, 375, 13, 33, "Text",
+  Evaluatable->False],
+Cell[57865, 1755, 260, 7, 35, "Text"],
+Cell[58128, 1764, 407, 6, 113, "Input"],
+Cell[58538, 1772, 240, 7, 35, "Text"],
+Cell[58781, 1781, 421, 7, 113, "Input"],
+Cell[59205, 1790, 234, 8, 33, "Text"],
+Cell[59442, 1800, 804, 15, 154, "Input"]
+}, Closed]],
+Cell[60261, 1818, 833, 24, 30, "Text"],
+Cell[61097, 1844, 158, 3, 35, "Text"],
+Cell[61258, 1849, 589, 18, 33, "Text"],
+Cell[61850, 1869, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

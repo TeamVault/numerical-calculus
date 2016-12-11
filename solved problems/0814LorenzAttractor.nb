@@ -1,0 +1,2168 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     78106,       1987]*)
+(*NotebookOutlinePosition[     79356,       2026]*)
+(*  CellTagsIndexPosition[     79312,       2022]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Lorenz Attractor",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Lorenz Attractor",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe ",
+  ButtonBox["Lorenz attractor",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LorenzAttractor.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " is a set of differential equations which are popular in the field of \
+Chaos. The equations describe the flow of fluid in a box which is heated \
+along the bottom. This model was intended to simulate medium-scale \
+atmospheric convection.  Lorenz simplified some of the Navier-Stokes \
+equations in the area of fluid dynamics and obtained three ordinary \
+differential equations\n\n\t\t",
+  Cell[BoxData[
+      \(x'\  = \ p \((y - x)\)\)]],
+  ",  \n\n\t\t",
+  Cell[BoxData[
+      \(y'\  = \ r\ x\  - \ y\  - \ x\ z\)]],
+  ",  ",
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z'\  = \ x\ y\  - \ c\ z\)]],
+  ".      \n\t\nThe parameter ",
+  StyleBox["p",
+    FontFamily->"Courier New"],
+  " is the ",
+  ButtonBox["Prandtl number",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/physics/PrandtlNumber.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  Cell[BoxData[
+      \(r = Ra\/Ra\_c\)]],
+  " is the quotient of the",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Rayleigh number",
+    ButtonData:>{
+      URL[ "http://scienceworld.wolfram.com/physics/RayleighNumber.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  "  and ",
+  ButtonBox["critical Rayleigh number",
+    ButtonData:>{
+      URL[ 
+      "http://scienceworld.wolfram.com/physics/CriticalRayleighNumber.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  "  and ",
+  StyleBox["b",
+    FontFamily->"Courier New"],
+  " is a geometric factor.  Lorenz is attributed to using the values ",
+  Cell[BoxData[
+      \(p = 10, r = 28, c = 8\/3\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  "\n\tThere are three critical points ",
+  StyleBox["(0,0,0)",
+    FontFamily->"Courier New"],
+  "  corresponds to no convection,  and the two points\n\n\t ",
+  Cell[BoxData[
+      \(\((\@\(c \((\ r - 1)\)\), \@\(c \((\ r - 1)\)\), r - 1)\)\)]],
+  " and  ",
+  Cell[BoxData[
+      \(\((\(-\@\(c \((\ r - 1)\)\)\), \(-\@\(c \((\ r - 1)\)\)\), 
+        r - 1)\)\)]],
+  "  correspond to steady convection. \n \nThe latter two points are to be \
+stable, only if the following equation holds \n\n\t",
+  Cell[BoxData[
+      \(r\  = \ \(p \((p + c + 3)\)\)\/\(p - c - 1\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LorenzAttractorProof.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LorenzAttractorProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LorenzAttractorProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LorenzAttractorProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" (Runge-Kutta Method in 3D space)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To compute a numerical approximation for the solution of the \
+initial value problem  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x'\  = \ \(f\_1\) \((t, x, y, z)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((a)\) = \[Alpha]\)]],
+  ",  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y'\  = \ \(f\_2\) \((t, x, y, z)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((a)\) = \[Beta]\)]],
+  StyleBox[",  \n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z'\  = \ \(f\_3\) \((t, x, y, z)\)\)]],
+  StyleBox["  with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z \((a)\) = \[Gamma]\)]],
+  StyleBox[",  \n\nover the interval  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ t\  \[LessEqual] \ b\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "at a discrete set of points. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Runge-Kutta Method in n-dimensions)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Runge3D[a0_, b0_, \[Alpha]_, \[Beta]_, \[Gamma]_, 
+          m0_] := \[IndentingNewLine]Module[{a = a0, b = b0, j, 
+            m = m0}, \[IndentingNewLine]h = \(b - a\)\/m; \ \
+\[IndentingNewLine]T\  = \ 
+            Table[\ a + \((j - 1)\) h, {j, 1, 
+                m + 1}]; \ \[IndentingNewLine]Z = \ 
+            Table[\ {\[Alpha], \[Beta], \[Gamma]}, {j, 1, 
+                m + 1}]; \ \ \[IndentingNewLine]For[\ j = 1, \ 
+            j \[LessEqual] m, \ \(j++\), \[IndentingNewLine]k\_1\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\), Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)]; \ \
+\[IndentingNewLine]k\_2\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_1\/2]; \ \[IndentingNewLine]k\_3\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h\/2, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_2\/2]; \ \[IndentingNewLine]k\_4\  = \ 
+              h\ \ F[T\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) + h, Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + 
+                    k\_3]; \ \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\
+\(j + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+              Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\) + \
+\(1\/6\) \((k\_1 + 2  k\_2 + 2  k\_3 + 
+                      k\_4)\);\ \ ]; \ \[IndentingNewLine]Return[
+            Z];\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the Lorenz I. V. P.  \n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-10\) x + 10  y\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 10\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(y' = \ 28  x - y - x\ z\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = \(-10\)\)]],
+  "  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z' = \(-\ \(8\/3\)\) z + x\ y\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z \((0)\) = 20\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y, z}]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, f, p, r, t, x, y, z];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_, z_]\  = \ 
+        p \((y - x)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_, z_]\  = \ 
+        r\ x - y - x\ z;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_3[t_, x_, y_, z_]\  = \ x\ y\  - \ c\ z;\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(p = 10;\)\), "\[IndentingNewLine]", 
+    \(\(r = 28;\)\), "\[IndentingNewLine]", 
+    \(\(c = 8\/3;\)\), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_, z_}]\  = \ {f\_1[t, x, y, z], f\_2[t, x, y, z], 
+          f\_3[t, x, y, z]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find a numerical solution to Lorenz equations\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y,z}] = \>", F[t, {x, y, z}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution. Since this curve is known to \
+twist a lot in 3D space, it will require about 1000 subintervals to get good \
+resolution. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 10.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0\  = \ 10;\)\), "\[IndentingNewLine]", 
+    \(\(y0\  = \ \(-10\);\)\), "\[IndentingNewLine]", 
+    \(\(z0\  = \ 20;\)\), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = Runge3D[a, b, x0, y0, z0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Purple], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        ScatterPlot3D[pts3, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Magenta, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {2, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts, "\< = \>", N[pts]];\)\)}], "Input"],
+
+Cell["We can plot the projections on the coordinate planes.", "Text"],
+
+Cell[BoxData[{
+    \(\(XY0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXY0 = 
+        ScatterPlot3D[XY0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXY0, 
+        PlotRange \[Rule] {All, 
+            All, {Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)] - 5, 
+              Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)]}}, ViewPoint \[Rule] {2, \(-3\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grXZ0 = 
+        ScatterPlot3D[XZ0, PlotJoined \[Rule] True, \ 
+          PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXZ0, 
+        PlotRange \[Rule] {All, {Min[\(Transpose[Z]\)\_\(\(\
+\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)] - 5, 
+              Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)]}, All}, ViewPoint \[Rule] {2, \(-3\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ0 = 
+        Transpose[{Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)] + 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grYZ0 = 
+        ScatterPlot3D[YZ0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grYZ0, 
+        PlotRange \[Rule] \
+{{Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\
+\)\)], Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)] + 5}, All, All}, ViewPoint \[Rule] {2, \(-3\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XY = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 2}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XY, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XZ, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Green, 
+        AxesLabel \[Rule] {"\<x\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({2, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[YZ, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Blue, 
+        AxesLabel \[Rule] {"\<y\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell["We can plot the coordinate functions.", "Text"],
+
+Cell[BoxData[{
+    \(\(Xs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXs\  = \ 
+        ListPlot[Xs, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          AxesLabel \[Rule] {"\<t\>", "\<x\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Ys = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grYs\  = \ 
+        ListPlot[Ys, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Blue, 
+          AxesLabel \[Rule] {"\<t\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Zs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grZs\  = \ 
+        ListPlot[Zs, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Green, 
+          AxesLabel \[Rule] {"\<t\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[grXs, grYs, grZs];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the Lorenz I. V. P.  \n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-10\) x + 10  y\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 10\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(y' = \ 28  x - y - x\ z\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = \(-10\)\)]],
+  "  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z' = \(-\ \(8\/3\)\) z + x\ y\)]],
+  "\t\t",
+  StyleBox["and\t  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z \((0)\) = 20\)]],
+  "  \nUse ",
+  StyleBox["Mathematica'",
+    FontSlant->"Italic"],
+  "s ",
+  StyleBox["NDSolve",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " procedure.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The syntax must be followed carefully.  The symbol \"",
+  Cell[BoxData[
+      StyleBox["\[Equal]",
+        FontWeight->"Bold"]]],
+  "\" is the boolean equal, you can use two ordinary equal signs next to each \
+other if you prefer \"",
+  Cell[BoxData[
+      StyleBox["==",
+        FontWeight->"Bold"]]],
+  "\".  ",
+  StyleBox["\n\nMathematica's numerical D.E. solver.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  It is more robust than the Runge-Kutta method, we can solve the \
+D.E.'s over the larger interval",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 20\)]],
+  ".  \n\n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.500008]],
+  "  If you do not use the option  \"",
+  Cell[BoxData[
+      StyleBox[\(\(,\)\(MaxSteps \[Rule] 3000\)\),
+        FontWeight->"Bold"]]],
+  "\" then ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will give you the error message:\n\n",
+  StyleBox["NDSolve::\"mxst\": \"Maximum number of 1000 steps reached at the \
+point t == 11.146875180780313`.\"",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nAfter you solve the problem successfully, you should make copies of \
+the commands and delete the ",
+  StyleBox["MaxSteps",
+    FontWeight->"Bold"],
+  " option so you can see \"numerical analysis in action.\"  (Or the lack of \
+it, because no one wants to report a bad answer.)"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[t, x, y, z];\)\), "\[IndentingNewLine]", 
+    \(\(LorenzEqns[p_, r_, c_, x0_, y0_, z0_] := 
+        Module[{}, \[IndentingNewLine]eqns = {\ \(x'\)[t] \[Equal] 
+                p \((\ y[t] - 
+                      x[t])\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \
+\(y'\)[t] \[Equal] \ \ r\ x[t] - \ y[t] - \ 
+                  x[t] z[t], \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \
+\(z'\)[t] \[Equal] \ 
+                x[t]\ y[t] - c\ z[t]\ }; \[IndentingNewLine]ics = {x[
+                  0] \[Equal] \ x0, y[0] \[Equal] \ y0, \ 
+              z[0] \[Equal] \ z0}; \[IndentingNewLine]Return[
+            Flatten[{eqns, ics}]]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(deic = 
+        LorenzEqns[10, 28, 8\/3, 10, \(-10\), 
+          20];\)\), "\[IndentingNewLine]", 
+    \(solDE\  = \ 
+      NDSolve[deic, \ \[IndentingNewLine]\ {x, y, z}, \ {t, 0, 20}, 
+        MaxSteps \[Rule] 3000]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "We need to get the interpolating functions in three coordinates. The \
+statement ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " is uses replacement rules to obtain a new form which in this case is \
+needed to draw a graph.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(curve = 
+      ReplaceAll[\ {x[t], y[t], z[t], Magenta}, \ solDE\ ]\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Purple], 
+          DisplayFunction \[Rule] Identity];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now we can get a nice graph.  Unfortunately, ParametricPlot3D does not \
+support colors. \n\n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.500008]],
+  "  If you do not use the option  \"",
+  Cell[BoxData[
+      StyleBox[\(\(,\)\(PlotPoints \[Rule] 1000\)\),
+        FontWeight->"Bold"]]],
+  "\" then ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " not use enough points and you will not see the \"true curve.\"\n\nAfter \
+you solve the problem successfully, you should make copies of the commands \
+and delete the ",
+  StyleBox["PlotPoints",
+    FontWeight->"Bold"],
+  " option so you can see the \"mess.\"  It takes a lot of computation to \
+make complicated figures that are accurate.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        ParametricPlot3D[Evaluate[curve], {t, 0, 20}, 
+          PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", f\_3[t, x, y, z]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " If you want to take these nice pictures home on a disk then you can.  \
+However the numerical computations are tremendous and the size on the disk is \
+about 180K.  So you cannot draw very many 3D pictures and store them on a \
+floppy disk.  We usually suggest that you delete the output by going to the \
+",
+  StyleBox["Kernel",
+    FontWeight->"Bold"],
+  " menu, and use the ",
+  StyleBox["Delete All Output",
+    FontWeight->"Bold"],
+  " submenu.  All the necessary ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " commands can then be saved and you can re-execute (every step) later.  To \
+re-execute everything in a ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " notebook use the ",
+  StyleBox["Kernel",
+    FontWeight->"Bold"],
+  " menu, ",
+  StyleBox["Evaluation",
+    FontWeight->"Bold"],
+  " submenu, ",
+  StyleBox["Evaluate Notebook",
+    FontWeight->"Bold"],
+  " submenu. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you want to use ",
+  StyleBox["NDSolve",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  and graph the projections. Then the following commands are needed."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f];\)\), "\[IndentingNewLine]", 
+    \(f = 
+      ReplaceAll[\ {x, y, z}, \ 
+        solDE\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]\ \
+\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        ParametricPlot3D[
+          Evaluate[Append[\(#[t] &\) /@ f, Magenta]], {t, 0, 20}, 
+          PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \)}], \
+"Input"],
+
+Cell["We can plot the projection on the xy-plane.", "Text"],
+
+Cell[BoxData[{
+    \(\(ParametricPlot[{f\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)[t], 
+          f\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)[
+            t]}, {t, 0, 10}, 
+        PlotStyle \[Rule] Red];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We can plot the coordinate function  ",
+  StyleBox["x = x[t]",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[
+        f\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)[t], {t, 
+          0, 10}, PlotStyle \[Rule] Red];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the Lorenz I. V. P. \n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-10\) x + 10  y\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(y' = \ \(470\/19\) x - y - x\ z\)]],
+  "  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z' = \(-\ \(8\/3\)\) z + x\ y\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y, z}]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, p, r, t, x, y, z];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_, z_]\  = \ 
+        p \((y - x)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_, z_]\  = \ 
+        r\ x - y - x\ z;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_3[t_, x_, y_, z_]\  = \ x\ y\  - \ c\ z;\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(p = 10;\)\), "\[IndentingNewLine]", 
+    \(\(r = 470\/19;\)\), "\[IndentingNewLine]", 
+    \(\(c = 8\/3;\)\), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_, z_}]\  = \ {f\_1[t, x, y, z], f\_2[t, x, y, z], 
+          f\_3[t, x, y, z]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find a numerical solution to Lorenz equations\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y,z}] = \>", F[t, {x, y, z}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution. Since this curve is known to \
+twist a lot in 3D space, it will require about 1000 subintervals to get good \
+resolution. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 10.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0\  = \ 10;\)\), "\[IndentingNewLine]", 
+    \(\(y0\  = \ \(-10\);\)\), "\[IndentingNewLine]", 
+    \(\(z0\  = \ 20;\)\), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3a = Runge3D[a, b, x0, y0, z0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Red], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        ScatterPlot3D[pts3a, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] Green, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-17\), 17}, {\(-23\), 23}, {3, 41}}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[N[pts]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The `green` curve starting at the point (10, -10, 20)\>"];\)\
+\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b = 10.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0\  = \ \(-10\);\)\), "\[IndentingNewLine]", 
+    \(\(y0\  = \ 10;\)\), "\[IndentingNewLine]", 
+    \(\(z0\  = \ 20;\)\), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3b = Runge3D[a, b, x0, y0, z0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Red], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        ScatterPlot3D[pts3b, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Blue, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-17\), 17}, {\(-23\), 23}, {3, 41}}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[N[pts]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The  `blue` curve starting at the point (-10, 10, 20)\>"];\)\
+\)}], "Input"],
+
+Cell["\<\
+Let us investigate what happens along the `green` curve and the \
+`blue curve.`
+By trial and error, it can be discovered that the last 322 points on the will \
+illustrate what is happening.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(gr0 = 
+        ScatterPlot3D[Take[pts3a, \(-322\)], PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Green, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gra = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-17\), 17}, {\(-23\), 23}, {3, 41}}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last 322 points of\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<the `green` curve starting at the point (10, -10, 20)\>"];\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical point \>", 
+        N[pts\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)], "\
+\< is stable because\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<the equation r = \!\(\(p \((p + c + 3)\)\)\/\(p - c - \
+1\)\) holds true\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<p = \>", p];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r = \>", r];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(p \((p + c + 3)\)\)\/\(p - c - 1\)\) = (\>\"", 
+        p \((p + c + 3)\), "\<)/(\>", 
+        p - c - 1, "\<) = \>", \(p \((p + c + 3)\)\)\/\(p - c - 1\)];\)\)}], \
+"Input"],
+
+Cell[BoxData[{
+    \(\(gr0 = 
+        ScatterPlot3D[Take[pts3b, \(-322\)], PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Blue, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(grb = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-17\), 17}, {\(-23\), 23}, {3, 41}}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last 322 points of\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<the  `blue` curve starting at the point (-10, 10, 20)\>"];\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical point \>", 
+        N[pts\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)], "\
+\< is stable because\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<the equation r = \!\(\(p \((p + c + 3)\)\)\/\(p - c - \
+1\)\) holds true\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<p = \>", p];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", c];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<r = \>", r];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(p \((p + c + 3)\)\)\/\(p - c - 1\)\) = (\>\"", 
+        p \((p + c + 3)\), "\<)/(\>", 
+        p - c - 1, "\<) = \>", \(p \((p + c + 3)\)\)\/\(p - c - 1\)];\)\)}], \
+"Input"],
+
+Cell[BoxData[{
+    \(\(gr = 
+        Show[gra, grb, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-17\), 17}, {\(-23\), 23}, {3, 41}}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[N[pts]];\)\), "\[IndentingNewLine]", 
+    \(Print["\<Notice that the portion of the \>"]\), "\[IndentingNewLine]", 
+    \(\(Print["\<`green curve` starts at \>", 
+        NumberForm[
+          pts3a\_\(\(\[LeftDoubleBracket]\)\(-322\)\(\[RightDoubleBracket]\)\)\
+, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< `blue curve` starts at \>", 
+        NumberForm[
+          pts3b\_\(\(\[LeftDoubleBracket]\)\(-322\)\(\[RightDoubleBracket]\)\)\
+, 12]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<However, these curves end up circling different stable \
+critical points.\>"];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the Lorenz I. V. P. \n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-10\) x + 10  y\)]],
+  "  \n\t\t",
+  Cell[BoxData[
+      \(y' = \ \(470\/19\) x - y - x\ z\)]],
+  "  ",
+  StyleBox["\n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z' = \(-\ \(8\/3\)\) z + x\ y\)]],
+  "  \nUse ",
+  StyleBox["Mathematica'",
+    FontSlant->"Italic"],
+  "s ",
+  StyleBox["NDSolve",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " procedure.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The syntax must be followed carefully.  The symbol \"",
+  Cell[BoxData[
+      StyleBox["\[Equal]",
+        FontWeight->"Bold"]]],
+  "\" is the boolean equal, you can use two ordinary equal signs next to each \
+other if you prefer \"",
+  Cell[BoxData[
+      StyleBox["==",
+        FontWeight->"Bold"]]],
+  "\".  ",
+  StyleBox["\n\nMathematica's numerical D.E. solver.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  It is more robust than the Runge-Kutta method, we can solve the \
+D.E.'s over the larger interval",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(0 \[LessEqual] t \[LessEqual] 20\)]],
+  ".  \n\n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.500008]],
+  "  If you do not use the option  \"",
+  Cell[BoxData[
+      StyleBox[\(\(,\)\(MaxSteps \[Rule] 3000\)\),
+        FontWeight->"Bold"]]],
+  "\" then ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will give you the error message:\n\n",
+  StyleBox["NDSolve::\"mxst\": \"Maximum number of 1000 steps reached at the \
+point t == 11.146875180780313`.\"",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nAfter you solve the problem successfully, you should make copies of \
+the commands and delete the ",
+  StyleBox["MaxSteps",
+    FontWeight->"Bold"],
+  " option so you can see \"numerical analysis in action.\"  (Or the lack of \
+it, because no one wants to report a bad answer.)"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[t, x, y, z];\)\), "\[IndentingNewLine]", 
+    \(\(LorenzEqns[p_, r_, c_, x0_, y0_, z0_] := 
+        Module[{}, \[IndentingNewLine]eqns = {\ \(x'\)[t] \[Equal] 
+                p \((\ y[t] - 
+                      x[t])\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \
+\(y'\)[t] \[Equal] \ \ r\ x[t] - \ y[t] - \ 
+                  x[t] z[t], \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \ \ \ \
+\(z'\)[t] \[Equal] \ 
+                x[t]\ y[t] - c\ z[t]\ }; \[IndentingNewLine]ics = {x[
+                  0] \[Equal] \ x0, y[0] \[Equal] \ y0, \ 
+              z[0] \[Equal] \ z0}; \[IndentingNewLine]Return[
+            Flatten[{eqns, ics}]]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(LorenzEqns[a, b, c, x\_0, y\_0, z\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Lorenz attractor equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<With\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[ics]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(deic = LorenzEqns[10, 470\/19, 8\/3, 8, \(-8\), 24];\)\), "\n", 
+    \(\(solDE\  = \ 
+        NDSolve[deic, \ \[IndentingNewLine]\ {x, y, z}, \ {t, 0, 20}, 
+          MaxSteps \[Rule] 3000];\)\ \ \), "\n", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(curve = 
+        ReplaceAll[\ {x[t], y[t], z[t], Magenta}, \ solDE\ ];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 2, 3}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Purple], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\n", 
+    \(\(gr = 
+        ParametricPlot3D[Evaluate[curve], {t, 0, 20}, 
+          PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\n\
+", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[ics]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(deic = LorenzEqns[10, 470\/19, 8\/3, \(-8\), 8, 24];\)\), "\n", 
+    \(\(solDE\  = \ 
+        NDSolve[deic, \ \[IndentingNewLine]\ {x, y, z}, \ {t, 0, 20}, 
+          MaxSteps \[Rule] 3000];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(curve = 
+        ReplaceAll[\ {x[t], y[t], z[t], Magenta}, \ solDE\ ];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\n", 
+    \(\(gr = 
+        ParametricPlot3D[Evaluate[curve], {t, 0, 20}, 
+          PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\n\
+", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[ics]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(deic = LorenzEqns[10, 470\/19, 8\/3, 8, 8, 24];\)\), "\n", 
+    \(\(solDE\  = \ 
+        NDSolve[deic, \ \[IndentingNewLine]\ {x, y, z}, \ {t, 0, 20}, 
+          MaxSteps \[Rule] 3000];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(curve = 
+        ReplaceAll[\ {x[t], y[t], z[t], Magenta}, \ solDE\ ];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\n", 
+    \(\(ParametricPlot3D[Evaluate[curve], {t, 0, 20}, 
+        PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+        ViewPoint \[Rule] {1, \(-3\), 1}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False];\)\ \ \), "\n", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\n\
+", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[ics]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(deic = LorenzEqns[10, 470\/19, 8\/3, \(-8\), \(-8\), 24];\)\), "\n", 
+    \(\(solDE\  = \ 
+        NDSolve[deic, \ \[IndentingNewLine]\ {x, y, z}, \ {t, 0, 20}, 
+          MaxSteps \[Rule] 3000];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(curve = 
+        ReplaceAll[\ {x[t], y[t], z[t], Magenta}, \ solDE\ ];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\n", 
+    \(\(ParametricPlot3D[Evaluate[curve], {t, 0, 10}, 
+        PlotPoints \[Rule] 1000, PlotRange \[Rule] All, 
+        ViewPoint \[Rule] {1, \(-3\), 1}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False];\)\ \ \), "\n", 
+    \(\(Print["\<Numerical solution to the Lorenz equations\>"];\)\ \ \), "\n\
+", 
+    \(\(Print["\<x' = \>", f\_1[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<y' = \>", f\_2[t, x, y, z]\ ];\)\ \ \), "\n", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<With\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[ics]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["R\[ODoubleDot]ssler Attractor",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n"
+}], "Text"],
+
+Cell[TextData[{
+  "\tIn 1976 the Swiss mathematician Otto R\[ODoubleDot]ssler was studying \
+oscillations in chemical reactions and discovered another set of equations \
+with attractor.  They also are involved with the study of  Navier-Stokes \
+equations.  \n\n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-\((y\  + z)\)\)\)]],
+  ",    \n\t\t\n\t\t",
+  Cell[BoxData[
+      \(y' = \ x + a\ y\)]],
+  ",    ",
+  StyleBox["   \n\t\t\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z' = b + x\ z - c\ z\)]],
+  ".       \n\nR\[ODoubleDot]ssler is acclaimed to use the parameters where \
+",
+  StyleBox["a = 0.2",
+    FontFamily->"Courier New"],
+  ", ",
+  StyleBox["b = 0.2",
+    FontFamily->"Courier New"],
+  ", and ",
+  StyleBox["c = 5.7",
+    FontFamily->"Courier New"],
+  ".  Screw chaos occurs when the parameter values are ",
+  StyleBox["a = 0.343,",
+    FontFamily->"Courier New"],
+  "  ",
+  StyleBox["b = 1.82",
+    FontFamily->"Courier New"],
+  "  and  ",
+  "c = 9.75",
+  ".  R\[ODoubleDot]ssler wanted to find a minimum system which would exhibit \
+chaos. This system of equations looks easier than the Lorenz system, but it \
+is harder to analyze."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the R\[ODoubleDot]ssler attractor I. V. P.   \n\t\t",
+  Cell[BoxData[
+      \(x'\  = \(-\((y\  + z)\)\)\)]],
+  "  \t\t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 9\)]],
+  ",    \n\t  \t",
+  Cell[BoxData[
+      \(y'\  = \ \ x + 0.2  y\)]],
+  "  \t\t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = 0\)]],
+  ",    ",
+  StyleBox["   \n\t",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z'\  = \ 0.2 + x\ z - 5.7  z\)]],
+  "  \t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z \((0)\) = 1\)]],
+  ".   "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y, z}]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, c, f, t, x, y, z];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_, 
+          z_]\  = \(-\((\ y + z)\)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_, z_]\  = x + a\ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_3[t_, x_, y_, z_]\  = \ \ b + x\ z - c\ z;\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0.2;\)\), "\[IndentingNewLine]", 
+    \(\(b = 0.2;\)\), "\[IndentingNewLine]", 
+    \(\(c = 5.7;\)\), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_, z_}]\  = \ {f\_1[t, x, y, z], f\_2[t, x, y, z], 
+          f\_3[t, x, y, z]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find a numerical solution to R\[ODoubleDot]ssler \
+equations\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y,z}] = \>", F[t, {x, y, z}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution. Since this curve is known to \
+twist a lot in 3D space, it will require about 1000 subintervals to get good \
+resolution. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(t0 = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(tn = 65.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0\  = \ 9;\)\), "\[IndentingNewLine]", 
+    \(\(y0\  = \ \(-0\);\)\), "\[IndentingNewLine]", 
+    \(\(z0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = Runge3D[t0, tn, x0, y0, z0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 1, 2}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 1, 2}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Blue], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        ScatterPlot3D[pts3, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Magenta, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-10\), 17}, {\(-16\), 8}, {\(-5\), 24}}, 
+          ViewPoint \[Rule] {3, \(-2\), 1}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts];\)\)}], "Input"],
+
+Cell["We can plot the projections on the coordinate planes.", "Text"],
+
+Cell[BoxData[{
+    \(\(XY0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXY0 = 
+        ScatterPlot3D[XY0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXY0, 
+        PlotRange \[Rule] {{\(-10\), 17}, {\(-16\), 8}, {\(-5\), 24}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grXZ0 = 
+        ScatterPlot3D[XZ0, PlotJoined \[Rule] True, \ 
+          PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXZ0, 
+        PlotRange \[Rule] {{\(-10\), 17}, {\(-16\), 8}, {\(-5\), 24}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ0 = 
+        Transpose[{Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)] + 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grYZ0 = 
+        ScatterPlot3D[YZ0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grYZ0, 
+        PlotRange \[Rule] {{\(-10\), 17}, {\(-16\), 8}, {\(-5\), 24}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XY = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 2}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XY, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Red, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XZ, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green, 
+        AxesLabel \[Rule] {"\<x\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({2, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[YZ, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue, 
+        AxesLabel \[Rule] {"\<y\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell["We can plot the coordinate functions.", "Text"],
+
+Cell[BoxData[{
+    \(\(Xs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXs\  = \ 
+        ListPlot[Xs, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          AxesLabel \[Rule] {"\<t\>", "\<x\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Ys = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grYs\  = \ 
+        ListPlot[Ys, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] Blue, 
+          AxesLabel \[Rule] {"\<t\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Zs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grZs\  = \ 
+        ListPlot[Zs, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] Green, 
+          AxesLabel \[Rule] {"\<t\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[grXs, grYs, grZs, 
+        PlotRange \[Rule] All];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the R\[ODoubleDot]ssler attractor I. V. P.   \n\t",
+  Cell[BoxData[
+      \(x'\  = \(-\((y\  + z)\)\)\)]],
+  "  \t\t\t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x \((0)\) = 9\)]],
+  ",    \n  \t",
+  Cell[BoxData[
+      \(y'\  = \ \ x + 0.343  y\)]],
+  "  \t\t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(y \((0)\) = 0\)]],
+  ",    ",
+  StyleBox["   \n",
+    FontFamily->"Times New Roman"],
+  "\t",
+  Cell[BoxData[
+      \(z'\  = \ 1.82 + x\ z - 9.75  z\)]],
+  "  \t",
+  StyleBox["with  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(z \((0)\) = 1\)]],
+  ".      \t"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the vector function  ",
+  Cell[BoxData[
+      \(F[t, {x, y, z}]\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, c, f, t, x, y, z];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_1[t_, x_, y_, 
+          z_]\  = \(-\((\ y + z)\)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_2[t_, x_, y_, z_]\  = x + a\ y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(f\_3[t_, x_, y_, z_]\  = \ \ b + x\ z - c\ z;\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0.343;\)\), "\[IndentingNewLine]", 
+    \(\(b = 1.82;\)\), "\[IndentingNewLine]", 
+    \(\(c = 9.75;\)\), "\[IndentingNewLine]", 
+    \(\(F[t_, {x_, y_, z_}]\  = \ {f\_1[t, x, y, z], f\_2[t, x, y, z], 
+          f\_3[t, x, y, z]\ };\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find a numerical solution to R\[ODoubleDot]ssler \
+equations\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[t,{x,y,z}] = \>", F[t, {x, y, z}]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Compute the Runge-Kutta solution. Since this curve is known to \
+twist a lot in 3D space, it will require about 1000 subintervals to get good \
+resolution. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(t0 = 0.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(tn = 65.0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0\  = \ 9;\)\), "\[IndentingNewLine]", 
+    \(\(y0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(z0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(n = 1000;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = {f\_1[t, x, y, z] \[Equal] 0, f\_2[t, x, y, z] \[Equal] 0, 
+          f\_3[t, x, y, z] \[Equal] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = Solve[eqns, {x, y, z}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = Runge3D[t0, tn, x0, y0, z0, n];\)\ \ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[ReplaceAll[{x, y, z}, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+], {i, 1, 2}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Table[Point[
+            ReplaceAll[{x, y, z}, 
+              solset\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)]], {i, 1, 2}];\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[Prepend[Prepend[dots, PointSize[0.025]], Blue], 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr0 = 
+        ScatterPlot3D[pts3, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] \ Magenta, PlotRange \[Rule] All, 
+          ViewPoint \[Rule] {1, \(-3\), 1}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, Boxed \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Show[gr0, dots, 
+          AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+          BoxRatios \[Rule] {1, 1, 1}, 
+          PlotRange \[Rule] {{\(-15\), 23}, {\(-25\), 12}, {\(-5\), 65}}, 
+          ViewPoint \[Rule] {3, \(-2\), 1}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", 
+        f\_1[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", 
+        f\_2[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", 
+        f\_3[t, x, y, z]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The critical points are\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[pts];\)\)}], "Input"],
+
+Cell["We can plot the projections on the coordinate planes.", "Text"],
+
+Cell[BoxData[{
+    \(\(XY0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXY0 = 
+        ScatterPlot3D[XY0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXY0, 
+        PlotRange \[Rule] {{\(-15\), 23}, {\(-25\), 12}, {\(-5\), 65}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ0 = 
+        Transpose[{\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), 
+            Min[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)] - 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grXZ0 = 
+        ScatterPlot3D[XZ0, PlotJoined \[Rule] True, \ 
+          PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grXZ0, 
+        PlotRange \[Rule] {{\(-15\), 23}, {\(-25\), 12}, {\(-5\), 65}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ0 = 
+        Transpose[{Max[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)] + 5 + 
+              0 \( Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)}]\
+;\)\), "\[IndentingNewLine]", 
+    \(\(grYZ0 = 
+        ScatterPlot3D[YZ0, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr0, dots, grYZ0, 
+        PlotRange \[Rule] {{\(-15\), 23}, {\(-25\), 12}, {\(-5\), 65}}, 
+        ViewPoint \[Rule] {3, \(-2\), 1}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Numerical solution to the R\[ODoubleDot]ssler equations\>"];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<And the projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XY = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 2}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XY, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Red, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xy-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(XZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({1, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[XZ, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Green, 
+        AxesLabel \[Rule] {"\<x\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the xz-plane\>"];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(YZ = 
+        Transpose[\(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\({2, 3}\)\(\
+\[RightDoubleBracket]\)\)];\)\), "\[IndentingNewLine]", 
+    \(\(ListPlot[YZ, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Blue, 
+        AxesLabel \[Rule] {"\<y\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The projection in the yz-plane\>"];\)\)}], "Input"],
+
+Cell["We can plot the coordinate functions.", "Text"],
+
+Cell[BoxData[{
+    \(\(Xs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grXs\  = \ 
+        ListPlot[Xs, PlotJoined \[Rule] True, \ PlotStyle \[Rule] Red, 
+          AxesLabel \[Rule] {"\<t\>", "\<x\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Ys = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grYs\  = \ 
+        ListPlot[Ys, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] Blue, 
+          AxesLabel \[Rule] {"\<t\>", "\<y\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Zs = 
+        Transpose[{T, \(Transpose[Z]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(grZs\  = \ 
+        ListPlot[Zs, PlotJoined \[Rule] True, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] Green, 
+          AxesLabel \[Rule] {"\<t\>", "\<z\>"}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[grXs, grYs, grZs, 
+        PlotRange \[Rule] All];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = x[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y = y[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z = z[t]  for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/LorenzAttractorBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lorenz Attractor",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/LorenzAttractorBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PageHeaders->{{Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"], Inherited, Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"]}, {Cell[ 
+        TextData[ {
+          ValueBox[ "FileName"]}], "Header"], Inherited, Cell[ 
+        TextData[ {
+          CounterBox[ "Page"]}], "PageNumber"]}},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {36, 36}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->True,
+"PrintMultipleHorizontalPages"->False,
+"FirstPageHeader"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 173, 4, 35, "Text"],
+Cell[1952, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3431, 111, 1899, 60, 285, "Text"],
+Cell[5333, 173, 604, 16, 171, "Text"],
+Cell[5940, 191, 628, 22, 33, "Text"],
+Cell[6571, 215, 619, 21, 33, "Text"],
+Cell[7193, 238, 1297, 41, 147, "Text"],
+Cell[8493, 281, 385, 11, 33, "Text"],
+Cell[8881, 294, 1660, 26, 309, "Input"],
+Cell[10544, 322, 751, 32, 93, "Text"],
+
+Cell[CellGroupData[{
+Cell[11320, 358, 101, 2, 33, "Text"],
+Cell[11424, 362, 113, 5, 33, "Text"],
+Cell[11540, 369, 344, 6, 90, "Input"],
+Cell[11887, 377, 739, 14, 204, "Input"],
+Cell[12629, 393, 180, 4, 33, "Text"],
+Cell[12812, 399, 2357, 46, 470, "Input"],
+Cell[15172, 447, 69, 0, 33, "Text"],
+Cell[15244, 449, 1292, 24, 132, "Input"],
+Cell[16539, 475, 1294, 25, 132, "Input"],
+Cell[17836, 502, 1256, 23, 132, "Input"],
+Cell[19095, 527, 378, 6, 71, "Input"],
+Cell[19476, 535, 380, 6, 71, "Input"],
+Cell[19859, 543, 379, 6, 71, "Input"],
+Cell[20241, 551, 53, 0, 33, "Text"],
+Cell[20297, 553, 437, 8, 71, "Input"],
+Cell[20737, 563, 438, 8, 71, "Input"],
+Cell[21178, 573, 439, 8, 71, "Input"],
+Cell[21620, 583, 419, 7, 90, "Input"]
+}, Closed]],
+Cell[22054, 593, 915, 39, 110, "Text"],
+
+Cell[CellGroupData[{
+Cell[22994, 636, 101, 2, 33, "Text"],
+Cell[23098, 640, 1626, 46, 185, "Text"],
+Cell[24727, 688, 683, 12, 150, "Input"],
+Cell[25413, 702, 258, 6, 83, "Input"],
+Cell[25674, 710, 266, 7, 33, "Text"],
+Cell[25943, 719, 178, 3, 50, "Input"],
+Cell[26124, 724, 752, 15, 110, "Input"],
+Cell[26879, 741, 774, 20, 109, "Text"],
+Cell[27656, 763, 912, 18, 170, "Input"],
+Cell[28571, 783, 1019, 31, 71, "Text"],
+Cell[29593, 816, 286, 9, 34, "Text"],
+Cell[29882, 827, 202, 5, 50, "Input"],
+Cell[30087, 834, 649, 13, 110, "Input"],
+Cell[30739, 849, 59, 0, 33, "Text"],
+Cell[30801, 851, 340, 6, 50, "Input"],
+Cell[31144, 859, 131, 5, 33, "Text"],
+Cell[31278, 866, 284, 5, 50, "Input"]
+}, Closed]],
+Cell[31577, 874, 417, 17, 93, "Text"],
+
+Cell[CellGroupData[{
+Cell[32019, 895, 101, 2, 33, "Text"],
+Cell[32123, 899, 113, 5, 33, "Text"],
+Cell[32239, 906, 341, 6, 90, "Input"],
+Cell[32583, 914, 744, 14, 218, "Input"],
+Cell[33330, 930, 180, 4, 33, "Text"],
+Cell[33513, 936, 2513, 49, 490, "Input"],
+Cell[36029, 987, 2338, 45, 470, "Input"],
+Cell[38370, 1034, 213, 5, 52, "Text"],
+Cell[38586, 1041, 1912, 36, 342, "Input"],
+Cell[40501, 1079, 1911, 36, 342, "Input"],
+Cell[42415, 1117, 1388, 28, 252, "Input"]
+}, Closed]],
+Cell[43818, 1148, 581, 24, 113, "Text"],
+
+Cell[CellGroupData[{
+Cell[44424, 1176, 101, 2, 33, "Text"],
+Cell[44528, 1180, 1626, 46, 185, "Text"],
+Cell[46157, 1228, 683, 12, 150, "Input"],
+Cell[46843, 1242, 334, 5, 110, "Input"],
+Cell[47180, 1249, 2124, 42, 443, "Input"],
+Cell[49307, 1293, 1301, 26, 323, "Input"],
+Cell[50611, 1321, 1123, 21, 303, "Input"],
+Cell[51737, 1344, 1133, 21, 303, "Input"]
+}, Closed]],
+Cell[52885, 1368, 137, 5, 49, "Text"],
+Cell[53025, 1375, 1178, 36, 223, "Text"],
+Cell[54206, 1413, 779, 32, 90, "Text"],
+
+Cell[CellGroupData[{
+Cell[55010, 1449, 101, 2, 33, "Text"],
+Cell[55114, 1453, 113, 5, 33, "Text"],
+Cell[55230, 1460, 333, 5, 90, "Input"],
+Cell[55566, 1467, 753, 14, 190, "Input"],
+Cell[56322, 1483, 180, 4, 33, "Text"],
+Cell[56505, 1489, 2469, 48, 490, "Input"],
+Cell[58977, 1539, 69, 0, 33, "Text"],
+Cell[59049, 1541, 1143, 21, 131, "Input"],
+Cell[60195, 1564, 1158, 23, 131, "Input"],
+Cell[61356, 1589, 1133, 21, 131, "Input"],
+Cell[62492, 1612, 408, 7, 71, "Input"],
+Cell[62903, 1621, 410, 7, 71, "Input"],
+Cell[63316, 1630, 409, 7, 71, "Input"],
+Cell[63728, 1639, 53, 0, 33, "Text"],
+Cell[63784, 1641, 437, 8, 71, "Input"],
+Cell[64224, 1651, 470, 9, 71, "Input"],
+Cell[64697, 1662, 471, 9, 71, "Input"],
+Cell[65171, 1673, 451, 8, 90, "Input"]
+}, Closed]],
+Cell[65637, 1684, 784, 32, 87, "Text"],
+
+Cell[CellGroupData[{
+Cell[66446, 1720, 101, 2, 33, "Text"],
+Cell[66550, 1724, 113, 5, 33, "Text"],
+Cell[66666, 1731, 333, 5, 90, "Input"],
+Cell[67002, 1738, 757, 14, 190, "Input"],
+Cell[67762, 1754, 180, 4, 33, "Text"],
+Cell[67945, 1760, 2465, 48, 490, "Input"],
+Cell[70413, 1810, 69, 0, 33, "Text"],
+Cell[70485, 1812, 1144, 21, 131, "Input"],
+Cell[71632, 1835, 1159, 23, 131, "Input"],
+Cell[72794, 1860, 1134, 21, 131, "Input"],
+Cell[73931, 1883, 408, 7, 71, "Input"],
+Cell[74342, 1892, 410, 7, 71, "Input"],
+Cell[74755, 1901, 409, 7, 71, "Input"],
+Cell[75167, 1910, 53, 0, 33, "Text"],
+Cell[75223, 1912, 437, 8, 71, "Input"],
+Cell[75663, 1922, 470, 9, 71, "Input"],
+Cell[76136, 1933, 471, 9, 71, "Input"],
+Cell[76610, 1944, 451, 8, 90, "Input"]
+}, Closed]],
+Cell[77076, 1955, 158, 3, 32, "Text"],
+Cell[77237, 1960, 569, 17, 33, "Text"],
+Cell[77809, 1979, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

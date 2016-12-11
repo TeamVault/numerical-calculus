@@ -1,0 +1,4729 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    159691,       4523]*)
+(*NotebookOutlinePosition[    160357,       4546]*)
+(*  CellTagsIndexPosition[    160313,       4542]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[{
+  StyleBox["Module for the ",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Matrix Exponential Solution of a Linear System of O. D. E.'s",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for the Fundamental Matrix",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe seek a solution of a ",
+  ButtonBox["homogeneous first order linear system",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/\
+OrdinaryDifferentialEquationSystemwithConstantCoefficients.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of differential equations.  For illustration purposes we consider the ",
+  Cell[BoxData[
+      \(2\[Times]2\)]],
+  " case: \n",
+  StyleBox["\n\t\t",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(x' = a\ \ x[t]\  + \ b\ \ y[t]\)]],
+  StyleBox["   \n\t\t",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      \(y' = c\ \ x[t]\  + \ d\ \ y[t]\)]],
+  "  \n"
+}], "Text"],
+
+Cell[TextData[{
+  "First, write the system in vector and matrix form  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  "  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"a", "b"},
+                  {"c", "d"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ".  \n\nThen, find the ",
+  ButtonBox["eigenvalues",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Eigenvalue.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " and ",
+  ButtonBox["eigenvectors",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Eigenvector.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[
+          RowBox[{"(", GridBox[{
+                {"a", "b"},
+                {"c", "d"}
+                }], ")"}],
+          FontWeight->"Plain"]}]]],
+  ",  denote the eigenpairs of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  by   \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox[
+              OverscriptBox[
+                StyleBox["v",
+                  FontWeight->"Bold"], "\[RightVector]"],
+              FontWeight->"Bold"], "1"], "=", 
+          RowBox[{"(", GridBox[{
+                {\(v\_\(1, 1\)\)},
+                {\(v\_\(2, 1\)\)}
+                }], ")"}]}]}]]],
+  "   and   ",
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        RowBox[{
+          SubscriptBox[
+            StyleBox[
+              OverscriptBox[
+                StyleBox["v",
+                  FontWeight->"Bold"], "\[RightVector]"],
+              FontWeight->"Bold"], "2"], "=", 
+          RowBox[{"(", GridBox[{
+                {\(v\_\(1, 2\)\)},
+                {\(v\_\(2, 2\)\)}
+                }], ")"}]}]}]]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Assumption.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Assume that there are two ",
+  ButtonBox["linearly independent",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearlyIndependent.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " eigenvectors ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], "1"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], "2"]}]]],
+  ", which correspond to the eigenvalues ",
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_1\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", \(\[Lambda]\_2\)}]]],
+  ", respectively.  Then two linearly independent solution to  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  "  are   \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox[
+              OverscriptBox[
+                StyleBox["x",
+                  FontWeight->"Bold"], "\[RightVector]"],
+              FontWeight->"Bold"], "1"], "[", "t", "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            SubscriptBox[
+              StyleBox[
+                OverscriptBox[
+                  StyleBox["v",
+                    FontWeight->"Bold"], "\[RightVector]"],
+                FontWeight->"Bold"], 
+              "1"], \(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\)}], " ", "=", 
+          " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\)},
+                  {\(v\_\(2, 1\)\)}
+                  }], 
+              ")"}], \(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\)}]}]}]]],
+  ",    and  \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox[
+              OverscriptBox[
+                StyleBox["x",
+                  FontWeight->"Bold"], "\[RightVector]"],
+              FontWeight->"Bold"], "2"], "[", "t", "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            SubscriptBox[
+              StyleBox[
+                OverscriptBox[
+                  StyleBox["v",
+                    FontWeight->"Bold"], "\[RightVector]"],
+                FontWeight->"Bold"], 
+              "2"], \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}], " ", "=", 
+          " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 2\)\)}
+                  }], 
+              ")"}], \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Fundamental Matrix Solution)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The fundamental matrix solution  ",
+  Cell[BoxData[
+      RowBox[{
+        OverscriptBox[
+          StyleBox["\[CapitalPsi]",
+            FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}]]],
+  ",  is formed by using the two column vectors  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], 
+          "1"], \(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], 
+          "2"], \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}]]],
+  ".  \n\n(1)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{"[", 
+            RowBox[{
+              RowBox[{
+                SubscriptBox[
+                  StyleBox[
+                    OverscriptBox[
+                      StyleBox["v",
+                        FontWeight->"Bold"], "\[RightVector]"],
+                    FontWeight->"Bold"], 
+                  "1"], \(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\)}], 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              RowBox[{
+                SubscriptBox[
+                  StyleBox[
+                    OverscriptBox[
+                      StyleBox["v",
+                        FontWeight->"Bold"], "\[RightVector]"],
+                    FontWeight->"Bold"], 
+                  "2"], \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}]}], 
+            "]"}], "  ", "=", " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                  }], ")"}], 
+            RowBox[{"(", GridBox[{
+                  {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                  {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                  }], ")"}]}]}]}]]],
+  ".\n\nThe general solution to  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  "  is the linear combination\n\n(2)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{\(c\_1\), 
+              SubscriptBox[
+                StyleBox[
+                  OverscriptBox[
+                    StyleBox["v",
+                      FontWeight->"Bold"], "\[RightVector]"],
+                  FontWeight->"Bold"], 
+                "1"], \(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\)}], " ", "+",
+             " ", 
+            RowBox[{\(c\_2\), 
+              SubscriptBox[
+                StyleBox[
+                  OverscriptBox[
+                    StyleBox["v",
+                      FontWeight->"Bold"], "\[RightVector]"],
+                  FontWeight->"Bold"], 
+                "2"], \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}]}], "  ", 
+          "=", " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                  }], ")"}], 
+            RowBox[{"(", GridBox[{
+                  {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                  {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                  }], ")"}], 
+            RowBox[{"(", GridBox[{
+                  {\(c\_1\)},
+                  {\(c\_2\)}
+                  }], ")"}]}]}]}]]],
+  ". \n\nIt can be written in matrix form using the fundamental matrix \
+solution  ",
+  Cell[BoxData[
+      RowBox[{
+        OverscriptBox[
+          StyleBox["\[CapitalPsi]",
+            FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}]]],
+  "  as follows\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(c\_1\)},
+                {\(c\_2\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Notation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  When we introduce the notation  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["p",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          RowBox[{"[", 
+            RowBox[{
+              SubscriptBox[
+                StyleBox[
+                  OverscriptBox[
+                    StyleBox["v",
+                      FontWeight->"Bold"], "\[RightVector]"],
+                  FontWeight->"Bold"], "1"], 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], 
+              SubscriptBox[
+                StyleBox[
+                  OverscriptBox[
+                    StyleBox["v",
+                      FontWeight->"Bold"], "\[RightVector]"],
+                  FontWeight->"Bold"], "2"]}], "]"}], " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                }], ")"}]}]}]]],
+  ",  \nand\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["e",
+            FontWeight->"Bold"], "[", "t", "]"}], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+              {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+              }], ")"}]}]]],
+  "\n\t\t\nThe fundamental matrix solution  ",
+  Cell[BoxData[
+      RowBox[{
+        OverscriptBox[
+          StyleBox["\[CapitalPsi]",
+            FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}]]],
+  "  can be written as"
+}], "Text"],
+
+Cell[TextData[{
+  "(3)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                }], ")"}]}]}]]],
+  ". \n\tor\n(4)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{
+            StyleBox["e",
+              FontWeight->"Bold"], "[", "t", "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["The initial condition  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      RowBox[{
+        OverscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}]],
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIf we desire to have the initial condition   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)}
+              }], ")"}]}]]],
+  ",  then this produces the equation \n\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)}
+              }], ")"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(c\_1\)},
+                {\(c\_2\)}
+                }], ")"}]}]}]]],
+  ". \n\nThe vector of constant ",
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {\(c\_1\)},
+            {\(c\_2\)}
+            }], ")"}]]],
+  " can be solved as follows \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", GridBox[{
+              {\(c\_1\)},
+              {\(c\_2\)}
+              }], ")"}], " ", "=", "  ", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  ". \n\nThe solution with the prescribed initial conditions is \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  ".  \n\t\t\nObserve that   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}], "=", " ", 
+        SubscriptBox[
+          StyleBox["I",
+            FontWeight->"Bold"], \(2\[Times]2\)]}]]],
+  "  where  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["I",
+          FontWeight->"Bold"], \(2\[Times]2\)]]],
+  " is the identity matrix.  This leads us to make the following important \
+definition \n"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MatrixExponential.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      RowBox[{
+        OverscriptBox[
+          StyleBox["\[CapitalPsi]",
+            FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}]]],
+  "  is a fundamental matrix solution to  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ",  then the matrix exponential is defined to be \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ".\n\t\t\n",
+  StyleBox["Notation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " This can be written as\n\n(5)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                }], ")"}], 
+          SuperscriptBox[
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                  }], ")"}], \(-1\)]}]}]]],
+  ",  \n\tor\n(6)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          RowBox[{
+            StyleBox["e",
+              FontWeight->"Bold"], "[", "t", "]"}], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox[
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)],
+            FontWeight->"Plain"]}]}]]],
+  ". \n\n",
+  StyleBox["Fact.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  For a ",
+  Cell[BoxData[
+      \(2\[Times]2\)]],
+  " system, the initial condition is \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], 
+            " ", 
+            RowBox[{
+              SuperscriptBox[
+                OverscriptBox[
+                  StyleBox["\[CapitalPsi]",
+                    FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0",
+               "]"}]}], " ", "=", " ", 
+          SubscriptBox[
+            StyleBox["I",
+              FontWeight->"Bold"], \(2\[Times]2\)]}]}]]],
+  ",  \n\nand the solution with the initial condition  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {
+                  RowBox[{
+                    SubscriptBox[
+                      StyleBox[
+                        OverscriptBox[
+                          StyleBox["x",
+                            FontWeight->"Bold"], "\[RightVector]"],
+                        FontWeight->"Bold"], "1"], "[", "0", "]"}]},
+                {
+                  RowBox[{
+                    SubscriptBox[
+                      StyleBox[
+                        OverscriptBox[
+                          StyleBox["x",
+                            FontWeight->"Bold"], "\[RightVector]"],
+                        FontWeight->"Bold"], "1"], "[", "0", "]"}]}
+                }], ")"}], "=", 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  " is\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  ",  \n\tor\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Matrix Diagonalization",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MatrixDiagonalization.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The eigen decomposition of a  ",
+  Cell[BoxData[
+      \(2\[Times]2\)]],
+  " square matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " is  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["d",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["p",
+              FontWeight->"Bold"], \(-1\)]}]}]]],
+  ",\n\t\t\nwhich exists when ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " has a full set of eigenpairs  ",
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], "i"]}]]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["m",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  ",  and ",
+  StyleBox["d",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " is the diagonal matrix  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["d",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {\(\[Lambda]\_1\), "0"},
+              {"0", \(\[Lambda]\_2\)}
+              }], ")"}]}]]],
+  " \nand\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["p",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            SubscriptBox[
+              StyleBox[
+                OverscriptBox[
+                  StyleBox["v",
+                    FontWeight->"Bold"], "\[RightVector]"],
+                FontWeight->"Bold"], "1"], 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            SubscriptBox[
+              StyleBox[
+                OverscriptBox[
+                  StyleBox["v",
+                    FontWeight->"Bold"], "\[RightVector]"],
+                FontWeight->"Bold"], "2"]}], "]"}]}]]],
+  " \n\t\t\nis the augmented matrix whose columns are the eigenvectors of ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".   \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["p",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+              {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+              }], ")"}]}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/MatrixExponentialProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/MatrixExponentialProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Matrix power  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(A\^n\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tHow do you compute the higher powers of a matrix ?  For example, \
+given  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[
+          RowBox[{"(", GridBox[{
+                {"a", "b"},
+                {"c", "d"}
+                }], ")"}],
+          FontWeight->"Plain"]}]]],
+  "   \nthen  \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], "2"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[
+            RowBox[{
+              RowBox[{"(", GridBox[{
+                    {"a", "b"},
+                    {"c", "d"}
+                    }], ")"}], 
+              RowBox[{"(", GridBox[{
+                    {"a", "b"},
+                    {"c", "d"}
+                    }], ")"}]}],
+            FontWeight->"Plain"], 
+          StyleBox[" ",
+            FontWeight->"Plain"], 
+          StyleBox["=",
+            FontWeight->"Plain"], 
+          StyleBox[" ",
+            FontWeight->"Plain"], 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(a\^2 + b\ c\), \(a\ b + b\ d\)},
+                  {\(a\ c + c\ d\), \(b\ c + d\^2\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}]}]]],
+  ",  \nand \n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], "3"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(a\^3 + 2\ a\ b\ c + b\ c\ d\), \(a\^2\ b + b\^2\ c + 
+                    a\ b\ d + b\ d\^2\)},
+                {\(a\^2\ c + b\ c\^2 + a\ c\ d + c\ d\^2\), \(a\ b\ c + 
+                    2\ b\ c\ d + d\^3\)}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  ",  etc.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  StyleBox["Exploration for  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(A\^n\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  "We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " compute a some of the higher powers of a matrix.  \n\nThis is just for \
+fun!"
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Clear[A, a, b, c, d];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          StyleBox["=",
+            FontWeight->"Bold"], 
+          StyleBox[
+            RowBox[{"(", GridBox[{
+                  {"a", "b"},
+                  {"c", "d"}
+                  }], ")"}],
+            FontWeight->"Plain"]}], 
+        StyleBox[";",
+          FontWeight->"Plain"]}], 
+      StyleBox[" ",
+        FontWeight->"Plain"]}], "\[IndentingNewLine]", \(For[i = 1, 
+      i \[LessEqual] 
+        5, \(i++\), \[IndentingNewLine]Print["\<\n\>", "\<A\>"\^i, "\< = \
+\>"]; \ \[IndentingNewLine]Print[
+        MatrixForm[ExpandAll[MatrixPower[A, i]]]];\ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tThe higher powers seem to be intractable!  But if we have an eigen \
+decomposition, then we are permitted to write \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^2\),
+          FontWeight->"Bold"], " ", "=", "  ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["d",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)], 
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["d",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}], "  ", "=", " ", 
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["d",
+                FontWeight->"Bold"], "2"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}]}]}]]],
+  "  \nand\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^3\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["d",
+                FontWeight->"Bold"], "2"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)], 
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox["d",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}], " ", "=", " ", 
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["d",
+                FontWeight->"Bold"], "3"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}]}]}]]],
+  "  \nin general\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["d",
+              FontWeight->"Bold"], "n"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["p",
+              FontWeight->"Bold"], \(-1\)]}]}]]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  For a  ",
+  Cell[BoxData[
+      \(2\[Times]2\)]],
+  "  matrix this is\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                  }], ")"}],
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox[
+              RowBox[{"(", GridBox[{
+                    {\(\[Lambda]\_1\), "0"},
+                    {"0", \(\[Lambda]\_2\)}
+                    }], ")"}],
+              FontWeight->"Bold"], "n"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox[
+              RowBox[{"(", GridBox[{
+                    {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                    {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                    }], ")"}],
+              FontWeight->"Bold"], \(-1\)]}]}]]],
+  " \n\t\t\nwhich can be simplified \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[
+            RowBox[{"(", GridBox[{
+                  {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                  {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                  }], ")"}],
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox[
+            RowBox[{"(", GridBox[{
+                  {\(\[Lambda]\_1\%n\), "0"},
+                  {"0", \(\[Lambda]\_2\%n\)}
+                  }], ")"}],
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox[
+              RowBox[{"(", GridBox[{
+                    {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\)},
+                    {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\)}
+                    }], ")"}],
+              FontWeight->"Bold"], \(-1\)]}]}]]],
+  " "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  StyleBox["The general case of  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(A\^n\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  "For the general case of an  ",
+  Cell[BoxData[
+      \(m\[Times]m\)]],
+  "  matrix which has a full set of eigenpairs  ",
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_i\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        SubscriptBox[
+          StyleBox[
+            OverscriptBox[
+              StyleBox["v",
+                FontWeight->"Bold"], "\[RightVector]"],
+            FontWeight->"Bold"], "i"]}]]],
+  "   for   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["m",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}]}]]],
+  ",  the matrix power  ",
+  Cell[BoxData[
+      StyleBox[\(A\^n\),
+        FontWeight->"Bold"]]],
+  " is given by \n\n",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^n\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["d",
+              FontWeight->"Bold"], "n"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            StyleBox["p",
+              FontWeight->"Bold"], \(-1\)]}]}]]],
+  " \n\n",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\^n\),
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(1, m - 1\)\), \(v\_\(1, m\)\)},
+              {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(2, m - 1\)\), \(v\_\(2, m\)\)},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[DescendingEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {\(v\_\(m - 1, 1\)\), \(v\_\(m - 1, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(m - 1, m - 1\)\), \(v\_\(m - 1, 
+                    m\)\)},
+              {\(v\_\(m, 1\)\), \(v\_\(m, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(m, 1  m - 1\)\), \(v\_\(m, 
+                    1  m\)\)}
+              }], ")"}]}]]],
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {\(\[Lambda]\_1\%n\), "0", "\[CenterEllipsis]", "0", "0"},
+            {"0", \(\[Lambda]\_2\%n\), "\[CenterEllipsis]", "0", "0"},
+            {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+              "\[DescendingEllipsis]", "\[VerticalEllipsis]", 
+              "\[VerticalEllipsis]"},
+            {"0", "0", "\[CenterEllipsis]", \(\[Lambda]\_\(m - 1\)\%n\), 
+              "0"},
+            {"0", "0", "\[CenterEllipsis]", "0", \(\[Lambda]\_m\%n\)}
+            }], ")"}]]],
+  Cell[BoxData[
+      SuperscriptBox[
+        RowBox[{"(", GridBox[{
+              {\(v\_\(1, 1\)\), \(v\_\(1, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(1, m - 1\)\), \(v\_\(1, m\)\)},
+              {\(v\_\(2, 1\)\), \(v\_\(2, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(2, m - 1\)\), \(v\_\(2, m\)\)},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[DescendingEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {\(v\_\(m - 1, 1\)\), \(v\_\(m - 1, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(m - 1, m - 1\)\), \(v\_\(m - 1, 
+                    m\)\)},
+              {\(v\_\(m, 1\)\), \(v\_\(m, 2\)\), 
+                "\[CenterEllipsis]", \(v\_\(m, 1  m - 1\)\), \(v\_\(m, 
+                    1  m\)\)}
+              }], ")"}], \(-1\)]]],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Theorem (Series Representation for the ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MatrixExponential.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The solution to  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  " is given by the series  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], 
+          StyleBox["[",
+            FontWeight->"Bold"], 
+          StyleBox["t",
+            FontWeight->"Bold"], 
+          StyleBox["]",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        RowBox[{
+          SuperscriptBox["\[ExponentialE]", 
+            StyleBox[
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], "t"}]]], " ", "=", " ", 
+          RowBox[{\(\[Sum]\+\(n = 0\)\%\[Infinity]\), 
+            RowBox[{\(1\/\(n!\)\), 
+              SuperscriptBox[
+                RowBox[{"(", 
+                  StyleBox[
+                    RowBox[{
+                      StyleBox["A",
+                        FontWeight->"Bold"], "t"}]], ")"}], "n"]}]}]}]}]]],
+  " ,    which becomes    \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], 
+          StyleBox["[",
+            FontWeight->"Bold"], 
+          StyleBox["t",
+            FontWeight->"Bold"], 
+          StyleBox["]",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        RowBox[{
+          SuperscriptBox["\[ExponentialE]", 
+            StyleBox[
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], "t"}]]], " ", "=", " ", 
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            RowBox[{"(", " ", 
+              RowBox[{\(\[Sum]\+\(n = 0\)\%\[Infinity]\), 
+                RowBox[{\(1\/\(n!\)\), 
+                  SuperscriptBox[
+                    RowBox[{"(", GridBox[{
+                          {\(\(\[Lambda]\_1\%n\) t\^n\), "0"},
+                          {"0", \(\(\[Lambda]\_2\%n\) t\^n\)}
+                          }], ")"}], "n"]}]}], " ", ")"}], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}]}]}]]],
+  "   \n\nand has the simplified form \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], 
+          StyleBox["[",
+            FontWeight->"Bold"], 
+          StyleBox["t",
+            FontWeight->"Bold"], 
+          StyleBox["]",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        RowBox[{
+          SuperscriptBox["\[ExponentialE]", 
+            StyleBox[
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], "t"}]]], " ", "=", " ", 
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            RowBox[{"(", GridBox[{
+                  {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                  {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                  }], ")"}], 
+            SuperscriptBox[
+              StyleBox["p",
+                FontWeight->"Bold"], \(-1\)]}]}]}]]],
+  ",  \n\tor\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", "  ", 
+        RowBox[{
+          SuperscriptBox["\[ExponentialE]", 
+            StyleBox[
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], "t"}]]], " ", "=", " ", 
+          RowBox[{
+            StyleBox["p",
+              FontWeight->"Bold"], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            RowBox[{
+              StyleBox["e",
+                FontWeight->"Bold"], "[", "t", "]"}], 
+            StyleBox[" ",
+              FontWeight->"Bold"], 
+            StyleBox[
+              SuperscriptBox[
+                StyleBox["p",
+                  FontWeight->"Bold"], \(-1\)],
+              FontWeight->"Plain"]}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/MatrixExponentialProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/MatrixExponentialProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/MatrixExponentialProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/MatrixExponentialProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the matrix  ",
+  Cell[BoxData[
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"2", "1"},
+              {"1", "2"}
+              }], ")"}]}]]],
+  ",\n",
+  StyleBox["1 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(\[CapitalPhi]\  = \ \[ExponentialE]\^A\)]],
+  ".\n",
+  StyleBox["1 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(\[CapitalPhi] \((t)\)\  = \ \[ExponentialE]\^At\)]],
+  "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "We want to find \n\n\t",
+  Cell[BoxData[
+      \(\[ExponentialE]\^A\  = \ \(I + 
+                A\  + \(1\/\(2!\)\) A\^2 + \(1\/\(3!\)\) A\^3 + \(1\/\(4!\)\) 
+                  A\^4 +  ... \) + \(1\/\(n!\)\) A\^n +  ... \)]],
+  "  \n\nFirst look at some powers   ",
+  Cell[BoxData[
+      \(A\^i\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"2", "1"},
+                {"1", "2"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \[IndentingNewLine]Print["\<A\>"\^i, "\< = \>", 
+          MatrixForm[MatrixPower[A, i]]]];\)}], "Input"],
+
+Cell[TextData[{
+  "Now use the calculation   ",
+  Cell[BoxData[
+      \(A\^i\  = \ p . d\^i . p\^\(-1\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"d", "=", 
+        RowBox[{"(", GridBox[{
+              {"1", "0"},
+              {"0", "3"}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"p", "=", 
+        RowBox[{"(", GridBox[{
+              {\(-1\), "1"},
+              {"1", "1"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(pi = 
+        Inverse[p];\), "\[IndentingNewLine]", \(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \[IndentingNewLine]Print["\<p\>", "\<d\>"\^i, \*"\"\<\!\
+\(p\^\(-1\)\)\>\"", "\< = \>", MatrixForm[p], MatrixForm[MatrixPower[d, i]], 
+          MatrixForm[pi], "\< = \>", 
+          MatrixForm[p . MatrixPower[d, i] . Inverse[p]]]];\)}], "Input"],
+
+Cell[TextData[{
+  "Find the expression for the general term   ",
+  Cell[BoxData[
+      \(A\^n\  = \ p . d\^n . p\^\(-1\)\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Print["\<p\>", "\<d\>"\^n, \*"\"\<\!\(p\^\(-1\)\)\>\"", "\< = \>", 
+      MatrixForm[p], MatrixForm[MatrixPower[d, n]], 
+      MatrixForm[pi], "\< = \>", 
+      MatrixForm[p . MatrixPower[d, n] . pi]]\)], "Input"],
+
+Cell[TextData[{
+  "Find matrix exponential   ",
+  Cell[BoxData[
+      \(\[Phi]\  = \ \[ExponentialE]\^A\)]],
+  "  will be the sum of the infinite series \n\n",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0"},
+                {"0", "1"}
+                }], "\[NoBreak]", ")"}], "+", 
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(1\/2 + 3\/2\), \(\(-\(1\/2\)\) + 3\/2\)},
+                {\(\(-\(1\/2\)\) + 3\/2\), \(1\/2 + 3\/2\)}
+                }], "\[NoBreak]", ")"}], "+", 
+          RowBox[{\(1\/\(2!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^2\/2\), \(\(-\(1\/2\)\) + 3\^2\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^2\/2\), \(1\/2 + 3\^2\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+", 
+          RowBox[{\(1\/\(3!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^3\/2\), \(\(-\(1\/2\)\) + 3\^3\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^3\/2\), \(1\/2 + 3\^3\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+", 
+          RowBox[{\(1\/\(4!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^4\/2\), \(\(-\(1\/2\)\) + 3\^4\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^4\/2\), \(1\/2 + 3\^4\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+"}], "..."}]]],
+  " "
+}], "Text"],
+
+Cell["The sum of the first few terms are:", "Text"],
+
+Cell[BoxData[{\(Clear[n];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%4\), 
+          RowBox[{\(1\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[s], "\< = \>", 
+        MatrixForm[N[s]]];\)}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%9\), 
+          RowBox[{\(1\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[s], "\< = \>", 
+        MatrixForm[N[s]]];\)}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%99\), 
+          RowBox[{\(1\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[N[s]]];\)}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%199\), 
+          RowBox[{\(1\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[N[s]]];\)}], "Input"],
+
+Cell[TextData[{
+  "Each element in   ",
+  Cell[BoxData[
+      \(\[Phi]\)]],
+  "  can be calculated by the sum of an infinite series and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can assist us in these computations."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi] = Table[0, {2}, {2}];\)\ \), "\[IndentingNewLine]", 
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( 1\/\(n!\)\) \((1\/2 + 
+              3\^n\/2)\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( 1\/\(n!\)\) \((\(-\(1\/2\)\) + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( 1\/\(n!\)\) \((\(-\(1\/2\)\) + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( 1\/\(n!\)\) \((1\/2 + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[TextData[{
+  "Therefore, the matrix exponential   ",
+  Cell[BoxData[
+      \(\[Phi]\  = \ \[ExponentialE]\^A\)]],
+  "  is "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<\[Phi] = \>", MatrixForm[\[Phi]]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This can be compared to the matrix exponential  ",
+  Cell[BoxData[
+      \(\[CapitalPhi]\  = \ \[ExponentialE]\^A\)]],
+  "  that can be computed by using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["MatrixExp[At]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\  = \ 
+        MapAll[Together, MatrixExp[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi] = \>", 
+        MatrixForm[\[CapitalPhi]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Phi] = \>", 
+        MatrixForm[\[Phi]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \[CapitalPhi] = \[Phi] ?\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[ExpandAll[\ \[CapitalPhi]\  == \ \[Phi]\ ]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  This shows the power of \"artificial intelligence\" that is available in \
+",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  For this example the matrix had a full set of eigenvectors.  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is \"smart\" enough to know how to compute the matrix exponential for the \
+difficult case when the set of eigenvectors is deficient. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "We want to find \n\n\t",
+  Cell[BoxData[
+      \(\[ExponentialE]\^\(A\ t\)\  = \ \(I + 
+                A\ t + \(1\/\(2!\)\) \(A\^2\) t\^2 + \(1\/\(3!\)\) \(A\^3\) 
+                  t\^3 + \(1\/\(4!\)\) \(A\^4\) 
+                  t\^4 +  ... \) + \(1\/\(n!\)\) \(A\^n\) t\^n +  ... \)]],
+  "  \n\nFirst look at some powers   ",
+  Cell[BoxData[
+      \(\(A\^i\) t\^i\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \[IndentingNewLine]Print["\<A\>"\^i, "\< = \>", 
+          MatrixForm[MatrixPower[A, i] t\^i]]];\)\)], "Input"],
+
+Cell[TextData[{
+  "Now use the calculation   ",
+  Cell[BoxData[
+      \(\(A\^i\) t\^i\  = \ p . d\^i . p\^\(-1\) t\^i\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"d", "=", 
+        RowBox[{"(", GridBox[{
+              {"1", "0"},
+              {"0", "3"}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"p", "=", 
+        RowBox[{"(", GridBox[{
+              {\(-1\), "1"},
+              {"1", "1"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(pi = 
+        Inverse[p];\), "\[IndentingNewLine]", \(For[i = 1, 
+        i \[LessEqual] 
+          5, \(i++\), \[IndentingNewLine]Print["\<p\>", "\<d\>"\^i, \*"\"\<\!\
+\(p\^\(-1\)\)\>\"", "\<t\>"\^i, "\< = \>", MatrixForm[p], 
+          MatrixForm[MatrixPower[d, i]], 
+          MatrixForm[pi], "\<t\>"\^i, "\< = \>", 
+          MatrixForm[p . MatrixPower[d, i] . Inverse[p] t\^i]]];\)}], "Input"],
+
+Cell[TextData[{
+  "Find the expression for the general term   ",
+  Cell[BoxData[
+      \(\(A\^n\) t\^n\  = \ p . d\^n . p\^\(-1\) t\^n\)]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Print["\<p\>", "\<d\>"\^n, \*"\"\<\!\(p\^\(-1\)\)\>\"", "\<t\>"\^n, "\< \
+= \>", MatrixForm[p], MatrixForm[MatrixPower[d, n]], 
+      MatrixForm[pi], "\<t\>"\^n, "\< = \>", 
+      MatrixForm[p . MatrixPower[d, n] . pi] t\^n]\)], "Input"],
+
+Cell[TextData[{
+  "Find matrix exponential   ",
+  Cell[BoxData[
+      \(\[Phi] \((t)\)\  = \ \[ExponentialE]\^At\)]],
+  "  will be the sum of the infinite series \n\n",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "0"},
+                {"0", "1"}
+                }], "\[NoBreak]", ")"}], "+", 
+          RowBox[{"t", 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\/2\), \(\(-\(1\/2\)\) + 3\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\/2\), \(1\/2 + 3\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+", 
+          RowBox[{\(t\^2\/\(2!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^2\/2\), \(\(-\(1\/2\)\) + 3\^2\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^2\/2\), \(1\/2 + 3\^2\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+", 
+          RowBox[{\(t\^3\/\(3!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^3\/2\), \(\(-\(1\/2\)\) + 3\^3\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^3\/2\), \(1\/2 + 3\^3\/2\)}
+                  }], "\[NoBreak]", ")"}]}], "+", 
+          RowBox[{\(t\^4\/\(4!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^4\/2\), \(\(-\(1\/2\)\) + 3\^4\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^4\/2\), \(1\/2 + 3\^4\/2\)}
+                  }], "\[NoBreak]", ")"}]}], " ", "+"}], "..."}]]],
+  " "
+}], "Text"],
+
+Cell["The sum of the first five terms is  ", "Text"],
+
+Cell[BoxData[{\(Clear[n];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%4\), 
+          RowBox[{\(t\^n\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[s]];\)}], "Input"],
+
+Cell["The sum of the first ten terms is  ", "Text"],
+
+Cell[BoxData[{\(Clear[n];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"s", "=", 
+        RowBox[{\(\[Sum]\+\(n = 0\)\%9\), 
+          RowBox[{\(t\^n\/\(n!\)\), 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/2 + 3\^n\/2\), \(\(-\(1\/2\)\) + 3\^n\/2\)},
+                  {\(\(-\(1\/2\)\) + 3\^n\/2\), \(1\/2 + 3\^n\/2\)}
+                  }], "\[NoBreak]", ")"}]}]}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[MatrixForm[s]];\)}], "Input"],
+
+Cell[TextData[{
+  "Each element in   ",
+  Cell[BoxData[
+      \(\[Phi] \((t)\)\)]],
+  "  can be calculated by the sum of an infinite series and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can assist us in these computations."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Phi] = Table[0, {2}, {2}];\)\ \), "\[IndentingNewLine]", 
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( t\^n\/\(n!\)\) \((1\/2 + 
+              3\^n\/2)\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(1, 2\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( t\^n\/\(n!\)\) \((\(-\(1\/2\)\) + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( t\^n\/\(n!\)\) \((\(-\(1\/2\)\) + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\[Phi]\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\)\  \
+= \[Sum]\+\(n = 0\)\%\[Infinity]\( t\^n\/\(n!\)\) \((1\/2 + 
+              3\^n\/2)\)\)], "Input"],
+
+Cell[TextData[{
+  "Therefore, the matrix exponential   ",
+  Cell[BoxData[
+      \(\[Phi] \((t)\)\  = \ \[ExponentialE]\^At\)]],
+  "  is "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<\[Phi] = \>", MatrixForm[\[Phi]]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This can be compared to the matrix exponential  ",
+  Cell[BoxData[
+      \(\[CapitalPhi] \((t)\)\  = \ \[ExponentialE]\^At\)]],
+  "  that can be computed by using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["MatrixExp[At]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\  = \ 
+        MapAll[Together, MatrixExp[A\ t]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[CapitalPhi] = \>", 
+        MatrixForm[\[CapitalPhi]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Phi] = \>", 
+        MatrixForm[\[Phi]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \[CapitalPhi] = \[Phi] ?\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\[CapitalPhi]\  == \ \[Phi]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  This shows the power of \"artificial intelligence\" that is available in \
+",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  For this example the matrix had a full set of eigenvectors.  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is \"smart\" enough to know how to compute the matrix exponential for the \
+difficult case when the set of eigenvectors is deficient. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Matrix Exponential 2D examples\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontWeight->"Bold"],
+  "The following examples illustrate the situation when there is a full set \
+of eigenvectors. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the matrix exponential to find the general solution for the system \
+of D. E.'s   \n\t\t",
+  Cell[BoxData[{
+      \(\(x'\)[t]\  = \ \(-2\)\ x[t]\  + \ \ \ \ y[t]\), "\n", 
+      \(\(y'\)[t]\  = \ \ \ \ \ x[t]\ \ \  - \ 2\ y[t]\)}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, write the system in vector and matrix form  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"a", "b"},
+                  {"c", "d"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-2\), "1"},
+                  {"1", \(-2\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), " "}], "\n", 
+    RowBox[{\(v = Eigenvectors[A];\), " "}], "\n", 
+    RowBox[{\(p = Transpose[v];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(d = DiagonalMatrix[\[Lambda]];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<A = \>", MatrixForm[A]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<p = \>", MatrixForm[p]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<d = \>", MatrixForm[d]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p], 
+          MatrixForm[d], MatrixForm[Inverse[p]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p . d], 
+          MatrixForm[Inverse[p]]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", 
+          MatrixForm[p . d . Inverse[p]]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "A fundamental matrix solution is   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e[t_] = 
+        DiagonalMatrix[Exp[\[Lambda]\ t]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPsi]\&\[RightVector][t_] = 
+        p . e[t];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[A], 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[
+          Expand[A . \[CapitalPsi]\&\[RightVector][t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = \>\"", 
+        MatrixForm[\(\[CapitalPsi]\&\[RightVector]'\)[t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<Does \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = A.\!\(\
+\[CapitalPsi]\&\[RightVector]\)[t] ?\>\""];\)\), "\n", 
+    \(\(Print[
+        MapAll[Expand, \(\[CapitalPsi]\&\[RightVector]'\)[t] \[Equal] 
+            A . \[CapitalPsi]\&\[RightVector][t]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The matrix exponential is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\&\[RightVector][
+          t_] = \[CapitalPsi]\&\[RightVector][t] . 
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \!\(\
+\[CapitalPsi]\&\[RightVector]\)[t].Inverse[\!\(\[CapitalPsi]\&\[RightVector]\)\
+[0]]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], "\<Inverse[\>", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]], "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], 
+        MatrixForm[
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][0]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution to the D. E. with initial conditions  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)}
+              }], ")"}]}]]],
+  ",   is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["F",
+              FontWeight->"Bold"], "\[RightVector]"], "[", \(t, x\_0, y\_0\), 
+          "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0}]]\ ];\), 
+      " "}]}], "Input"],
+
+Cell[BoxData[{\(Needs["\<Graphics`Colors`\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(a = 0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b = 2.5;\), 
+      " "}], "\[IndentingNewLine]", \(xys\  = \ {{0, 1}, {0.5, 1}, {1, 
+            1}, {1, 0.5}, {1, 
+            0}, {1, \(-0.5\)}, {1, \(-1\)}, {0.5, \(-1\)}, {0, \(-1\)}, \
+{\(-0.5\), \(-1\)}, {\(-1\), \(-1\)}, {\(-1\), \(-0.5\)}, {\(-1\), 
+            0}, {\(-1\), 0.5}, {\(-1\), 1}, {\(-0.5\), 
+            1}};\), "\[IndentingNewLine]", \(fun = 
+        Table[F\&\[RightVector][t, 
+            xys\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)], \
+{i, 1, Length[xys]}];\), "\[IndentingNewLine]", \(dots = 
+        ListPlot[xys, PlotStyle \[Rule] {PointSize[0.02], Brown}, 
+          DisplayFunction \[Rule] 
+            Identity];\), "\[IndentingNewLine]", \(graph = 
+        ParametricPlot[\ Evaluate[fun\ ], {t, a, b}, AspectRatio \[Rule] 1, 
+          PlotStyle \[Rule] {Red, Blue, Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(Show[graph, dots, 
+        PlotRange \[Rule] {{\(-1\), 1}, {\(-1\), 1}}, 
+        Ticks \[Rule] {Range[\(-1\), 1, 0.5], Range[\(-1\), 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<For t in the interval  \>", 
+          a, "\< \[LessEqual] t \[LessEqual] \>", b];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<I.C.'s {\>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {\(y\_0\)}
+                  }], ")"}], "]"}], ",", "\"\<} = \>\"", 
+          ",", \(Table[
+            MatrixForm[
+              xys\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, Length[xys]}]\)}], "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We compare the above work, with the construction of  ",
+  Cell[BoxData[
+      \(\(F\& \[RightVector] \)[t, {x0, y0}]\)]],
+  "  using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["MatrixExp",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-2\), "1"},
+                  {"1", \(-2\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][t_]\  = \ 
+        MatrixExp[A\ t];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A  = \>", MatrixForm[A]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", \
+\[ExponentialE]\^MatrixForm[A], "\<\>"\^t\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \
+MatrixExp[A t]\>\""\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0}]]\ ];\), 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the matrix exponential to find the general solution for system of D. \
+E.'s  \n\t\t",
+  Cell[BoxData[
+      InterpretationBox[GridBox[{
+            {\(\(x'\)[t]\  = \ \(-x[t]\)\  - \ 2\ y[t]\)},
+            {\(\(y'\)[t]\  = \ 2\ x[t]\  - \ y[t]\)}
+            },
+          RowSpacings->1,
+          ColumnSpacings->3,
+          RowAlignments->Baseline,
+          ColumnAlignments->{Left}],
+        TableForm[ {
+          Equal[ 
+            Derivative[ 1][ x][ t], 
+            Plus[ 
+              Times[ -1, 
+                x[ t]], 
+              Times[ -2, 
+                y[ t]]]], 
+          Equal[ 
+            Derivative[ 1][ y][ t], 
+            Plus[ 
+              Times[ 2, 
+                x[ t]], 
+              Times[ -1, 
+                y[ t]]]]}]]]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First, write the system in vector and matrix form  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"a", "b"},
+                  {"c", "d"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-1\), \(-2\)},
+                  {"2", \(-1\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), " "}], "\n", 
+    RowBox[{\(v = Eigenvectors[A];\), " "}], "\n", 
+    RowBox[{\(p = Transpose[v];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(d = DiagonalMatrix[\[Lambda]];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<A = \>", MatrixForm[A]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<p = \>", MatrixForm[p]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<d = \>", MatrixForm[d]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p], 
+          MatrixForm[d], MatrixForm[Inverse[p]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p . d], 
+          MatrixForm[Inverse[p]]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", 
+          MatrixForm[p . d . Inverse[p]]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "A fundamental matrix solution is   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e[t_] = 
+        DiagonalMatrix[Exp[\[Lambda]\ t]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPsi]\&\[RightVector][t_] = 
+        p . e[t];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[A], 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[
+          Expand[A . \[CapitalPsi]\&\[RightVector][t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = \>\"", 
+        MatrixForm[\(\[CapitalPsi]\&\[RightVector]'\)[t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<Does \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = A.\!\(\
+\[CapitalPsi]\&\[RightVector]\)[t] ?\>\""];\)\), "\n", 
+    \(\(Print[
+        MapAll[Expand, \(\[CapitalPsi]\&\[RightVector]'\)[t] \[Equal] 
+            A . \[CapitalPsi]\&\[RightVector][t]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The matrix exponential is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\&\[RightVector][
+          t_] = \[CapitalPsi]\&\[RightVector][t] . 
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \!\(\
+\[CapitalPsi]\&\[RightVector]\)[t].Inverse[\!\(\[CapitalPsi]\&\[RightVector]\)\
+[0]]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], "\<Inverse[\>", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]], "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], 
+        MatrixForm[
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi]\&\[RightVector][t_] = 
+        ComplexExpand[\[CapitalPhi]\&\[RightVector][
+            t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][0]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution to the D. E. with initial conditions  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)}
+              }], ")"}]}]]],
+  ",   is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["F",
+              FontWeight->"Bold"], "\[RightVector]"], "[", \(t, x\_0, y\_0\), 
+          "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)}
+                }], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0}]]\ ];\), 
+      " "}]}], "Input"],
+
+Cell[BoxData[{\(Needs["\<Graphics`Colors`\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\(a = 0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b = 3.5;\), 
+      " "}], "\[IndentingNewLine]", \(xys\  = \ {{0, 1}, {0.5, 1}, {1, 
+            1}, {1, 0.5}, {1, 
+            0}, {1, \(-0.5\)}, {1, \(-1\)}, {0.5, \(-1\)}, {0, \(-1\)}, \
+{\(-0.5\), \(-1\)}, {\(-1\), \(-1\)}, {\(-1\), \(-0.5\)}, {\(-1\), 
+            0}, {\(-1\), 0.5}, {\(-1\), 1}, {\(-0.5\), 
+            1}};\), "\[IndentingNewLine]", \(xys\  = \ 
+        Table[2 {Cos[2  \[Pi]\ i/16], Sin[2  \[Pi]\ i/16]}, {i, 0, 
+            15}];\), "\[IndentingNewLine]", \(fun = 
+        Table[F\&\[RightVector][t, 
+            xys\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)], \
+{i, 1, Length[xys]}];\), "\[IndentingNewLine]", \(dots = 
+        ListPlot[xys, PlotStyle \[Rule] {PointSize[0.02], Brown}, 
+          DisplayFunction \[Rule] 
+            Identity];\), "\[IndentingNewLine]", \(graph = 
+        ParametricPlot[\ Evaluate[fun\ ], {t, a, b}, AspectRatio \[Rule] 1, 
+          PlotStyle \[Rule] {Red, Blue, Magenta, Green}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(Show[graph, dots, 
+        PlotRange \[Rule] {{\(-2\), 2}, {\(-2\), 2}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 0.5], Range[\(-2\), 2, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), " "}], "\n", 
+    RowBox[{\(Print["\<for t in the interval  \>", 
+          a, "\< \[LessEqual] t \[LessEqual] \>", b];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<I.C.'s {\>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {\(y\_0\)}
+                  }], ")"}], "]"}], ",", "\"\<} = \>\"", 
+          ",", \(Table[
+            MatrixForm[
+              xys\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, Length[xys]}]\)}], "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We compare the above work, with the construction of  ",
+  Cell[BoxData[
+      \(F\&\[RightVector][t, {x0, y0}]\)]],
+  "  using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["MatrixExp",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-1\), \(-2\)},
+                  {"2", \(-1\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][t_]\  = \ 
+        MatrixExp[A\ t];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A  = \>", MatrixForm[A]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", \
+\[ExponentialE]\^MatrixForm[A], "\<\>"\^t\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \
+MatrixExp[A t]\>\""\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0}]]\ ];\), 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Matrix Exponential 3D examples\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontWeight->"Bold"],
+  "The following examples illustrate the situation when there is a full set \
+of eigenvectors. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use the matrix exponential to find the general solution for the system of  \
+D.E.'s   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ",  where \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(-1\), \(-2\), "2"},
+                {"1", \(-4\), "2"},
+                {\(-1\), \(-3\), "1"}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        TagBox[
+          TagBox[
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-1\), \(-2\), "2"},
+                    {"1", \(-4\), "2"},
+                    {\(-1\), \(-3\), "1"}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), " "}], "\n", 
+    RowBox[{\(v = Eigenvectors[A];\), " "}], "\n", 
+    RowBox[{\(p = Transpose[v];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(d = DiagonalMatrix[\[Lambda]];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<A = \>", MatrixForm[A]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<p = \>", MatrixForm[p]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<d = \>", MatrixForm[d]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p], 
+          MatrixForm[d], MatrixForm[Inverse[p]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p . d], 
+          MatrixForm[Inverse[p]]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", 
+          MatrixForm[p . d . Inverse[p]]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "A fundamental matrix solution is   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0", "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\), "0"},
+                {"0", "0", \(\[ExponentialE]\^\(\(\[Lambda]\_3\) t\)\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e[t_] = 
+        DiagonalMatrix[Exp[\[Lambda]\ t]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPsi]\&\[RightVector][t_] = 
+        p . e[t];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[A], 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[
+          Expand[A . \[CapitalPsi]\&\[RightVector][t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = \>\"", 
+        MatrixForm[\(\[CapitalPsi]\&\[RightVector]'\)[t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<Does \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = A.\!\(\
+\[CapitalPsi]\&\[RightVector]\)[t] ?\>\""];\)\), "\n", 
+    \(\(Print[
+        MapAll[Expand, \(\[CapitalPsi]\&\[RightVector]'\)[t] \[Equal] 
+            A . \[CapitalPsi]\&\[RightVector][t]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The matrix exponential is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\&\[RightVector][
+          t_] = \[CapitalPsi]\&\[RightVector][t] . 
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi]\&\[RightVector][t_] = 
+        ExpandAll[\[CapitalPhi]\&\[RightVector][
+            t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \!\(\
+\[CapitalPsi]\&\[RightVector]\)[t].Inverse[\!\(\[CapitalPsi]\&\[RightVector]\)\
+[0]]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], "\<Inverse[\>", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]], "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], 
+        MatrixForm[
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(ww = 
+        ComplexExpand[\[CapitalPhi]\&\[RightVector][
+            t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[ww]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][0]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution to the D. E. with initial conditions  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)},
+              {\(z\_0\)}
+              }], ")"}]}]]],
+  ",   is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["F",
+              FontWeight->"Bold"], "\[RightVector]"], "[", \(t, x\_0, y\_0, 
+          z\_0\), "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)},
+                {\(z\_0\)}
+                }], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_, z0_}]\), "=", 
+          RowBox[{"ComplexExpand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}]}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{\(ics = {{1, 1, 1}, {1, 1, \(-1\)}, {1, \(-1\), 
+              1}, {1, \(-1\), \(-1\)}, {\(-1\), 1, 1}, {\(-1\), 
+              1, \(-1\)}, {\(-1\), \(-1\), 1}, {\(-1\), \(-1\), \(-1\)}};\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(pts = 
+          Table[Point[
+              ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, 1, Length[ics]}];\), 
+      " "}], "\[IndentingNewLine]", \(Needs["\<Graphics`Colors`\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Graphics3D`\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(dots = 
+          Graphics3D[Prepend[Prepend[pts, PointSize[0.025]], Brown], 
+            DisplayFunction \[Rule] Identity];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(graphs = Table[0, {i, 1, Length[ics]}];\), 
+      " "}], "\[IndentingNewLine]", \(gcolor = {Orange, Blue, Green, Red, 
+          Red, Cyan, Blue, Magenta};\), "\[IndentingNewLine]", \(i = 
+        1;\), "\[IndentingNewLine]", 
+    RowBox[{\(a = 0;\), 
+      " "}], "\[IndentingNewLine]", \(b = 4;\), "\[IndentingNewLine]", \(For[
+        i = 1, i \[LessEqual] 
+          Length[ics], \(i++\), \[IndentingNewLine]curve = 
+          Table[Chop[
+              Flatten[F\&\[RightVector][t, 
+                  ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]]], {t, a, b, 0.05}]; \[IndentingNewLine]gr0 = 
+          ScatterPlot3D[curve, PlotJoined \[Rule] True, 
+            PlotStyle \[Rule] \ 
+              gcolor\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), PlotRange \[Rule] All, ViewPoint \[Rule] {3, \(-5\), 2}, 
+            AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+            Boxed \[Rule] False, 
+            DisplayFunction \[Rule] 
+              Identity]; \
+\[IndentingNewLine]graphs\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          Show[gr0, PlotRange \[Rule] All, 
+            DisplayFunction \[Rule] 
+              Identity];\ ];\), "\[IndentingNewLine]", \(Show[graphs, dots, 
+        PlotRange \[Rule] All, ViewPoint \[Rule] {2, \(-4\), 1}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False, 
+        Ticks \[Rule] {Range[\(-1\), 1, 0.5], Range[\(-1\), 1, 0.5], 
+            Range[\(-1.5\), 1.5, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\ 
+            ComplexExpand[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]]\ ];\), 
+      " "}], "\n", 
+    RowBox[{\(Print["\<For t in the interval  \>", 
+          a, "\< \[LessEqual] t \[LessEqual] \>", b];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<I.C.'s {\>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {\(y\_0\)},
+                  {\(z\_0\)}
+                  }], ")"}], "]"}], ",", "\"\<} = \>\"", 
+          ",", \(Table[
+            MatrixForm[
+              ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, Length[ics]}]\)}], "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We compare the above work, with the construction of  ",
+  Cell[BoxData[
+      \(F\&\[RightVector][t, {x0, y0, z0}]\)]],
+  "  using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["MatrixExp",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        TagBox[
+          TagBox[
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-1\), \(-2\), "2"},
+                    {"1", \(-4\), "2"},
+                    {\(-1\), \(-3\), "1"}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}], 
+      ";"}], "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][t_]\  = \ 
+        MatrixExp[
+          A\ t];\), "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][
+          t_] = MapAll[
+          ComplexExpand, \[CapitalPhi]\&\[RightVector][
+            t]];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A  = \>", MatrixForm[A]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", \
+\[ExponentialE]\^MatrixForm[A], "\<\>"\^t\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \
+MatrixExp[A t]\>\""\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_, z0_}]\), "=", 
+          RowBox[{"ComplexExpand", "[", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", ",", \(MatrixForm[ww]\), 
+            ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use the matrix exponential to find the general solution for the system of  \
+D.E.'s   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ",  where \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"1", \(-4\), "4"},
+              {"1", \(-6\), "4"},
+              {\(-1\), \(-1\), \(-1\)}
+              }], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"1", \(-4\), "4"},
+              {"1", \(-6\), "4"},
+              {\(-1\), \(-1\), \(-1\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), " "}], "\n", 
+    RowBox[{\(v = Eigenvectors[A];\), " "}], "\n", 
+    RowBox[{\(p = Transpose[v];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(d = DiagonalMatrix[\[Lambda]];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<A = \>", MatrixForm[A]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<p = \>", MatrixForm[p]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<d = \>", MatrixForm[d]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p], 
+          MatrixForm[d], MatrixForm[Inverse[p]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p . d], 
+          MatrixForm[Inverse[p]]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", 
+          MatrixForm[p . d . Inverse[p]]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "A fundamental matrix solution is   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0", "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\), "0"},
+                {"0", "0", \(\[ExponentialE]\^\(\(\[Lambda]\_3\) t\)\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e[t_] = 
+        DiagonalMatrix[Exp[\[Lambda]\ t]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPsi]\&\[RightVector][t_] = 
+        p . e[t];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[A], 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[
+          Expand[A . \[CapitalPsi]\&\[RightVector][t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = \>\"", 
+        MatrixForm[\(\[CapitalPsi]\&\[RightVector]'\)[t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<Does \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = A.\!\(\
+\[CapitalPsi]\&\[RightVector]\)[t] ?\>\""];\)\), "\n", 
+    \(\(Print[
+        MapAll[Expand, \(\[CapitalPsi]\&\[RightVector]'\)[t] \[Equal] 
+            A . \[CapitalPsi]\&\[RightVector][t]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The matrix exponential is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\&\[RightVector][
+          t_] = \[CapitalPsi]\&\[RightVector][t] . 
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \!\(\
+\[CapitalPsi]\&\[RightVector]\)[t].Inverse[\!\(\[CapitalPsi]\&\[RightVector]\)\
+[0]]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], "\<Inverse[\>", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]], "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], 
+        MatrixForm[
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi]\&\[RightVector][t_] = 
+        ComplexExpand[\[CapitalPhi]\&\[RightVector][
+            t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][0]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution to the D. E. with initial conditions  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(x\_0\)},
+              {\(y\_0\)},
+              {\(z\_0\)}
+              }], ")"}]}]]],
+  ",   is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["F",
+              FontWeight->"Bold"], "\[RightVector]"], "[", \(t, x\_0, y\_0, 
+          z\_0\), "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)},
+                {\(z\_0\)}
+                }], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_, z0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}]}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{\(ics = {{1, 1, 1}, {1, 1, \(-1\)}, {1, \(-1\), 
+              1}, {1, \(-1\), \(-1\)}, {\(-1\), 1, 1}, {\(-1\), 
+              1, \(-1\)}, {\(-1\), \(-1\), 1}, {\(-1\), \(-1\), \(-1\)}};\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(pts = 
+          Table[Point[
+              ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, 1, Length[ics]}];\), 
+      " "}], "\[IndentingNewLine]", \(Needs["\<Graphics`Colors`\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Graphics3D`\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(dots = 
+          Graphics3D[Prepend[Prepend[pts, PointSize[0.025]], Brown], 
+            DisplayFunction \[Rule] Identity];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(graphs = Table[0, {i, 1, Length[ics]}];\), 
+      " "}], "\[IndentingNewLine]", \(gcolor = {Orange, Blue, Green, Red, 
+          Red, Cyan, Blue, Magenta};\), "\[IndentingNewLine]", \(i = 
+        1;\), "\[IndentingNewLine]", 
+    RowBox[{\(a = 0;\), 
+      " "}], "\[IndentingNewLine]", \(b = 5;\), "\[IndentingNewLine]", \(For[
+        i = 1, i \[LessEqual] 
+          Length[ics], \(i++\), \[IndentingNewLine]curve = 
+          Table[Chop[
+              Flatten[F\&\[RightVector][t, 
+                  ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]]], {t, a, b, 0.05}]; \[IndentingNewLine]gr0 = 
+          ScatterPlot3D[curve, PlotJoined \[Rule] True, 
+            PlotStyle \[Rule] \ 
+              gcolor\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), PlotRange \[Rule] All, ViewPoint \[Rule] {3, \(-5\), 2}, 
+            AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+            Boxed \[Rule] False, 
+            DisplayFunction \[Rule] 
+              Identity]; \
+\[IndentingNewLine]graphs\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+          Show[gr0, PlotRange \[Rule] All, 
+            DisplayFunction \[Rule] 
+              Identity];\ ];\), "\[IndentingNewLine]", \(Show[graphs, dots, 
+        PlotRange \[Rule] All, ViewPoint \[Rule] {2, \(-4\), 1}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        AxesEdge \[Rule] {{\(-1\), \(-1\)}, {1, \(-1\)}, {\(-1\), \(-1\)}}, 
+        BoxRatios \[Rule] {1, 1, 1}, Boxed \[Rule] False, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-1\), 1, 0.5], 
+            Range[\(-1.5\), 1.5, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\ 
+            ComplexExpand[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]]\ ];\), 
+      " "}], "\n", 
+    RowBox[{\(Print["\<For t in the interval  \>", 
+          a, "\< \[LessEqual] t \[LessEqual] \>", b];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<I.C.'s {\>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {\(y\_0\)},
+                  {\(z\_0\)}
+                  }], ")"}], "]"}], ",", "\"\<} = \>\"", 
+          ",", \(Table[
+            MatrixForm[
+              ics\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+, {i, Length[ics]}]\)}], "]"}], ";"}]}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We compare the above work, with the construction of  ",
+  Cell[BoxData[
+      \(F\&\[RightVector][t, {x0, y0, z0}]\)]],
+  "  using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["MatrixExp",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"1", \(-4\), "4"},
+              {"1", \(-6\), "4"},
+              {\(-1\), \(-1\), \(-1\)}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][t_]\  = \ 
+        MatrixExp[A\ t];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A  = \>", MatrixForm[A]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", \
+\[ExponentialE]\^MatrixForm[A], "\<\>"\^t\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \
+MatrixExp[A t]\>\""\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {x0_, y0_, z0_}]\), "=", 
+          RowBox[{"Expand", "[", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Matrix Exponential 4D example\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontWeight->"Bold"],
+  "The following example illustrate the situation when there is a full set of \
+eigenvectors. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Use the matrix exponential to find the general solution for the system of  \
+D.E.'s  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["X",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ",  where \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(-1\), "4", "0", "0"},
+              {"0", \(-1\), "1", "0"},
+              {"0", "0", \(-1\), "3"},
+              {"0", "0", "0", \(-2\)}
+              }], ")"}]}]]],
+  " \n\nFind the solution  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["Y",
+                FontWeight->"Bold"], "\[RightVector]"], "'"}], "[", "t", 
+          "]"}], "=", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], 
+          RowBox[{
+            OverscriptBox[
+              StyleBox["Y",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", 
+            "]"}]}]}]]],
+  ",that has the I.C.'s  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(y\_1\) \((0)\) = 3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(\(y\_2\) \((0)\) = \(-1\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", \(\(y\_3\) \((0)\) = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(y\_4\), \((0)\)}], 
+          "=", \(-2\)}]}]]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {\(-1\), "1", "2", "3"},
+              {"0", \(-2\), "1", "2"},
+              {"0", "0", \(-3\), "1"},
+              {"0", "0", "0", \(-4\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), " "}], "\n", 
+    RowBox[{\(v = Eigenvectors[A];\), " "}], "\n", 
+    RowBox[{\(p = Transpose[v];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(d = DiagonalMatrix[\[Lambda]];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Print["\<A = \>", MatrixForm[A]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<p = \>", MatrixForm[p]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<d = \>", MatrixForm[d]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p], 
+          MatrixForm[d], MatrixForm[Inverse[p]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", MatrixForm[p . d], 
+          MatrixForm[Inverse[p]]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<p d \!\(p\^\(-1\)\) = \>\"", 
+          MatrixForm[p . d . Inverse[p]]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "A fundamental matrix solution is   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPsi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          StyleBox["p",
+            FontWeight->"Bold"], 
+          RowBox[{"(", GridBox[{
+                {\(\[ExponentialE]\^\(\(\[Lambda]\_1\) t\)\), "0", "0", "0"},
+                {"0", \(\[ExponentialE]\^\(\(\[Lambda]\_2\) t\)\), "0", "0"},
+                {"0", "0", \(\[ExponentialE]\^\(\(\[Lambda]\_3\) t\)\), "0"},
+                {"0", "0", "0", \(\[ExponentialE]\^\(\(\[Lambda]\_4\) t\)\)}
+                }], ")"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(e[t_] = 
+        DiagonalMatrix[Exp[\[Lambda]\ t]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPsi]\&\[RightVector][t_] = 
+        p . e[t];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[A], 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<A.\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[
+          Expand[A . \[CapitalPsi]\&\[RightVector][t]]]];\)\), "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = \>\"", 
+        MatrixForm[\(\[CapitalPsi]\&\[RightVector]'\)[t]]];\)\), "\n", 
+    \(\(Print[\*"\"\<Does \!\(\[CapitalPsi]\&\[RightVector]\)'[t] = A.\!\(\
+\[CapitalPsi]\&\[RightVector]\)[t] ?\>\""];\)\), "\n", 
+    \(\(Print[
+        MapAll[Expand, \(\[CapitalPsi]\&\[RightVector]'\)[t] \[Equal] 
+            A . \[CapitalPsi]\&\[RightVector][t]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The matrix exponential is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["\[CapitalPhi]",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+        "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPsi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], " ", 
+          
+          RowBox[{
+            SuperscriptBox[
+              OverscriptBox[
+                StyleBox["\[CapitalPsi]",
+                  FontWeight->"Bold"], "\[RightVector]"], \(-1\)], "[", "0", 
+            "]"}]}]}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[CapitalPhi]\&\[RightVector][
+          t_] = \[CapitalPsi]\&\[RightVector][t] . 
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPsi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \!\(\
+\[CapitalPsi]\&\[RightVector]\)[t].Inverse[\!\(\[CapitalPsi]\&\[RightVector]\)\
+[0]]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], "\<Inverse[\>", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][
+            0]], "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPsi]\&\[RightVector][t]], 
+        MatrixForm[
+          Inverse[\[CapitalPsi]\&\[RightVector][
+              0]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(\[CapitalPhi]\&\[RightVector][t_] = 
+        ComplexExpand[\[CapitalPhi]\&\[RightVector][
+            t]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][
+            t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[\[CapitalPhi]\&\[RightVector][0]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution to the D. E. with initial conditions  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "\[RightVector]"], "[", "0", "]"}], " ", 
+        "=", 
+        RowBox[{"(", GridBox[{
+              {\(w\_0\)},
+              {\(x\_0\)},
+              {\(y\_0\)},
+              {\(z\_0\)}
+              }], ")"}]}]]],
+  ",   is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          OverscriptBox[
+            StyleBox["F",
+              FontWeight->"Bold"], "\[RightVector]"], "[", \(t, w\_0, x\_0, 
+          y\_0, z\_0\), "]"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            OverscriptBox[
+              StyleBox["\[CapitalPhi]",
+                FontWeight->"Bold"], "\[RightVector]"], "[", "t", "]"}], 
+          RowBox[{"(", GridBox[{
+                {\(w\_0\)},
+                {\(x\_0\)},
+                {\(y\_0\)},
+                {\(z\_0\)}
+                }], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {w0_, x0_, y0_, z0_}]\), "=", 
+          RowBox[{"Expand", "[", " ", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"w0"},
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(w\_0\)},
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\ \[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(w\_0\)},
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {w\_0, x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {w\_0, x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), \
+"\[IndentingNewLine]", \(Print["\<For the given I.C.'s\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \!\(F\&\[RightVector]\
+\)[t,{3,-1,1,-2}] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {3, \(-1\), 1, \(-2\)}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \!\(F\&\[RightVector]\
+\)[0,{3,-1,1,-2}] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {3, \(-1\), 1, \(-2\)}]]\ ];\), 
+      " "}]}], "Input"],
+
+Cell[TextData[{
+  "Extract the columns of   ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(\[CapitalPhi]\& \[RightVector] \),
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  and construct the three linearly solutions, and form the general \
+solution  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\& \[RightVector] \),
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  to the D.E. \nThen construct the solution with the desired I.C.'s and \
+call it  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(Y\& \[RightVector] \),
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_1[
+          t_] = \(\[CapitalPhi]\&\[RightVector][t]\)\_\(\(\[LeftDoubleBracket]\
+\)\(All, 1\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(X\_2[
+          t_] = \(\[CapitalPhi]\&\[RightVector][t]\)\_\(\(\[LeftDoubleBracket]\
+\)\(All, 2\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(X\_3[
+          t_] = \(\[CapitalPhi]\&\[RightVector][t]\)\_\(\(\[LeftDoubleBracket]\
+\)\(All, 3\)\(\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(X\_4[
+          t_] = \(\[CapitalPhi]\&\[RightVector][t]\)\_\(\(\[LeftDoubleBracket]\
+\)\(All, 4\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_1\)[t] = \>\"", 
+        MatrixForm[X\_1[t]], "\<,   \>", \*"\"\<\!\(X\_1\)[0] = \>\"", 
+        MatrixForm[X\_1[0]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_2\)[t] = \>\"", 
+        MatrixForm[X\_2[t]], "\<,   \>", \*"\"\<\!\(X\_2\)[0] = \>\"", 
+        MatrixForm[X\_2[0]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_3\)[t] = \>\"", 
+        MatrixForm[X\_3[t]], "\<,   \>", \*"\"\<\!\(X\_3\)[0] = \>\"", 
+        MatrixForm[X\_3[0]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(X\_4\)[t] = \>\"", 
+        MatrixForm[X\_4[t]], "\<,   \>", \*"\"\<\!\(X\_4\)[0] = \>\"", 
+        MatrixForm[X\_4[0]]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(c\_1 = \ 3; \ c\_2 = \(-1\)\ ; \ c\_3 = 1; 
+    c\_4 = \(-2\);\), "\[IndentingNewLine]", 
+    \(\(Y[t_] = \ 
+        Expand[\ c\_1\ X\_1[t] + c\_2\ X\_2[t] + \ \ \(c\_3\) X\_3[t] + 
+            c\_4\ X\_4[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Y[t] = \!\(c\_1\) \!\(X\_1\)[t]+ \!\(c\_2\) \
+\!\(X\_2\)[t]+ \!\(c\_3\)\!\(X\_3\)[t]+ \!\(c\_4\) \!\(X\_4\)[t]\>\""];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", 
+        c\_1\ \*"\"\<\!\(X\_1\)[t]\>\"" + 
+          c\_2\ \*"\"\<\!\(X\_2\)[t]\>\"" + \ \ \(c\_3\) \*"\"\<\!\(X\_3\)[t]\
+\>\"" + c\_4\ \*"\"\<\!\(X\_4\)[t]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", \(c\_1\) MatrixForm[X\_1[t]] + 
+          c\_2\ MatrixForm[X\_2[t]] + \ \ \(c\_3\) MatrixForm[X\_3[t]] + 
+          c\_4\ MatrixForm[X\_4[t]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[t] = \>", 
+        MatrixForm[Y[t]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Y[0] = \>", 
+        MatrixForm[Y[0]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<This is the same as\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t,{3,-1,1,-2}] = \>\"", 
+        MatrixForm[
+          F\&\[RightVector][
+            t, {3, \(-1\), 1, \(-2\)}]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0,{3,-1,1,-2}] = \>\"", 
+        MatrixForm[
+          F\&\[RightVector][0, {3, \(-1\), 1, \(-2\)}]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Extract the four coordinate functions from  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(Y\& \[RightVector] \),
+          FontWeight->"Bold"], "[", "t", "]"}]]],
+  "  and call them  ",
+  Cell[BoxData[
+      RowBox[{\(y\_1[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_2[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(y\_3[t]\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], "  ", \(y\_4[t]\)}]}]]],
+  ",  and plot the functions. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(y\_1[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_2[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y\_3[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(y4[
+          t_] = \(Y[t]\)\_\(\(\[LeftDoubleBracket]\)\(4\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(g1 = 
+        Plot[y\_1[t], {t, 0, 5}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+          PlotStyle\  \[Rule] Blue, 
+          Ticks \[Rule] {Range[0, 2, 0.5], 
+              Range[\(-2\), 3, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", y\_1[t]\ ];\)\ \), "\n", 
+    \(\(g2 = 
+        Plot[y\_2[t], {t, 0, 5}, PlotRange \[Rule] {{0, 2}, {\(-1.05\), 0}}, 
+          PlotStyle\  \[Rule] Green, 
+          Ticks \[Rule] {Range[0, 2, 0.5], 
+              Range[\(-2\), 3, 1]}];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", y\_2[t]\ ];\)\ \), "\n", 
+    \(\(g3 = 
+        Plot[y\_3[t], {t, 0, 5}, PlotRange \[Rule] {{0, 2}, {0, 1}}, 
+          PlotStyle\  \[Rule] Cyan, 
+          Ticks \[Rule] {Range[0, 2, 0.5], 
+              Range[\(-2\), 3, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", y\_3[t]\ ];\)\ \), "\n", 
+    \(\(g4 = 
+        Plot[y4[t], {t, 0, 5}, PlotRange \[Rule] {{0, 2}, {\(-2\), 0}}, 
+          PlotStyle\  \[Rule] Red, 
+          Ticks \[Rule] {Range[0, 2, 0.5], 
+              Range[\(-2\), 3, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y4[t] = \>", y4[t]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[{g1, g2, g3, g4}, PlotRange \[Rule] {{0, 2}, {\(-2\), 3}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[\(-2\), 3, 1]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(y\_1\)[t] = \>\"", 
+        y\_1[t], "\<  Blue\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_2\)[t] = \>\"", 
+        y\_2[t], "\<  Green\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(y\_3\)[t] = \>\"", 
+        y\_3[t], "\<  Cyan\>"];\)\ \), "\n", 
+    \(\(Print["\<y4[t] = \>", y4[t], "\<  Red\>"];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "We are done.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We compare the above work, with the construction of  ",
+  Cell[BoxData[
+      \(F\&\[RightVector][t, {x0, y0, z0}]\)]],
+  "  using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["MatrixExp",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {\(-1\), "1", "2", "3"},
+              {"0", \(-2\), "1", "2"},
+              {"0", "0", \(-3\), "1"},
+              {"0", "0", "0", \(-4\)}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(\[CapitalPhi]\&\[RightVector][t_]\  = \ 
+        MatrixExp[A\ t];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  A  = \>", MatrixForm[A]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", \
+\[ExponentialE]\^MatrixForm[A], "\<\>"\^t\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \
+MatrixExp[A t]\>\""\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(\[CapitalPhi]\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[\[CapitalPhi]\&\[RightVector][t]]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{
+      RowBox[{
+        RowBox[{\(F\&\[RightVector][t_, {w0_, x0_, y0_, z0_}]\), "=", 
+          RowBox[{"Expand", "[", 
+            RowBox[{\(\[CapitalPhi]\&\[RightVector][t]\), ".", 
+              RowBox[{"(", GridBox[{
+                    {"w0"},
+                    {"x0"},
+                    {"y0"},
+                    {"z0"}
+                    }], ")"}]}], " ", "]"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] =  \
+\!\(\[CapitalPhi]\&\[RightVector]\)[t].\>\"", ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(w\_0\)},
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{
+          "\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+            ",", \(MatrixForm[\[CapitalPhi]\&\[RightVector][t]]\), ",", 
+            RowBox[{"MatrixForm", "[", 
+              RowBox[{"(", GridBox[{
+                    {\(w\_0\)},
+                    {\(x\_0\)},
+                    {\(y\_0\)},
+                    {\(z\_0\)}
+                    }], ")"}], "]"}]}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[t] = \>\"", 
+          MatrixForm[F\&\[RightVector][t, {w\_0, x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<\!\(F\&\[RightVector]\)[0] = \>\"", 
+          MatrixForm[F\&\[RightVector][0, {w\_0, x\_0, y\_0, z\_0}]]\ ];\), 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/MatrixExponentialBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Matrix Exponential",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/MatrixExponentialBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 361, 11, 35, "Text"],
+Cell[2140, 66, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3619, 118, 756, 24, 144, "Text"],
+Cell[4378, 144, 3331, 111, 173, "Text"],
+Cell[7712, 257, 3701, 113, 129, "Text"],
+Cell[11416, 372, 5687, 163, 259, "Text"],
+Cell[17106, 537, 1857, 53, 171, "Text"],
+Cell[18966, 592, 1102, 35, 85, "Text"],
+Cell[20071, 629, 3468, 111, 358, "Text"],
+Cell[23542, 742, 6536, 203, 411, "Text"],
+Cell[30081, 947, 4546, 147, 282, "Text"],
+Cell[34630, 1096, 637, 22, 33, "Text"],
+Cell[35270, 1120, 2337, 76, 183, "Text"],
+
+Cell[CellGroupData[{
+Cell[37632, 1200, 223, 8, 33, "Text"],
+Cell[37858, 1210, 179, 6, 71, "Text"],
+Cell[38040, 1218, 770, 22, 126, "Input"]
+}, Closed]],
+Cell[38825, 1243, 3291, 106, 144, "Text"],
+Cell[42119, 1351, 2180, 67, 173, "Text"],
+
+Cell[CellGroupData[{
+Cell[44324, 1422, 227, 8, 33, "Text"],
+Cell[44554, 1432, 4705, 127, 173, "Text"]
+}, Closed]],
+Cell[49274, 1562, 4943, 149, 249, "Text"],
+Cell[54220, 1713, 637, 22, 33, "Text"],
+Cell[54860, 1737, 623, 21, 33, "Text"],
+Cell[55486, 1760, 647, 26, 79, "Text"],
+
+Cell[CellGroupData[{
+Cell[56158, 1790, 105, 2, 33, "Text"],
+Cell[56266, 1794, 338, 10, 112, "Text"],
+Cell[56607, 1806, 396, 11, 84, "Input"],
+Cell[57006, 1819, 127, 5, 33, "Text"],
+Cell[57136, 1826, 740, 19, 158, "Input"],
+Cell[57879, 1847, 144, 5, 33, "Text"],
+Cell[58026, 1854, 233, 4, 52, "Input"],
+Cell[58262, 1860, 1414, 32, 103, "Text"],
+Cell[59679, 1894, 51, 0, 33, "Text"],
+Cell[59733, 1896, 515, 10, 108, "Input"],
+Cell[60251, 1908, 477, 10, 85, "Input"],
+Cell[60731, 1920, 443, 9, 85, "Input"],
+Cell[61177, 1931, 444, 9, 85, "Input"],
+Cell[61624, 1942, 244, 8, 33, "Text"],
+Cell[61871, 1952, 259, 4, 71, "Input"],
+Cell[62133, 1958, 198, 3, 49, "Input"],
+Cell[62334, 1963, 198, 3, 49, "Input"],
+Cell[62535, 1968, 189, 3, 49, "Input"],
+Cell[62727, 1973, 140, 5, 33, "Text"],
+Cell[62870, 1980, 90, 1, 30, "Input"],
+Cell[62963, 1983, 360, 12, 34, "Text"],
+Cell[63326, 1997, 471, 9, 110, "Input"],
+Cell[63800, 2008, 505, 13, 52, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[64342, 2026, 105, 2, 30, "Text"],
+Cell[64450, 2030, 410, 11, 112, "Text"],
+Cell[64863, 2043, 191, 4, 52, "Input"],
+Cell[65057, 2049, 141, 5, 33, "Text"],
+Cell[65201, 2056, 780, 20, 158, "Input"],
+Cell[65984, 2078, 158, 5, 33, "Text"],
+Cell[66145, 2085, 257, 4, 52, "Input"],
+Cell[66405, 2091, 1471, 33, 103, "Text"],
+Cell[67879, 2126, 52, 0, 33, "Text"],
+Cell[67934, 2128, 480, 9, 108, "Input"],
+Cell[68417, 2139, 51, 0, 33, "Text"],
+Cell[68471, 2141, 480, 9, 108, "Input"],
+Cell[68954, 2152, 252, 8, 33, "Text"],
+Cell[69209, 2162, 262, 4, 71, "Input"],
+Cell[69474, 2168, 201, 3, 49, "Input"],
+Cell[69678, 2173, 201, 3, 49, "Input"],
+Cell[69882, 2178, 192, 3, 49, "Input"],
+Cell[70077, 2183, 149, 5, 33, "Text"],
+Cell[70229, 2190, 90, 1, 30, "Input"],
+Cell[70322, 2193, 369, 12, 34, "Text"],
+Cell[70694, 2207, 459, 9, 110, "Input"],
+Cell[71156, 2218, 505, 13, 52, "Text"]
+}, Closed]],
+Cell[71676, 2234, 272, 8, 68, "Text"],
+Cell[71951, 2244, 362, 10, 69, "Text"],
+
+Cell[CellGroupData[{
+Cell[72338, 2258, 101, 2, 33, "Text"],
+Cell[72442, 2262, 695, 23, 41, "Text"],
+Cell[73140, 2287, 1368, 30, 265, "Input"],
+Cell[74511, 2319, 558, 17, 47, "Text"],
+Cell[75072, 2338, 1245, 22, 246, "Input"],
+Cell[76320, 2362, 688, 22, 33, "Text"],
+Cell[77011, 2386, 1628, 29, 231, "Input"],
+Cell[78642, 2417, 916, 31, 41, "Text"],
+Cell[79561, 2450, 1831, 45, 216, "Input"],
+Cell[81395, 2497, 2006, 38, 286, "Input"],
+Cell[83404, 2537, 405, 15, 71, "Text"],
+Cell[83812, 2554, 2660, 64, 335, "Input"]
+}, Closed]],
+Cell[86487, 2621, 889, 30, 57, "Text"],
+
+Cell[CellGroupData[{
+Cell[87401, 2655, 101, 2, 33, "Text"],
+Cell[87505, 2659, 695, 23, 41, "Text"],
+Cell[88203, 2684, 1371, 30, 265, "Input"],
+Cell[89577, 2716, 558, 17, 47, "Text"],
+Cell[90138, 2735, 1245, 22, 246, "Input"],
+Cell[91386, 2759, 688, 22, 33, "Text"],
+Cell[92077, 2783, 1939, 35, 277, "Input"],
+Cell[94019, 2820, 916, 31, 41, "Text"],
+Cell[94938, 2853, 1739, 43, 176, "Input"],
+Cell[96680, 2898, 2107, 39, 306, "Input"],
+Cell[98790, 2939, 399, 15, 71, "Text"],
+Cell[99192, 2956, 2663, 64, 335, "Input"]
+}, Closed]],
+Cell[101870, 3023, 272, 8, 68, "Text"],
+Cell[102145, 3033, 1075, 37, 95, "Text"],
+
+Cell[CellGroupData[{
+Cell[103245, 3074, 101, 2, 33, "Text"],
+Cell[103349, 3078, 1589, 35, 283, "Input"],
+Cell[104941, 3115, 641, 18, 65, "Text"],
+Cell[105585, 3135, 1245, 22, 246, "Input"],
+Cell[106833, 3159, 688, 22, 33, "Text"],
+Cell[107524, 3183, 2057, 38, 319, "Input"],
+Cell[109584, 3223, 976, 33, 57, "Text"],
+Cell[110563, 3258, 1855, 46, 236, "Input"],
+Cell[112421, 3306, 3308, 68, 467, "Input"],
+Cell[115732, 3376, 403, 15, 71, "Text"],
+Cell[116138, 3393, 3134, 77, 435, "Input"]
+}, Closed]],
+Cell[119287, 3473, 991, 35, 92, "Text"],
+
+Cell[CellGroupData[{
+Cell[120303, 3512, 101, 2, 33, "Text"],
+Cell[120407, 3516, 1249, 26, 283, "Input"],
+Cell[121659, 3544, 641, 18, 65, "Text"],
+Cell[122303, 3564, 1245, 22, 246, "Input"],
+Cell[123551, 3588, 688, 22, 33, "Text"],
+Cell[124242, 3612, 1991, 36, 296, "Input"],
+Cell[126236, 3650, 976, 33, 57, "Text"],
+Cell[127215, 3685, 1848, 46, 236, "Input"],
+Cell[129066, 3733, 3306, 68, 467, "Input"],
+Cell[132375, 3803, 403, 15, 71, "Text"],
+Cell[132781, 3820, 2650, 64, 413, "Input"]
+}, Closed]],
+Cell[135446, 3887, 270, 8, 68, "Text"],
+Cell[135719, 3897, 2884, 91, 187, "Text"],
+
+Cell[CellGroupData[{
+Cell[138628, 3992, 101, 2, 33, "Text"],
+Cell[138732, 3996, 1297, 27, 301, "Input"],
+Cell[140032, 4025, 734, 19, 85, "Text"],
+Cell[140769, 4046, 1245, 22, 246, "Input"],
+Cell[142017, 4070, 688, 22, 33, "Text"],
+Cell[142708, 4094, 1991, 36, 296, "Input"],
+Cell[144702, 4132, 1036, 35, 73, "Text"],
+Cell[145741, 4169, 2505, 59, 381, "Input"],
+Cell[148249, 4230, 621, 19, 52, "Text"],
+Cell[148873, 4251, 1326, 24, 178, "Input"],
+Cell[150202, 4277, 1473, 27, 215, "Input"],
+Cell[151678, 4306, 1457, 43, 33, "Text"],
+Cell[153138, 4351, 1740, 37, 274, "Input"],
+Cell[154881, 4390, 538, 10, 110, "Input"],
+Cell[155422, 4402, 403, 15, 68, "Text"],
+Cell[155828, 4419, 2807, 68, 491, "Input"]
+}, Closed]],
+Cell[158650, 4490, 158, 3, 32, "Text"],
+Cell[158811, 4495, 580, 18, 33, "Text"],
+Cell[159394, 4515, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

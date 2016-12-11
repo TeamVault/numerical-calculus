@@ -1,0 +1,2169 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     67434,       1998]*)
+(*NotebookOutlinePosition[     68128,       2022]*)
+(*  CellTagsIndexPosition[     68084,       2018]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Hessenberg Matrix and Factorization",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\t\n\tIf A is symmetric then ",
+  ButtonBox["Householder's method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  " can be used to reduce it to a similar symmetric tridiagonal matrix.  If A \
+is nonsymmetric then ",
+  ButtonBox["Householder's method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  " can be used to reduce it to a similar Hessenberg matrix.  These are the \
+preliminary steps that are made before applying the",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["QR method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodMod.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  "for finding eigenvalues of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Hessenberg Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HessenbergMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tAn  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " matrix with  ",
+  Cell[BoxData[
+      \(a\_\(i, j\) = 0\)]],
+  "  for ",
+  Cell[BoxData[
+      \(i > j + 1\)]],
+  " is called a Hessenberg matrix.  The form of a Hessenberg matrix is \n\n\t\
+\t",
+  Cell[BoxData[
+      TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), \(a\_\(1, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(1, n - 3\)\), \(a\_\(1, 
+                    n - 2\)\), \(a\_\(1, n - 1\)\), \(a\_\(1, n\)\)},
+              {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(2, n - 3\)\), \(a\_\(2, 
+                    n - 2\)\), \(a\_\(2, n - 1\)\), \(a\_\(2, n\)\)},
+              {"0", \(a\_\(3, 2\)\), \(a\_\(3, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(3, n - 3\)\), \(a\_\(3, 
+                    n - 2\)\), \(a\_\(3, n - 1\)\), \(a\_\(3, n\)\)},
+              {"0", "0", \(a\_\(4, 3\)\), 
+                "\[CenterEllipsis]", \(a\_\(4, n - 3\)\), \(a\_\(4, 
+                    n - 2\)\), \(a\_\(4, n - 1\)\), \(a\_\(4, n\)\)},
+              {"0", "0", "0", "\[DescendingEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]"},
+              {"0", "0", "0", 
+                "0", \(a\_\(n - 2, n - 3\)\), \(a\_\(n - 2, 
+                    n - 2\)\), \(a\_\(n - 2, n - 1\)\), \(a\_\(n - 2, n\)\)},
+              {"0", "0", "0", "0", 
+                "0", \(a\_\(n - 1, n - 2\)\), \(a\_\(n - 1, 
+                    n - 1\)\), \(a\_\(n - 1, n\)\)},
+              {"0", "0", "0", "0", "0", 
+                "0", \(a\_\(n, n - 1\)\), \(a\_\(n, n\)\)}
+              }], "\[NoBreak]", ")"}],
+        Function[ BoxForm`e$, 
+          MatrixForm[ BoxForm`e$]]]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Unitary Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/UnitaryMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n",
+  StyleBox["(i) ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tFor real matrices, a unitary matrix is a matrix  ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  "  for which  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\^\(-1\)\),
+          FontWeight->"Bold"], "=", 
+        StyleBox[\(P\^T\),
+          FontWeight->"Bold"]}]]],
+  ".  \n\t\n",
+  StyleBox["(ii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tFor complex matrices, a unitary matrix is a matrix  ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  "  for which  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\^\(-1\)\),
+          FontWeight->"Bold"], "=", 
+        StyleBox[\(\(P\^T\)\&_\),
+          FontWeight->"Bold"]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Hessenberg Factorization of a Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HessenbergDecomposition.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[")",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  There are two cases to consider.  \n\n",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tGiven a real matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", there exists a unitary matrix ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  " and Hessenberg matrix ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " so that  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["H",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\^T\),
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\n",
+  StyleBox["(iv) ",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tGiven a complex matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", there exists a unitary matrix ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  " and Hessenberg matrix ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " so that  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["H",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(\(P\^T\)\&_\),
+            FontWeight->"Bold"]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Hessenberg Factorization",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HessenbergProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Hessenberg Factorization of a Symmetric Matrix)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Given a real symmetric matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ", there exists a unitary matrix ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  " and tri-diagonal symmetric matrix ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " so that \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["H",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\^T\),
+            FontWeight->"Bold"]}]}]]],
+  ".  \n\n",
+  StyleBox["Remark",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  ".  This is the case that is easiest to illustrate in a first course in \
+numerical methods. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Hessenberg Factorization",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HessenbergProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["H",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\^T\),
+            FontWeight->"Bold"]}]}]]],
+  "  then ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " is similar to ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " and the eigenvalues of ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".   \n\n",
+  StyleBox["Remark",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  ".  The eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are in general different from the eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Hessenberg Factorization",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HessenbergProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Hessenberg Factorization",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HessenbergProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Householder Reduction to Upper-Hessenberg Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  real matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  to a Hessenberg matrix form by using  ",
+  Cell[BoxData[
+      \(n - 2\)]],
+  " Householder transformations.  The following version of the program uses \
+\"loops\" extensively and is more traditional in programming structure.  It \
+also contains a print statement so that you can watch the Householder \
+transformations perform their \"magic.\"  \n",
+  StyleBox["Disclaimer.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  The following subroutine is for pedagogical purposes only, it may not \
+work for all cases.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Hessenberg1[
+          A0_] := \[IndentingNewLine]Module[\ {B = N[A0], i, j, k, 
+            n = Length[A]}, \[IndentingNewLine]Q = 
+            IdentityMatrix[n]; \ \[IndentingNewLine]For[\ k = 1, \ 
+            k \[LessEqual] 
+              n - 2, \ \(k++\), \[IndentingNewLine]\[Alpha]\  = \ 
+              0; \ \[IndentingNewLine]For[\ j = k + 1, \ 
+              j \[LessEqual] 
+                n, \ \(j++\), \[IndentingNewLine]\(\[Alpha]\  = \ \[Alpha]\  \
++ \ \((B\_\(\(\[LeftDoubleBracket]\)\(j, \
+k\)\(\[RightDoubleBracket]\)\))\)\^2;\)\ ]; \ \[IndentingNewLine]\[Alpha]\  = \
+\ Sign[B\_\(\(\[LeftDoubleBracket]\)\(k + 1, k\)\(\[RightDoubleBracket]\)\)] \
+\@\[Alpha]; \ \[IndentingNewLine]u = 
+              Table[0, {n}]; \ \[IndentingNewLine]For[\ \ j = k + 1, \ 
+              j \[LessEqual] 
+                n, \ \(j++\), \
+\[IndentingNewLine]\(u\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\) = B\_\(\(\[LeftDoubleBracket]\)\(j, k\)\(\[RightDoubleBracket]\)\);\)\ \
+]; \ \[IndentingNewLine]u\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\) = 
+              u\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\
+\) + \[Alpha]; \ \[IndentingNewLine]\[Beta] = \(1\/2\) 
+                u . u; \ \[IndentingNewLine]P\  = \ 
+              IdentityMatrix[n]; \ \[IndentingNewLine]For[\ \ i = 1, \ 
+              i \[LessEqual] 
+                n, \ \(i++\), \[IndentingNewLine]\(For\ [\ j = 1, \ 
+                  j \[LessEqual] 
+                    n, \ \(j++\), \[IndentingNewLine]\(P\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\) = 
+                      P\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\) - \(\(u\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\) u\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/\[Beta];\)\ \ ];\)\ \ ]; \ \[IndentingNewLine]Q \
+= Q . P; \ \[IndentingNewLine]B = P . B . P; \ \[IndentingNewLine]If[
+              k \[Equal] n - 2, 
+              Print["\<The upper-Hessenberg form is:\>"]\ ]; \
+\[IndentingNewLine]Print[
+              MatrixForm[Chop[B]], "\<\n\>"];\ ]; \ \[IndentingNewLine]H = 
+            Chop[B]; \ \[IndentingNewLine]Return[{Q, 
+              H}];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Householder Reduction to Upper-Hessenberg Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  real matrix  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  to a Hessenberg form form by using  ",
+  Cell[BoxData[
+      \(n - 2\)]],
+  " Householder transformations.  The following version of the program uses \
+\"objects\" extensively and is more like \"object oriented programming.\"   \n\
+",
+  StyleBox["Disclaimer.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  The following subroutine is for pedagogical purposes only, it may not \
+work for all cases.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Hessenberg[
+          A0_] := \[IndentingNewLine]Module[\ {B = N[A0], i, j, k, 
+            n = Length[A]}, \[IndentingNewLine]Q = 
+            IdentityMatrix[n]; \ \[IndentingNewLine]For[\ k = 1, \ 
+            k \[LessEqual] n - 2, \ \(k++\), \[IndentingNewLine]u = 
+              Table[0, {n}]; \ \[IndentingNewLine]u\_\(\(\[LeftDoubleBracket]\
+\)\(\ \)\(Range[k + 1, n]\)\(\ \)\(\[RightDoubleBracket]\)\)\  = \ 
+              B\_\(\(\[LeftDoubleBracket]\)\(\ \)\(Range[k + 1, n], \ k\)\(\ \
+\)\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]u\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+              u\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\
+\)\  + \ Sign[
+                    B\_\(\(\[LeftDoubleBracket]\)\(k + 1, k\)\(\
+\[RightDoubleBracket]\)\)] \@\(\[Sum]\+\(j = k + 1\)\%n\((B\_\(\(\
+\[LeftDoubleBracket]\)\(j, k\)\(\[RightDoubleBracket]\)\))\)\^2\); \ \
+\[IndentingNewLine]P = IdentityMatrix[n]; \ \[IndentingNewLine]P\  = \ 
+              P\  - \ \(2  Outer[Times, u, u]\)\/u . u; \ \
+\[IndentingNewLine]Q\  = \ Q . P; \ \[IndentingNewLine]B\  = \ 
+              P . B . P;\ ]; \ \[IndentingNewLine]H = 
+            Chop[B]; \ \[IndentingNewLine]Return[{Q, 
+              H}];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  The above subroutines will ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 0]],
+  " reduce an  ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  "  complex matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " to Hessenberg form.  You should use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  if you use complex matrices.  If you do use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure you will need to learn how software developers are \
+permitted to dig into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s kernel and use its internal mathematical subroutines (i.e. picking ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s brain)."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form for the real symmetric matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"5", "1", "2", "0", "4"},
+              {"1", "4", "2", "1", "3"},
+              {"2", "2", "5", "4", "0"},
+              {"0", "1", "4", "1", "3"},
+              {"4", "3", "0", "3", "4"}
+              }], ")"}]}]]],
+  ".   Use the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Make the first ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine  ",
+  StyleBox["Hessenberg1",
+    FontFamily->"Courier New"],
+  "  active, then obtain the answer."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"5", "1", "2", "0", "4"},
+                {"1", "4", "2", "1", "3"},
+                {"2", "2", "5", "4", "0"},
+                {"0", "1", "4", "1", "3"},
+                {"4", "3", "0", "3", "4"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A], "\<\n\>"];\), "\[IndentingNewLine]", 
+    RowBox[{\({P, H} = Hessenberg1[A];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "You can also look at the unitary matrix ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "Verify that we have found the Hessenberg factorization so that  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["H",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\^T\),
+            FontWeight->"Bold"]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<     P = \>", 
+        MatrixForm[P], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<     H = \>", 
+        MatrixForm[H], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<    \!\(P\^T\) = \>\"", 
+        MatrixForm[Transpose[P]], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P H \!\(P\^T\) = \>\"", MatrixForm[P], MatrixForm[H], 
+        MatrixForm[Transpose[P]], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P H \!\(P\^T\) = \>\"", MatrixForm[P], 
+        MatrixForm[
+          H . Transpose[P]], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<P H \!\(P\^T\) = \>\"", \ 
+        Chop[MatrixForm[
+            P . H . Transpose[P]]], "\<\n\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<     A = \>", MatrixForm[A]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "If you don't need the in-between steps printed, make the second \
+mathematica subroutine  ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "  active, obtain the answer only. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The upper-Hessenberg form is:\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", MatrixForm[H]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form for the real symmetric matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"5.0", "1", "2", "0", "4"},
+              {"1", "4", "2", "1", "3"},
+              {"2", "2", "5", "4", "0"},
+              {"0", "1", "4", "1", "3"},
+              {"4", "3", "0", "3", "4"}
+              }], ")"}]}]]],
+  ".  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in subroutine ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  This command is part of a more complicated subroutine and is not part \
+of the standard instruction set.   For ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " developers, it has been made available.  Developer context includes \
+functions that directly access specific internal algorithms and capabilities \
+of ",
+  StyleBox["Mathematica", "TI"],
+  " that are normally used only as part of more general functions.  Let's \
+peek inside ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " and see that it knows our methods too.  "
+}], "Text"],
+
+Cell[TextData[{
+  "Before we can use  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  we must  \"",
+  StyleBox["Get",
+    FontFamily->"Courier New"],
+  "\"  all developer accessible parts and more important make the entries in \
+",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " numerical (not integer) before calling the subroutine."
+}], "Text"],
+
+Cell["\<\
+One way to do this would be to type in all those decimal places (or at least \
+one decimal place).\
+\>", "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"5.0", "1", "2", "0", "4"},
+                {"1", "4", "2", "1", "3"},
+                {"2", "2", "5", "4", "0"},
+                {"0", "1", "4", "1", "3"},
+                {"4", "3", "0", "3", "4"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Get["\<Developer`\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\({P, H} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[H]]\ ];\)}], "Input"],
+
+Cell[TextData[{
+  "If a matrix of integers is sent to  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ",  it will grumble, but give you the answer. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"5", "1", "2", "0", "4"},
+                {"1", "4", "2", "1", "3"},
+                {"2", "2", "5", "4", "0"},
+                {"0", "1", "4", "1", "3"},
+                {"4", "3", "0", "3", "4"}
+                }], ")"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Get["\<Developer`\>"];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{\({P, H} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[H]]\ ];\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form for the real symmetric matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"5", "1", "2", "0", "4"},
+              {"1", "4", "2", "1", "3"},
+              {"2", "2", "5", "4", "0"},
+              {"0", "1", "4", "1", "3"},
+              {"4", "3", "0", "3", "4"}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues and eigenvectors.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Observe that ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["do not",
+    FontColor->RGBColor[1, 0, 0]],
+  " have the same eigenvectors.  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["Eigenvalues",
+    FontFamily->"Courier New"],
+  "  for this computation. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"5", "1", "2", "0", "4"},
+                  {"1", "4", "2", "1", "3"},
+                  {"2", "2", "5", "4", "0"},
+                  {"0", "1", "4", "1", "3"},
+                  {"4", "3", "0", "3", "4"}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({P, H} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[H]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[H];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "To verify that the eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " are different it will suffice to look at the ",
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  " and the corresponding eigenvectors of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  \!\(V\_1\) = \>\"", 
+        MatrixForm[
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A \!\(V\_1\) = \>\"", MatrixForm[A], 
+        MatrixForm[
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<A \!\(V\_1\) = \>\"", 
+        MatrixForm[
+          A . V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  \!\(\[Lambda]\_1\) = \>\"", \[Lambda]\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Lambda]\_1\)\!\(V\_1\) = \>\"", \[Lambda]\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+        MatrixForm[\ 
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Lambda]\_1\)\!\(V\_1\) = \>\"", 
+        MatrixForm[\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\ V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  \!\(W\_1\) = \>\"", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<H \!\(W\_1\) = \>\"", Chop[MatrixForm[H]], 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<H \!\(W\_1\) = \>\"", 
+        MatrixForm[
+          H . W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  \!\(\[CapitalLambda]\_1\) = \>\"", \
+\[CapitalLambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\
+\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalLambda]\_1\)\!\(W\_1\) = \>\"", 
+        MatrixForm[\[CapitalLambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)], 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[CapitalLambda]\_1\)\!\(W\_1\) = \>\"", 
+        MatrixForm[\[CapitalLambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\ W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The eigenvector of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " that correspond to the eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = \(\[CapitalLambda]\_1 = 12.025753978122228`\)\)]],
+  "  are ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 0]],
+  " the same. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The eigenvalue is \!\(\[Lambda]\_1\) = \!\(\
+\[CapitalLambda]\_1\) = \>\"", \[Lambda]\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvector for A is \!\(V\_1\) = \>\"", 
+        MatrixForm[
+          V\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Eigenvector for H is \!\(W\_1\) = \>\"", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\ \
+];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<     Eigenvalue        Eigenvector of A    Eigenvector of \
+H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        5, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", 
+          PaddedForm[\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), {8, 6}], "\<,  V\>"\_i, "\< = \>", 
+          PaddedForm[
+            MatrixForm[
+              V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)], \
+{7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            MatrixForm[
+              W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)], \
+{7, 6}]\ ];\)\ \ ]\), "\[IndentingNewLine]", 
+    \(\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"2", \(-1\), "1"},
+              {\(-1\), "2", "1"},
+              {"1", \(-1\), "2"}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"2", \(-1\), "1"},
+                  {\(-1\), "2", "1"},
+                  {"1", \(-1\), "2"}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%3, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[h];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%3, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Eigenvalue     Eigenvector of A    Eigenvector of \
+H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        3, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<,  \
+V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"3", \(-4\), "4"},
+              {"1", \(-2\), "4"},
+              {\(-1\), \(-1\), "3"}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"3", \(-4\), "4"},
+                  {"1", \(-2\), "4"},
+                  {\(-1\), \(-1\), "3"}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%3, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[h];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%3, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<     Eigenvalue          Eigenvector of A                \
+Eigenvector of H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        3, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<,  \
+V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"1", \(-4\), "0", "3"},
+              {\(-1\), "3", "0", \(-2\)},
+              {"3", \(-7\), \(-2\), "6"},
+              {"0", "4", "0", \(-2\)}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"1", \(-4\), "0", "3"},
+                  {\(-1\), "3", "0", \(-2\)},
+                  {"3", \(-7\), \(-2\), "6"},
+                  {"0", "4", "0", \(-2\)}
+                  }], ")"}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%4, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[h];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%4, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Hessenberg form of a real matrix is real.  Both our subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "  and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  work on real matrices.  "
+}], "Text"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Eigenvalue     Eigenvector of A     Eigenvector of \
+H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        4, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<,  \
+V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"1", \(-1\), "0", "0"},
+              {"2", \(-1\), "0", "0"},
+              {"3", \(-2\), "3", "4"},
+              {\(-1\), "1", \(-2\), \(-1\)}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"1", \(-1\), "0", "0"},
+                  {"2", \(-1\), "0", "0"},
+                  {"3", \(-2\), "3", "4"},
+                  {\(-1\), "1", \(-2\), \(-1\)}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Chop[Eigenvalues[A]];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%4, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Chop[Eigenvalues[h]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%4, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Hessenberg form of a real matrix is real.  Both our subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "  and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  work on real matrices.  "
+}], "Text"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<     Eigenvalue           Eigenvector of A                \
+Eigenvector of H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        4, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", 
+          Chop[\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)], "\<,  V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"6", "1", \(-2\), "19", "4"},
+              {"1", "4", "2", "1", "3"},
+              {"7", "12", "5", "11", \(-1\)},
+              {\(-3\), "21", "4", "1", "3"},
+              {"4", "6", \(-1\), "3", "7"}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {"6", "1", \(-2\), "19", "4"},
+                  {"1", "4", "2", "1", "3"},
+                  {"7", "12", "5", "11", \(-1\)},
+                  {\(-3\), "21", "4", "1", "3"},
+                  {"4", "6", \(-1\), "3", "7"}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Get["\<Developer`\>"];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[h];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Hessenberg form of a real matrix is real.  Both our subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "  and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  work on real matrices. "
+}], "Text"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Eigenvalue          Eigenvector of A       Eigenvector of \
+H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        5, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<,  \
+V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Find the upper-Hessenberg form ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " for the real matrix    ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(\(\ \)\(5\)\), \(\(\ \)\(4\)\), \(\(\ \)\(3\)\), \(\(\ \)\(2\
+\)\), \(\(\ \)\(1\)\)},
+              {\(\(\ \)\(1\)\), \(\(\ \)\(4\)\), \(\(\ \)\(0\)\), \(\(\ \)\(3\
+\)\), \(\(\ \)\(3\)\)},
+              {\(\(\ \)\(2\)\), \(\(\ \)\(0\)\), \(\(\ \)\(3\)\), \(\(\ \)\(0\
+\)\), \(\(\ \)\(0\)\)},
+              {\(\(\ \)\(3\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(2\
+\)\), \(\(\ \)\(5\)\)},
+              {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \)\(4\
+\)\), \(\(\ \)\(1\)\)}
+              }], ")"}]}]]],
+  ".   Explore the eigenvalues. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Verify that the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["H",
+        FontWeight->"Bold"]]],
+  " are the same as the eigenvalues of  ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".  Notice that some of the eigenvalues are complex and that they occur in \
+conjugate pairs. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"N", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(\(\ \)\(5\)\), \(\(\ \)\(4\)\), \(\(\ \)\(3\)\), \(\(\ \
+\)\(2\)\), \(\(\ \)\(1\)\)},
+                  {\(\(\ \)\(1\)\), \(\(\ \)\(4\)\), \(\(\ \)\(0\)\), \(\(\ \
+\)\(3\)\), \(\(\ \)\(3\)\)},
+                  {\(\(\ \)\(2\)\), \(\(\ \)\(0\)\), \(\(\ \)\(3\)\), \(\(\ \
+\)\(0\)\), \(\(\ \)\(0\)\)},
+                  {\(\(\ \)\(3\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \
+\)\(2\)\), \(\(\ \)\(5\)\)},
+                  {\(\(\ \)\(4\)\), \(\(\ \)\(2\)\), \(\(\ \)\(1\)\), \(\(\ \
+\)\(4\)\), \(\(\ \)\(1\)\)}
+                  }], ")"}], "]"}]}], ";"}], 
+      "   "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of A are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[Lambda] = Eigenvalues[A];\), "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[Lambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[Lambda]];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\>"];\), "\[IndentingNewLine]",
+   
+    RowBox[{\({p, h} = HessenbergDecomposition[A];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The upper-Hessenberg form is:\
+\>"];\), "\[IndentingNewLine]", \(Print["\<H = \>", 
+        Chop[MatrixForm[h]]\ ];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The eigenvalues of H are\>"];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(\[CapitalLambda] = Eigenvalues[h];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<{\[CapitalLambda]}\>"\_\("\<i=1\>"\)\%5, "\< = \>", \
+\[CapitalLambda]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "Now compare the results obtained with the subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({P, H} = Hessenberg[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using the subroutine 'Hessenberg' we get\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[H]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Get["\<Developer`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]\ ];\)\), "\[IndentingNewLine]", 
+    \(\({p, h} = HessenbergDecomposition[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Using Mathematica's 'HessenbergDecomposition' we \
+get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<H = \>", Chop[MatrixForm[h]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The Hessenberg form of a real matrix is real.  Both our subroutine ",
+  StyleBox["Hessenberg",
+    FontFamily->"Courier New"],
+  "  and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine  ",
+  StyleBox["HessenbergDecomposition",
+    FontFamily->"Courier New"],
+  "  work on real matrices.  "
+}], "Text"],
+
+Cell[TextData[{
+  "We are done!\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  Here is a list of all of the eigenvalues and corresponding eigenvectors \
+for the matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["H",
+    FontWeight->"Bold"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = Eigenvalues[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(V = Eigenvectors[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[CapitalLambda] = Eigenvalues[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Eigenvectors[H];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Eigenvalue          Eigenvector of A       Eigenvector of \
+H\>"];\)\), "\[IndentingNewLine]", 
+    \(For[i = 1, 
+      i \[LessEqual] \ 
+        5, \(i++\), \[IndentingNewLine]\(Print["\<\[Lambda]\>"\_i, "\< = \>", \
+"\<\[CapitalLambda]\>"\_i, "\< = \>", \
+\[Lambda]\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<,  \
+V\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                V\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}], "\<,  W\>"\_i, "\< = \>", 
+          PaddedForm[
+            Chop[MatrixForm[
+                W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\
+], {7, 6}]\ ];\)\ \ ]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Hessenberg Factorization",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HessenbergBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1013, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 217, 5, 35, "Text"],
+Cell[1996, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3144, 101, 1103, 33, 106, "Text"],
+Cell[4250, 136, 2218, 53, 221, "Text"],
+Cell[6471, 191, 1135, 41, 109, "Text"],
+Cell[7609, 234, 1836, 68, 185, "Text"],
+Cell[9448, 304, 406, 13, 33, "Text"],
+Cell[9857, 319, 989, 34, 109, "Text"],
+Cell[10849, 355, 406, 13, 33, "Text"],
+Cell[11258, 370, 1118, 45, 71, "Text"],
+Cell[12379, 417, 406, 13, 33, "Text"],
+Cell[12788, 432, 351, 11, 33, "Text"],
+Cell[13142, 445, 1075, 30, 90, "Text"],
+Cell[14220, 477, 2277, 40, 510, "Input"],
+Cell[16500, 519, 959, 29, 71, "Text"],
+Cell[17462, 550, 1293, 21, 313, "Input"],
+Cell[18758, 573, 940, 31, 71, "Text"],
+Cell[19701, 606, 627, 20, 89, "Text"],
+
+Cell[CellGroupData[{
+Cell[20353, 630, 101, 2, 33, "Text"],
+Cell[20457, 634, 215, 8, 33, "Text"],
+Cell[20675, 644, 531, 13, 136, "Input"],
+Cell[21209, 659, 148, 6, 33, "Text"],
+Cell[21360, 667, 406, 14, 33, "Text"],
+Cell[21769, 683, 850, 15, 154, "Input"],
+Cell[22622, 700, 219, 6, 33, "Text"],
+Cell[22844, 708, 297, 5, 90, "Input"]
+}, Closed]],
+Cell[23156, 716, 709, 23, 86, "Text"],
+
+Cell[CellGroupData[{
+Cell[23890, 743, 101, 2, 33, "Text"],
+Cell[23994, 747, 732, 20, 71, "Text"],
+Cell[24729, 769, 400, 13, 33, "Text"],
+Cell[25132, 784, 122, 3, 33, "Text"],
+Cell[25257, 789, 769, 17, 196, "Input"],
+Cell[26029, 808, 189, 5, 33, "Text"],
+Cell[26221, 815, 696, 16, 176, "Input"]
+}, Closed]],
+Cell[26932, 834, 587, 17, 86, "Text"],
+
+Cell[CellGroupData[{
+Cell[27544, 855, 101, 2, 33, "Text"],
+Cell[27648, 859, 670, 27, 33, "Text"],
+Cell[28321, 888, 1476, 31, 338, "Input"],
+Cell[29800, 921, 504, 21, 33, "Text"],
+Cell[30307, 944, 1343, 26, 170, "Input"],
+Cell[31653, 972, 1408, 27, 170, "Input"],
+Cell[33064, 1001, 410, 16, 33, "Text"],
+Cell[33477, 1019, 595, 11, 70, "Input"],
+Cell[34075, 1032, 328, 13, 71, "Text"],
+Cell[34406, 1047, 773, 17, 110, "Input"]
+}, Closed]],
+Cell[35194, 1067, 530, 19, 54, "Text"],
+
+Cell[CellGroupData[{
+Cell[35749, 1090, 101, 2, 33, "Text"],
+Cell[35853, 1094, 340, 11, 33, "Text"],
+Cell[36196, 1107, 1365, 29, 302, "Input"],
+Cell[37564, 1138, 313, 11, 33, "Text"],
+Cell[37880, 1151, 312, 5, 90, "Input"],
+Cell[38195, 1158, 401, 6, 110, "Input"],
+Cell[38599, 1166, 328, 13, 71, "Text"],
+Cell[38930, 1181, 981, 20, 170, "Input"]
+}, Closed]],
+Cell[39926, 1204, 533, 19, 54, "Text"],
+
+Cell[CellGroupData[{
+Cell[40484, 1227, 101, 2, 33, "Text"],
+Cell[40588, 1231, 340, 11, 33, "Text"],
+Cell[40931, 1244, 1368, 29, 302, "Input"],
+Cell[42302, 1275, 313, 11, 33, "Text"],
+Cell[42618, 1288, 312, 5, 90, "Input"],
+Cell[42933, 1295, 401, 6, 110, "Input"],
+Cell[43337, 1303, 328, 13, 71, "Text"],
+Cell[43668, 1318, 1003, 20, 170, "Input"]
+}, Closed]],
+Cell[44686, 1341, 590, 20, 70, "Text"],
+
+Cell[CellGroupData[{
+Cell[45301, 1365, 101, 2, 33, "Text"],
+Cell[45405, 1369, 340, 11, 33, "Text"],
+Cell[45748, 1382, 1428, 30, 320, "Input"],
+Cell[47179, 1414, 313, 11, 33, "Text"],
+Cell[47495, 1427, 312, 5, 90, "Input"],
+Cell[47810, 1434, 401, 6, 110, "Input"],
+Cell[48214, 1442, 426, 14, 33, "Text"],
+Cell[48643, 1458, 328, 13, 71, "Text"],
+Cell[48974, 1473, 982, 20, 170, "Input"]
+}, Closed]],
+Cell[49971, 1496, 590, 20, 70, "Text"],
+
+Cell[CellGroupData[{
+Cell[50586, 1520, 101, 2, 33, "Text"],
+Cell[50690, 1524, 340, 11, 33, "Text"],
+Cell[51033, 1537, 1448, 31, 320, "Input"],
+Cell[52484, 1570, 313, 11, 33, "Text"],
+Cell[52800, 1583, 312, 5, 90, "Input"],
+Cell[53115, 1590, 401, 6, 110, "Input"],
+Cell[53519, 1598, 426, 14, 33, "Text"],
+Cell[53948, 1614, 328, 13, 71, "Text"],
+Cell[54279, 1629, 1019, 20, 170, "Input"]
+}, Closed]],
+Cell[55313, 1652, 649, 21, 86, "Text"],
+
+Cell[CellGroupData[{
+Cell[55987, 1677, 101, 2, 33, "Text"],
+Cell[56091, 1681, 340, 11, 33, "Text"],
+Cell[56434, 1694, 1492, 31, 338, "Input"],
+Cell[57929, 1727, 313, 11, 33, "Text"],
+Cell[58245, 1740, 312, 5, 90, "Input"],
+Cell[58560, 1747, 401, 6, 110, "Input"],
+Cell[58964, 1755, 425, 14, 33, "Text"],
+Cell[59392, 1771, 328, 13, 71, "Text"],
+Cell[59723, 1786, 989, 20, 170, "Input"]
+}, Closed]],
+Cell[60727, 1809, 947, 26, 86, "Text"],
+
+Cell[CellGroupData[{
+Cell[61699, 1839, 101, 2, 33, "Text"],
+Cell[61803, 1843, 340, 11, 33, "Text"],
+Cell[62146, 1856, 1714, 35, 318, "Input"],
+Cell[63863, 1893, 313, 11, 33, "Text"],
+Cell[64179, 1906, 312, 5, 90, "Input"],
+Cell[64494, 1913, 401, 6, 110, "Input"],
+Cell[64898, 1921, 426, 14, 33, "Text"],
+Cell[65327, 1937, 328, 13, 71, "Text"],
+Cell[65658, 1952, 989, 20, 170, "Input"]
+}, Closed]],
+Cell[66662, 1975, 158, 3, 32, "Text"],
+Cell[66823, 1980, 311, 8, 33, "Text"],
+Cell[67137, 1990, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

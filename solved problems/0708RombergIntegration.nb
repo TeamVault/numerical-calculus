@@ -1,0 +1,1816 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     55663,       1629]*)
+(*NotebookOutlinePosition[     56357,       1653]*)
+(*  CellTagsIndexPosition[     56313,       1649]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Romberg Integration",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/RombergIntegration.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  To approximate the integral   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], \(f \((x)\) \[DifferentialD]x\)}], "  ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], " ", \(R\_\(j, j\)\)}]]],
+  "  by generating a table of approximations, and using  ",
+  Cell[BoxData[
+      \(R\_\(j, j\)\)]],
+  "  as the final answer.  \nThe approximations  ",
+  Cell[BoxData[
+      \(R\_\(j, k\)\)]],
+  "  are stored in a special lower triangular matrix.  The elements  ",
+  Cell[BoxData[
+      \(R\_\(j, 1\)\)]],
+  "  of the first column are computed using the sequential trapezoidal rule \n\
+based on  ",
+  Cell[BoxData[
+      \(2\^\(j - 1\)\)]],
+  "  subintervals of  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ";  then  ",
+  Cell[BoxData[
+      \(R\_\(j, k + 1\)\)]],
+  StyleBox[" ",
+    FontSize->9],
+  " is computed using Romberg's rule.  \n\nElements of row  j  are   ",
+  Cell[BoxData[
+      RowBox[{\(R\_\(j, k + 1\)\), " ", "=", " ", 
+        RowBox[{\(R\_\(j, k\)\), " ", "+", 
+          FractionBox[
+            StyleBox[\(R\_\(j, k\)\  - \ R\_\(j - 1, k\)\),
+              FontSize->12], 
+            StyleBox[\(4\^k\  - \ 1\),
+              FontSize->12]]}]}]]],
+  ". \n\nThe algorithm is terminated when   ",
+  Cell[BoxData[
+      RowBox[{"|", 
+        StyleBox[\(R\_\(j, j\)\  - \ R\_\(j - 1, j - 1\)\),
+          FontSize->12], 
+        StyleBox["|",
+          FontSize->12]}]]],
+  Cell[BoxData[
+      \(\(\(<\)\(\ \)\(tol\)\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/RombergProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RombergProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Rombeg/Romberg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Rombeg/\
+Romberg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/RombergProg.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0],
+    Background->None],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RombergProg.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe subroutine Romberg is \"dynamic\" in the following sense.  At the \
+start, we initialize the array with the command  ",
+  Cell[BoxData[
+      \(R = {{0}}\)]],
+  " and it contains one row and one element  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) \
+\[Equal] {0}\)]],
+  ",  in which we place one element  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\) = \(\
+\(\(h\)\(\ \)\)\/2\) \((f[a]\  + \ f[b])\)\)],
+    AspectRatioFixed->False],
+  ".  Next, the increment command,  ",
+  Cell[BoxData[
+      \(\(j++\)\)]],
+  "  is used to make  ",
+  Cell[BoxData[
+      \(j = 2\)]],
+  ", and the Append command,  ",
+  Cell[BoxData[
+      \(R = Append[\ R, Table[0, {2}]]\)]],
+  ",   is invoked which adds a second row to  ",
+  Cell[BoxData[
+      \(R\)]],
+  ", which is initialized with zeros,  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) \
+\[Equal] {0, 0}\)]],
+  ".  Then the TrapRule subroutine is called to perform the sequential \
+trapezoidal rule and fill in the first entry  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\)\)]],
+  "  and Romberg's rule is used to fill in the second entry  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(2, 2\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  And so it goes, the sequential trapezoidal rule is used to fill in the \
+first entry in succeeding rows and  Romberg's rule fills in rest of the \
+entries in that row.  The algorithm is terminated when  ",
+  Cell[BoxData[
+      \(Abs[\ 
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\) - 
+            R\_\(\(\[LeftDoubleBracket]\)\(j - 1, j - 1\)\(\
+\[RightDoubleBracket]\)\)\ ] < tol\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Romberg Integration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(Romberg[a_, b_, tol_]\), ":=", 
+          RowBox[{"Module", "[", 
+            RowBox[{\({}\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(TrapRule[i_] := 
+                  Module[{k}, \[IndentingNewLine]h = 
+                      h\/2; \ \
+\[IndentingNewLine]R\_\(\(\[LeftDoubleBracket]\)\(i + 1, 1\)\(\
+\[RightDoubleBracket]\)\) = 
+                      R\_\(\(\[LeftDoubleBracket]\)\(i, 1\)\(\
+\[RightDoubleBracket]\)\)\/2 + 
+                        h \(\[Sum]\+\(k = 1\)\%m f[
+                              a + h\ \((2\ k - 
+                                      1)\)]\); \ \[IndentingNewLine]m = 
+                      2\ m;]\), ";", " ", 
+                "\[IndentingNewLine]", \(h = b - a\), ";", " ", 
+                "\[IndentingNewLine]", \(m = 1\), ";", " ", 
+                "\[IndentingNewLine]", \(close = 1\), ";", " ", 
+                "\[IndentingNewLine]", \(j = 1\), ";", " ", 
+                "\[IndentingNewLine]", \(R = {{0}}\), ";", " ", 
+                "\[IndentingNewLine]", \(R\_\(\(\[LeftDoubleBracket]\)\(1, \
+1\)\(\[RightDoubleBracket]\)\)\  = \ \(\(\(h\)\(\ \)\)\/2\) \((f[a]\  + \ 
+                        f[b])\)\), ";", " ", 
+                "\[IndentingNewLine]", \(Print[\ 
+                  R\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)\ ]\), ";", " ", "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  
+                  RowBox[{\(And[j \[LessEqual] 11\ , \ tol < close]\), ",", 
+                    " ", 
+                    
+                    RowBox[{\(j++\), ";", "  ", 
+                      "\[IndentingNewLine]", \(R\  = \ 
+                        Append[\ R, Table[0, {j}]\ ]\), ";", " ", 
+                      "\[IndentingNewLine]", \(TrapRule[j - 1]\), ";", " ", 
+                      "\[IndentingNewLine]", 
+                      RowBox[{"For", "[", " ", 
+                        
+                        RowBox[{\(k = 1\), ",", " ", \(k \[LessEqual] j - 1\),
+                           ",", " ", \(k++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            
+                            RowBox[{\(R\_\(\(\[LeftDoubleBracket]\)\(j, 
+                                  k + 1\)\(\[RightDoubleBracket]\)\)\), "=", 
+                              
+                              RowBox[{\(R\_\(\(\[LeftDoubleBracket]\)\(j, 
+                                    k\)\(\[RightDoubleBracket]\)\)\), "+", 
+                                FractionBox[
+                                  
+                                  StyleBox[\(R\_\(\(\[LeftDoubleBracket]\)\(j,\
+ k\)\(\[RightDoubleBracket]\)\) - 
+                                      R\_\(\(\[LeftDoubleBracket]\)\(j - 1, k\
+\)\(\[RightDoubleBracket]\)\)\),
+                                    FontSize->12], \(4\^k - 1\)]}]}], ";"}]}],
+                         " ", "]"}], ";", " ", 
+                      "\[IndentingNewLine]", \(Print[\ \ R\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\ ]\), ";", " ", 
+                      "\[IndentingNewLine]", \(close\  = \ 
+                        Abs[\ R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\
+\[RightDoubleBracket]\)\) - 
+                            R\_\(\(\[LeftDoubleBracket]\)\(j - 1, j - 1\)\(\
+\[RightDoubleBracket]\)\)\ ]\), ";"}]}], " ", "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Return[\ 
+                  R\_\(\(\[LeftDoubleBracket]\)\(j, \
+j\)\(\[RightDoubleBracket]\)\)]\), ";"}]}], " ", "]"}]}], ";"}], 
+      " "}]], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Investigate Romberg integration for approximating the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0.0\%1.25 Cos[x\^2] \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 1.25]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the Romberg table using   tol = 0.001\nWhat do the entries in \
+the first column mean ?\nWhat do the entries in the second column mean ?\n\
+Which entries in the table are used to determine if Romberg integration is \
+converging ?"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(ans1b\  = \ 
+        Romberg[0.0, \ 1.25, \ 0.001];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%1.25\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", ans1b\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " The last entry in the table is  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  Let's find it.\n\t(This is possible because  j  is a global variable in \
+the subroutine.)"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Look at 10 digits in  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Are all 10 digits correct ?   Why ?  \nBe sure to support your answer to \
+this question !\nNO.  The subroutine was called with the accuracy  ",
+  Cell[BoxData[
+      \(tol\  = \ 0.001\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["1 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Determine how to call the Romberg integration subroutine so that it will \
+achieve 10 digits of accuracy.   \nYou will need to experiment to find the \
+solution.  Do it !\nReport the answer with 10 digits of accuracy. \nHow many \
+function evaluations were required to achieve this answer ?"
+}], "Text"],
+
+Cell["\<\
+We suspect the following answer might have 10 digits of accuracy.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Romberg[0.0, \ 1.25, \ 0.00000000005];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Since the last row was row 7, the sequential trapezoidal rule used \
+the following number of function calls.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The number of function calls was  \>", 
+        2\^j + 1\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral",
+  ", i.e. the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%\(5/4\)Cos[
+              x\^2] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<F[\!\(5\/4\)] = \>\"", 
+        F[5\/4]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x = \>\"", analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["1 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Last entry: Romberg integration \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Romberg integration to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\ \((14  x - 
+              11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                x\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[\(-0.5\), 2, 2]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the Romberg table using   tol = 0.001\nWhat do the entries in \
+the first column mean ?\nWhat do the entries in the second column mean ?\n\
+Which entries in the table are used to determine if Romberg integration is \
+converging ?"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(ans1b\  = \ 
+        Romberg[0.0, \ 2.0, \ 0.001];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%2.0\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\>\"", "\< \[TildeTilde] \>", 
+        ans1b\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["2 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " The last entry in the table is  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  Let's find it.\n\t(This is possible because  j  is a global variable in \
+the subroutine.)"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Look at 10 digits in  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Are all 10 digits correct ?   Why ?  \nBe sure to support your answer to \
+this question !\nNO.  The subroutine was called with the accuracy  ",
+  Cell[BoxData[
+      \(tol\  = \ 0.001\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Determine how to call the Romberg integration subroutine so that it will \
+achieve 10 digits of accuracy.   \nYou will need to experiment to find the \
+solution.  Do it !\nReport the answer with 10 digits of accuracy. \nHow many \
+function evaluations were required to achieve this answer ?"
+}], "Text"],
+
+Cell["\<\
+We suspect the following answer might have 10 digits of accuracy.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Romberg[0.0, \ 2.0, \ 0.00000000005];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Since the last row was row 8, the sequential trapezoidal rule used \
+the following number of function calls.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The number of function calls was  \>", 
+        2\^j + 1\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%2\((14  x - 
+                11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                  x\)\) \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[2] = \>", F[2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x = \>\"", 
+        analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(14x-11\!\(x\^2\))\!\(\
+\[ExponentialE]\^\(\(-2\) x\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["2 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Last entry: Romberg integration \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, 
+        PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[\(-0.5\), 2, 2]}, \[IndentingNewLine]PlotStyle \[Rule] 
+          Magenta, Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Romberg integration to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2 x\^10\ \(\[ExponentialE]\^\(4  x\^3 - \ 
+                3  x\^4\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s \"numerical value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {\(-0.5\), 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[5, 20, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the Romberg table using   tol = 0.001"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(ans1b\  = \ 
+        Romberg[0.0, \ 2.0, \ 0.001];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[\*"\"\<\!\(\[Integral]\_0.0\%2.0\)\!\(x\^10\) \!\(\[ExponentialE]\
+\^\(4  x\^3 - 3  x\^4\)\)\>\"", "\< \[TildeTilde] \>", ans1b\ ]\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " The last entry in the table is  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  Let's find it."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Look at 10 digits in  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Are all 10 digits correct ?   Why ?  \nNO.  The subroutine was called \
+with the accuracy  ",
+  Cell[BoxData[
+      \(tol\  = \ 0.001\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["3 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Determine how to call the Romberg integration subroutine so that it will \
+achieve 10 digits of accuracy.   "
+}], "Text"],
+
+Cell["\<\
+We suspect the following answer might have 10 digits of accuracy.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Romberg[0.0, \ 2.0, \ 0.00000000005];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Since the last row was row 10, the sequential trapezoidal rule used \
+the following number of function calls.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The number of function calls was  \>", 
+        2\^j + 1\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the numerical solution to the integral. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(\(analytic\  = \ 
+        NIntegrate[
+          x\^10\ \[ExponentialE]\^\(4  x\^3 - 3  x\^4\), {x, 0, 
+            2}];\)\(\[IndentingNewLine]\)
+    \)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)\!\(x\^10\) \!\(\[ExponentialE]\^\
+\(4  x\^3 - 3  x\^4\)\)\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["3 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s \"numerical value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the numerical value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Last entry of:  Romberg integration \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(ratio = 1;\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[0, 20, 5]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan, 
+        AspectRatio \[Rule] ratio];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Romberg integration to compute a numerical approximation to the \
+integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 2]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_]\ \  = \ 2 + Cos[2 \@ x];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] Magenta, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the Romberg table using   tol = 0.001"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(ans1b\  = \ 
+        Romberg[0.0, \ 2.0, \ 0.001];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0.0\%2.0\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", ans1b\ ];\)\)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " The last entry in the table is  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  Let's find it."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Look at 10 digits in  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Are all 10 digits correct ?   Why ?  \nNO.  The subroutine was called \
+with the accuracy  ",
+  Cell[BoxData[
+      \(tol\  = \ 0.001\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Determine how to call the Romberg integration subroutine so that it will \
+achieve 10 digits of accuracy.   "
+}], "Text"],
+
+Cell["\<\
+We suspect the following answer might have 10 digits of accuracy.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Romberg[0.0, \ 2.0, \ 0.00000000005];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Since the last row was row 7, the sequential trapezoidal rule used \
+the following number of function calls.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The number of function calls was  \>", 
+        2\^j + 1\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \((2 + Cos[2 \@ x])\);\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(analytic\  = \ \[Integral]\_0\%2\((2 + 
+                Cos[2 \@ x])\) \[DifferentialD]x;\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[2] = \>", F[2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x = \>\"", analytic\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(2+Cos[2\!\(\@x\)])\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[analytic], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[analytic], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Last entry: Romberg integration \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Romberg integration to compute a numerical approximation to the \
+integral ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, \ and\ \ 0.00000000005\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 3]."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "  ", "=", " ", 
+          RowBox[{
+            RowBox[{"3", 
+              StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox[\(Sin[x\^2]\),
+                FontSize->12]}], 
+            StyleBox["+",
+              FontSize->12], 
+            StyleBox[" ",
+              FontSize->12], 
+            StyleBox["1",
+              FontSize->12]}]}], ";"}], " "}], "\n", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\n", 
+    RowBox[{\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+          PlotStyle \[Rule] Magenta, AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Construct the Romberg table using   tol = 0.001"
+}], "Text"],
+
+Cell[BoxData[{\(ans1b\  = \ 
+        Romberg[0.0, \ 3.0, \ 
+          0.001];\), "\[IndentingNewLine]", \(Print["\<\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{\("\<\[Integral]\>"\+0\%3\), ",", "\"\<(\>\"", 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox[\(f[x]\),
+            FontSize->12], 
+          StyleBox[",",
+            FontSize->12], 
+          StyleBox["\"\<)\[DifferentialD]x\>\"",
+            FontSize->12], ",", "\"\< \[TildeTilde] \>\"", ",", "ans1b"}], 
+        " ", "]"}], ";"}]}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " The last entry in the table is  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ".  Let's find it."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\ \
+];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Look at 10 digits in  ",
+  Cell[BoxData[
+      \(R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Are all 10 digits correct ?   Why ?  \nNO.  The subroutine was called \
+with the accuracy  ",
+  Cell[BoxData[
+      \(tol\  = \ 0.001\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["5 (f).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Determine how to call the Romberg integration subroutine so that it will \
+achieve 10 digits of accuracy.   "
+}], "Text"],
+
+Cell["\<\
+We suspect the following answer might have 10 digits of accuracy.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Romberg[0.0, \ 3.0, \ 0.00000000005];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last row is row \>", 
+        j\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The last entry in this row is \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          10]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Since the last row was row 7, the sequential trapezoidal rule used \
+the following number of function calls.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print["\<The number of function calls was  \>", 
+        2\^j + 1\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (g).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to find the analytic solution to the integral, i.e. the \"true value\" of \
+the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "=", 
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}]}], ";"}], " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(F[x_] = \[Integral]f[x] \[DifferentialD]x;\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"analytic", " ", "=", " ", 
+          RowBox[{\(\[Integral]\_0\%3\), 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{
+                  RowBox[{"3", 
+                    StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                      FontSize->12], 
+                    StyleBox[" ",
+                      FontSize->12], 
+                    StyleBox[\(Sin[x\^2]\),
+                      FontSize->12]}], 
+                  StyleBox["+",
+                    FontSize->12], 
+                  StyleBox[" ",
+                    FontSize->12], 
+                  StyleBox["1",
+                    FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]}], 
+        ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[x] = \>", F[x]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[0] = \>", F[0]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<F[2] = \>", F[2]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{\("\<\[Integral]\>"\+0\%3\), ",", "\"\<(\>\"", 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox[\(f[x]\),
+              FontSize->12], 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox["\"\<)\[DifferentialD]x\>\"",
+              FontSize->12], ",", "\"\< = \>\"", ",", "analytic"}], " ", 
+          "]"}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{\("\<\[Integral]\>"\+0\%3\), ",", "\"\<(\>\"", 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox[\(f[x]\),
+              FontSize->12], 
+            StyleBox[",",
+              FontSize->12], 
+            StyleBox["\"\<)\[DifferentialD]x\>\"",
+              FontSize->12], ",", "\"\< = \>\"", 
+            ",", \(NumberForm[N[Re[analytic]], 10]\)}], " ", "]"}], ";"}], 
+      " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (h).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " How close did our last numerical approximation using Romberg integration \
+come to the \"true value\" of the integral."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Decimal form of the  true value \>", 
+        NumberForm[N[Re[analytic]], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Last entry: Romberg integration \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[
+          R\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\), 
+          17]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for Romberg Integration.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use Romberg integration to approximate the value of the integral.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell["Construct the Romberg table using   tol = 0.001", "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%2\)(1+\!\(\[ExponentialE]\^\(-x\)\) \
+Sin[8 \!\(x\^\(2/3\)\)])\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        Romberg[0.0, \ 2.0, \ 0.001]\ ];\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    \(\(tbl = Table[i, {i, 1, j}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          j, \(i++\), \ \
+\[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = {2\^\(i - 1\) + 1, 
+              NumberForm[
+                R\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\), 7]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \*"\"\<\!\(R\_\
+\(\(\[LeftDoubleBracket]\)\(i, i\)\(\[RightDoubleBracket]\)\)\)\>\""}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Rombeg/Rombergaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Rombeg/\
+Rombergaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Rombeg/Romberg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Rombeg/\
+Romberg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/rq.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg Integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/rq.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Romberg integration",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/RombergBib.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Romberg integration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RombergBib.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 172, 4, 35, "Text"],
+Cell[1951, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3430, 111, 2094, 66, 158, "Text"],
+Cell[5527, 179, 605, 20, 33, "Text"],
+Cell[6135, 201, 732, 24, 33, "Text"],
+Cell[6870, 227, 609, 20, 33, "Text"],
+Cell[7482, 249, 1825, 46, 112, "Text"],
+Cell[9310, 297, 149, 2, 33, "Text"],
+Cell[9462, 301, 3615, 69, 484, "Input"],
+Cell[13080, 372, 468, 13, 53, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[13573, 389, 101, 2, 33, "Text"],
+Cell[13677, 393, 155, 3, 51, "Input"],
+Cell[13835, 398, 160, 5, 33, "Text"],
+Cell[13998, 405, 363, 6, 70, "Input"],
+Cell[14364, 413, 352, 8, 90, "Text"],
+Cell[14719, 423, 321, 6, 83, "Input"],
+Cell[15043, 431, 338, 9, 52, "Text"],
+Cell[15384, 442, 252, 5, 50, "Input"],
+Cell[15639, 449, 237, 8, 33, "Text"],
+Cell[15879, 459, 206, 4, 30, "Input"],
+Cell[16088, 465, 309, 9, 71, "Text"],
+Cell[16400, 476, 403, 8, 90, "Text"],
+Cell[16806, 486, 91, 3, 33, "Text"],
+Cell[16900, 491, 366, 7, 70, "Input"],
+Cell[17269, 500, 132, 3, 33, "Text"],
+Cell[17404, 505, 116, 2, 31, "Input"],
+Cell[17523, 509, 269, 9, 33, "Text"],
+Cell[17795, 520, 1023, 18, 299, "Input"],
+Cell[18821, 540, 231, 6, 33, "Text"],
+Cell[19055, 548, 328, 6, 50, "Input"],
+Cell[19386, 556, 798, 13, 190, "Input"]
+}, Closed]],
+Cell[20199, 572, 512, 14, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[20736, 590, 101, 2, 33, "Text"],
+Cell[20840, 594, 199, 5, 51, "Input"],
+Cell[21042, 601, 157, 5, 33, "Text"],
+Cell[21202, 608, 332, 5, 70, "Input"],
+Cell[21537, 615, 352, 8, 90, "Text"],
+Cell[21892, 625, 349, 7, 83, "Input"],
+Cell[22244, 634, 338, 9, 52, "Text"],
+Cell[22585, 645, 252, 5, 50, "Input"],
+Cell[22840, 652, 237, 8, 33, "Text"],
+Cell[23080, 662, 206, 4, 30, "Input"],
+Cell[23289, 668, 309, 9, 71, "Text"],
+Cell[23601, 679, 403, 8, 90, "Text"],
+Cell[24007, 689, 91, 3, 33, "Text"],
+Cell[24101, 694, 365, 7, 70, "Input"],
+Cell[24469, 703, 132, 3, 33, "Text"],
+Cell[24604, 708, 116, 2, 31, "Input"],
+Cell[24723, 712, 265, 9, 33, "Text"],
+Cell[24991, 723, 1202, 22, 285, "Input"],
+Cell[26196, 747, 231, 6, 33, "Text"],
+Cell[26430, 755, 328, 6, 50, "Input"],
+Cell[26761, 763, 814, 14, 190, "Input"]
+}, Closed]],
+Cell[27590, 780, 541, 16, 58, "Text"],
+
+Cell[CellGroupData[{
+Cell[28156, 800, 101, 2, 33, "Text"],
+Cell[28260, 804, 177, 4, 53, "Input"],
+Cell[28440, 810, 157, 5, 33, "Text"],
+Cell[28600, 817, 403, 6, 90, "Input"],
+Cell[29006, 825, 160, 5, 33, "Text"],
+Cell[29169, 832, 338, 6, 83, "Input"],
+Cell[29510, 840, 262, 8, 33, "Text"],
+Cell[29775, 850, 252, 5, 50, "Input"],
+Cell[30030, 857, 237, 8, 33, "Text"],
+Cell[30270, 867, 206, 4, 30, "Input"],
+Cell[30479, 873, 258, 9, 52, "Text"],
+Cell[30740, 884, 221, 6, 33, "Text"],
+Cell[30964, 892, 91, 3, 33, "Text"],
+Cell[31058, 897, 365, 7, 70, "Input"],
+Cell[31426, 906, 133, 3, 33, "Text"],
+Cell[31562, 911, 116, 2, 31, "Input"],
+Cell[31681, 915, 224, 8, 33, "Text"],
+Cell[31908, 925, 624, 14, 143, "Input"],
+Cell[32535, 941, 293, 9, 33, "Text"],
+Cell[32831, 952, 336, 6, 50, "Input"],
+Cell[33170, 960, 944, 17, 210, "Input"]
+}, Closed]],
+Cell[34129, 980, 443, 12, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[34597, 996, 101, 2, 33, "Text"],
+Cell[34701, 1000, 157, 5, 33, "Text"],
+Cell[34861, 1007, 357, 6, 93, "Input"],
+Cell[35221, 1015, 160, 5, 33, "Text"],
+Cell[35384, 1022, 323, 6, 83, "Input"],
+Cell[35710, 1030, 262, 8, 33, "Text"],
+Cell[35975, 1040, 252, 5, 50, "Input"],
+Cell[36230, 1047, 237, 8, 33, "Text"],
+Cell[36470, 1057, 206, 4, 30, "Input"],
+Cell[36679, 1063, 258, 9, 52, "Text"],
+Cell[36940, 1074, 221, 6, 33, "Text"],
+Cell[37164, 1082, 91, 3, 33, "Text"],
+Cell[37258, 1087, 365, 7, 70, "Input"],
+Cell[37626, 1096, 132, 3, 33, "Text"],
+Cell[37761, 1101, 116, 2, 31, "Input"],
+Cell[37880, 1105, 265, 9, 33, "Text"],
+Cell[38148, 1116, 1014, 18, 287, "Input"],
+Cell[39165, 1136, 231, 6, 33, "Text"],
+Cell[39399, 1144, 328, 6, 50, "Input"],
+Cell[39730, 1152, 818, 14, 170, "Input"]
+}, Closed]],
+Cell[40563, 1169, 945, 28, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[41533, 1201, 101, 2, 33, "Text"],
+Cell[41637, 1205, 157, 5, 33, "Text"],
+Cell[41797, 1212, 856, 22, 91, "Input"],
+Cell[42656, 1236, 160, 5, 33, "Text"],
+Cell[42819, 1243, 606, 16, 90, "Input"],
+Cell[43428, 1261, 262, 8, 33, "Text"],
+Cell[43693, 1271, 252, 5, 50, "Input"],
+Cell[43948, 1278, 237, 8, 33, "Text"],
+Cell[44188, 1288, 206, 4, 30, "Input"],
+Cell[44397, 1294, 258, 9, 52, "Text"],
+Cell[44658, 1305, 221, 6, 33, "Text"],
+Cell[44882, 1313, 91, 3, 33, "Text"],
+Cell[44976, 1318, 365, 7, 70, "Input"],
+Cell[45344, 1327, 132, 3, 33, "Text"],
+Cell[45479, 1332, 116, 2, 31, "Input"],
+Cell[45598, 1336, 265, 9, 33, "Text"],
+Cell[45866, 1347, 2880, 75, 300, "Input"],
+Cell[48749, 1424, 231, 6, 33, "Text"],
+Cell[48983, 1432, 332, 6, 50, "Input"],
+Cell[49318, 1440, 820, 14, 170, "Input"]
+}, Closed]],
+Cell[50153, 1457, 305, 10, 32, "Text"],
+Cell[50461, 1469, 338, 11, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[50824, 1484, 101, 2, 33, "Text"],
+Cell[50928, 1488, 190, 4, 51, "Input"],
+Cell[51121, 1494, 63, 0, 33, "Text"],
+Cell[51187, 1496, 247, 4, 42, "Input"],
+Cell[51437, 1502, 1001, 19, 152, "Input"],
+Cell[52441, 1523, 773, 26, 33, "Text"]
+}, Closed]],
+Cell[53229, 1552, 732, 24, 30, "Text"],
+Cell[53964, 1578, 701, 20, 33, "Text"],
+Cell[54668, 1600, 158, 3, 35, "Text"],
+Cell[54829, 1605, 534, 14, 33, "Text"],
+Cell[55366, 1621, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,2335 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     73794,       2193]*)
+(*NotebookOutlinePosition[     74549,       2219]*)
+(*  CellTagsIndexPosition[     74505,       2215]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Householder Transformations",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Householder\[CloseCurlyQuote]s Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tEach transformation in ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Jacobi\[CloseCurlyQuote]s method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/JacobiMethodMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" produced two zero off-diagonal elements, but subsequent \
+iterations might make them nonzero. Hence many iterations are required to \
+make the off-diagonal entries sufficiently close to zero. \n\t\n\tSuppose \
+that ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is a real symmetric matrix.  Householder\[CloseCurlyQuote]s \
+method is used to construct a similar symmetric tridiagonal matrix.  Then the \
+",
+    FontFamily->"Times New Roman"],
+  ButtonBox["QR method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/QRMethodMod.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" can be used to find all eigenvalues of the tridiagonal matrix.  \
+\n\t\n\tWe now develop the method attributed to ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["Alston Scott Householder",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Householder.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" (",
+    FontFamily->"Times New Roman"],
+  "May 5, 1904",
+  StyleBox[" - ",
+    FontFamily->"Times New Roman"],
+  "July4, 1993",
+  StyleBox[") which is ",
+    FontFamily->"Times New Roman"],
+  "routinely taught in courses in linear algebra, and numerical analysis.  \
+Several ",
+  StyleBox["several zero off-diagonal elements are created with each \
+iteration, and they remain zero in subsequent iterations.  We start by \
+developing an important step in the process.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Householder Reflection)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  If ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" and ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["Y",
+        FontWeight->"Bold"]]],
+  StyleBox[" are vectors with the same norm, there exists an orthogonal \
+symmetric matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  StyleBox[" such that\n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox[",  \n\t\twhere\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["I",
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(W\^T\),
+              FontWeight->"Bold"]}]}]}]]],
+  "  ",
+  StyleBox["\n\t\tand\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["W",
+          FontWeight->"Bold"], " ", "=", " ", 
+        FractionBox[
+          StyleBox[\(X - Y\),
+            FontWeight->"Bold"], 
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            StyleBox[\(X - Y\),
+              FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}]]}]]],
+  StyleBox[".  \n\nSince ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  StyleBox[" is both orthogonal and symmetric, it follows that\n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], \(-1\)], " ", "=", " ", 
+        StyleBox["P",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Householder Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  It should be observed that the effect of the mapping ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Y",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox[" is to reflect ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" through the line whose direction is ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["Z",
+        FontWeight->"Bold"]]],
+  StyleBox[", hence the name Householder reflection.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary (",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(k\^th\),
+        FontColor->RGBColor[0, 0, 1]]],
+    FontWeight->"Bold"],
+  StyleBox[" Householder Matrix)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Let ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" be an ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  StyleBox[" matrix, and ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" any vector.  If ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(k\)]],
+  StyleBox[" is an integer with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(1 \[LessEqual] k \[LessEqual] n - 2\)]],
+  StyleBox[", we can construct a vector ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(W\_k\),
+        FontWeight->"Bold"]]],
+  StyleBox[" and matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_k\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["I",
+            FontWeight->"Bold"], "-", 
+          RowBox[{"2", " ", 
+            StyleBox[\(W\_k\),
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(W\_k\%T\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox["  so that  \n\n",
+    FontFamily->"Times New Roman"],
+  "(1)",
+  StyleBox["\t\t\t ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(P\_k\),
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            StyleBox[\(P\_k\),
+              FontWeight->"Bold"], 
+            RowBox[{"(", GridBox[{
+                  {\(x\_1\)},
+                  {"\[VerticalEllipsis]"},
+                  {\(x\_k\)},
+                  {\(x\_\(k + 1\)\)},
+                  {\(x\_\(k + 2\)\)},
+                  {"\[VerticalEllipsis]"},
+                  {\(x\_n\)}
+                  }], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(x\_1\)},
+                  {"\[VerticalEllipsis]"},
+                  {\(x\_k\)},
+                  {\(-\ S\)},
+                  {"0"},
+                  {"\[VerticalEllipsis]"},
+                  {"0"}
+                  }], ")"}], " ", "=", " ", 
+            StyleBox["Y",
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Householder Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Householder Transformations",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tSuppose that ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" is a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["symmetric",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  StyleBox[" matrix. Then a sequence of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n - 2\)]],
+  StyleBox[" transformations of the form  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", 
+        StyleBox["A",
+          FontWeight->"Bold"], " ", 
+        StyleBox["P",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  will reduce ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" to a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["symmetric",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SymmetricMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["tridiagonal",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TridiagonalMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" matrix.  Let us visualize the process when ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n = 5\)]],
+  StyleBox[".  The first transformation is defined to be  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"], " ", 
+        StyleBox["A",
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[",  where ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_1\),
+        FontWeight->"Bold"]]],
+  " ",
+  StyleBox["is constructed by applying the above Corollary with the vector ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" being the first column of the matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[".  The general form of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is\n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"1", "0", "0", "0", "0"},
+              {"0", "p", "p", "p", "p"},
+              {"0", "p", "p", "p", "p"},
+              {"0", "p", "p", "p", "p"},
+              {"0", "p", "p", "p", "p"}
+              }], ")"}]}]]],
+  "  \n",
+  StyleBox["\nwhere the letter ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox[" stands for some element in ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[".  As a result, the transformation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"], " ", 
+        StyleBox["A",
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  does not affect the element ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(1, 1\)\)]],
+  StyleBox[" of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[": \n\n",
+    FontFamily->"Times New Roman"],
+  "(2)",
+  StyleBox["\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(P\_1\),
+            FontWeight->"Bold"], " ", 
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\_1\),
+            FontWeight->"Bold"]}], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(a\_\(1, 1\)\), \(v\_1\), "0", "0", "0"},
+                {\(u\_1\), \(w\_1\), "w", "w", "w"},
+                {"0", "w", "w", "w", "w"},
+                {"0", "w", "w", "w", "w"},
+                {"0", "w", "w", "w", "w"}
+                }], ")"}], " ", "=", " ", 
+          StyleBox[\(A\_1\),
+            FontWeight->"Bold"]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe element denoted ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(u\_1\)]],
+  StyleBox[" is changed because of premultiplication by ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[", and ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(v\_1\)]],
+  StyleBox[" is changed because of postmultiplication by ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox["; since ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is symmetric, we have ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(u\_1 = v\_1\)]],
+  StyleBox[".  The changes to the elements denoted  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(w\)]],
+  StyleBox["  have been affected by both premultiplication and \
+postmultiplication.  Also, since ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" is the first column of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[", equation ",
+    FontFamily->"Times New Roman"],
+  "(1)",
+  StyleBox[" implies that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(u\_1 = \(-S\)\)]],
+  ".",
+  StyleBox["  \n\n\tThe second Householder transformation is applied to the \
+matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[" defined in ",
+    FontFamily->"Times New Roman"],
+  "(2)",
+  StyleBox[" and is denoted  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(A\_1\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[",  where ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is constructed by applying the Corollary with the vector ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" being the second column of the matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_1\),
+        FontWeight->"Bold"]]],
+  StyleBox[".  The form of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is \n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"1", "0", "0", "0", "0"},
+              {"0", "1", "0", "0", "0"},
+              {"0", "0", "p", "p", "p"},
+              {"0", "0", "p", "p", "p"},
+              {"0", "0", "p", "p", "p"}
+              }], ")"}]}]]],
+  "  ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox[" stands for some element in ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[".  The ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(2\[Times]2\)]],
+  StyleBox[" identity block in the upper-left corner ensures that the partial \
+tridiagonalization achieved in the first step will not be altered by the \
+second transformation ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(A\_1\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  The outcome of this transformation is  \n\n",
+    FontFamily->"Times New Roman"],
+  "(3)",
+  StyleBox["\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(P\_2\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(A\_1\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\_2\),
+            FontWeight->"Bold"]}], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(a\_\(1, 1\)\), \(v\_1\), "0", "0", "0"},
+                {\(u\_1\), \(w\_1\), \(v\_2\), "0", "0"},
+                {"0", \(u\_2\), \(w\_2\), "w", "w"},
+                {"0", "0", "w", "w", "w"},
+                {"0", "0", "w", "w", "w"}
+                }], ")"}], " ", "=", " ", 
+          StyleBox[\(A\_2\),
+            FontWeight->"Bold"]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe elements ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(u\_2\)]],
+  StyleBox[" and ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(v\_2\)]],
+  StyleBox[" were affected by premultiplication and postmultiplication by ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[".  Additional changes have been introduced to the other elements \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(w\)]],
+  StyleBox[" by the transformation.  The third Householder transformation,  ",
+    
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_3\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(A\_2\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_3\),
+          FontWeight->"Bold"]}]]],
+  StyleBox[",  is applied to the matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[" defined in ",
+    FontFamily->"Times New Roman"],
+  "(3)",
+  StyleBox[" where the Corollary is used with ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[" being the third column of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[".  The form of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(P\_3\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is  \n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_3\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"1", "0", "0", "0", "0"},
+              {"0", "1", "0", "0", "0"},
+              {"0", "0", "1", "0", "0"},
+              {"0", "0", "0", "p", "p"},
+              {"0", "0", "0", "p", "p"}
+              }], ")"}]}]]],
+  "  ",
+  StyleBox["\n\nAgain, the ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(3\[Times]3\)]],
+  StyleBox[" identity block ensures that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_3\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(A\_2\),
+          FontWeight->"Bold"], " ", 
+        StyleBox[\(P\_3\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  does not affect the elements of ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_2\),
+        FontWeight->"Bold"]]],
+  StyleBox[", which lie in the upper ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(3\[Times]3\)]],
+  StyleBox[" corner, and we obtain \n\n\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[\(P\_3\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(A\_2\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\_3\),
+            FontWeight->"Bold"]}], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(a\_\(1, 1\)\), \(v\_1\), "0", "0", "0"},
+                {\(u\_1\), \(w\_1\), \(v\_2\), "0", "0"},
+                {"0", \(u\_2\), \(w\_2\), \(v\_3\), "0"},
+                {"0", "0", \(u\_3\), "w", "w"},
+                {"0", "0", "0", "w", "w"}
+                }], ")"}], " ", "=", " ", 
+          StyleBox[\(A\_3\),
+            FontWeight->"Bold"]}]}]]],
+  ".  ",
+  StyleBox["\n\nThus it has taken three transformations to reduce ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" to tridiagonal form.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tIn general, for efficiency, the transformation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", 
+        StyleBox["A",
+          FontWeight->"Bold"], " ", 
+        StyleBox["P",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  is not performed in matrix form.  The next result shows that it \
+is more efficiently carried out via some clever vector manipulations.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Computation of One Householder Transformation)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  If ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Bold"]]],
+  StyleBox[" is a Householder matrix, the transformation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", 
+        StyleBox["A",
+          FontWeight->"Bold"], " ", 
+        StyleBox["P",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  is accomplished as follows.  Let  \n\n\t\tLet \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["W",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox["    and compute \n\n\t\t    \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"c", " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(W\^T\),
+            FontWeight->"Bold"], " ", 
+          StyleBox["V",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox["  \n\t\tand \n\t\t   \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Q",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["V",
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"c", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"]}]}]}]]],
+  ",  ",
+  StyleBox["\n\t\n\t\tthen   \t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["P",
+            FontWeight->"Bold"], " ", 
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["P",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(Q\^T\),
+              FontWeight->"Bold"]}], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["Q",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(W\^T\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox[".   ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Householder Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Reduction to Tridiagonal Form",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tSuppose that ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[" is a symmetric ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " ",
+  StyleBox["matrix.  Start with \n\t\n\t\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  ".  ",
+  StyleBox["\n\nConstruct the sequence  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_1\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\_2\),
+          FontWeight->"Bold"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(P\_\(n - 1\)\),
+          FontWeight->"Bold"]}]]],
+  StyleBox["  of Householder matrices, so that \n\n\t\t\t ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_k\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{
+          StyleBox[\(P\_k\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(A\_\(k - 1\)\),
+            FontWeight->"Bold"], " ", 
+          StyleBox[\(P\_k\),
+            FontWeight->"Bold"]}]}]]],
+  "    ",
+  StyleBox["for   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(k = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(n - 2\)}]]],
+  StyleBox[",\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_k\),
+        FontWeight->"Bold"]]],
+  StyleBox[" has zeros below the subdiagonal in columns ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "k"}]]],
+  StyleBox[".  Then ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(A\_\(n - 2\)\),
+        FontWeight->"Bold"]]],
+  StyleBox[" is a symmetric tridiagonal matrix that is similar to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[".  This process is called Householder\[CloseCurlyQuote]s method.",
+    
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use Householder\[CloseCurlyQuote]s method to reduce the ",
+    FontFamily->"Times New Roman"],
+  "symmetric matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"4", "2", "2", "1"},
+              {"2", \(-3\), "1", "1"},
+              {"2", "1", "3", "1"},
+              {"1", "1", "1", "2"}
+              }], ")"}]}]]],
+  StyleBox["  to symmetric tridiagonal form.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontFamily->"Times New Roman",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"4", "2", "2", "1"},
+                {"2", \(-3\), "1", "1"},
+                {"2", "1", "3", "1"},
+                {"1", "1", "1", "2"}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(A\_0\  = \ A;\), 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(A\_0\) = \>\"", 
+        MatrixForm[A\_0]\ ];\)}], "Input"],
+
+Cell[TextData[{
+  "Use column 1 to compute the  S  and  R.  \n\t\n\t",
+  Cell[BoxData[{
+      \(\(\(S\  = \ \@\(\[Sum]\+\(j = 2\)\%4\((a\_\(j, 1\))\)\^2\)\)\(\
+\[IndentingNewLine]\)
+      \)\), "\[IndentingNewLine]", 
+      \(S\  = \@\(2\^2 + 2\^2 + 1\^2\)\[IndentingNewLine]\), 
+    "\[IndentingNewLine]", 
+      \(S = \ \@9\[IndentingNewLine]\), "\[IndentingNewLine]", 
+      \(S\  = \ 3\)}]],
+  " \n\t\n\t\n\t",
+  Cell[BoxData[{
+      \(\(\(R\ \  = \(\@\(2\ \((a\_\(2, 1\) + S)\)\ S\)\  = \ \@\(2\ \((2 + \
+S)\)\ S\)\)\)\(\[IndentingNewLine]\)
+      \)\), "\[IndentingNewLine]", 
+      \(\(\(R\  = \ \@\(2\ \((2 + \@\(2\^2 + 2\^2 + 1\^2\))\)\ \@\(2\^2 + \
+2\^2 + 1\^2\)\)\)\(\[IndentingNewLine]\)
+      \)\), "\[IndentingNewLine]", 
+      \(R\  = \ \@\(2\ \((2 + 3)\)\ 3\)\ \ \[IndentingNewLine]\), 
+    "\[IndentingNewLine]", 
+      \(R\  = \ \ \@30\[IndentingNewLine]\), "\[IndentingNewLine]", 
+      \(\(\(R\)\(\ \)\(=\)\(\ \)\(5.477225575\)\(\ \)\)\)}]],
+  "    "
+}], "Text"],
+
+Cell[TextData[{
+  "The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will perform the above computations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(k = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(X\  = \(A\_\(k - 1\)\)\_\(\(\[LeftDoubleBracket]\)\(All, k\)\(\
+\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[A\_\(k - 1\)];\)\), "\[IndentingNewLine]", 
+    \(\(S = 
+        Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)] \@\(\[Sum]\+\(j = k + 1\)\%n\((X\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\^2\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(R = \@\(2\ \((X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\) + S)\)\ S\);\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = Table["\<x\>"\_j, {j, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_\(k - 1\), "\< = \>", 
+        MatrixForm[A\_\(k - 1\)]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Select column k = \>", k\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<S = \>", 
+        Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)], \@\(\[Sum]\+\(j = k + 1\)\%n\(("\<x\>"\_j)\)\
+\^2\), "\< = \>", S, "\< = \>", 
+        NumberForm[N[S], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R = \>", \@\(\(("\<x\>"\_\(k + 1\) + "\<S\>")\)\ "\<2 \
+S\>"\), "\< = \>", R, "\< = \>", NumberForm[N[R], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The constants  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S = 3\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 5.477225575\)]],
+  StyleBox["  are used to construct the vector ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(W\^T\),
+        FontWeight->"Bold"]]],
+  ".  ",
+  StyleBox["\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[{
+      RowBox[{
+        StyleBox[\(W\^T\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          
+          FontWeight->
+            "Bold"], \(\(1\/R\) {\ 0, 2 + S, 2, 1\ }\ \  = \ \ \(1\/\@30\) {\ 
+              0, 2 + 3, 2, 1\ }\)}], "\[IndentingNewLine]", 
+      RowBox[{
+        RowBox[{
+          StyleBox[\(W\^T\),
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontWeight->"Bold"], 
+          StyleBox["=",
+            FontWeight->"Bold"], 
+          " ", \(\(1\/\@30\) {\ 0, 5, 2, 1\ }\ \  = \ \ {\ 
+              0, \@\(5\/6\), \@\(2\/15\), 1\/\@30\ }\)}], 
+        "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{
+        StyleBox[\(W\^T\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        " ", \({\ 0.0, 0.9128709292, 0.3651483717, 0.1825741858\ }\)}]}]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  "The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will perform this computation. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(W\  = \ X;\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, i \[LessEqual] k, \(i++\), \ 
+        W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+          0];\)\ \), "\[IndentingNewLine]", 
+    \(\(W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) = 
+        W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) + 
+          S;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \!\(1\/R\){0,...,0,\>\"", 
+        x\_\(k + 1\) + "\<S\>", "\<,\>", x\_\(k + 2\), "\<,...,\>", 
+        x\_n, "\<}\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", 1\/R, 
+        W\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", NumberForm[1.0\/R, 10], "\< \>", 
+        NumberForm[N[W], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = \(1\/R\) W;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", W\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Chop[N[W]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", 
+        NumberForm[W, 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Then  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["V",
+        FontWeight->"Bold"]]],
+  StyleBox["  is formed using partial matrix multiplication  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["W",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(W = Partition[W, 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(V = A\_\(k - 1\) . W;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", "\<A\>"\_\(k - 1\), "\< W\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", \ MatrixForm[A], 
+        MatrixForm[W]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", \ 
+        NumberForm[MatrixForm[A\_\(k - 1\) . W], 10]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The constant  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"c", " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(W\^T\),
+            FontWeight->"Bold"], " ", 
+          StyleBox["V",
+            FontWeight->"Bold"]}]}]]],
+  StyleBox["  is calculated",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(c\  = Flatten[W] . Flatten[V];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<c = \!\(W\^T\) V\>\""\ ]\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", MatrixForm[Transpose[W]], 
+        MatrixForm[V]\ ]\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", NumberForm[c, 10]\ ]\ ;\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Then the vector  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["Q",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["V",
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"c", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"]}]}]}]]],
+  "  ",
+  StyleBox[" is formed",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q\  = \ V - c\ W;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = V - c W\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", MatrixForm[V], "\< - (\>", c, "\<)\>", \ 
+        MatrixForm[W]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(If[c \[LessEqual] 0, 
+        Print["\<Q = \>", MatrixForm[V], "\< + \>", \(-c\), \ 
+          MatrixForm[W]\ ]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(If[c > 0, 
+        Print["\<Q = \>", MatrixForm[V], "\< - \>", c, \ 
+          MatrixForm[W]\ ]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", MatrixForm[V], "\< + \>", \ 
+        MatrixForm[\(-c\)\ W]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", 
+        NumberForm[MatrixForm[V - c\ W], 10]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The computation  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_1\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(A\_0\),
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(Q\^T\),
+              FontWeight->"Bold"]}], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["Q",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(W\^T\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox["  is now performed  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A\_k\  = \ 
+        A\_\(k - 1\)\  - \ 2\ W . Transpose[Q] - 
+          2  Q . Transpose[W];\)\ \), "\[IndentingNewLine]", 
+    \(\(A\_k\  = Chop[A\_k];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", MatrixForm[A\_\(k - 1\)], "\< - \>", 
+        MatrixForm[Chop[2\ W . Transpose[Q]]], "\< - \>", 
+        MatrixForm[
+          Chop[2  Q . Transpose[W]]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", MatrixForm[A\_\(k - 1\)], "\< - \>", 
+        MatrixForm[
+          Chop[\(-\ 2\)\ W . Transpose[Q] - 
+              2  Q . Transpose[W]]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", 
+        NumberForm[MatrixForm[A\_k], 10]\ ];\)\)}], "Input"],
+
+Cell["We have now completed the first step.  ", "Text"],
+
+Cell[TextData[{
+  StyleBox["The final step uses the constants  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(S = \(-3.16227766\)\)]],
+  StyleBox[",   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R\  = \ 6.03687368\)]],
+  StyleBox["   and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\  = \ \(-1.264911064\)\)]],
+  "  ",
+  StyleBox["and the vectors  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[{
+      RowBox[{
+        RowBox[{
+          StyleBox[\(W\^T\),
+            FontWeight->"Bold"], 
+          StyleBox[
+            RowBox[{
+              StyleBox[" ",
+                FontWeight->"Bold"], " "}]], "=", 
+          " ", \({\ 0.0, 0.0, \(-0.9545135388\), \(-0.2981675773\)\ }\)}], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "\[IndentingNewLine]"}], "\[IndentingNewLine]",
+     
+      RowBox[{
+        RowBox[{
+          StyleBox[\(V\^T\),
+            FontWeight->"Bold"], 
+          StyleBox[
+            RowBox[{
+              StyleBox[" ",
+                FontWeight->"Bold"], " "}]], "=", 
+          " ", \({\ 0.0, 3.01843684, 1.018797002, 0.9808428356\ }\)}], 
+        "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{
+        StyleBox[\(Q\^T\),
+          FontWeight->"Bold"], 
+        StyleBox[
+          RowBox[{
+            StyleBox[" ",
+              FontWeight->"Bold"], " "}]], "=", 
+        " ", \({\ 0.0, 3.01843684, \(-0.1885777338\), 0.603687368\ }\), 
+        " "}]}]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  "The details can be computed with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(k = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(X\  = \(A\_\(k - 1\)\)\_\(\(\[LeftDoubleBracket]\)\(All, k\)\(\
+\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(n = Length[A\_\(k - 1\)];\)\), "\[IndentingNewLine]", 
+    \(\(S = 
+        Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)] \@\(\[Sum]\+\(j = k + 1\)\%n\((X\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\^2\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(R = \@\(2\ \((X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\) + S)\)\ S\);\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = Table["\<x\>"\_j, {j, 1, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_\(k - 1\), "\< = \>", 
+        MatrixForm[A\_\(k - 1\)]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Select column k = \>", k\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<S = \>", 
+        Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)], \@\(\[Sum]\+\(j = k + 1\)\%n\(("\<x\>"\_j)\)\
+\^2\), "\< = \>", S, "\< = \>", 
+        NumberForm[N[S], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<R = \>", \@\(\(("\<x\>"\_\(k + 1\) + "\<S\>")\)\ "\<2 \
+S\>"\), "\< = \>", R, "\< = \>", NumberForm[N[R], 10]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(W\  = \ X;\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, i \[LessEqual] k, \(i++\), \ 
+        W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+          0];\)\ \), "\[IndentingNewLine]", 
+    \(\(W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) = 
+        W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) + 
+          S;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \!\(1\/R\){0,...,0,\>\"", 
+        x\_\(k + 1\) + "\<S\>", "\<,\>", x\_\(k + 2\), "\<,...,\>", 
+        x\_n, "\<}\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", 1\/R, 
+        W\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", NumberForm[1.0\/R, 10], "\< \>", 
+        NumberForm[N[W], 10]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = \(1\/R\) W;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", W\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(W = Chop[N[W]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(W\^T\) = \>\"", 
+        NumberForm[W, 10]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(W = Partition[W, 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(V = A\_\(k - 1\) . W;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", "\<A\>"\_\(k - 1\), "\< W\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", \ MatrixForm[A], 
+        MatrixForm[W]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<V = \>", \ 
+        NumberForm[MatrixForm[A\_\(k - 1\) . W], 10]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(c\  = Flatten[W] . Flatten[V];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<c = \!\(W\^T\) V\>\""\ ]\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", MatrixForm[Transpose[W]], 
+        MatrixForm[V]\ ]\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>", NumberForm[c, 10]\ ]\ ;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Q\  = \ V - c\ W;\)\ \), "\[IndentingNewLine]", 
+    \(\(Q = Chop[Q];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = V - c W\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", MatrixForm[V], "\< - (\>", c, "\<)\>", \ 
+        MatrixForm[W]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(If[c \[LessEqual] 0, 
+        Print["\<Q = \>", MatrixForm[V], "\< + \>", \(-c\), \ 
+          MatrixForm[W]\ ]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(If[c > 0, 
+        Print["\<Q = \>", MatrixForm[V], "\< - \>", c, \ 
+          MatrixForm[W]\ ]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", MatrixForm[V], "\< + \>", \ 
+        MatrixForm[\(-c\)\ W]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Q = \>", 
+        NumberForm[MatrixForm[V - c\ W], 10]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["The tridiagonal matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_2\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[\(A\_1\),
+            FontWeight->"Bold"], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["W",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(Q\^T\),
+              FontWeight->"Bold"]}], " ", "-", " ", 
+          RowBox[{"2", " ", 
+            StyleBox["Q",
+              FontWeight->"Bold"], " ", 
+            StyleBox[\(W\^T\),
+              FontWeight->"Bold"]}]}]}]]],
+  StyleBox["  is now found ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A\_k\  = \ 
+        A\_\(k - 1\)\  - \ 2\ W . Transpose[Q] - 
+          2  Q . Transpose[W];\)\ \), "\[IndentingNewLine]", 
+    \(\(A\_k\  = Chop[A\_k];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", MatrixForm[A\_\(k - 1\)], "\< - \>", 
+        MatrixForm[Chop[2\ W . Transpose[Q]]], "\< - \>", 
+        MatrixForm[
+          Chop[2  Q . Transpose[W]]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", MatrixForm[A\_\(k - 1\)], "\< - \>", 
+        MatrixForm[
+          Chop[\(-\ 2\)\ W . Transpose[Q] - 
+              2  Q . Transpose[W]]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A\>"\_k, "\< = \>", 
+        NumberForm[MatrixForm[A\_k], 10]\ ];\)\)}], "Input"],
+
+Cell["We are done, the tridiagonal matrix has been found. ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Algorithm",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tLet us combine the steps used in Example 1 and make an algorithm for \
+performing one Householder transformation. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(One ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Householder Transformation).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " symmetric matrix",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " to tridiagonal form by using",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n - 2\)]],
+  " Householder transformations."
+}], "Text"],
+
+Cell[BoxData[
+    \(HouseholderStep[k_]\  := \ 
+      Module[{}, \[IndentingNewLine]X\  = \(A\_\(k - 1\)\)\_\(\(\
+\[LeftDoubleBracket]\)\(All, k\)\(\[RightDoubleBracket]\)\); \
+\[IndentingNewLine]n = Length[A\_\(k - 1\)]; \[IndentingNewLine]S = 
+          Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)] \@\(\[Sum]\+\(j = k + 1\)\%n\((X\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\))\)\^2\); \
+\[IndentingNewLine]R = \@\(2\ \((X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\) + S)\)\ S\); \ \[IndentingNewLine]vars = 
+          Table["\<x\>"\_j, {j, 1, 
+              n}]; \[IndentingNewLine]Print["\<A\>"\_\(k - 1\), "\< = \>", 
+          MatrixForm[
+            A\_\(k - 1\)]\ ]; \[IndentingNewLine]Print["\<Select column k = \
+\>", k\ ]; 
+        Print["\<X = \>", MatrixForm[vars], "\< = \>", 
+          MatrixForm[X]\ ]; \[IndentingNewLine]Print["\<S = \>", 
+          Sign[X\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)], \@\(\[Sum]\+\(j = k + 1\)\%n\(("\<x\>"\_j)\)\
+\^2\), "\< = \>", S, "\< = \>", 
+          NumberForm[N[S], 
+            10]\ ]; \ \[IndentingNewLine]Print["\<R = \>", \
+\@\(\(("\<x\>"\_\(k + 1\) + "\<S\>")\)\ "\<2 S\>"\), "\< = \>", R, "\< = \>", 
+          NumberForm[N[R], 10]\ ]; \ \[IndentingNewLine]W\  = \ 
+          X; \ \[IndentingNewLine]For[i = 1, i \[LessEqual] k, \(i++\), \ 
+          W\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+            0]; \ \[IndentingNewLine]W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\) = 
+          W\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) + 
+            S; \ \[IndentingNewLine]Print[\*"\"\<\!\(W\^T\) = \
+\!\(1\/R\){0,...,0,\>\"", x\_\(k + 1\) + "\<S\>", "\<,\>", 
+          x\_\(k + 2\), "\<,...,\>", 
+          x\_n, "\<}\>"]; \ \[IndentingNewLine]Print[\*"\"\<\!\(W\^T\) = \
+\>\"", 1\/R, W\ ]; \ \[IndentingNewLine]Print[\*"\"\<\!\(W\^T\) = \>\"", 
+          NumberForm[1.0\/R, 10], "\< \>", 
+          NumberForm[N[W], 10]\ ]; \ \[IndentingNewLine]W = \(1\/R\) 
+            W; \ \[IndentingNewLine]Print[\*"\"\<\!\(W\^T\) = \>\"", 
+          W\ ]; \ \[IndentingNewLine]W = 
+          Chop[N[W]]; \ \[IndentingNewLine]Print[\*"\"\<\!\(W\^T\) = \>\"", 
+          NumberForm[W, 10]\ ]; \ \[IndentingNewLine]W = 
+          Partition[W, 1]; \ \[IndentingNewLine]V = 
+          A\_\(k - 1\) . 
+            W; \ \[IndentingNewLine]Print["\<V = \>", "\<A\>"\_\(k - 1\), "\< \
+W\>"]; \[IndentingNewLine]Print["\<V = \>", \ MatrixForm[A], 
+          MatrixForm[W]\ ]; \[IndentingNewLine]Print["\<V = \>", \ 
+          NumberForm[MatrixForm[A\_\(k - 1\) . W], 
+            10]\ ]; \[IndentingNewLine]c\  = 
+          Flatten[W] . 
+            Flatten[V]; \ \[IndentingNewLine]Print[\*"\"\<c = \!\(W\^T\) \
+V\>\""\ ]\ ; \[IndentingNewLine]Print["\<c = \>", MatrixForm[Transpose[W]], 
+          MatrixForm[V]\ ]\ ; \[IndentingNewLine]Print["\<c = \>", 
+          NumberForm[c, 10]\ ]\ ; \[IndentingNewLine]Q\  = \ 
+          V - c\ W; \ \ \[IndentingNewLine]Print["\<Q = V - c W\>"\ ]; \ \ \
+\[IndentingNewLine]Print["\<Q = \>", MatrixForm[V], "\< - (\>", c, "\<)\>", \ 
+          MatrixForm[W]\ ]; \ \[IndentingNewLine]If[c \[LessEqual] 0, 
+          Print["\<Q = \>", MatrixForm[V], "\< + \>", \(-c\), \ 
+            MatrixForm[W]\ ]\ ]; \ \[IndentingNewLine]If[c > 0, 
+          Print["\<Q = \>", MatrixForm[V], "\< - \>", c, \ 
+            MatrixForm[W]\ ]\ ]; \ \[IndentingNewLine]Print["\<Q = \>", 
+          MatrixForm[V], "\< + \>", \ 
+          MatrixForm[\(-c\)\ W]\ ]; \ \ \[IndentingNewLine]Print["\<Q = \>", 
+          NumberForm[MatrixForm[V - c\ W], 
+            10]\ ]; \ \ \[IndentingNewLine]A\_k\  = \ 
+          A\_\(k - 1\)\  - \ 2\ W . Transpose[Q] - 
+            2  Q . Transpose[W]; \ \[IndentingNewLine]A\_k\  = 
+          Chop[A\_k]; \[IndentingNewLine]Print["\<A\>"\_k, "\< = \>", 
+          MatrixForm[A\_\(k - 1\)], "\< - \>", 
+          MatrixForm[Chop[2\ W . Transpose[Q]]], "\< - \>", 
+          MatrixForm[
+            Chop[2  Q . 
+                  Transpose[
+                    W]]]\ ]; \[IndentingNewLine]Print["\<A\>"\_k, "\< = \>", 
+          MatrixForm[A\_\(k - 1\)], "\< - \>", 
+          MatrixForm[
+            Chop[\(-\ 2\)\ W . Transpose[Q] - 
+                2  Q . Transpose[
+                      W]]]\ ]; \[IndentingNewLine]Print["\<A\>"\_k, "\< = \
+\>", NumberForm[MatrixForm[A\_k], 10]\ ];\ ]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  Use the Householder step algorithm to reduce the ",
+    FontFamily->"Times New Roman"],
+  "symmetric matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"4", "2", "2", "1"},
+              {"2", \(-3\), "1", "1"},
+              {"2", "1", "3", "1"},
+              {"1", "1", "1", "2"}
+              }], ")"}]}]]],
+  StyleBox["  to symmetric tridiagonal form.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontFamily->"Times New Roman",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"4", "2", "2", "1"},
+                {"2", \(-3\), "1", "1"},
+                {"2", "1", "3", "1"},
+                {"1", "1", "1", "2"}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(A\_0\  = \ A;\), 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(A\_0\) = \>\"", 
+        MatrixForm[A\_0]\ ];\)}], "Input"],
+
+Cell[BoxData[
+    \(\(HouseholderStep[1];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[2];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use the Householder step algorithm to reduce the ",
+    FontFamily->"Times New Roman"],
+  "symmetric matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"5", "1", "2", "2", "4"},
+              {"1", "1", "2", "1", "0"},
+              {"2", "2", "0", "2", "1"},
+              {"2", "1", "2", "1", "2"},
+              {"4", "0", "1", "2", "4"}
+              }], ")"}]}]]],
+  StyleBox["  to symmetric tridiagonal form.  ",
+    FontFamily->"Times New Roman"]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"5", "1", "2", "2", "4"},
+              {"1", "1", "2", "1", "0"},
+              {"2", "2", "0", "2", "1"},
+              {"2", "1", "2", "1", "2"},
+              {"4", "0", "1", "2", "4"}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(A\_0\  = \ A;\), 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(A\_0\) = \>\"", 
+        MatrixForm[A\_0]\ ];\)}], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(HouseholderStep[1];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[2];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[3];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Exercise 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use the Householder step algorithm to reduce the ",
+    FontFamily->"Times New Roman"],
+  "symmetric matrix",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(A\_0\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], 
+        RowBox[{"(", GridBox[{
+              {"4", "1", "2", \(-5\), "1", "4"},
+              {"1", "2", "0", "4", "5", "3"},
+              {"2", "0", "3", \(-1\), "2", "1"},
+              {\(-5\), "4", \(-1\), "1", "5", "2"},
+              {"1", "5", "2", "5", \(-2\), "4"},
+              {"4", "3", "1", "2", "4", "1"}
+              }], ")"}]}]]],
+  StyleBox["  to symmetric tridiagonal form.  ",
+    FontFamily->"Times New Roman"]
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"4", "1", "2", \(-5\), "1", "4"},
+              {"1", "2", "0", "4", "5", "3"},
+              {"2", "0", "3", \(-1\), "2", "1"},
+              {\(-5\), "4", \(-1\), "1", "5", "2"},
+              {"1", "5", "2", "5", \(-2\), "4"},
+              {"4", "3", "1", "2", "4", "1"}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(A\_0\  = \ A;\), 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<\!\(A\_0\) = \>\"", 
+        MatrixForm[A\_0]\ ];\)}], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(HouseholderStep[1];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[2];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[3];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(HouseholderStep[4];\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Traditional Programming",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWe now present a version of the Householder program that uses \
+traditional more traditional loops to perform the computations.  It also \
+takes into consideration that once a portion of the tridiagonal structure has \
+been created one only needs to continue the process on the submatrix below \
+and to the right.  This program will be harder to read, but might prove to be \
+more efficient when the size of the matrix is larger.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Householder Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Householder Reduction to Tridiagonal Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To reduce the",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " symmetric matrix",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " to tridiagonal form by using",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n - 2\)]],
+  " Householder transformations."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(FormW[k_, 
+          n_] := \[IndentingNewLine]Module[{i, j, 
+            sum}, \[IndentingNewLine]sum\  = \ 0; \[IndentingNewLine]For[
+            j = k + 1, 
+            j \[LessEqual] 
+              n, \(j++\), \[IndentingNewLine]\(sum\  = \ 
+                sum\  + \ \((A1\_\(\(\[LeftDoubleBracket]\)\(j, k\)\(\
+\[RightDoubleBracket]\)\))\)\^2;\)]; \[IndentingNewLine]s0\  = \ \@sum; \
+\[IndentingNewLine]If[
+            A1\_\(\(\[LeftDoubleBracket]\)\(k + 1, k\)\(\[RightDoubleBracket]\
+\)\) < 0, \(s0 = \(-s0\);\)\ ]; \[IndentingNewLine]r0\  = \ \@\(2\ \
+\((A1\_\(\(\[LeftDoubleBracket]\)\(k + 1, k\)\(\[RightDoubleBracket]\)\) + \
+s0)\)\ s0\); \[IndentingNewLine]For[j = 1, 
+            j \[LessEqual] 
+              k, \(j++\), \(W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) = 
+                0;\)\ ]; \[IndentingNewLine]W1\_\(\(\[LeftDoubleBracket]\)\(k \
++ 1\)\(\[RightDoubleBracket]\)\)\  = \ \(A1\_\(\(\[LeftDoubleBracket]\)\(k + \
+1, k\)\(\[RightDoubleBracket]\)\)\  + \ s0\)\/r0; \[IndentingNewLine]For[
+            j = k + 2, 
+            j \[LessEqual] 
+              n, \(j++\), \[IndentingNewLine]\(W1\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = 
+                A1\_\(\(\[LeftDoubleBracket]\)\(j, k\)\(\[RightDoubleBracket]\
+\)\)\/r0;\)\ ];\ ];\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(FormV[k_, 
+          n_] := \[IndentingNewLine]Module[{i, j, 
+            sum}, \[IndentingNewLine]For[j = 1, 
+            j \[LessEqual] 
+              k, \(j++\), \(V1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) = 0;\)\ ]; \[IndentingNewLine]For[i = k + 1, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]sum\  = \ 
+              0; \[IndentingNewLine]For[j = k + 1, 
+              j \[LessEqual] 
+                n, \(j++\), \[IndentingNewLine]\(sum\  = \ 
+                  sum\  + \ 
+                    A1\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\ W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\);\)\ ]; \[IndentingNewLine]V1\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\  = \ 
+              sum;\ ];\ ];\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(FormQ[k_, 
+          n_] := \[IndentingNewLine]Module[{j}, \[IndentingNewLine]c\  = \ 
+            0; \[IndentingNewLine]For[j = k + 1, 
+            j \[LessEqual] 
+              n, \(j++\), \[IndentingNewLine]\(c\  = \ 
+                c\  + \ 
+                  W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)\ V1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\);\)\ ]; \
+\[IndentingNewLine]For[j = 1, 
+            j \[LessEqual] 
+              k, \(j++\), \[IndentingNewLine]\(Q1\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\)\  = \ 0;\)\ ]; \[IndentingNewLine]For[
+            j = k + 1, 
+            j \[LessEqual] 
+              n, \(j++\), \[IndentingNewLine]\(Q1\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                V1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\
+\  - \ c\ \ W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\);\)\
+\ ];\ ];\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(FormA[k_, 
+          n_] := \[IndentingNewLine]Module[{i, j}, \[IndentingNewLine]For[
+            j = k + 2, 
+            j \[LessEqual] 
+              n, \(j++\), \
+\[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(j, k\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+              0; \[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(k, j\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+              0;\ ]; \[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(k + \
+1, k\)\(\[RightDoubleBracket]\)\)\  = \ \(-\ 
+              s0\); \[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(k, k + \
+1\)\(\[RightDoubleBracket]\)\)\  = \ \(-\ s0\); \[IndentingNewLine]For[j = k, 
+            j \[LessEqual] 
+              n, \(j++\), \[IndentingNewLine]\(A1\_\(\(\[LeftDoubleBracket]\)\
+\(j, j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                A1\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\
+\)\)\  - \ 
+                  4\ Q1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\ W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\);\)\ ]; \[IndentingNewLine]For[i = k + 1, 
+            i \[LessEqual] 
+              n, \(i++\), \[IndentingNewLine]\(For[j = i + 1, 
+                j \[LessEqual] 
+                  n, \(j++\), \[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\
+\)\(i, j\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  A1\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\  - \ 
+                    2\ W1\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\ Q1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\  - \ 
+                    2\ Q1\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\ W1\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\); \
+\[IndentingNewLine]A1\_\(\(\[LeftDoubleBracket]\)\(j, i\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  A1\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\);\ ];\)\ ];\ ];\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(Householder[
+          A0_] := \[IndentingNewLine]Module[{k}, \[IndentingNewLine]A1\  = \ 
+            N[A0]; \[IndentingNewLine]n\  = \ 
+            Length[A1]; \[IndentingNewLine]Q1\  = \ 
+            Table[0, {i, n}]; \[IndentingNewLine]V1\  = \ 
+            Table[0, {i, n}]; \[IndentingNewLine]W1\  = \ 
+            Table[0, {i, n}]; \[IndentingNewLine]For[k = 1, 
+            k \[LessEqual] n - 2, \(k++\), \[IndentingNewLine]FormW[k, 
+              n]; \[IndentingNewLine]FormV[k, n]; \[IndentingNewLine]FormQ[k, 
+              n]; \[IndentingNewLine]FormA[k, n]; \[IndentingNewLine]If[
+              k \[Equal] n - 2, 
+              Print["\<The tri-diagonal form is:\>"]\ ]; \
+\[IndentingNewLine]Print[
+              NumberForm[MatrixForm[A1], 10], "\<\n\>"];\ ];\ ];\)\)], "Input",\
+
+  AspectRatioFixed->True]
+}, Open  ]],
+
+Cell[TextData[{
+  StyleBox["Exercise 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use traditional Householder subroutine to reduce the symmetric matrix  \
+",
+  Cell[BoxData[
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"4", "1", "2", \(-5\), "1", "4"},
+              {"1", "2", "0", "4", "5", "3"},
+              {"2", "0", "3", \(-1\), "2", "1"},
+              {\(-5\), "4", \(-1\), "1", "5", "2"},
+              {"1", "5", "2", "5", \(-2\), "4"},
+              {"4", "3", "1", "2", "4", "1"}
+              }], ")"}]}]],
+    AspectRatioFixed->True],
+  "  to symmetric tridiagonal form.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"4", "1", "2", \(-5\), "1", "4"},
+              {"1", "2", "0", "4", "5", "3"},
+              {"2", "0", "3", \(-1\), "2", "1"},
+              {\(-5\), "4", \(-1\), "1", "5", "2"},
+              {"1", "5", "2", "5", \(-2\), "4"},
+              {"4", "3", "1", "2", "4", "1"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print[\ 
+        MatrixForm[
+          N[A]], "\<\n\>"\ ];\), "\[IndentingNewLine]", \(Householder[
+        A];\)}], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Householder Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HouseholderBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{996, 650},
+WindowMargins->{{Automatic, 7}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 205, 5, 35, "Text"],
+Cell[1984, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3132, 101, 2079, 55, 201, "Text"],
+Cell[5214, 158, 2262, 75, 228, "Text"],
+Cell[7479, 235, 401, 13, 33, "Text"],
+Cell[7883, 250, 870, 28, 33, "Text"],
+Cell[8756, 280, 2755, 93, 182, "Text"],
+Cell[11514, 375, 401, 13, 33, "Text"],
+Cell[11918, 390, 4926, 165, 335, "Text"],
+Cell[16847, 557, 4992, 166, 354, "Text"],
+Cell[21842, 725, 4004, 131, 335, "Text"],
+Cell[25849, 858, 521, 14, 52, "Text"],
+Cell[26373, 874, 2425, 79, 185, "Text"],
+Cell[28801, 955, 401, 13, 33, "Text"],
+Cell[29205, 970, 4806, 152, 223, "Text"],
+Cell[34014, 1124, 872, 28, 73, "Text"],
+
+Cell[CellGroupData[{
+Cell[34911, 1156, 134, 3, 33, "Text"],
+Cell[35048, 1161, 470, 12, 118, "Input"],
+Cell[35521, 1175, 982, 23, 430, "Text"],
+Cell[36506, 1200, 148, 5, 33, "Text"],
+Cell[36657, 1207, 1389, 24, 290, "Input"],
+Cell[38049, 1233, 1504, 50, 167, "Text"],
+Cell[39556, 1285, 142, 5, 33, "Text"],
+Cell[39701, 1292, 1124, 19, 268, "Input"],
+Cell[40828, 1313, 547, 19, 33, "Text"],
+Cell[41378, 1334, 424, 8, 110, "Input"],
+Cell[41805, 1344, 356, 12, 33, "Text"],
+Cell[42164, 1358, 338, 5, 91, "Input"],
+Cell[42505, 1365, 451, 16, 33, "Text"],
+Cell[42959, 1383, 779, 14, 150, "Input"],
+Cell[43741, 1399, 715, 22, 33, "Text"],
+Cell[44459, 1423, 736, 14, 110, "Input"],
+Cell[45198, 1439, 55, 0, 33, "Text"],
+Cell[45256, 1441, 1550, 50, 145, "Text"],
+Cell[46809, 1493, 134, 5, 33, "Text"],
+Cell[46946, 1500, 1389, 24, 290, "Input"],
+Cell[48338, 1526, 1124, 19, 268, "Input"],
+Cell[49465, 1547, 424, 8, 110, "Input"],
+Cell[49892, 1557, 338, 5, 91, "Input"],
+Cell[50233, 1564, 823, 15, 170, "Input"],
+Cell[51059, 1581, 717, 22, 33, "Text"],
+Cell[51779, 1605, 736, 14, 110, "Input"],
+Cell[52518, 1621, 68, 0, 33, "Text"]
+}, Closed]],
+Cell[52601, 1624, 235, 6, 68, "Text"],
+Cell[52839, 1632, 793, 28, 33, "Text"],
+Cell[53635, 1662, 4464, 77, 951, "Input"],
+Cell[58102, 1741, 865, 28, 73, "Text"],
+
+Cell[CellGroupData[{
+Cell[58992, 1773, 134, 3, 33, "Text"],
+Cell[59129, 1778, 470, 12, 118, "Input"],
+Cell[59602, 1792, 56, 1, 30, "Input"],
+Cell[59661, 1795, 66, 1, 30, "Input"]
+}, Closed]],
+Cell[59742, 1799, 943, 31, 86, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[60710, 1834, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[60863, 1840, 518, 13, 136, "Input"],
+Cell[61384, 1855, 56, 1, 30, "Input"],
+Cell[61443, 1858, 66, 1, 30, "Input"],
+Cell[61512, 1861, 66, 1, 30, "Input"]
+}, Closed]],
+Cell[61593, 1865, 1029, 32, 102, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[62647, 1901, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[62800, 1907, 604, 14, 154, "Input"],
+Cell[63407, 1923, 56, 1, 30, "Input"],
+Cell[63466, 1926, 66, 1, 30, "Input"],
+Cell[63535, 1929, 66, 1, 30, "Input"],
+Cell[63604, 1932, 66, 1, 30, "Input"]
+}, Closed]],
+Cell[63685, 1936, 566, 10, 106, "Text"],
+Cell[64254, 1948, 346, 11, 33, "Text"],
+Cell[64603, 1961, 804, 28, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[65432, 1993, 1368, 26, 293, "Input"],
+Cell[66803, 2021, 859, 17, 170, "Input"],
+Cell[67665, 2040, 1013, 20, 190, "Input"],
+Cell[68681, 2062, 2004, 39, 270, "Input"],
+Cell[70688, 2103, 841, 16, 290, "Input"]
+}, Open  ]],
+Cell[71544, 2122, 699, 20, 105, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[72268, 2146, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[72421, 2152, 591, 15, 154, "Input"]
+}, Closed]],
+Cell[73027, 2170, 158, 3, 32, "Text"],
+Cell[73188, 2175, 306, 8, 33, "Text"],
+Cell[73497, 2185, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

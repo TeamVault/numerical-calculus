@@ -1,0 +1,2752 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     86832,       2532]*)
+(*NotebookOutlinePosition[     87498,       2555]*)
+(*  CellTagsIndexPosition[     87454,       2551]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Row Reduced Echelon Form",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tAn important technique for solving a system of linear equations  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  is to form the augmented matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], ",", 
+            StyleBox["B",
+              FontWeight->"Bold"]}], "]"}]}]]],
+  "and reduce  ",
+  Cell[BoxData[
+      StyleBox["M",
+        FontWeight->"Bold"]]],
+  "  to reduced row echelon form.  \n\n",
+  StyleBox["Definition (Reduced Row Echelon Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  A matrix is said to be in row-reduced echelon form provided that\n\n",
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIn each row that does not consist of all zero elements, the first \
+non-zero element in this row is a 1.  (called. a \"leading 1).  \n\n",
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIn each column that contains a leading 1 of some row, all other elements \
+of this column are zeros. \n\n",
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIn any two successive rows with non-zero elements, the leading 1 of the \
+the lower row occurs farther to the right than the leading 1 of the higher \
+row.\n\n",
+  StyleBox["(iv)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf there are any rows contains only zero elements then they are grouped \
+together at the bottom. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Reduced Row Echelon Form).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   The reduced row echelon form of a matrix is unique.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Rank).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   The number of nonzero rows in the reduced row echelon form of a matrix  \
+",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  "  is called the rank of   ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " and is denoted by   ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   Consider the  m \[Times] n  linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], ",", 
+            StyleBox["B",
+              FontWeight->"Bold"]}], "]"}]}]]],
+  " is the augmented matrix.  \n\n",
+  StyleBox["(i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}]}], "=", "n"}]}]]],
+  "  then the system has a unique solution.  \n\n",
+  StyleBox["(ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}]}], "<", "n"}]}]]],
+  "  then the system has an infinite number of solution.  \n\n",
+  StyleBox["(iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "<", 
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}]}]]],
+  "  then the system is inconsistent and has ",
+  StyleBox["no",
+    FontColor->RGBColor[1, 0, 0]],
+  " solution.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/EchelonFormProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EchelonFormProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/EchelonFormProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EchelonFormProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Complete Gauss-Jordan Elimination",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(\(GaussJordan[A0_, 
+          n_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[\ {A = A0, i, k, 
+            p}, \ \[IndentingNewLine]Print[\ 
+            MatrixForm[A]\ ]; \ \[IndentingNewLine]For[\ p = 1, \ 
+            p \[LessEqual] n, \ \(p++\), \ \[IndentingNewLine]For[\ 
+              k = p + 1, \ 
+              k \[LessEqual] 
+                n, \ \(k++\), \ \[IndentingNewLine]\(If[\ 
+                  Abs[A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\)] > 
+                    Abs[A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)], \ \
+\[IndentingNewLine]\(A\_\(\(\[LeftDoubleBracket]\)\({p, k}\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\({k, p}\)\(\
+\[RightDoubleBracket]\)\);\)\ \ \ ];\)\ ]; \ \[IndentingNewLine]A\_\(\(\
+\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\  = \ 
+              A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\/\
+A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ i = 1, \ 
+              i \[LessEqual] 
+                n, \ \(i++\), \ \[IndentingNewLine]\(If[\ 
+                  i \[NotEqual] 
+                    p, \ \[IndentingNewLine]A\_\(\(\[LeftDoubleBracket]\)\(i\)\
+\(\[RightDoubleBracket]\)\)\  = \ 
+                    A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)\  - \ \(A\_\(\(\[LeftDoubleBracket]\)\(i, 
+                            p\)\(\[RightDoubleBracket]\)\)\) 
+                        A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\ \ ];\)\ ]; \ \[IndentingNewLine]Print[
+              MatrixForm[A]];\ \ ]; \[IndentingNewLine]Return[
+            A];\ \ ]\)\(\ \)\),
+      Background->None]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the linear system of equations  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ x\_1\ \  + \ \ \ x\_2\ \  - \ 2\ x\_3\  = \ \ \ \ 1\), 
+    "\[IndentingNewLine]", 
+      \(3\ x\_1\ \  + \ 2\ x\_2\  + \ 4\ x\_3\  = \ \(-4\)\), 
+    "\[IndentingNewLine]", 
+      \(\ 4  x\_1\  + \ 3\ x\_2\  + \ 3\ x\_3\  = \ \(-4\)\)}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the equations into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(eqns\  = \ {x\_1\ \  + \ \ x\_2\  - 
+              2\ x\_3 \[Equal] \ \ \ 1, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \
+\ \ 3\ x\_1 + 2\ x\_2\  + 
+              4\ x\_3 \[Equal] \ \(-4\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \
+\ \ 4  x\_1 + 3\ x\_2\  + 3\ x\_3 \[Equal] \ \(-4\)\ \ };\)\)], "Input"],
+
+Cell[TextData[{
+  "Identify the matrix of coefficients ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and column vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " for the matrix problem ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {x\_1\ , x\_2\ , x\_3};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and perform Gauss-Jordan elimination with row interchanges."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(b = Partition[B, 1];\)\), "\[IndentingNewLine]", 
+    \(M = AppendRows[A, b]; \ m = M;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M, 3];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Find the reduced row echelon form of the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "].  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) - 
+          3  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) - 
+          4  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) + 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) - 
+          8  M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) + 
+          10  M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The 3\[Times]3 identity matrix appears in the left 3 columns of  ",
+  StyleBox["M",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ", and the given linear system is equivalent to:\n\n\t",
+  Cell[BoxData[GridBox[{
+          {\(x\_1\), "  ", "  ", "=", "2"},
+          {"  ", \(x\_2\), "  ", "=", \(-3\)},
+          {"  ", "  ", \(x\_3\), "=", "4"}
+          }]]]
+}], "Text"],
+
+Cell[TextData[{
+  "The solution vector is the fourth column of  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"],
+
+Cell["Verify the solution. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], "\< ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[A . X] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the reduced row echelon matrix.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We check out  ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "rank", 
+        RowBox[{"(", 
+          StyleBox["M",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", 
+        MatrixForm[RowReduce[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Looking at the above calculations we see that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "=", "3"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}], "=", "3"}]]],
+  ".    \nSince  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}]}], "=", "3"}]}]]],
+  "  the theorem guarantees a unique solution.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will also solve the problem automatically.  \nIt starts with the \
+equations, creates the matrices, and ends up with the vector form of the \
+solution.  \nThis is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {\ 
+          x\_1 + x\_2 - 2\ x\_3 \[Equal] 
+            1, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 3\ x\_1 + 2\ x\_2 + 
+              4\ x\_3 \[Equal] \(-4\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 4 
+                 x\_1 + 3\ x\_2 + 
+              3\ x\_3 \[Equal] \(-4\)};\)\), "\[IndentingNewLine]", 
+    \(\(vars\  = \ {x\_1, x\_2, x\_3};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        Transpose[{mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(M = AppendRows[A, B];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The matrix form is  A X = B.\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix [A,B] is\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(M = RowReduce[M];\)\), "\[IndentingNewLine]", 
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the linear system of equations  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ x\_1\ \  + \ \ \ x\_2\ \  - \ 2\ x\_3\  = \ \ \ \ 1\), 
+    "\[IndentingNewLine]", 
+      \(3\ x\_1\ \  + \ 2\ x\_2\  + \ 4\ x\_3\  = \ \(-4\)\), 
+    "\[IndentingNewLine]", 
+      \(\ 4  x\_1\  + \ 3\ x\_2\  + \ 2\ x\_3\  = \ \(-4\)\)}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the equations into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(eqns\  = \ {x\_1\ \  + \ \ x\_2\  - 
+              2\ x\_3 \[Equal] \ \ \ 1, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \
+\ \ 3\ x\_1 + 2\ x\_2\  + 
+              4\ x\_3 \[Equal] \ \(-4\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \
+\ \ 4  x\_1 + 3\ x\_2\  + 2\ x\_3 \[Equal] \ \(-4\)\ \ };\)\)], "Input"],
+
+Cell[TextData[{
+  "Identify the matrix of coefficients ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and column vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " for the matrix problem ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {x\_1\ , x\_2\ , x\_3};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and perform Gauss-Jordan elimination with row interchanges."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(b = Partition[B, 1];\)\), "\[IndentingNewLine]", 
+    \(M = AppendRows[A, b]; \ m = M;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M, 3];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "This time Gauss-Jordan elimination encountered division by error and could \
+not find a solution.  \nWe might have suspected a problem because the \
+determinant of  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  is zero."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< A  = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|A| = \>", Det[A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Let us investigate further and the reduced row echelon form of the \
+augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "].  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) - 
+          3  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) - 
+          4  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) + 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = \
+\(-M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "This linear system is equivalent to:\n\n\t",
+  Cell[BoxData[GridBox[{
+          {\(x\_1\), "  ", \(\(+\ 8\) \(x\_3\)\(\ \)\), "=", \(-6\)},
+          {"  ", \(x\_2\), \(\(\ \ \)\(\(-\ 10\) x\_3\)\), "=", "7"},
+          {"  ", "  ", "0", "=", \(\(\ \)\(1\)\)}
+          }]]]
+}], "Text"],
+
+Cell[TextData[{
+  "The third equation states that  ",
+  Cell[BoxData[
+      \(0 = 1\)]],
+  " which is a contradiction.\nIn this case we say that the system of \
+equations is inconsistent and there is ",
+  StyleBox["no",
+    FontColor->RGBColor[1, 0, 0]],
+  " solution.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the reduced row echelon matrix.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We check out  ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "rank", 
+        RowBox[{"(", 
+          StyleBox["M",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", 
+        MatrixForm[RowReduce[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Looking at the above calculations we see that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "=", "2"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}], "=", "3"}]]],
+  ".    \nSince  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "<", 
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], 
+            StyleBox[")",
+              FontWeight->"Bold"]}]}]}]]],
+  "  the theorem states that ",
+  "the system is inconsistent and has ",
+  StyleBox["no",
+    FontColor->RGBColor[1, 0, 0]],
+  " solution.  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the linear system  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ x\_1\  + \ \ x\_\(\(2\)\(\ \)\) - 2\ x\_3 = \ \ 5\), 
+    "\[IndentingNewLine]", 
+      \(2\ x\_1 + 3\ x\_2 + 4\ x\_3 = \(-3\)\), "\[IndentingNewLine]", 
+      \(3  x\_1 + 4\ x\_2 + 2\ x\_3 = \ \ 2\)}]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the equations into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(eqns = {\ 
+          x\_1 + x\_2 - 2\ x\_3 \[Equal] 
+            5, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 2\ x\_1 + 3\ x\_2 + 
+              4\ x\_3 \[Equal] \(-3\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 3 
+                 x\_1 + 4\ x\_2 + 2\ x\_3 \[Equal] 2\ \ };\)\)], "Input"],
+
+Cell[TextData[{
+  "Identify the matrix of coefficients ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and column vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " for the matrix problem ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {x\_1\ , x\_2\ , x\_3};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and perform Gauss-Jordan elimination with row interchanges."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(b = Partition[B, 1];\)\), "\[IndentingNewLine]", 
+    \(M = AppendRows[A, b]; \ m = M;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M, 3];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Again, Gauss-Jordan elimination encountered division by error and could \
+not find a solution.  \nWe might have suspected a problem because the \
+determinant of  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  is zero."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\< A  = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<|A| = \>", Det[A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Let us investigate further and the reduced row echelon form of the \
+augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "].  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) - 
+          2  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) - 
+          3  M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\
+\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The equation form for this matrix is  \n\n\t",
+  Cell[BoxData[{
+      \(x\_1\ \ \ \ \ \ \ \ \ \  - 10  x\_3 = \ \ 18\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ x\_2\  + \ 8\ x\_3 = \(-13\)\)}]],
+  "  \n\nThere is one free variable which we choose to be  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ".  It is used in computing  ",
+  Cell[BoxData[
+      \(x\_2\ \ and\ \ x\_1\)]],
+  ".  \n\nSolve the previous equations for   ",
+  Cell[BoxData[
+      RowBox[{\(x\_1\), "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", \(x\_2\)}]]],
+  ".  \n\n\t",
+  Cell[BoxData[{
+      \(x\_1\  = \ \ 18 + 10  x\_3\), "\n", 
+      \(x\_2\  = \(-13\) - \ 8\ x\_3\)}]],
+  "  \n\nMake the substitution  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ". \n\n\t",
+  Cell[BoxData[{
+      \(x\_1\  = 18 + 10  t\), "\n", 
+      \(x\_2\  = \(-13\) - 8  t\)}]],
+  "  \n\nThe solution vector  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(x\_1\)},
+                {\(x\_2\)},
+                {\(x\_3\)}
+                }], "\[NoBreak]", ")"}]}],
+        MatrixForm[ {
+          Subscript[ x, 1], 
+          Subscript[ x, 2], 
+          Subscript[ x, 3]}]]]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"X", "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(18 + \(\(10\)\(\ \)\(t\)\(\ \)\)\)},
+                {\(\(-13\) - \ \ \(\(8\)\(\ \)\(t\)\(\ \ \ \ \)\)\)},
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(t\)\(\ \ \)\)}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}], ";"}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], "\< ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the reduced row echelon matrix.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\n", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Since the last row is entirely zero, the system has reduced to two \
+equations and three unknowns.  \n\nWe can add the equation  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  "  to those in the reduced row echelon form and then row reduce one more \
+time to get the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = {0, 
+          0, 1, t};\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Add the free variable\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The 3\[Times]3 identity matrix appears in the left 3 columns of  ",
+  StyleBox["M",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ", and the given linear system is equivalent to:\n\n\t",
+  Cell[BoxData[GridBox[{
+          {\(x\_1\), "  ", "  ", "=", \(\(\ \ \)\(8 + 10\ t\)\)},
+          {"  ", \(x\_2\), "  ", "=", \(\(-13\) - 8\ t\)},
+          {"  ", "  ", \(x\_3\), 
+            "=", \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(t\)\)}
+          }]]]
+}], "Text"],
+
+Cell[TextData[{
+  "The solution vector is the fourth column of  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "\n",
+  "We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\nAside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We might wonder if Gauss-Jordan elimination could be use to find some \
+solution, after all there is an infinite number of them."
+}], "Text"],
+
+Cell[BoxData[{
+    \(A1 = A; \ 
+    A1\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = {0, 0, 
+        1};\), "\[IndentingNewLine]", 
+    \(B1 = B; \ 
+    B1\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+      1;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<|A| = \>", Det[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Since |A| = , choose  \!\(x\_3\) = 1 and modify the \
+third row in the matrix.\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the modified equation A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A1] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B1]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and perform Gauss-Jordan elimination with row interchanges."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(b1 = Partition[B1, 1];\)\), "\[IndentingNewLine]", 
+    \(\(M1 = AppendRows[A1, b1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M1]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M1, 3];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "So we have found ",
+  StyleBox["one",
+    FontColor->RGBColor[0, 0, 1]],
+  " of the ",
+  StyleBox["infinite number",
+    FontColor->RGBColor[0, 0, 1]],
+  " of solutions to be  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          StyleBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"28"},
+                  {\(-21\)},
+                  {"1"}
+                  }], "\[NoBreak]", ")"}],
+            FontWeight->"Bold"]}],
+        MatrixForm[ {
+          Subscript[ x, 1], 
+          Subscript[ x, 2], 
+          Subscript[ x, 3]}]]]],
+  ". \n\nNotice that this is merely substituting ",
+  StyleBox["t=1",
+    FontFamily->"Courier New"],
+  " in the general solution  ",
+  Cell[BoxData[
+      RowBox[{"X", 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(18 + \(\(10\)\(\ \)\(t\)\(\ \)\)\)},
+                {\(\(-13\) - \ \ \(\(8\)\(\ \)\(t\)\(\ \ \ \ \)\)\)},
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(t\)\(\ \ \)\)}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}]], "Input"],
+  ".  \n"
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can graph general solution.  This is just for fun.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\[IndentingNewLine]\(x\&\[RightVector][t_]\  = \ 
+        Flatten[X];\)\), "\[IndentingNewLine]", 
+    \(\(pts = 
+        Table[x\&\[RightVector][
+              0] + \(i\/10\) \((x\&\[RightVector][1] - 
+                  x\&\[RightVector][0])\), {i, 0, 
+            10}];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(ScatterPlot3D[pts, PlotJoined \[Rule] True, 
+        PlotStyle \[Rule] {Thickness[0.02], Magenta}, 
+        PlotRange \[Rule] {{18, 28}, {\(-21\), \(-13\)}, {0, 1}}, 
+        ViewPoint \[Rule] {2, \(-5\), 2}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        BoxRatios \[Rule] {1, 1, 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The solution is \!\(x\&\[RightVector]\)[t] = \>\"", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<When t = 0      \!\(x\&\[RightVector]\)[0] = \>\"", 
+        MatrixForm[x\&\[RightVector][0]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<When t = 1      \!\(x\&\[RightVector]\)[1] = \>\"", 
+        MatrixForm[x\&\[RightVector][1]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We check out  ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "rank", 
+        RowBox[{"(", 
+          StyleBox["M",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", 
+        MatrixForm[RowReduce[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Looking at the above calculations we see that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "=", "2"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}], "=", "2"}]]],
+  ".    \nSince  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}]}], "=", \(2 < 3\)}]}]]],
+  "  the theorem guarantees that there will be an infinite number of \
+solutions.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are really really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will also solve the problem automatically.  It starts with the \
+equations, creates the matrices, and ends up with the vector form of the \
+solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {\ 
+          x\_1 + x\_2 - 2\ x\_3 \[Equal] 
+            5, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 2\ x\_1 + 3\ x\_2 + 
+              4\ x\_3 \[Equal] \(-3\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 3 
+                 x\_1 + 4\ x\_2 + 2\ x\_3 \[Equal] 2};\)\), "\n", 
+    \(\(vars\  = \ {x\_1, x\_2, x\_3};\)\), "\n", 
+    \(\(mats = LinearEquationsToMatrices[eqns, vars];\)\), "\n", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\n", 
+    \(\(B = 
+        Transpose[{mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\n", 
+    \(\(M = AppendRows[A, B];\)\), "\n", 
+    \(\(Print[TableForm[eqns]];\)\), "\n", 
+    \(\(Print["\<The matrix form is  A X = B.\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\n", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = RowReduce[M];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<Now enter our free variable choice in row 3\>"];\)\), "\n", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = {0, 
+          0, 1, t};\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\n", 
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the linear system  \n\t\t",
+  Cell[BoxData[{
+      \(4  x\_1\  + \ 3  x\_2\  + \ 2\ x\_3\  = \ 12\), 
+    "\[IndentingNewLine]", 
+      \(4  x\_1\  + \ 3  x\_2\  + \ 2\ x\_3\  = \ 12\), 
+    "\[IndentingNewLine]", 
+      \(4  x\_1\  + \ 3  x\_2\  + \ 2\ x\_3\  = \ 12\)}]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the equations into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(eqns = {\ 
+          4  x\_1 + 3  x\_2 + 2\ x\_3 \[Equal] 
+            12, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ 4  x\_1 + 3  x\_2 + 
+              2\ x\_3 \[Equal] 
+            12, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ 4  x\_1 + 3  x\_2 + 
+              2\ x\_3 \[Equal] 12\ \ };\)\)], "Input"],
+
+Cell[TextData[{
+  "Identify the matrix of coefficients ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and column vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " for the matrix problem ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {x\_1\ , x\_2\ , x\_3};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and find its reduced row echelon form."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(b = Partition[B, 1];\)\), "\[IndentingNewLine]", 
+    \(M = AppendRows[A, b]; \ m = M;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = 
+        M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) - 
+          M\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The equation form for this matrix is  \n\n\t",
+  Cell[BoxData[
+      \(4  x\_1\  + \ 3  x\_2\  + \ 2\ x\_3\  = \ 12\)]],
+  "  \n\nThere are two free variables which we choose to be  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ".   They is used in computing  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  ".  \n\nSolve the previous equations for  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  ".  \n\n\t",
+  Cell[BoxData[
+      \(4  x\_1\  = \ 12 - \ 3  x\_2\  - \ 2\ x\_3\)]],
+  "  \n\nMake the substitutions  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ".  \n\n\t",
+  Cell[BoxData[
+      \(4  x\_1\  = \ 12 - \ 3  s\  - \ 2\ t\)]],
+  " \n\t\nGet\t\n\t",
+  Cell[BoxData[
+      \(x\_1\  = \ 12\/4 - \ \(3\/4\) s\  - \ 2\/4\ t\)]],
+  " \n\nThe solution vector  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(x\_1\)},
+                {\(x\_2\)},
+                {\(x\_3\)}
+                }], "\[NoBreak]", ")"}]}],
+        MatrixForm[ {
+          Subscript[ x, 1], 
+          Subscript[ x, 2], 
+          Subscript[ x, 3]}]]]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"X", "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(12\/4 - \ \(3\/4\) 
+                      s\  - \ \(\(2\/4\)\(\ \)\(t\)\(\ \)\)\)},
+                {\(\(\ \ \ \ \)\(s\)\(\ \ \ \ \)\)},
+                {\(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\)\(t\)\(\ \ \)\)}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}], ";"}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the reduced row echelon matrix.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\n", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Since the last two rows are entirely zero, the system has reduced to one \
+equations and three unknowns.  \n\nWe can add the equations  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ". to those in the reduced row echelon form and then row reduce one more \
+time to get the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Add the free variables\>"];\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = {0, 
+          1, 0, s};\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = {0, 
+          0, 1, t};\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The 3\[Times]3 identity matrix appears in the left 3 columns of  ",
+  StyleBox["M",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ", and the given linear system is equivalent to:\n\n\t",
+  Cell[BoxData[GridBox[{
+          {\(x\_1\), "  ", "  ", 
+            "=", \(\(\ \ \)\(3 - \(3\ s\)\/4 - t\/2\)\)},
+          {"  ", \(x\_2\), "  ", "=", "s"},
+          {"  ", "  ", \(x\_3\), 
+            "=", \(\(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \)\(t\)\)}
+          }]]]
+}], "Text"],
+
+Cell[TextData[{
+  "The solution vector is the fourth column of  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "\n",
+  "We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can graph the situation.  This is just for fun.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(x\&\[RightVector][s_, t_]\  = \ 
+        Flatten[X];\)\), "\[IndentingNewLine]", 
+    \(\(f[y_, 
+          z_] = \(x\&\[RightVector][y, \
+z]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\), "\
+\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ParametricPlot3D`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(ParametricPlot3D[
+        Evaluate[x\&\[RightVector][s, t]], {s, 0, 1, 1\/10}, {t, 0, 1, 
+          1\/10}, ViewPoint \[Rule] {2, 5, 2}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x = f[y,z] = \>", f[y, z]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We check out  ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "rank", 
+        RowBox[{"(", 
+          StyleBox["M",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", 
+        MatrixForm[RowReduce[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Looking at the above calculations we see that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "=", "1"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}], "=", "1"}]]],
+  ".    \nSince  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}]}], "=", \(1 < 3\)}]}]]],
+  "  the theorem guarantees that there will be an infinite number of \
+solutions.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are really really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will also solve the problem automatically.  It starts with the \
+equations, creates the matrices, and ends up with the vector form of the \
+solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {\ 
+          4  x\_1 + 3  x\_2 + 2\ x\_3 \[Equal] 
+            12, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ 4  x\_1 + 3  x\_2 + 
+              2\ x\_3 \[Equal] 
+            12, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ 4  x\_1 + 3  x\_2 + 
+              2\ x\_3 \[Equal] 12\ \ };\)\), "\n", 
+    \(\(vars\  = \ {x\_1, x\_2, x\_3};\)\), "\n", 
+    \(\(mats = LinearEquationsToMatrices[eqns, vars];\)\), "\n", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\n", 
+    \(\(B = 
+        Transpose[{mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\n", 
+    \(\(M = AppendRows[A, B];\)\), "\n", 
+    \(\(Print[TableForm[eqns]];\)\), "\n", 
+    \(\(Print["\<The matrix form is  A X = B.\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\n", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = RowReduce[M];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<Now enter our free variables in rows 2 and 3\>"];\)\), "\n", \
+
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\) = {0, 
+          1, 0, s};\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\) = {0, 
+          0, 1, t};\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\n", 
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Free Variables",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tWhen the linear system is underdetermined, we needed to introduce \
+free variables in the proper location. The following subroutine will \
+rearrange the equations and introduce free variables in the location they are \
+needed.  Then all that is needed to do is find the row reduced echelon form a \
+second time.  This is done at the end of the next example."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Under Determined Equations).",
+  
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(FreeVariables[M0_]\  := \ 
+      Module[{c, i, k, L, M = M0, m, n, 
+          Z}, \[IndentingNewLine]n = \(Dimensions[M]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \[IndentingNewLine]m \
+= \(Dimensions[M]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\
+\); \[IndentingNewLine]L = {t, s, r, q, p, u, v, w, z, y, 
+            x}; \[IndentingNewLine]Z = Table[0, {m}]; \[IndentingNewLine]c = 
+          1; \[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] 
+            n, \(i++\), \[IndentingNewLine]\(If[
+              M\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\) \[Equal] 
+                0, \[IndentingNewLine]\(For[k = n, 
+                  i < k, \(k--\), \[IndentingNewLine]M\_\(\(\
+\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\) = 
+                    M\_\(\(\[LeftDoubleBracket]\)\(k - 1\)\(\
+\[RightDoubleBracket]\)\)\ \ ];\)\ ];\)\ ]; \[IndentingNewLine]For[i = n, 
+          1 \[LessEqual] 
+            i, \(i--\), \[IndentingNewLine]\(If[
+              M\_\(\(\[LeftDoubleBracket]\)\(i, \
+i\)\(\[RightDoubleBracket]\)\) \[Equal] 
+                0, \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\) = 
+                Z; \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\) = 
+                1; \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i, m\)\(\
+\[RightDoubleBracket]\)\) = 
+                L\_\(\(\[LeftDoubleBracket]\)\(c\)\(\[RightDoubleBracket]\)\);\
+ \[IndentingNewLine]c = c + 1;\ ];\)\ ]; \[IndentingNewLine]Return[
+          M]]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Solve the linear system  \n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ \ x\_1\  + \ \ 2  x\_2\  + \ \ \ 3\ x\_3\ \  + \ \ \ 4 
+             x\_4\ \  + \ \ \ 3\ x\_5\  = \ \ \ \ 1\), 
+    "\[IndentingNewLine]", 
+      \(\ 2  x\_1\  + \ \ 4  x\_2\  + \ \ \ 6\ x\_3\ \  + \ \ \ 2 
+             x\_4\ \  + \ \ \ 6\ x\_5\  = \ \ \ \ 2\), 
+    "\[IndentingNewLine]", 
+      \(\ 3  x\_1\  + \ \ 6  x\_2\  + \ 
+          18\ x\_3\ \  + \ \ \ 9  x\_4\ \  + \ \ \ 9\ x\_5\  = \ \(-6\)\), 
+    "\[IndentingNewLine]", 
+      \(\ 4  x\_1\  + \ \ 8  x\_2\  + \ 12\ x\_3\ \  + \ 10  x\_4\  + \ 
+          12\ x\_5\  = \ \ \ 4\), "\[IndentingNewLine]", 
+      \(\ 5  x\_1\  + 10  x\_2\  + \ 24\ x\_3\ \  + \ 11  x\_4\  + \ 
+          15\ x\_5\  = \ \(\(-4\)\(\ \)\)\)}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the equations into ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(eqns = {\ \ \ \ x\_1 + \ 2  x\_2\  + \ 3\ x\_3\  + \ 4  x\_4\  + \ 
+              3\ x\_5 \[Equal] \ \ 1, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+2  x\_1 + \ 4  x\_2\  + \ 6\ x\_3\  + \ 2  x\_4\  + \ 
+              6\ x\_5 \[Equal] \ \ 2, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+3  x\_1 + \ 6  x\_2 + 18\ x\_3\  + \ 9  x\_4\  + \ 
+              9\ x\_5 \[Equal] \(-6\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+4  x\_1 + \ 8  x\_2 + 12\ x\_3 + 10  x\_4 + 
+              12\ x\_5 \[Equal] \ \ 4, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 5 
+                 x\_1 + 10  x\_2 + 24\ x\_3 + 11  x\_4 + 
+              15\ x\_5 \[Equal] \(-4\)\ \ };\)\)], "Input"],
+
+Cell[TextData[{
+  "Identify the matrix of coefficients ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and column vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " for the matrix problem ",
+  StyleBox["AX",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(vars = {x\_1\ , x\_2\ , x\_3, x\_4\ , 
+          x\_5};\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(mats = 
+        LinearEquationsToMatrices[eqns, vars];\)\), "\[IndentingNewLine]", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(B = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[eqns]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]  and find its reduced row echelon form."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(b = Partition[B, 1];\)\), "\[IndentingNewLine]", 
+    \(M = AppendRows[A, b]; \ m = M;\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(MatrixForm[RowReduce[M]]\)], "Input"],
+
+Cell[TextData[{
+  "The equation form for this matrix is  \n\n\t",
+  Cell[BoxData[{
+      \(x\_1\  + \ 2  x\_2\ \ \ \ \ \ \ \ \ \  + \ 3\ x\_5\  = \ 4\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+\ \  = \ \(-1\)\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\_4\ \ \ \ \ \ \ \ \
+\ \ \ \  = \ 0\)}]],
+  "  \n\nThere are two free variables which we choose to be  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_5 = t\)]],
+  ".   They is used in computing  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  ".  \n\nSolve the previous equations for  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  ".  \n\n\t",
+  Cell[BoxData[
+      \(x\_1\  + \ 2  x\_2\  + \ 3\ x\_5\  = \ 4\)]],
+  "  \n\nMake the substitutions  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_5 = t\)]],
+  ".  \n\n\t",
+  Cell[BoxData[
+      \(x\_1\  + \ 2  s\  + \ 3\ t\  = \ 4\)]],
+  " \n\t\nGet\t\n\t",
+  Cell[BoxData[
+      \(x\_1\  = \ 4 - \ 2  s\  - \ 3\ t\)]],
+  " \n\nThe solution vector  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)},
+                  {\(x\_5\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ x, 1], 
+              Subscript[ x, 2], 
+              Subscript[ x, 3], 
+              Subscript[ x, 4], 
+              Subscript[ x, 5]}]]}],
+        MatrixForm[ {
+          Subscript[ x, 1], 
+          Subscript[ x, 2], 
+          Subscript[ x, 3]}]]]],
+  "  is"
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"X", "=", 
+        TagBox[
+          RowBox[{"(", GridBox[{
+                {\(4 - \ 2  s\  - \ 3\ t\)},
+                {"s"},
+                {\(-1\)},
+                {"0"},
+                {"t"}
+                }], ")"}],
+          (MatrixForm[ #]&)]}], ";"}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " find the reduced row echelon matrix.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The row reduced echelon form is\>"];\)\), "\n", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Since the last two rows are entirely zero, the system has reduced to \
+three equations and five unknowns.  \n\nWe can add the equations  ",
+  Cell[BoxData[
+      \(x\_2 = s\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(x\_3 = t\)]],
+  ". to those in the reduced row echelon form and then row reduce one more \
+time to get the solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the reduced row echelon form\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Add the free variables\>"];\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\) = {0, 
+          1, 0, 0, 0, s};\)\), "\[IndentingNewLine]", 
+    \(\(M\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\) = {0, 
+          0, 0, 0, 1, t};\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the reduced row echelon form\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The 5\[Times]5 identity matrix appears in the left 5 columns of  ",
+  StyleBox["M",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ", and the given linear system is equivalent to:\n\n\t",
+  Cell[BoxData[GridBox[{
+          {\(x\_1\), " ", " ", " ", " ", "=", \(4 - 2\ s - 3\ t\)},
+          {" ", \(x\_2\), " ", " ", " ", "=", "s"},
+          {" ", " ", \(x\_3\), " ", " ", "=", \(-1\)},
+          {" ", " ", " ", \(x\_4\), " ", "=", "0"},
+          {" ", " ", " ", " ", \(x\_5\), "=", "t"}
+          }]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The solution vector is the sixth column of  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "\n",
+  "We can verify that this is the solution by direct multiplication ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " ",
+  StyleBox["X",
+    FontWeight->"Bold"],
+  ".  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equation A X = B\>"];\)\), "\n", 
+    \(\(Print["\<  A = \>", MatrixForm[A] MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<  X = \>", MatrixForm[vars], "\< = \>", 
+        MatrixForm[X]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Does  \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[B], "\< ?\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[A . X], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<      \>", MatrixForm[Expand[A . X]], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[Flatten[Expand[A . X]] \[Equal] \ B];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\nAside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We check out  ",
+  Cell[BoxData[
+      RowBox[{"rank", 
+        RowBox[{"(", 
+          StyleBox["A",
+            FontWeight->"Bold"], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "   ", "rank", 
+        RowBox[{"(", 
+          StyleBox["M",
+            FontWeight->"Bold"], ")"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", 
+        MatrixForm[RowReduce[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(M = m;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The row reduced echelon form of M is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<    \>", MatrixForm[RowReduce[M]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Looking at the above calculations we see that  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "=", "3"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["M",
+              FontWeight->"Bold"], ")"}]}], "=", "3"}]]],
+  ".    \nSince  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"rank", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], " ", "=", 
+        RowBox[{
+          RowBox[{"rank", 
+            RowBox[{"(", 
+              StyleBox["M",
+                FontWeight->"Bold"], ")"}], "3"}], "<", "5"}]}]]],
+  "  the theorem guarantees that there will be an infinite number of \
+solutions.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are really really done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1],
+    Background->None],
+  StyleBox["\n\n",
+    FontWeight->"Bold"],
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " steps will also solve the problem automatically.  It starts with the \
+equations, creates the matrices, and ends up with the vector form of the \
+solution.  This is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(eqns = {\ \ \ \ x\_1 + \ 2  x\_2\  + \ 3\ x\_3\  + \ 4  x\_4\  + \ 
+              3\ x\_5 \[Equal] \ \ 1, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+2  x\_1 + \ 4  x\_2\  + \ 6\ x\_3\  + \ 2  x\_4\  + \ 
+              6\ x\_5 \[Equal] \ \ 2, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+3  x\_1 + \ 6  x\_2 + 18\ x\_3\  + \ 9  x\_4\  + \ 
+              9\ x\_5 \[Equal] \(-6\), \[IndentingNewLine]\ \ \ \ \ \ \ \ \ \ \
+4  x\_1 + \ 8  x\_2 + 12\ x\_3 + 10  x\_4 + 
+              12\ x\_5 \[Equal] \ \ 4, \[IndentingNewLine]\ \ \ \ \ \ \ \ \ 5 
+                 x\_1 + 10  x\_2 + 24\ x\_3 + 11  x\_4 + 
+              15\ x\_5 \[Equal] \(-4\)\ \ };\)\), "\n", 
+    \(\(vars = {x\_1\ , x\_2\ , x\_3, x\_4\ , x\_5};\)\), "\n", 
+    \(\(mats = LinearEquationsToMatrices[eqns, vars];\)\), "\n", 
+    \(\(A = 
+        mats\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\)\),\
+ "\n", 
+    \(\(B = 
+        Transpose[{mats\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\n", 
+    \(\(M = AppendRows[A, B];\)\), "\n", 
+    \(\(Print[TableForm[eqns]];\)\), "\n", 
+    \(\(Print["\<The matrix form is  A X = B.\>"];\)\), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\n", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\), "\n", 
+    \(\(Print["\<The augmented matrix M = [A,B] is\>"];\)\), "\n", 
+    \(\(Print["\<M = \>", MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = RowReduce[M];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<Now determine the free variables\>"];\)\), "\n", 
+    \(\(Print["\<and incorporate them into the matrix M\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(M = FreeVariables[M];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The reduced row echelon form of M is\>"];\)\), "\n", 
+    \(\(M = Expand[RowReduce[M]];\)\), "\n", 
+    \(\(X = TakeColumns[M, \(-1\)];\)\), "\n", 
+    \(\(Print[MatrixForm[M]];\)\), "\n", 
+    \(\(Print["\<The solution is X = \>", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/EchelonFormBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Row Reduced Echelon Form",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/EchelonFormBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 181, 4, 35, "Text"],
+Cell[1960, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3439, 111, 1805, 52, 258, "Text"],
+Cell[5247, 165, 197, 5, 33, "Text"],
+Cell[5447, 172, 533, 20, 33, "Text"],
+Cell[5983, 194, 2066, 73, 147, "Text"],
+Cell[8052, 269, 623, 20, 33, "Text"],
+Cell[8678, 291, 609, 19, 33, "Text"],
+Cell[9290, 312, 349, 10, 33, "Text"],
+Cell[9642, 324, 1773, 33, 295, "Input"],
+Cell[11418, 359, 443, 12, 88, "Text"],
+
+Cell[CellGroupData[{
+Cell[11886, 375, 101, 2, 33, "Text"],
+Cell[11990, 379, 118, 5, 33, "Text"],
+Cell[12111, 386, 317, 5, 70, "Input"],
+Cell[12431, 393, 306, 14, 33, "Text"],
+Cell[12740, 409, 942, 18, 230, "Input"],
+Cell[13685, 429, 316, 13, 33, "Text",
+  Evaluatable->False],
+Cell[14004, 444, 423, 7, 130, "Input"],
+Cell[14430, 453, 67, 1, 30, "Input"],
+Cell[14500, 456, 242, 11, 33, "Text"],
+Cell[14745, 469, 159, 3, 50, "Input"],
+Cell[14907, 474, 566, 9, 70, "Input"],
+Cell[15476, 485, 233, 4, 50, "Input"],
+Cell[15712, 491, 560, 9, 70, "Input"],
+Cell[16275, 502, 567, 9, 70, "Input"],
+Cell[16845, 513, 403, 11, 96, "Text"],
+Cell[17251, 526, 125, 5, 33, "Text"],
+Cell[17379, 533, 153, 2, 50, "Input"],
+Cell[17535, 537, 37, 0, 33, "Text"],
+Cell[17575, 539, 616, 10, 130, "Input"],
+Cell[18194, 551, 362, 13, 71, "Text"],
+Cell[18559, 566, 283, 5, 90, "Input"],
+Cell[18845, 573, 643, 22, 33, "Text"],
+Cell[19491, 597, 496, 9, 130, "Input"],
+Cell[19990, 608, 812, 28, 52, "Text"],
+Cell[20805, 638, 529, 16, 109, "Text"],
+Cell[21337, 656, 1680, 32, 410, "Input"]
+}, Closed]],
+Cell[23032, 691, 443, 12, 85, "Text"],
+
+Cell[CellGroupData[{
+Cell[23500, 707, 101, 2, 33, "Text"],
+Cell[23604, 711, 118, 5, 33, "Text"],
+Cell[23725, 718, 317, 5, 70, "Input"],
+Cell[24045, 725, 306, 14, 33, "Text"],
+Cell[24354, 741, 942, 18, 230, "Input"],
+Cell[25299, 761, 316, 13, 33, "Text",
+  Evaluatable->False],
+Cell[25618, 776, 423, 7, 130, "Input"],
+Cell[26044, 785, 67, 1, 30, "Input"],
+Cell[26114, 788, 254, 7, 52, "Text"],
+Cell[26371, 797, 140, 2, 50, "Input"],
+Cell[26514, 801, 270, 12, 33, "Text"],
+Cell[26787, 815, 159, 3, 50, "Input"],
+Cell[26949, 820, 566, 9, 70, "Input"],
+Cell[27518, 831, 233, 4, 50, "Input"],
+Cell[27754, 837, 560, 9, 70, "Input"],
+Cell[28317, 848, 233, 4, 50, "Input"],
+Cell[28553, 854, 305, 7, 95, "Text"],
+Cell[28861, 863, 283, 9, 52, "Text"],
+Cell[29147, 874, 362, 13, 71, "Text"],
+Cell[29512, 889, 283, 5, 90, "Input"],
+Cell[29798, 896, 643, 22, 33, "Text"],
+Cell[30444, 920, 496, 9, 130, "Input"],
+Cell[30943, 931, 924, 33, 52, "Text"]
+}, Closed]],
+Cell[31882, 967, 392, 11, 85, "Text"],
+
+Cell[CellGroupData[{
+Cell[32299, 982, 101, 2, 33, "Text"],
+Cell[32403, 986, 118, 5, 33, "Text"],
+Cell[32524, 993, 300, 5, 70, "Input"],
+Cell[32827, 1000, 306, 14, 33, "Text"],
+Cell[33136, 1016, 942, 18, 230, "Input"],
+Cell[34081, 1036, 316, 13, 33, "Text",
+  Evaluatable->False],
+Cell[34400, 1051, 423, 7, 130, "Input"],
+Cell[34826, 1060, 67, 1, 30, "Input"],
+Cell[34896, 1063, 251, 7, 52, "Text"],
+Cell[35150, 1072, 140, 2, 50, "Input"],
+Cell[35293, 1076, 270, 12, 33, "Text"],
+Cell[35566, 1090, 159, 3, 50, "Input"],
+Cell[35728, 1095, 566, 9, 70, "Input"],
+Cell[36297, 1106, 560, 9, 70, "Input"],
+Cell[36860, 1117, 1545, 49, 374, "Text"],
+Cell[38408, 1168, 400, 9, 57, "Input"],
+Cell[38811, 1179, 429, 16, 71, "Text"],
+Cell[39243, 1197, 744, 12, 150, "Input"],
+Cell[39990, 1211, 244, 8, 33, "Text"],
+Cell[40237, 1221, 230, 4, 90, "Input"],
+Cell[40470, 1227, 388, 10, 71, "Text"],
+Cell[40861, 1239, 771, 14, 230, "Input"],
+Cell[41635, 1255, 488, 12, 96, "Text"],
+Cell[42126, 1269, 125, 5, 33, "Text"],
+Cell[42254, 1276, 153, 2, 50, "Input"],
+Cell[42410, 1280, 225, 9, 52, "Text"],
+Cell[42638, 1291, 734, 12, 150, "Input"],
+Cell[43375, 1305, 361, 10, 71, "Text"],
+Cell[43739, 1317, 876, 16, 190, "Input"],
+Cell[44618, 1335, 316, 13, 33, "Text",
+  Evaluatable->False],
+Cell[44937, 1350, 428, 7, 130, "Input"],
+Cell[45368, 1359, 68, 1, 30, "Input"],
+Cell[45439, 1362, 1257, 40, 138, "Text"],
+Cell[46699, 1404, 169, 5, 33, "Text"],
+Cell[46871, 1411, 1208, 21, 227, "Input"],
+Cell[48082, 1434, 643, 22, 33, "Text"],
+Cell[48728, 1458, 540, 10, 150, "Input"],
+Cell[49271, 1470, 853, 29, 52, "Text"],
+Cell[50127, 1501, 532, 16, 71, "Text"],
+Cell[50662, 1519, 1700, 32, 510, "Input"]
+}, Closed]],
+Cell[52377, 1554, 403, 12, 85, "Text"],
+
+Cell[CellGroupData[{
+Cell[52805, 1570, 101, 2, 33, "Text"],
+Cell[52909, 1574, 118, 5, 33, "Text"],
+Cell[53030, 1581, 319, 6, 70, "Input"],
+Cell[53352, 1589, 306, 14, 33, "Text"],
+Cell[53661, 1605, 942, 18, 230, "Input"],
+Cell[54606, 1625, 247, 11, 33, "Text"],
+Cell[54856, 1638, 423, 7, 130, "Input"],
+Cell[55282, 1647, 560, 9, 70, "Input"],
+Cell[55845, 1658, 1304, 47, 383, "Text"],
+Cell[57152, 1707, 458, 11, 65, "Input"],
+Cell[57613, 1720, 429, 16, 71, "Text"],
+Cell[58045, 1738, 734, 12, 150, "Input"],
+Cell[58782, 1752, 244, 8, 33, "Text"],
+Cell[59029, 1762, 230, 4, 90, "Input"],
+Cell[59262, 1768, 446, 13, 71, "Text"],
+Cell[59711, 1783, 915, 16, 250, "Input"],
+Cell[60629, 1801, 499, 13, 104, "Text"],
+Cell[61131, 1816, 125, 5, 33, "Text"],
+Cell[61259, 1823, 153, 2, 50, "Input"],
+Cell[61415, 1827, 225, 9, 52, "Text"],
+Cell[61643, 1838, 734, 12, 150, "Input"],
+Cell[62380, 1852, 325, 11, 71, "Text"],
+Cell[62708, 1865, 750, 14, 165, "Input"],
+Cell[63461, 1881, 643, 22, 33, "Text"],
+Cell[64107, 1905, 540, 10, 150, "Input"],
+Cell[64650, 1917, 853, 29, 52, "Text"],
+Cell[65506, 1948, 532, 16, 71, "Text"],
+Cell[66041, 1966, 1852, 36, 530, "Input"]
+}, Closed]],
+Cell[67908, 2005, 483, 9, 87, "Text"],
+Cell[68394, 2016, 159, 3, 33, "Text"],
+Cell[68556, 2021, 1625, 30, 352, "Input"],
+Cell[70184, 2053, 875, 20, 126, "Text"],
+
+Cell[CellGroupData[{
+Cell[71084, 2077, 101, 2, 33, "Text"],
+Cell[71188, 2081, 118, 5, 33, "Text"],
+Cell[71309, 2088, 676, 10, 110, "Input"],
+Cell[71988, 2100, 306, 14, 33, "Text"],
+Cell[72297, 2116, 967, 19, 230, "Input"],
+Cell[73267, 2137, 247, 11, 33, "Text"],
+Cell[73517, 2150, 423, 7, 130, "Input"],
+Cell[73943, 2159, 57, 1, 30, "Input"],
+Cell[74003, 2162, 1845, 61, 448, "Text"],
+Cell[75851, 2225, 315, 11, 89, "Input"],
+Cell[76169, 2238, 429, 16, 71, "Text"],
+Cell[76601, 2256, 734, 12, 150, "Input"],
+Cell[77338, 2270, 244, 8, 33, "Text"],
+Cell[77585, 2280, 230, 4, 90, "Input"],
+Cell[77818, 2286, 447, 13, 71, "Text"],
+Cell[78268, 2301, 931, 16, 250, "Input"],
+Cell[79202, 2319, 555, 14, 128, "Text"],
+Cell[79760, 2335, 124, 5, 33, "Text"],
+Cell[79887, 2342, 153, 2, 50, "Input"],
+Cell[80043, 2346, 225, 9, 52, "Text"],
+Cell[80271, 2357, 744, 12, 150, "Input"],
+Cell[81018, 2371, 762, 26, 71, "Text"],
+Cell[81783, 2399, 540, 10, 150, "Input"],
+Cell[82326, 2411, 852, 29, 52, "Text"],
+Cell[83181, 2442, 532, 16, 71, "Text"],
+Cell[83716, 2460, 2074, 38, 570, "Input"]
+}, Closed]],
+Cell[85805, 2501, 158, 3, 32, "Text"],
+Cell[85966, 2506, 566, 16, 33, "Text"],
+Cell[86535, 2524, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

@@ -1,0 +1,4662 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    160057,       4414]*)
+(*NotebookOutlinePosition[    160723,       4437]*)
+(*  CellTagsIndexPosition[    160679,       4433]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Pivoting Methods",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIn the ",
+  ButtonBox["Gauss-Jordan module",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/GaussianJordanMod.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  " we saw an algorithm for solving a general linear system of equations ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " consisting of ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " equations and ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " unknowns where it is assumed that the system has a unique solution.  The \
+method is attributed ",
+  StyleBox[ButtonBox["Johann Carl Friedrich Gauss",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Gauss.html"]\
+, None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0, 0, 1]],
+  " (1777-1855) and ",
+  StyleBox[ButtonBox["Wilhelm Jordan",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Jordan.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0, 0, 1]],
+  " (1842 to 1899).  The following theorem states the sufficient conditions \
+for the existence and uniqueness of solutions of a linear system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ".  \n\n",
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Unique Solutions",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearSystemofEquations.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[") ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Assume that ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " is an ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " matrix.  The following statements are equivalent.\n\n",
+  StyleBox["     (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Given any ",
+  Cell[BoxData[
+      \(n\[Times]1\)]],
+  " matrix ",
+  Cell[BoxData[
+      StyleBox["B",
+        FontWeight->"Bold"]]],
+  ", the linear system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " has a unique solution.\n     \n",
+  StyleBox["    (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " is ",
+  ButtonBox["nonsingular",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/NonsingularMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (i.e., ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  " exists).\n    \n",
+  StyleBox["   (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The system of equations ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["0",
+          FontWeight->"Bold"]}]]],
+  " has the unique solution ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        StyleBox["0",
+          FontWeight->"Bold"]}]]],
+  ".  \n   \n",
+  StyleBox["   (iv)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The ",
+  ButtonBox["determinant",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Determinant.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " is nonzero, i.e. ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"det", 
+          RowBox[{"(", 
+            StyleBox["A",
+              FontWeight->"Bold"], ")"}]}], "\[NotEqual]", "0"}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tIt is convenient to store all the coefficients of the linear system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  " in one array of dimension ",
+  Cell[BoxData[
+      \(n\[Times]n + 1\)]],
+  ".  The coefficients of ",
+  Cell[BoxData[
+      StyleBox["B",
+        FontWeight->"Bold"]]],
+  " are stored in column ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  " of the array (i.e. ",
+  Cell[BoxData[
+      \(a\_\(i, n + 1\) = b\_i\)]],
+  ").  Row ",
+  Cell[BoxData[
+      \(k\)]],
+  " contains all the coefficients necessary to represent the ",
+  Cell[BoxData[
+      \(i\^th\)]],
+  " equation in the linear system. The augmented matrix is denoted ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "|", 
+            StyleBox["B",
+              FontWeight->"Bold"]}], "]"}]}]]],
+  " and the linear system is represented as follows:\n\n\t\t ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "="}]]],
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), \(a\_\(1, 3\)\), 
+              "...", \(a\_\(1, n\)\), \(b\_1\)},
+            {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), 
+              "...", \(a\_\(2, n\)\), \(b\_2\)},
+            {\(a\_\(3, 1\)\), \(a\_\(3, 2\)\), \(a\_\(3, 3\)\), 
+              "...", \(a\_\(3, n\)\), \(b\_3\)},
+            {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+              "\[VerticalEllipsis]", " ", "\[VerticalEllipsis]", 
+              "\[VerticalEllipsis]"},
+            {\(a\_\(n, 1\)\), \(a\_\(n, 2\)\), \(a\_\(n, 3\)\), 
+              "...", \(a\_\(n, n\)\), \(b\_n\)}
+            }], ")"}]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ", with augmented matrix ",
+  Cell[BoxData[
+      StyleBox["M",
+        FontWeight->"Bold"]]],
+  ", can be solved by performing row operations on ",
+  Cell[BoxData[
+      StyleBox["M",
+        FontWeight->"Bold"]]],
+  ".  The variables  are placeholders for the coefficients and cam be omitted \
+until the end of the computation."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianJordanProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/GaussianJordanProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Elementary Row Operations",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/ElementaryRowandColumnOperations.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["). ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The following operations applied to the augmented matrix ",
+  Cell[BoxData[
+      StyleBox["M",
+        FontWeight->"Bold"]]],
+  " yield an equivalent linear system. \n\n",
+  StyleBox["     (i)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  StyleBox["Interchanges:",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tThe order of two rows can be interchanged.  \n     \n",
+  StyleBox["    (ii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  StyleBox["Scaling:",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   \tMultiplying a row by a nonzero constant.\n    \n",
+  StyleBox["   (iii)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " ",
+  StyleBox["Replacement:",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tRow r can be replaced by the sum of that tow and a nonzero multiple of \
+any other row;\n                           \tthat is:  ",
+  Cell[BoxData[
+      \(row\_r = row\_r - c\ row\_p\)]],
+  ".  \t\n\n\tIt is common practice to implement ",
+  StyleBox["(iii)",
+    FontColor->RGBColor[0, 0, 1]],
+  " by replacing a row with the difference of that row and a multiple of \
+another row.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianJordanProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/GaussianJordanProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Pivot Element",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Pivoting.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " The number ",
+  Cell[BoxData[
+      \(a\_\(p, p\)\)]],
+  " in the coefficient matrix ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " that is used to eliminate ",
+  Cell[BoxData[
+      \(a\_\(i, p\)\)]],
+  " where ",
+  Cell[BoxData[
+      RowBox[{\(i = p + 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(p + 2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ", is called the ",
+  Cell[BoxData[
+      \(p\^th\)]],
+  " pivot element, and the ",
+  Cell[BoxData[
+      \(p\^th\)]],
+  " row is called the pivot row.      "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gaussian Elimination with Back Substitution",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/GaussianElimination.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Assume that ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " is an ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " nonsingular matrix. There exists a unique system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["UX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["Y",
+          FontWeight->"Bold"]}]]],
+  " that is equivalent to the given system ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ", where ",
+  Cell[BoxData[
+      StyleBox["U",
+        FontWeight->"Bold"]]],
+  " is an upper-triangular matrix with ",
+  Cell[BoxData[
+      \(u\_\(i, i\) \[NotEqual] 0\)]],
+  " for ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  After  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["U",
+          FontWeight->"Bold"], " ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], " ", 
+        StyleBox["Y",
+          FontWeight->"Bold"]}]]],
+  " are constructed, back substitution can be used to solve ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["UX",
+          FontWeight->"Bold"], "=", 
+        StyleBox["Y",
+          FontWeight->"Bold"]}]]],
+  " for ",
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/GaussianJordanProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gauss-Jordan Elimination and Pivoting",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/GaussianJordanProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Pivoting Strategies",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThere are numerous ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["pivoting",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Pivoting.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" strategies discussed in the literature.  We mention only a few \
+to give an indication of the possibilities.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(i)  No Pivoting.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["No pivoting means no row interchanges.  It can be done only if \
+Gaussian elimination never run into zeros on the diagonal.  Since division by \
+zero is a fatal error we usually avoid this pivoting strategy. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Pivoting to Avoid ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(a\_\(p, p\) = 0\),
+        FontWeight->"Bold",
+        FontColor->RGBColor[0, 0, 1]]],
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tIf  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) = 0\)]],
+  StyleBox[",  then row p cannot be used to eliminate the elements in column \
+p below the main diagonal.  It is necessary to find row k, where ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(k, p\) \[NotEqual] 0\)]],
+  StyleBox[" and k > p, and then interchange row p and row k so that a \
+nonzero pivot element is obtained.  This process is called pivoting, and the \
+criterion for deciding which row to choose is called a pivoting strategy.  \
+The first idea that comes to mind is the following one. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(ii) Trivial Pivoting.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["The trivial pivoting strategy is as follows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  do not switch rows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) = 0\)]],
+  StyleBox[",  locate the first row below p in which  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(k, p\) \[NotEqual] 0\)]],
+  " ",
+  StyleBox["and then switch rows k and p.  This will result in a new element  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  which is a nonzero pivot element.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Pivoting to Reduce Error",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tBecause the computer uses fixed-precision arithmetic, it is \
+possible that a small error will be introduced each time that an arithmetic \
+operation is performed. The following example illustrates how use of the \
+trivial pivoting strategy in Gaussian elimination can lead to significant \
+error in the solution of a linear system of equations.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(iii) Partial Pivoting.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["The partial pivoting strategy is as follows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  do not switch rows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) = 0\)]],
+  StyleBox[",  locate row u below p in which  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(u, p\)\)\(|\)\)\  = \ 
+        max\+\(p + 1 \[LessEqual] i \[LessEqual] \ n\)\ \(\(|\)\(a\_\(i, 
+                p\)\)\(|\)\)\)]],
+  "  and ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(u, p\) \[NotEqual] 0\)]],
+  " ",
+  StyleBox["and then switch rows u and p.  This will result in a new element  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  which is a nonzero pivot element.    ",
+    FontFamily->"Times New Roman"],
+  "\t\n",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  " O",
+  StyleBox["nly row permutations are permitted. The strategy is to switch the \
+largest entry in the pivot column to the diagonal. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(iv) Scaled Partial Pivoting.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  At the start of the procedure we compute scale factors for each \
+row of the matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(A\)]],
+  " as follows:\n\t\t",
+  Cell[BoxData[
+      \(s\_i\  = \ 
+        max\+\(1 \[LessEqual] j \[LessEqual] \ n\)\ \(\(|\)\(a\_\(i, 
+                j\)\)\(|\)\)\)]],
+  "   for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n",
+  StyleBox["The scale factors are interchanged with their corresponding row \
+in the elimination steps.  The scaled partial pivoting strategy is as \
+follows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  do not switch rows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) = 0\)]],
+  StyleBox[",  locate row u below p in which  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(u, p\)\)\(|\)\)\/s\_u\  = \ 
+        max\+\(p + 1 \[LessEqual] i \[LessEqual] \ n\)\ \(\(|\)\(a\_\(i, \
+p\)\)\(|\)\)\/s\_i\)]],
+  "  and ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(u, p\) \[NotEqual] 0\)]],
+  " ",
+  StyleBox["and then switch rows ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u",
+    FontFamily->"Courier New"],
+  StyleBox[" and ",
+    FontFamily->"Times New Roman"],
+  StyleBox["p",
+    FontFamily->"Courier New"],
+  StyleBox[".  This will result in a new element  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  which is a nonzero pivot element.   ",
+    FontFamily->"Times New Roman"],
+  "\n",
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  " O",
+  StyleBox["nly row permutations are permitted. The strategy is to switch the \
+largest scaled entry in the pivot column to the diagonal. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(v) Total Pivoting.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  The total pivoting strategy is as follows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  do not switch rows.  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) = 0\)]],
+  StyleBox[",  locate row u below p and column v to the right of p in which  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(a\_\(u, v\)\)\(|\)\)\  = \ 
+        max\+\(p + 1 \[LessEqual] i, j \[LessEqual] \ n\)\ \(\(|\)\(a\_\(i, 
+                j\)\)\(|\)\)\)]],
+  "  and ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(u, v\) \[NotEqual] 0\)]],
+  " ",
+  StyleBox["and then: first switch rows ",
+    FontFamily->"Times New Roman"],
+  StyleBox["u",
+    FontFamily->"Courier New"],
+  StyleBox[" and ",
+    FontFamily->"Times New Roman"],
+  StyleBox["p",
+    FontFamily->"Courier New"],
+  StyleBox[" and second switch column v and p.   This will result in a new \
+element  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, p\) \[NotEqual] 0\)]],
+  StyleBox[",  which is a nonzero pivot element.  This is also called \
+\"complete pivoting\" or \"maximal pivoting.\"\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["Remark.",
+    FontColor->RGBColor[0, 1, 0]],
+  " ",
+  StyleBox["Both row and column permutations are permitted. The strategy is \
+to switch the largest entry in the part of the matrix that we have not yet \
+processed to the diagonal.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Pivoting Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PivotingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["Pivoting Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PivotingProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutines for Pivoting.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["E",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["xecute the cells in this group to activate to subroutines.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(\(\[DoubleLongRightArrow]\)\(\[DoubleLongRightArrow]\)\(\
+\[DoubleLongRightArrow]\)\(\[DoubleLongRightArrow]\)\(\[DoubleLongRightArrow]\
+\)\),
+        FontWeight->"Bold"]],
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Back Substitution).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  Used after the pivoting strategy is used to reduce the matrix \
+to upper-triangular form.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(BackSubstitution[
+          a0_] := \[IndentingNewLine]Module[\ {a = a0, \ i, 
+            j\ }, \[IndentingNewLine]X\  = \ 
+            Table[0, {n}]; \ \[IndentingNewLine]vars = 
+            Table["\<x\>"\_i, {i, n}]; \ \[IndentingNewLine]For[\ i = n, \ 
+            1 \[LessEqual] 
+              i, \ \(i--\), \
+\[IndentingNewLine]\(X\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)\  = \ \(a\_\(\(\[LeftDoubleBracket]\)\(i, n + 1\)\(\[RightDoubleBracket]\
+\)\) - \[Sum]\+\(j = \ i + 1\)\%n\( a\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) X\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/a\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\);\)\ ]; \ \[IndentingNewLine]Print["\<\n\>", "\<Now \
+do back substitution\>"]; \[IndentingNewLine]If[\ SameQ[X, N[X]], 
+            Print["\<Get  X = \>", MatrixForm[vars], "\< = \>", 
+              MatrixForm[X]\ ], \[IndentingNewLine]\ 
+            Print["\<Get X = \>", MatrixForm[vars], "\< = \>", 
+              MatrixForm[X], "\< = \>", 
+              NumberForm[MatrixForm[N[X]], 
+                17]\ ]]; \[IndentingNewLine]Print["\<\n\>", "\<Therefore, the \
+'\>", method, "\<' solution to\>"]; \[IndentingNewLine]Print[MatrixForm[A], 
+            MatrixForm[vars], "\< = \>", 
+            MatrixForm[B]]; \[IndentingNewLine]If[\ SameQ[X, N[X]], 
+            Print["\<Get  X = \>", MatrixForm[vars], "\< = \>", 
+              MatrixForm[X]\ ], \[IndentingNewLine]\ 
+            Print["\<Is  X = \>", MatrixForm[vars], "\< = \>", 
+              MatrixForm[X], "\< = \>", 
+              NumberForm[MatrixForm[N[X]], 
+                17]\ ]];\ \ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (No Pivoting Gaussian Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  No row interchanges, i.e. no pivoting. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(\(NoPivoting[A0_, 
+        B0_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[\ {A = 
+            AppendRows[A0, B0]\ , i, p}, \ method = "\<No Pivoting\>"; \ 
+        n = Length[
+            A]; \ \[IndentingNewLine]Print["\<Use 'No Pivoting' to solve\>"]; \
+\ \[IndentingNewLine]Print[MatrixForm[A0], MatrixForm[vars], "\< = \>", 
+          MatrixForm[
+            B]]; \[IndentingNewLine]Print["\<Use the augmented matrix  \
+[A,B]\>"]; \[IndentingNewLine]Print[
+          MatrixForm[
+            Prepend[A, 
+              Append[Table["\<x\>"\_i, {i, 1, 
+                    n}]\ , "\<\>"]]]]; \[IndentingNewLine]For[\ p = 1, \ 
+          p \[LessEqual] 
+            n - 1, \ \(p++\), \ \[IndentingNewLine]Print["\<Pivot element is  \
+a\>", "\<\>"\_\(p, p\), "\< = \>", 
+            A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\), \
+"\<\n\>"]; \[IndentingNewLine]mult\  = \ 
+            A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\/A\_\
+\(\(\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ i = p + 1, \ 
+            i \[LessEqual] 
+              n, \ \(i++\), \ \
+\[IndentingNewLine]A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\)\  = \ A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\  - \ 
+                mult*A\_\(\(\[LeftDoubleBracket]\)\(i, p\)\(\
+\[RightDoubleBracket]\)\)\ \ ]; \ \[IndentingNewLine]Print[
+            MatrixForm[
+              Prepend[A, 
+                Append[Table["\<x\>"\_i, {i, 1, 
+                      n}]\ , "\<\>"]]]];\ \ ]; \
+\[IndentingNewLine]BackSubstitution[A]; \ \[IndentingNewLine]Return[
+          X];\ ]\)\(\ \)\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Trivial Pivoting Gaussian Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  If the diagonal element is zero, interchange the first non-zero \
+element in the ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\^th\)]],
+  StyleBox[" column below the diagonal.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{\(TrivialPivoting[A0_, B0_]\), ":=", "\[IndentingNewLine]", 
+      RowBox[{"Module", "[", " ", 
+        RowBox[{\({A = AppendRows[A0, B0]\ , i, p}\), ",", " ", 
+          
+          RowBox[{\(method = "\<Trivial Pivoting\>"\), ";", 
+            " ", \(n = Length[A]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print["\<Use 'Trivial Pivoting' to solve\
+\>"]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print[MatrixForm[A0], 
+              MatrixForm[vars], "\< = \>", MatrixForm[B]]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<Use the augmented matrix  [A,B]\
+\>"]\), ";", 
+            "\[IndentingNewLine]", \(Print[
+              MatrixForm[
+                Prepend[A, 
+                  Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\), ";", 
+            " ", "\[IndentingNewLine]", 
+            RowBox[{"For", "[", " ", 
+              
+              RowBox[{\(p = 1\), ",", " ", \(p \[LessEqual] n - 1\), ",", 
+                " ", \(p++\), ",", " ", "\[IndentingNewLine]", 
+                
+                RowBox[{\(For[\ k = p + 1, \ 
+                    k \[LessEqual] 
+                      n, \ \(k++\), \ \[IndentingNewLine]\(If[\ \ And[\ 
+                          A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)\  \[Equal] \ 0, 
+                          A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\) \[NotEqual] 
+                            0\ \ ]\ \ , \ \[IndentingNewLine]A\_\(\(\
+\[LeftDoubleBracket]\)\({p, k}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                          A\_\(\(\[LeftDoubleBracket]\)\({k, p}\)\(\
+\[RightDoubleBracket]\)\); \ \ \ \[IndentingNewLine]Print["\<Switching row  p \
+= \>", p, "\<  with row  k = \>", 
+                          k, "\<  produces\>"]; \ \[IndentingNewLine]Print[
+                          MatrixForm[
+                            Prepend[A, 
+                              Append[
+                                Table["\<x\>"\_i, {i, 1, 
+                                    n}]\ , "\<\>"]]]];\ ];\)\ ]\), ";", " ", 
+                  "\[IndentingNewLine]", 
+                  
+                  StyleBox[\(Print["\<Pivot element a\>", "\<\>"\_\(p, p\), "\
+\< = \>", 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\), "\< is used to do Gaussian elimination\>", "\<\n\
+\>"]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  "\[IndentingNewLine]", \(mult\  = \ 
+                    A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\
+\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\)\), ";",
+                   " ", "\[IndentingNewLine]", \(For[\ i = p + 1, \ 
+                    i \[LessEqual] 
+                      n, \ \(i++\), \ \[IndentingNewLine]A\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - 
+                        mult*A\_\(\(\[LeftDoubleBracket]\)\(i, p\)\(\
+\[RightDoubleBracket]\)\)\ \ ]\), ";", " ", 
+                  "\[IndentingNewLine]", \(Print[
+                    MatrixForm[
+                      Prepend[A, 
+                        Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\), 
+                  ";"}]}], "  ", "]"}], ";", " ", 
+            "\[IndentingNewLine]", \(BackSubstitution[A]\), ";", " ", 
+            "\[IndentingNewLine]", \(Return[X]\), ";"}]}], " ", "]"}], 
+      " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Partial Pivoting Gaussian Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  The diagonal element is interchanged so that it is larger in \
+magnitude than the elements in the ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\^th\)]],
+  StyleBox[" column below it.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\),
+      Background->None], "\[IndentingNewLine]", 
+    RowBox[{
+      StyleBox[\(PartialPivoting[A0_, B0_]\),
+        Background->None], 
+      StyleBox[":=",
+        Background->None], 
+      StyleBox["\[IndentingNewLine]",
+        Background->None], 
+      RowBox[{
+        StyleBox["Module",
+          Background->None], 
+        StyleBox["[",
+          Background->None], 
+        StyleBox[" ",
+          Background->None], 
+        RowBox[{
+          StyleBox[\({A = AppendRows[A0, B0]\ , i, p}\),
+            Background->None], 
+          StyleBox[",",
+            Background->None], 
+          StyleBox[" ",
+            Background->None], 
+          RowBox[{
+            StyleBox[\(method = "\<Partial Pivoting\>"\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            StyleBox[\(n = Length[A]\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            "\[IndentingNewLine]", \(Print["\<Use 'Partial Pivoting' to solve\
+\>"]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print[MatrixForm[A0], 
+              MatrixForm[vars], "\< = \>", MatrixForm[B]]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<Use the augmented matrix  [A,B]\
+\>"]\), ";", 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            
+            StyleBox[\(Print[
+                MatrixForm[
+                  Prepend[A, 
+                    Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            RowBox[{
+              StyleBox["For",
+                Background->None], 
+              StyleBox["[",
+                Background->None], 
+              StyleBox[" ",
+                Background->None], 
+              RowBox[{
+                StyleBox[\(p = 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p \[LessEqual] n - 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p++\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], "\[IndentingNewLine]", 
+                
+                RowBox[{\(elements = 
+                    Table[Abs[
+                        A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\)], {k, p, n}]\), ";", 
+                  "\[IndentingNewLine]", \(Print["\<a\>", "\<\>"\_\("\<i\>", \
+p\), "\< = \>", MatrixForm[elements], "\< = \>", MatrixForm[N[elements]]]\), 
+                  ";", "\[IndentingNewLine]", \(u = 
+                    p - 1 + \(Position[elements, Max[elements]]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\), ";", 
+                  "\[IndentingNewLine]", \(Print["\<Largest element in column \
+ p = \>", p, "\<  is  |a\>", "\<\>"\_\(u, p\), "\<| = |\>", 
+                    A\_\(\(\[LeftDoubleBracket]\)\(u, p\)\(\
+\[RightDoubleBracket]\)\), "\<|\>"\ ]\), ";", 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], \(Print["\<Switching row  p = \>", 
+                    p, "\<  with row  u = \>", u, "\<  produces\>"]\), ";", 
+                  "\[IndentingNewLine]", \(A\_\(\(\[LeftDoubleBracket]\)\({p, \
+u}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    A\_\(\(\[LeftDoubleBracket]\)\({u, p}\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print[
+                      MatrixForm[
+                        Prepend[A, 
+                          Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\),
+                    
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print["\<Pivot element a\>", "\<\>"\_\(p, p\), "\
+\< = \>", 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\), "\< is used to do Gaussian elimination\>", "\<\n\
+\>"]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(mult\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  RowBox[{
+                    StyleBox["For",
+                      Background->None], 
+                    StyleBox["[",
+                      Background->None], 
+                    StyleBox[" ",
+                      Background->None], 
+                    RowBox[{
+                      StyleBox[\(i = p + 1\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox[\(i \[LessEqual] n\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox[\(i++\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox["\[IndentingNewLine]",
+                        Background->None], 
+                      RowBox[{
+                        
+                        StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\),
+                          Background->None], 
+                        StyleBox[" ",
+                          Background->None], 
+                        StyleBox["=",
+                          Background->None], 
+                        StyleBox[" ",
+                          Background->None], 
+                        RowBox[{
+                          
+                          StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\),
+                            Background->None], 
+                          StyleBox[" ",
+                            Background->None], 
+                          StyleBox["-",
+                            Background->None], 
+                          StyleBox[" ",
+                            Background->None], 
+                          RowBox[{"mult", "*", 
+                            
+                            StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i, 
+                                  p\)\(\[RightDoubleBracket]\)\)\),
+                              Background->None]}]}]}]}], 
+                    StyleBox["  ",
+                      Background->None], 
+                    StyleBox["]",
+                      Background->None]}], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print[
+                      MatrixForm[
+                        Prepend[A, 
+                          Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\),
+                    
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None]}]}], 
+              StyleBox["  ",
+                Background->None], 
+              StyleBox["]",
+                Background->None]}], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            StyleBox[\(BackSubstitution[A]\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], "\[IndentingNewLine]", \(Return[X]\), 
+            ";"}]}], " ", "]"}], " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Scaled Partial Pivoting Gaussian \
+Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  The diagonal element is interchanged so that it is larger in \
+scaled magnitude than the scaled magnitude of the elements in the ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\^th\)]],
+  StyleBox[" column below it.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        StyleBox[
+          RowBox[{"Scaled", 
+            StyleBox["PartialPivoting",
+              Background->None]}]], "[", \(A0_, B0_\), "]"}], ":=", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Module", "[", " ", 
+        RowBox[{\({A = AppendRows[A0, B0]\ , i, p}\), ",", " ", 
+          RowBox[{
+            RowBox[{"method", "=", "\"\<Scaled \!\(\*
+StyleBox[\"Partial\",\nBackground->None]\)\!\(\*
+StyleBox[\" \",\nBackground->None]\)\!\(\*
+StyleBox[\"Pivoting\",\nBackground->None]\)\>\""}], ";", 
+            " ", \(n = Length[A]\), ";", " ", "\[IndentingNewLine]", 
+            RowBox[{"Print", "[", "\"\<Use 'Scaled \!\(\*
+StyleBox[\"Partial\",\nBackground->None]\)\!\(\*
+StyleBox[\" \",\nBackground->None]\)\!\(\*
+StyleBox[\"Pivoting\",\nBackground->None]\)\!\(\*
+StyleBox[\"'\",\nBackground->None]\) to solve\>\"", "]"}], ";", " ", 
+            "\[IndentingNewLine]", \(Print[MatrixForm[A0], 
+              MatrixForm[vars], "\< = \>", MatrixForm[B]]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<Use the augmented matrix  [A,B]\
+\>"]\), ";", 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            StyleBox[
+              RowBox[{"s", "=", 
+                RowBox[{
+                  StyleBox["Table",
+                    Background->None], 
+                  StyleBox["[",
+                    Background->None], 
+                  RowBox[{
+                    RowBox[{
+                      StyleBox["Max",
+                        Background->None], 
+                      StyleBox["[",
+                        Background->None], 
+                      RowBox[{
+                        StyleBox["Abs",
+                          Background->None], 
+                        StyleBox["[",
+                          Background->None], 
+                        RowBox[{
+                          StyleBox[
+                            RowBox[{"T", 
+                              StyleBox["ake",
+                                Background->None]}]], 
+                          StyleBox["[",
+                            Background->None], 
+                          
+                          StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), n\),
+                            Background->None], 
+                          StyleBox["]",
+                            Background->None]}], 
+                        StyleBox["]",
+                          Background->None]}], 
+                      StyleBox["]",
+                        Background->None]}], 
+                    StyleBox[",",
+                      Background->None], 
+                    StyleBox[\({i, n}\),
+                      Background->None]}], 
+                  StyleBox["]",
+                    Background->None]}]}],
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], \(Print[
+              MatrixForm[
+                Prepend[A, 
+                  Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\), ";", 
+            StyleBox[" ",
+              Background->None], 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            RowBox[{
+              StyleBox["For",
+                Background->None], 
+              StyleBox["[",
+                Background->None], 
+              StyleBox[" ",
+                Background->None], 
+              RowBox[{
+                StyleBox[\(p = 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p \[LessEqual] n - 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p++\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], "\[IndentingNewLine]", 
+                
+                RowBox[{\(elements = 
+                    Table[Abs[A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\)]\/s\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), {k, p, n}]\), ";", 
+                  "\[IndentingNewLine]", \(Print["\<a\>", "\<\>"\_\("\<i\>", \
+p\), "\< = \>", MatrixForm[
+                      Table[A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\), {k, p, 
+                          n}]], "\<, s\>", "\<\>"\_"\<i\>", "\< = \>", 
+                    MatrixForm[
+                      Take[s, 
+                        n - p + 
+                          1]], \[IndentingNewLine]"\<, Scaled |a\>", "\<\>"\_\
+\("\<i\>", p\), "\</s\>", "\<\>"\_"\<i\>", "\<| = \>", 
+                    MatrixForm[elements], "\< = \>", 
+                    MatrixForm[N[elements]]]\), ";", 
+                  "\[IndentingNewLine]", \(u = 
+                    p - 1 + \(Position[elements, Max[elements]]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\), ";", 
+                  "\[IndentingNewLine]", \(Print["\<Largest scaled element in \
+column  p = \>", p, "\<  is  |a\>", "\<\>"\_\(u, p\), "\<| = |\>", 
+                    A\_\(\(\[LeftDoubleBracket]\)\(u, p\)\(\
+\[RightDoubleBracket]\)\), "\<|\>"\ ]\), ";", 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], \(Print["\<Switching row  p = \>", 
+                    p, "\<  with row  u = \>", u, "\<  produces\>"]\), ";", 
+                  "\[IndentingNewLine]", \(A\_\(\(\[LeftDoubleBracket]\)\({p, \
+u}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                    A\_\(\(\[LeftDoubleBracket]\)\({u, p}\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                  " ", \(t = 
+                    s\_\(\(\[LeftDoubleBracket]\)\(u\)\(\[RightDoubleBracket]\
+\)\)\), ";", 
+                  " ", \(s\_\(\(\[LeftDoubleBracket]\)\(u\)\(\
+\[RightDoubleBracket]\)\) = 
+                    
+                    s\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\
+\)\)\), ";", 
+                  " ", \(s\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\) = t\), ";", " ", 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], \(Print[
+                    MatrixForm[
+                      Prepend[A, 
+                        Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\), 
+                  ";", "\[IndentingNewLine]", 
+                  
+                  StyleBox[\(Print["\<Pivot element a\>", "\<\>"\_\(p, p\), "\
+\< = \>", 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\), "\< is used to do Gaussian elimination\>", "\<\n\
+\>"]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(mult\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(For[\ i = p + 1, \ 
+                      i \[LessEqual] 
+                        n, \ \(i++\), \ \[IndentingNewLine]A\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\  = \ 
+                        A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\  - \ 
+                          mult*A\_\(\(\[LeftDoubleBracket]\)\(i, p\)\(\
+\[RightDoubleBracket]\)\)\ \ ]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], \(Print[
+                    MatrixForm[
+                      Prepend[A, 
+                        Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\), 
+                  ";"}]}], "  ", "]"}], ";", " ", 
+            "\[IndentingNewLine]", \(BackSubstitution[A]\), ";", " ", 
+            "\[IndentingNewLine]", \(Return[X]\), ";"}]}], " ", "]"}], 
+      " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (Total Pivoting Gaussian Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  The diagonal element is interchanged so that it is larger in \
+magnitude than the elements in the block below and to the right of  it.  Both \
+rows and columns are interchanged in this subroutine.  This is also called \
+\"complete pivoting\" or \"maximal pivoting.\"",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\),
+      Background->None], "\[IndentingNewLine]", 
+    RowBox[{
+      StyleBox[\(TotalPivoting[A0_, B0_]\),
+        Background->None], 
+      StyleBox[":=",
+        Background->None], 
+      StyleBox["\[IndentingNewLine]",
+        Background->None], 
+      RowBox[{
+        StyleBox["Module",
+          Background->None], 
+        StyleBox["[",
+          Background->None], 
+        StyleBox[" ",
+          Background->None], 
+        RowBox[{
+          StyleBox[\({A = AppendRows[A0, B0]\ , i, p}\),
+            Background->None], 
+          StyleBox[",",
+            Background->None], 
+          StyleBox[" ",
+            Background->None], 
+          RowBox[{
+            StyleBox[\(method = "\<Total Pivoting\>"\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            StyleBox[\(n = Length[A]\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            "\[IndentingNewLine]", \(Print["\<Use 'Total Pivoting' to \
+solve\>"]\), ";", " ", 
+            "\[IndentingNewLine]", \(Print[MatrixForm[A0], 
+              MatrixForm[vars], "\< = \>", MatrixForm[B]]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<Use the augmented matrix  [A,B]\
+\>"]\), ";", 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            
+            StyleBox[\(Print[
+                MatrixForm[
+                  Prepend[A, 
+                    Append[Table["\<x\>"\_i, {i, 1, n}]\ , "\<\>"]]]]\),
+              Background->None], 
+            StyleBox[";",
+              Background->None], 
+            "\[IndentingNewLine]", \(c = Table[i, {i, n}]\), ";", 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], 
+            RowBox[{
+              StyleBox["For",
+                Background->None], 
+              StyleBox["[",
+                Background->None], 
+              StyleBox[" ",
+                Background->None], 
+              RowBox[{
+                StyleBox[\(p = 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p \[LessEqual] n - 1\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], 
+                StyleBox[\(p++\),
+                  Background->None], 
+                StyleBox[",",
+                  Background->None], 
+                StyleBox[" ",
+                  Background->None], "\[IndentingNewLine]", 
+                
+                RowBox[{\(block = 
+                    A\_\(\(\[LeftDoubleBracket]\)\(Table[i, {i, p, n}], \
+Table[i, {i, p, n}]\)\(\[RightDoubleBracket]\)\)\), ";", 
+                  StyleBox["\[IndentingNewLine]",
+                    
+                    Background->None], \({u, 
+                      v} = {p - 1, 
+                        p - 1} + \(Position[Abs[block], \
+Max[Abs[block]]]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+\), ";", "\[IndentingNewLine]", \(Print["\<Largest element in row i\
+\[GreaterEqual]\>", p, "\< and column j\[GreaterEqual]\>", 
+                    p, "\<  is |a\>", "\<\>"\_\(u, v\), "\<| = |\>", 
+                    A\_\(\(\[LeftDoubleBracket]\)\(u, v\)\(\
+\[RightDoubleBracket]\)\), "\<|\>"]\), ";", 
+                  "\[IndentingNewLine]", \(Print["\<Switching rows p = \>", 
+                    p, "\< and u = \>", u, "\< then switch columns p = \>", 
+                    p, "\< and v = \>", v]\), ";", 
+                  "\[IndentingNewLine]", \(A\_\(\(\[LeftDoubleBracket]\)\({p, \
+u}\)\(\[RightDoubleBracket]\)\) = 
+                    A\_\(\(\[LeftDoubleBracket]\)\({u, p}\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                  " ", \(T = 
+                    A\_\(\(\[LeftDoubleBracket]\)\(All, p\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                  " ", \(A\_\(\(\[LeftDoubleBracket]\)\(All, p\)\(\
+\[RightDoubleBracket]\)\) = 
+                    A\_\(\(\[LeftDoubleBracket]\)\(All, v\)\(\
+\[RightDoubleBracket]\)\)\), ";", 
+                  " ", \(A\_\(\(\[LeftDoubleBracket]\)\(All, v\)\(\
+\[RightDoubleBracket]\)\) = T\), ";", " ", 
+                  "\[IndentingNewLine]", \(t = 
+                    c\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\
+\)\)\), ";", 
+                  " ", \(c\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\) = 
+                    c\_\(\(\[LeftDoubleBracket]\)\(v\)\(\[RightDoubleBracket]\
+\)\)\), ";", 
+                  " ", \(c\_\(\(\[LeftDoubleBracket]\)\(v\)\(\
+\[RightDoubleBracket]\)\) = t\), ";", " ", 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print[
+                      MatrixForm[
+                        Prepend[A, 
+                          Append[
+                            Table["\<x\>"\_\(c\_\(\(\[LeftDoubleBracket]\)\(i\
+\)\(\[RightDoubleBracket]\)\)\), {i, 1, n}]\ , "\<\>"]]]]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print["\<Pivot element a\>", "\<\>"\_\(p, p\), "\
+\< = \>", 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\), "\< is used to do Gaussian elimination\>", "\<\n\
+\>"]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(mult\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  RowBox[{
+                    StyleBox["For",
+                      Background->None], 
+                    StyleBox["[",
+                      Background->None], 
+                    StyleBox[" ",
+                      Background->None], 
+                    RowBox[{
+                      StyleBox[\(i = p + 1\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox[\(i \[LessEqual] n\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox[\(i++\),
+                        Background->None], 
+                      StyleBox[",",
+                        Background->None], 
+                      StyleBox[" ",
+                        Background->None], 
+                      StyleBox["\[IndentingNewLine]",
+                        Background->None], 
+                      RowBox[{
+                        
+                        StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\),
+                          Background->None], 
+                        StyleBox[" ",
+                          Background->None], 
+                        StyleBox["=",
+                          Background->None], 
+                        StyleBox[" ",
+                          Background->None], 
+                        RowBox[{
+                          
+                          StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)\),
+                            Background->None], 
+                          StyleBox[" ",
+                            Background->None], 
+                          StyleBox["-",
+                            Background->None], 
+                          StyleBox[" ",
+                            Background->None], 
+                          RowBox[{"mult", 
+                            StyleBox[" ",
+                              Background->None], 
+                            
+                            StyleBox[\(A\_\(\(\[LeftDoubleBracket]\)\(i, 
+                                  p\)\(\[RightDoubleBracket]\)\)\),
+                              Background->None]}]}]}]}], 
+                    StyleBox["  ",
+                      Background->None], 
+                    StyleBox["]",
+                      Background->None]}], 
+                  StyleBox[";",
+                    Background->None], 
+                  StyleBox[" ",
+                    Background->None], 
+                  StyleBox["\[IndentingNewLine]",
+                    Background->None], 
+                  
+                  StyleBox[\(Print[
+                      MatrixForm[
+                        Prepend[A, 
+                          Append[
+                            Table["\<x\>"\_\(c\_\(\(\[LeftDoubleBracket]\)\(i\
+\)\(\[RightDoubleBracket]\)\)\), {i, 1, n}]\ , "\<\>"]]]]\),
+                    Background->None], 
+                  StyleBox[";",
+                    Background->None]}]}], 
+              StyleBox["  ",
+                Background->None], 
+              StyleBox["]",
+                Background->None]}], 
+            StyleBox[";",
+              Background->None], 
+            StyleBox[" ",
+              Background->None], 
+            StyleBox["\[IndentingNewLine]",
+              Background->None], \(X\  = \(Z = \ Table[0, {n}]\)\), ";", " ", 
+            "\[IndentingNewLine]", \(vars = Table["\<x\>"\_i, {i, n}]\), ";", 
+            " ", "\[IndentingNewLine]", \(For[\ i = n, \ 
+              1 \[LessEqual] 
+                i, \ \(i--\), \
+\[IndentingNewLine]\(Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)\  = \ \(A\_\(\(\[LeftDoubleBracket]\)\(i, n + 1\)\(\[RightDoubleBracket]\
+\)\) - \[Sum]\+\(j = \ i + 1\)\%n\( A\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\) Z\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)\)\/A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\);\)\ ]\), ";", " ", 
+            "\[IndentingNewLine]", \(For[\ i = 1, \ 
+              i \[LessEqual] 
+                n, \ \(i++\), \
+\[IndentingNewLine]\(X\_\(\(\[LeftDoubleBracket]\)\(c\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)\(\
+\[RightDoubleBracket]\)\) = 
+                  Z\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\);\)]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<\n\>", "\<Now do back \
+substitution\>"]\), ";", 
+            "\[IndentingNewLine]", \(If[\ SameQ[X, N[X]], 
+              Print["\<Get  X = \>", MatrixForm[vars], "\< = \>", 
+                MatrixForm[X]\ ], \[IndentingNewLine]\ 
+              Print["\<Bet X = \>", MatrixForm[vars], "\< = \>", 
+                MatrixForm[X], "\< = \>", 
+                NumberForm[MatrixForm[N[X]], 17]\ ]]\), ";", 
+            "\[IndentingNewLine]", \(Print["\<\n\>", "\<Therefore, the '\>", 
+              method, "\<' solution to\>"]\), ";", 
+            "\[IndentingNewLine]", \(Print[MatrixForm[A0], 
+              MatrixForm[vars], "\< = \>", MatrixForm[B]]\), ";", 
+            "\[IndentingNewLine]", \(If[\ SameQ[X, N[X]], 
+              Print["\<Get  X = \>", MatrixForm[vars], "\< = \>", 
+                MatrixForm[X]\ ], \[IndentingNewLine]\ 
+              Print["\<Is  X = \>", MatrixForm[vars], "\< = \>", 
+                MatrixForm[X], "\< = \>", 
+                NumberForm[MatrixForm[N[X]], 17]\ ]]\), ";", 
+            "\[IndentingNewLine]", \(Return[X]\), ";"}]}], " ", "]"}], 
+      " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", \(-4\), "4", "7"},
+                {"0", "2", \(-1\), "0"},
+                {"2", "1", "1", "4"},
+                {"2", \(-3\), "2", \(-5\)}
+                }], "\[NoBreak]", ")"}], 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x\_1\)},
+                  {\(x\_2\)},
+                  {\(x\_3\)},
+                  {\(x\_4\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Subscript[ "x", 1], 
+              Subscript[ "x", 2], 
+              Subscript[ "x", 3], 
+              Subscript[ "x", 4]}]]}], "  ", "=", " ", 
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {"4"},
+              {"5"},
+              {"2"},
+              {"9"}
+              }], "\[NoBreak]", ")"}]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use the menu \"Input\" then submenu \"Create Table/Matrix/Palette\" to \
+enter matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " and vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1", \(-4\), "4", "7"},
+                  {"0", "2", \(-1\), "0"},
+                  {"2", "1", "1", "4"},
+                  {"2", \(-3\), "2", \(-5\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", " ", "=", " ", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"4"},
+                  {"5"},
+                  {"2"},
+                  {"9"}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(vars = 
+        Table["\<x\>"\_i, {i, 1, 
+            Length[A]}];\), "\[IndentingNewLine]", \(Print["\<Solve the \
+system\>"];\), "\[IndentingNewLine]", \(Print[MatrixForm[A], 
+        MatrixForm[vars], "\< = \>", MatrixForm[B]];\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(TotalPivoting[A, B];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", "2", "4", "3", "5"},
+                {"3", "5", "3", "1", "2"},
+                {"1", "4", "4", "2", "1"},
+                {"4", "1", "2", "5", "3"},
+                {"5", "2", "1", "4", "1"}
+                }], "\[NoBreak]", ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\_1\)},
+                {\(x\_2\)},
+                {\(x\_3\)},
+                {\(x\_4\)},
+                {\(x\_5\)}
+                }], ")"}]}], " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"5"},
+              {"6"},
+              {"7"},
+              {"8"},
+              {"9"}
+              }], ")"}]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Use the menu \"Input\" then submenu \"Create Table/Matrix/Palette\" to \
+enter matrices ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " and ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " and vector ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", 
+          TagBox[
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {"1", "2", "4", "3", "5"},
+                    {"3", "5", "3", "1", "2"},
+                    {"1", "4", "4", "2", "1"},
+                    {"4", "1", "2", "5", "3"},
+                    {"5", "2", "1", "4", "1"}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", " ", "=", " ", 
+          RowBox[{"(", GridBox[{
+                {"5"},
+                {"6"},
+                {"7"},
+                {"8"},
+                {"9"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(vars = 
+        Table["\<x\>"\_i, {i, 1, 
+            Length[A]}];\), "\[IndentingNewLine]", \(Print["\<Solve the \
+system\>"];\), "\[IndentingNewLine]", \(Print[MatrixForm[A], 
+        MatrixForm[vars], "\< = \>", MatrixForm[B]];\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(TotalPivoting[A, B];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tA linear system with a ",
+  ButtonBox["Hilbert matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HilbertMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], \(n\[Times]n\)], " ", "=", " ", 
+        RowBox[{
+          RowBox[{\(\((a\_\(i, j\))\)\_\(n\[Times]n\)\), "  ", 
+            StyleBox["where",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(a\_\(i, j\)\)}], 
+          "=", \(1\/\(i + j - 1\)\)}]}]]],
+  "  is difficult to solve numerically. The following examples illustrate \
+this situation.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(5\[Times]5\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(5\[Times]5\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"5", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "4", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "3", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", "\<\n\>", 
+        NumberForm[MatrixForm[A], 17]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the partial pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_2\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains most of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(6\[Times]6\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(6\[Times]6\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"6", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "5", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["4",
+                  FontFamily->"Courier New"], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["...",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[" ",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 6;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", "\<\n\>", 
+        NumberForm[MatrixForm[A], 17]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the trivial pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_1\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains most of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(7\[Times]7\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(7\[Times]7\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"7", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "6", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["5",
+                  FontFamily->"Courier New"], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["...",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[" ",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 7;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the partial pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_2\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains some of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(8\[Times]8\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(8\[Times]8\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"8", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "7", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["6",
+                  FontFamily->"Courier New",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["...",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[" ",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 8;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the total pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_4\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains some of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(9\[Times]9\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(9\[Times]9\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"9", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "8", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["7",
+                  FontFamily->"Courier New",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["...",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[" ",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 9;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", "\<\n\>", 
+        NumberForm[MatrixForm[A], 17]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the scaled partial pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_3\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains some of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use the Gaussian elimination methods to solve  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SubscriptBox[
+            StyleBox["A",
+              FontWeight->"Bold"], \(10\[Times]10\)], 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  ",  where ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(10\[Times]10\)]]],
+  " is the Hilbert matrix and  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["B",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontWeight->"Plain"], 
+        StyleBox[
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{"10", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "9", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["8",
+                  FontFamily->"Courier New",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox["...",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[" ",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "2", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "1"}], ")"}], 
+            StyleBox["T",
+              FontWeight->"Bold"]],
+          FontWeight->"Plain"]}]]],
+  ".  Use the trivial, partial scaled partial and total pivoting strategies. \
+"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 10;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A\  = 
+        Table[1\/\(i + j - 1\), {i, n}, {j, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(B\  = \ Table[{n + 1 - i}, {i, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(vars = 
+        Table["\<x\>"\_i, {i, 1, Length[A]}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<To illustrate round off error we use the numerical form.  \
+Note that\>"];\)\), "\[IndentingNewLine]", 
+    \(\(A = N[A];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica always uses 16 digits in its numerical \
+calculations.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<But we display only 6 digits to make it easier to read.\>"];\
+\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[A], MatrixForm[vars], "\< = \>", 
+        MatrixForm[B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Remember. Mathematica uses 16 digits in its calculations for \
+this example!\>"];\)\)}], "Input"],
+
+Cell["\<\
+Perform Gaussian elimination using the various pivoting strategies. \
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(X1\  = \ TrivialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X2\  = \ PartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(X3\  = \ ScaledPartialPivoting[A, B];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(X4\  = \ TotalPivoting[A, B];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Summary",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let us compare the \"true solution\" with the above approximations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X\_true = 
+        Inverse[Table[1\/\(i + j - 1\), {i, n}, {j, n}]] . 
+          B;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The true solution is  X = \>", 
+        MatrixForm[X\_true]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_1\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X1], 17], "\< = \>", 
+        MatrixForm[X\_true - X1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_2\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X2], 17], "\< = \>", 
+        MatrixForm[X\_true - X2]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_3\) = \>\"", 
+        MatrixForm[\(X\_true\) Z], "\< - \>", 
+        NumberForm[MatrixForm[X3], 17], "\< = \>", 
+        MatrixForm[X\_true - X3]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<X - \!\(X\&^\_4\) = \>\"", 
+        MatrixForm[X\_true], "\< - \>", 
+        NumberForm[MatrixForm[X4], 17], "\< = \>", 
+        MatrixForm[X\_true - X4]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The errors for the numerical approximations are\>", "\<\n\
+\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_1\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X1)\)] . \
+Flatten[\((X\_true - X1)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_2\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X2)\)] . \
+Flatten[\((X\_true - X2)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_3\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X3)\)] . \
+Flatten[\((X\_true - X3)\)]\)];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftDoubleBracketingBar]X - \!\(X\&^\_4\)\
+\[RightDoubleBracketingBar] = \>\"", \@\(Flatten[\((X\_true - X4)\)] . \
+Flatten[\((X\_true - X4)\)]\)];\)\)}], "Input"],
+
+Cell[TextData[{
+  "For this example, we see that the trivial pivoting solution  ",
+  Cell[BoxData[
+      StyleBox[\(X\&^\_1\),
+        FontWeight->"Bold"]]],
+  "  is slightly better than the others. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  We must proceed with caution when using a Hilbert matrix because the \
+linear system might be ill conditioned.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<The system we solved was  A X = B\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[Table[1\/\(i + j - 1\), {i, n}, {j, n}]], 
+        MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[B]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The 'true' solution is\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_true = N[X\_true];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\tThe ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the above system can be determined by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A] = \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Fact.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Given the linear system  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], "=", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox[".  If   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  StyleBox["  are input with machine precision then a bound for the error in \
+the computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  "  ",
+  StyleBox["is given by\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[LeftDoubleBracketingBar]", 
+            RowBox[{
+              StyleBox["X",
+                FontWeight->"Bold"], "-", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"]}], "\[RightDoubleBracketingBar]"}], "  ", 
+          "\[LessEqual]", "  ", 
+          RowBox[{
+            RowBox[{"\[LeftDoubleBracketingBar]", 
+              StyleBox[\(X\&^\),
+                FontWeight->"Bold"], "\[RightDoubleBracketingBar]"}], 
+            RowBox[{"Cond", "[", 
+              StyleBox["A",
+                FontWeight->"Bold"], "]"}]}]}], "\[Element]"}]]],
+  " ",
+  StyleBox["\n\nwhere ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \( \[Element] \)]],
+  " ",
+  StyleBox["is machine epsilon for the computer.  The computed solution  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  loses about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(log\_10\), 
+        RowBox[{"Cond", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}]}]]],
+  StyleBox["  decimal digits of accuracy relative to precision of input. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(error = 
+        VectorNorm[Flatten[X\_true], 2]*
+          MatrixConditionNumber[
+            N[A]]*$MachineEpsilon;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The condition number of the matrix A is\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Cond[A]  =  \>", \ 
+        MatrixConditionNumber[N[A]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<    \[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]  \
+=  \>", VectorNorm[Flatten[X\_true], 2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<      \[Epsilon]  =  \>", \ $MachineEpsilon\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \[LeftDoubleBracketingBar]X\
+\[RightDoubleBracketingBar]*Cond[A]*\[Epsilon]\>\""\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual] (\>\"", 
+        VectorNorm[Flatten[X\_true], 2], "\<)(\>", 
+        MatrixConditionNumber[
+          N[A]], "\<)(\>", $MachineEpsilon, "\<)\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< \[LeftDoubleBracketingBar]X - \!\(X\&^\)\
+\[RightDoubleBracketingBar] \[LessEqual]  \>\"", 
+        error\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A 'computed' solution might be of the form\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<X = \>", MatrixForm[Partition[vars, 1]], "\< = \>", 
+        MatrixForm[X*\(\[PlusMinus]error\)]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.750011]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " uses extended precision sixteen digit numbers, the solution",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox[\(X\&^\),
+        FontWeight->"Bold"]]],
+  StyleBox["  retains some of this accuracy.  ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Pivoting Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PivotingBib.html"], None},
+    
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Hilbert Matrix",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HilbertMatrixBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Ill-Conditioned Linear Systems",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/IllConditionBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1006, 625},
+WindowMargins->{{Automatic, 2}, {Automatic, 1}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 194, 5, 35, "Text"],
+Cell[1973, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3121, 101, 4028, 144, 296, "Text"],
+Cell[7152, 247, 1904, 58, 169, "Text"],
+Cell[9059, 307, 527, 18, 52, "Text"],
+Cell[9589, 327, 795, 25, 33, "Text"],
+Cell[10387, 354, 1658, 52, 204, "Text"],
+Cell[12048, 408, 795, 25, 33, "Text"],
+Cell[12846, 435, 1756, 60, 52, "Text"],
+Cell[14605, 497, 2836, 98, 52, "Text"],
+Cell[17444, 597, 795, 25, 33, "Text"],
+Cell[18242, 624, 528, 14, 71, "Text"],
+Cell[18773, 640, 464, 11, 52, "Text"],
+Cell[19240, 653, 976, 24, 109, "Text"],
+Cell[20219, 679, 906, 27, 52, "Text"],
+Cell[21128, 708, 561, 11, 90, "Text"],
+Cell[21692, 721, 1381, 41, 71, "Text"],
+Cell[23076, 764, 2851, 86, 137, "Text"],
+Cell[25930, 852, 1704, 49, 90, "Text"],
+Cell[27637, 903, 399, 13, 33, "Text"],
+Cell[28039, 918, 386, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[28450, 934, 689, 19, 33, "Text"],
+Cell[29142, 955, 299, 7, 33, "Text"],
+Cell[29444, 964, 1714, 29, 296, "Input"],
+Cell[31161, 995, 264, 6, 33, "Text"],
+Cell[31428, 1003, 1782, 35, 335, "Input"],
+Cell[33213, 1040, 424, 11, 33, "Text"],
+Cell[33640, 1053, 3622, 70, 435, "Input"],
+Cell[37265, 1125, 431, 11, 33, "Text"],
+Cell[37699, 1138, 9172, 228, 476, "Input"],
+Cell[46874, 1368, 471, 12, 52, "Text"],
+Cell[47348, 1382, 8723, 199, 537, "Input"],
+Cell[56074, 1583, 494, 9, 52, "Text"],
+Cell[56571, 1594, 12206, 283, 769, "Input"]
+}, Closed]],
+Cell[68792, 1880, 1193, 36, 70, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[70010, 1920, 101, 2, 33, "Text"],
+Cell[70114, 1924, 327, 14, 33, "Text",
+  Evaluatable->False],
+Cell[70444, 1940, 1126, 30, 211, "Input"],
+Cell[71573, 1972, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[71716, 1978, 69, 1, 30, "Input"],
+Cell[71788, 1981, 69, 1, 30, "Input"],
+Cell[71860, 1984, 75, 1, 30, "Input"],
+Cell[71938, 1987, 57, 1, 30, "Input"]
+}, Closed]],
+Cell[72010, 1991, 1026, 33, 86, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[73061, 2028, 101, 2, 33, "Text"],
+Cell[73165, 2032, 327, 14, 33, "Text",
+  Evaluatable->False],
+Cell[73495, 2048, 1177, 32, 249, "Input"],
+Cell[74675, 2082, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[74818, 2088, 69, 1, 30, "Input"],
+Cell[74890, 2091, 69, 1, 30, "Input"],
+Cell[74962, 2094, 75, 1, 30, "Input"],
+Cell[75040, 2097, 57, 1, 30, "Input"]
+}, Closed]],
+Cell[75112, 2101, 905, 25, 35, "Text"],
+Cell[76020, 2128, 2523, 74, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[78568, 2206, 101, 2, 33, "Text"],
+Cell[78672, 2210, 1314, 24, 306, "Input"],
+Cell[79989, 2236, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[80132, 2242, 78, 1, 30, "Input"],
+Cell[80213, 2245, 78, 1, 30, "Input"],
+Cell[80294, 2248, 84, 1, 30, "Input"],
+Cell[80381, 2251, 66, 1, 30, "Input"],
+Cell[80450, 2254, 183, 5, 33, "Text"],
+Cell[80636, 2261, 2033, 36, 281, "Input"],
+Cell[82672, 2299, 212, 6, 33, "Text"],
+Cell[82887, 2307, 228, 6, 33, "Text"],
+Cell[83118, 2315, 614, 11, 146, "Input"],
+Cell[83735, 2328, 299, 10, 33, "Text"],
+Cell[84037, 2340, 198, 4, 50, "Input"],
+Cell[84238, 2346, 2481, 78, 109, "Text"],
+Cell[86722, 2426, 1614, 31, 233, "Input"],
+Cell[88339, 2459, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[88825, 2478, 3590, 100, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[92440, 2582, 101, 2, 33, "Text"],
+Cell[92544, 2586, 1361, 25, 322, "Input"],
+Cell[93908, 2613, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[94051, 2619, 78, 1, 30, "Input"],
+Cell[94132, 2622, 78, 1, 30, "Input"],
+Cell[94213, 2625, 84, 1, 30, "Input"],
+Cell[94300, 2628, 66, 1, 30, "Input"],
+Cell[94369, 2631, 183, 5, 33, "Text"],
+Cell[94555, 2638, 2033, 36, 281, "Input"],
+Cell[96591, 2676, 212, 6, 33, "Text"],
+Cell[96806, 2684, 228, 6, 33, "Text"],
+Cell[97037, 2692, 614, 11, 146, "Input"],
+Cell[97654, 2705, 299, 10, 33, "Text"],
+Cell[97956, 2717, 198, 4, 50, "Input"],
+Cell[98157, 2723, 2481, 78, 109, "Text"],
+Cell[100641, 2803, 1614, 31, 233, "Input"],
+Cell[102258, 2836, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[102744, 2855, 3590, 100, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[106359, 2959, 101, 2, 33, "Text"],
+Cell[106463, 2963, 1206, 22, 286, "Input"],
+Cell[107672, 2987, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[107815, 2993, 78, 1, 30, "Input"],
+Cell[107896, 2996, 78, 1, 30, "Input"],
+Cell[107977, 2999, 84, 1, 30, "Input"],
+Cell[108064, 3002, 66, 1, 30, "Input"],
+Cell[108133, 3005, 183, 5, 33, "Text"],
+Cell[108319, 3012, 2033, 36, 281, "Input"],
+Cell[110355, 3050, 212, 6, 33, "Text"],
+Cell[110570, 3058, 228, 6, 33, "Text"],
+Cell[110801, 3066, 614, 11, 146, "Input"],
+Cell[111418, 3079, 299, 10, 33, "Text"],
+Cell[111720, 3091, 198, 4, 50, "Input"],
+Cell[111921, 3097, 2481, 78, 109, "Text"],
+Cell[114405, 3177, 1614, 31, 233, "Input"],
+Cell[116022, 3210, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[116508, 3229, 3840, 106, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[120373, 3339, 101, 2, 33, "Text"],
+Cell[120477, 3343, 1206, 22, 286, "Input"],
+Cell[121686, 3367, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[121829, 3373, 78, 1, 30, "Input"],
+Cell[121910, 3376, 78, 1, 30, "Input"],
+Cell[121991, 3379, 84, 1, 30, "Input"],
+Cell[122078, 3382, 66, 1, 30, "Input"],
+Cell[122147, 3385, 183, 5, 33, "Text"],
+Cell[122333, 3392, 2033, 36, 281, "Input"],
+Cell[124369, 3430, 210, 6, 33, "Text"],
+Cell[124582, 3438, 228, 6, 33, "Text"],
+Cell[124813, 3446, 614, 11, 146, "Input"],
+Cell[125430, 3459, 299, 10, 33, "Text"],
+Cell[125732, 3471, 198, 4, 50, "Input"],
+Cell[125933, 3477, 2481, 78, 109, "Text"],
+Cell[128417, 3557, 1614, 31, 233, "Input"],
+Cell[130034, 3590, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[130520, 3609, 3840, 106, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[134385, 3719, 101, 2, 33, "Text"],
+Cell[134489, 3723, 1314, 24, 306, "Input"],
+Cell[135806, 3749, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[135949, 3755, 78, 1, 30, "Input"],
+Cell[136030, 3758, 78, 1, 30, "Input"],
+Cell[136111, 3761, 84, 1, 30, "Input"],
+Cell[136198, 3764, 66, 1, 30, "Input"],
+Cell[136267, 3767, 183, 5, 33, "Text"],
+Cell[136453, 3774, 2033, 36, 281, "Input"],
+Cell[138489, 3812, 219, 6, 33, "Text"],
+Cell[138711, 3820, 228, 6, 33, "Text"],
+Cell[138942, 3828, 614, 11, 146, "Input"],
+Cell[139559, 3841, 299, 10, 33, "Text"],
+Cell[139861, 3853, 198, 4, 50, "Input"],
+Cell[140062, 3859, 2481, 78, 109, "Text"],
+Cell[142546, 3939, 1614, 31, 233, "Input"],
+Cell[144163, 3972, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[144649, 3991, 3844, 106, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[148518, 4101, 101, 2, 33, "Text"],
+Cell[148622, 4105, 1207, 22, 286, "Input"],
+Cell[149832, 4129, 140, 4, 33, "Text",
+  Evaluatable->False],
+Cell[149975, 4135, 78, 1, 30, "Input"],
+Cell[150056, 4138, 78, 1, 30, "Input"],
+Cell[150137, 4141, 84, 1, 30, "Input"],
+Cell[150224, 4144, 66, 1, 30, "Input"],
+Cell[150293, 4147, 183, 5, 33, "Text"],
+Cell[150479, 4154, 2033, 36, 281, "Input"],
+Cell[152515, 4192, 212, 6, 33, "Text"],
+Cell[152730, 4200, 228, 6, 33, "Text"],
+Cell[152961, 4208, 614, 11, 146, "Input"],
+Cell[153578, 4221, 299, 10, 33, "Text"],
+Cell[153880, 4233, 198, 4, 50, "Input"],
+Cell[154081, 4239, 2481, 78, 109, "Text"],
+Cell[156565, 4319, 1614, 31, 233, "Input"],
+Cell[158182, 4352, 471, 16, 33, "Text"]
+}, Closed]],
+Cell[158668, 4371, 158, 3, 32, "Text"],
+Cell[158829, 4376, 299, 8, 33, "Text"],
+Cell[159131, 4386, 304, 8, 33, "Text"],
+Cell[159438, 4396, 319, 8, 33, "Text"],
+Cell[159760, 4406, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

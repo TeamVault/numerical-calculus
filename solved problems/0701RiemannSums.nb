@@ -1,0 +1,2488 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     83960,       2269]*)
+(*NotebookOutlinePosition[     84626,       2292]*)
+(*  CellTagsIndexPosition[     84582,       2288]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Riemann Sums, Midpoint Rule and \
+Trapezoidal Rule",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Definition.  Definite Integral as a Limit of a ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Riemann Sum",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/RiemannSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[".",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["   ",
+    FontWeight->"Bold"],
+  "Let  ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  "  be continuous over the interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ",  \nand let  ",
+  Cell[BoxData[
+      \(P : \ a = \(\(x\_0 < x\_1 < x\_2 <  ... \) < x\_n = b\)\)]],
+  "  be a partition,  then the definite integral is given by\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox[
+            SubsuperscriptBox["\[Integral]", 
+              StyleBox["a",
+                FontSize->10], 
+              StyleBox["b",
+                FontSize->10]],
+            FontSize->18], \(f \((x)\)\ \[DifferentialD]x\)}], 
+        "=", \(lim\ \ \(\[Sum]\+\(k = 1\)\%n f[
+                t\_k] \[CapitalDelta]x\_k\)\)}]]],
+  ",  \n\nwhere  ",
+  Cell[BoxData[
+      \(t\_k \[Element] \([x\_\(k - 1\), x\_k]\)\)]],
+  "  and the ",
+  ButtonBox["mesh size",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MeshSize.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " of the partition goes to zero in the \"limit,\"  i.e . ",
+  Cell[BoxData[
+      RowBox[{\(\[CapitalDelta]x\_k\), "\[Rule]", 
+        RowBox[{
+          RowBox[{"0", "  ", 
+            StyleBox["as",
+              FontFamily->"Times New Roman"], "  ", "n"}], "\[Rule]", 
+          "\[Infinity]"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/RiemannSumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RiemannSumProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+RiemannSum/RiemannSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+RiemannSum/RiemannSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/RiemannSumProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RiemannSumProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The following two ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutines are used to illustrate this concept, which was introduced in \
+calculus."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["The Left Riemann sum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " uses ",
+  Cell[BoxData[
+      \(t\_k = x\_\(k - 1\)\)]],
+  " in the definition."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Left Riemann Sum).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(LeftRiemannSum[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, 
+            b = b0, \[CapitalDelta]X, k, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]X\_k_ = 
+            a + k\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]Return[\ \ \[Sum]\
+\+\(k = 1\)\%n f[X\_\(k - 1\)]\ \[CapitalDelta]X\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The Right Riemann sum",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " uses ",
+  Cell[BoxData[
+      \(t\_k = x\_k\)]],
+  " in the definition."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Right Riemann Sum).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(RightRiemannSum[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, 
+            b = b0, \[CapitalDelta]X, k, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]X\_k_ = 
+            a + k\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]Return[\ \ \[Sum]\
+\+\(k = 1\)\%n f[X\_k]\ \[CapitalDelta]X\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The m",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["idpoint rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " uses ",
+  Cell[BoxData[
+      \(t\_k = \(1\/2\) \((x\_\(k - 1\) + x\_k)\)\)]],
+  " in the definition."
+}], "Text"],
+
+Cell[TextData[{
+  "Improvements can be made in two directions, the ",
+  StyleBox["midpoint rule",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " evaluates the function at  ",
+  Cell[BoxData[
+      \(c\_k\)]],
+  ",  which is the midpoint of the subinterval ",
+  Cell[BoxData[
+      \(\([x\_k, x\_\(k + 1\)]\)\)]],
+  ", i.e. ",
+  Cell[BoxData[
+      \(t\_k = \(1\/2\) \((x\_\(k - 1\) + x\_k)\)\)]],
+  " in the Riemann sum.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Midpoint Rule).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(MidPointRule[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, b = b0, 
+            c, \[CapitalDelta]X, k, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]c\_k_ = 
+            a + \((k - 
+                    1\/2)\)\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]Return[\
+\ \ \[Sum]\+\(k = 1\)\%n f[
+                  c\_k]\ \[CapitalDelta]X\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/TrapezoidalRule.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " is the average of the left Riemann sum and the right Riemann sum."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Trapezoidal Rule).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(TrapezoidalRule[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, 
+            b = b0, \[CapitalDelta]X, k, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]X\_k_ = 
+            a + k\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]Return[\ \ \[Sum]\
+\+\(k = 1\)\%n\((\(f[X\_\(k - 1\)] + f[X\_k]\)\/2)\)\ \[CapitalDelta]X\ ];\ \
+];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  Use the left Riemann sum  with  n = 25, 50, and 100  to approximate the \
+value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(LeftSum = LeftRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        FilledPlot[f[Floor[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Blue, 
+          Fills \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Left Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", LeftSum\ , "\< = \>", N[LeftSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(LeftSum = LeftRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        FilledPlot[f[Floor[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Blue, 
+          Fills \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Left Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", LeftSum\ , "\< = \>", N[LeftSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(LeftSum = LeftRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        FilledPlot[f[Floor[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Blue, 
+          Fills \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr2, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Left Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", LeftSum\ , "\< = \>", N[LeftSum]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  Use the right Riemann sum  with  n = 25, 50, and 100  to approximate \
+the value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(RightSum = RightRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        FilledPlot[f[Ceiling[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] Yellow, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr3, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Right Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", RightSum\ , "\< = \>", 
+        N[RightSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(RightSum = RightRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        FilledPlot[f[Ceiling[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] Yellow, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr3, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Right Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", RightSum\ , "\< = \>", 
+        N[RightSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(RightSum = RightRiemannSum[a, b, n];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        FilledPlot[f[Ceiling[n\ x]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] Yellow, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr3, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Right Riemann Sum is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", RightSum\ , "\< = \>", 
+        N[RightSum]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  Use the midpoint rule with  n = 25, 50, and 100  to approximate the \
+value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(MidpointSum = MidPointRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        FilledPlot[f[Floor[n\ \((x + 1\/\(2  n\))\)]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] LightPink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr4, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Midpoint Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", MidpointSum\ , "\< = \>", 
+        N[MidpointSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(MidpointSum = MidPointRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        FilledPlot[f[Floor[n\ \((x + 1\/\(2  n\))\)]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] LightPink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr4, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Midpoint Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", MidpointSum\ , "\< = \>", 
+        N[MidpointSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(MidpointSum = MidPointRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        FilledPlot[f[Floor[n\ \((x + 1\/\(2  n\))\)]\/n], {x, 0, 1}, 
+          PlotRange \[Rule] {{0, 1.01}, {0, 
+                1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Red, 
+          Fills \[Rule] LightPink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr4, gr1, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Midpoint Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", MidpointSum\ , "\< = \>", 
+        N[MidpointSum]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  Use the trapezoidal rule with  n = 25, 50, and 100  to approximate the \
+value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, x];\)\ \), "\n", 
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 25;\)\ \), "\[IndentingNewLine]", 
+    \(\(TrapezoidalSum = TrapezoidalRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \(b - a\)\/n;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts\  = \ 
+        Table[{X\_k, f[X\_k]}, {k, 0, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[pts, PlotStyle \[Rule] {Red, PointSize[0.008]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, DisplayFunction \[Rule] Identity, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        FilledListPlot[pts, PlotRange \[Rule] {{0, 1.01}, {0, 1.01}}, 
+          PlotStyle \[Rule] {Red}, Fills \[Rule] Pink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr5, dots, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Trapezoidal Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", TrapezoidalSum\ , "\< = \>", 
+        N[TrapezoidalSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, x];\)\ \), "\n", 
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 50;\)\ \), "\[IndentingNewLine]", 
+    \(\(TrapezoidalSum = TrapezoidalRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \(b - a\)\/n;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts\  = \ 
+        Table[{X\_k, f[X\_k]}, {k, 0, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[pts, PlotStyle \[Rule] {Red, PointSize[0.008]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, DisplayFunction \[Rule] Identity, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        FilledListPlot[pts, PlotRange \[Rule] {{0, 1.01}, {0, 1.01}}, 
+          PlotStyle \[Rule] {Red}, Fills \[Rule] Pink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr5, dots, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Trapezoidal Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", TrapezoidalSum\ , "\< = \>", 
+        N[TrapezoidalSum]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, x];\)\ \), "\n", 
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(n = 100;\)\ \), "\[IndentingNewLine]", 
+    \(\(TrapezoidalSum = TrapezoidalRule[a, b, n]\ ;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \(b - a\)\/n;\)\ \), "\[IndentingNewLine]", 
+    \(\(pts\  = \ 
+        Table[{X\_k, f[X\_k]}, {k, 0, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[pts, PlotStyle \[Rule] {Red, PointSize[0.008]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = \ 
+        Plot[f[x], {x, 0, 1}, PlotPoints \[Rule] 201, 
+          PlotStyle \[Rule] Magenta, DisplayFunction \[Rule] Identity, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        FilledListPlot[pts, PlotRange \[Rule] {{0, 1.01}, {0, 1.01}}, 
+          PlotStyle \[Rule] {Red}, Fills \[Rule] Pink, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr5, dots, DisplayFunction \[Rule] $DisplayFunction, 
+        ImageSize \[Rule] {640, Automatic}];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The Trapezoidal Rule is:\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", TrapezoidalSum\ , "\< = \>", 
+        N[TrapezoidalSum]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  Compare the left Riemann sum, right Riemann sum, midpoint rule and \
+trapezoidal rule for n = 100 subintervals.  Compare them with the analytic \
+solution.  "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(AnalyticValue\  = \ \[Integral]\_a\%b f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<        Left  Riemann Sum = \>", LeftSum, "\<  = \>", 
+        N[LeftSum]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<        Right Riemann Sum = \>", RightSum, "\<  = \>", 
+        N[RightSum]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<`Average` of Riemann Sums = \>", \(LeftSum + RightSum\)\/2, \
+"\<  = \>", N[\(LeftSum + RightSum\)\/2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<            Midpoint Rule = \>", MidpointSum, "\< = \>", 
+        N[MidpointSum]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<         Trapezoidal Rule = \>", TrapezoidalSum, "\<  = \>", 
+        N[TrapezoidalSum]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<           Analytic Value =   \>", 
+        AnalyticValue, "\<  = \>", 
+        NumberForm[N[AnalyticValue], 17]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Observe that the Trapezoidal Rule is the `Average` of \
+Riemann Sums.\>"];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  \n",
+  StyleBox["6 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the left Riemann sum using n subintervals. \n",
+  StyleBox["6 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the left Riemann sum in part (a)."
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the left Riemann sum using n subintervals. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, X];\)\ \), "\n", 
+    \(\(a = 0;\)\ \), "\n", 
+    \(\(b = 1;\)\ \), "\n", 
+    \(\(\[CapitalDelta]X = \(b - a\)\/n;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \[CapitalDelta]X;\)\ \), "\n", 
+    \(\(f[x_] = x\^2;\)\ \), "\n", 
+    \(\(LeftSum = \[Sum]\+\(k = 1\)\%n f[
+              X\_\(k - 1\)]\ \[CapitalDelta]X;\)\ \), "\n", 
+    \(\(LeftLimit\  = \ 
+        Limit[LeftSum, n \[Rule] \[Infinity]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Fact2 = \*"\"\<\!\(\[Sum]\+\(k = 1\)\%n\)(k-1\!\(\()\^2\)\)\>\"" \
+\[Equal] \(\((n - 1)\)\ n \((2\ n - 1)\)\)\/6;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(x\_\(k - 1\)\) = \>\"", \ 
+        X\_\(k - 1\)];\)\ \), "\n", 
+    \(\(Print["\<The Left Riemann Sum is:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[X\_\(k - 1\)], \[CapitalDelta]X\ \ ];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[X\_\(k - 1\)] \[CapitalDelta]X\ \ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", 
+        1\/\(\(\ \)\(Denominator[f[X\_\(k - 1\)] \[CapitalDelta]X]\)\), "\<\
+\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        Numerator[
+          f[X\_\(k - 1\)] \[CapitalDelta]X]\ ];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Use Fact 2:  \>", Fact2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", "\<(\>", 
+        Together[Numerator[LeftSum]] n/6, "\<)/(\>"\ , \ 
+        Denominator[LeftSum] n/6, "\<)\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\
+\[CapitalDelta]x = \>\"", LeftSum\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the left Riemann sum in part (a)."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, 0, 1}, 
+        PlotRange \[Rule] {{0, 1.01}, {0, 
+              1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<].\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The limit of the Left Riemann Sums is:\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\[CapitalDelta]x = \>\"", \*"\
+\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<(\>", 
+        Together[Numerator[LeftSum]] n/6, "\<)/(\>"\ , \ 
+        Denominator[LeftSum] n/6, "\<)\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\[CapitalDelta]x = \>\"", \*"\
+\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", LeftSum\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\[CapitalDelta]x = \>\"", \*"\
+\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", 
+        ExpandNumerator[LeftSum]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\[CapitalDelta]x = \>\"", 
+        LeftLimit\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The area under the curve y = \>", f[x], "\< is  \>", 
+        LeftLimit];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  \n",
+  StyleBox["7 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the right Riemann sum using n subintervals. \n",
+  StyleBox["7 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the right Riemann sum in part (a)."
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the right Riemann sum using n subintervals. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, X];\)\ \), "\n", 
+    \(\(a = 0;\)\ \), "\n", 
+    \(\(b = 1;\)\ \), "\n", 
+    \(\(\[CapitalDelta]X = \(b - a\)\/n;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \[CapitalDelta]X;\)\ \), "\n", 
+    \(\(f[x_] = x\^2;\)\ \), "\n", 
+    \(\(RightSum = \[Sum]\+\(k = 1\)\%n f[
+              X\_k]\ \[CapitalDelta]X\ ;\)\ \), "\n", 
+    \(\(RightLimit\  = \ 
+        Limit[RightSum, 
+          n \[Rule] \[Infinity]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Fact2 = \*"\"\<\!\(\[Sum]\+\(k = 1\)\%n\)\!\(k\^2\)\>\"" \[Equal] \
+\(\((n)\)\ \((n + 1)\) \((2\ n + 1)\)\)\/6;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(x\_\(k - 1\)\) = \>\"", \ 
+        X\_\(k - 1\)];\)\ \), "\n", 
+    \(\(Print["\<The Right Riemann Sum is:\>"];\)\ \), "\[IndentingNewLine]", \
+
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[X\_k], \[CapitalDelta]X\ \ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[X\_k] \[CapitalDelta]X\ \ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", 
+        1\/\(\(\ \)\(Denominator[f[X\_k] \[CapitalDelta]X]\)\), \
+"\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        Numerator[
+          f[X\_k] \[CapitalDelta]X]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Use Fact 2:  \>", Fact2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", "\<(\>", 
+        Together[Numerator[RightSum]] n/6, "\<)/(\>"\ , \ 
+        Denominator[RightSum] n/6, "\<)\>"];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\
+\[CapitalDelta]x = \>\"", RightSum\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the right Riemann sum in part (a)."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, 0, 1}, 
+        PlotRange \[Rule] {{0, 1.01}, {0, 
+              1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<].\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The limit of the Right Riemann Sums is:\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_\(k - 1\)\)]\[CapitalDelta]x = \>\"", \*"\
+\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<(\>", 
+        Together[Numerator[RightSum]] n/6, "\<)/(\>"\ , \ 
+        Denominator[RightSum] n/6, "\<)\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", \
+\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", RightSum\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", \
+\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", 
+        ExpandNumerator[RightSum]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", 
+        RightLimit\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The area under the curve y = \>", f[x], "\< is  \>", 
+        RightLimit];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  \n",
+  StyleBox["8 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the midpoint rule sum using n subintervals. \n",
+  StyleBox["8 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the midpoint rule sum in part (a)."
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the ",
+  "midpoint rule",
+  " sum using n subintervals. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, x];\)\ \), "\n", 
+    \(\(a = 0;\)\ \), "\n", 
+    \(\(b = 1;\)\ \), "\n", 
+    \(\(\[CapitalDelta]X = \(b - a\)\/n;\)\ \), "\n", 
+    \(\(c\_k_ = a + \((k + 1\/2)\)\ \[CapitalDelta]X\ ;\)\ \), "\n", 
+    \(\(f[x_] = x\^2\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(MidpointSum = \[Sum]\+\(k = 0\)\%\(n - 1\)f[
+              c\_k]\ \[CapitalDelta]X\ ;\)\ \), "\n", 
+    \(\(MidpointLimit\  = \ 
+        Limit[MidpointSum, n \[Rule] \[Infinity]];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(t\_k\) = \>\"", \ c\_k];\)\ \), "\n", 
+    \(\(Print["\<The Midpoint Rule is:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(t\_k\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[c\_k], \[CapitalDelta]X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(t\_k\)]\
+\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=1\>"\)\%n, 
+        f[c\_k] \[CapitalDelta]X];\)\ \), "\n", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(t\_k\)]\
+\[CapitalDelta]x = \>\"", MidpointSum\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the midpoint rule sum in part (a)."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, 0, 1}, 
+        PlotRange \[Rule] {{0, 1.01}, {0, 
+              1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<].\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The limit of the Midpoint Rule is:\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", \
+\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", 
+        MidpointSum\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", \
+\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", 
+        ExpandNumerator[MidpointSum]\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", 
+        MidpointLimit\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The area under the curve y = \>", f[x], "\< is  \>", 
+        MidpointLimit];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = x\^2\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  \n",
+  StyleBox["9 (a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the trapezoidal rule sum using n subintervals. \n",
+  StyleBox["9 (b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the trapezoidal rule sum in part (a)."
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the formula for the ",
+  "trapezoidal",
+  " rule sum using n subintervals. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[a, b, k, n, X];\)\ \), "\n", 
+    \(\(a = 0;\)\ \), "\n", 
+    \(\(b = 1;\)\ \), "\n", 
+    \(\(\[CapitalDelta]X = \(b - a\)\/n;\)\ \), "\n", 
+    \(\(X\_k_ = a + k\ \[CapitalDelta]X\ ;\)\ \), "\n", 
+    \(\(f[x_] = x\^2;\)\ \), "\[IndentingNewLine]", 
+    \(\(TrapezoidalSum = \[Sum]\+\(k = 0\)\%\(n - 1\)\((\(f[X\_k] + f[X\_\(k \
++ 1\)]\)\/2)\)\ \[CapitalDelta]X;\)\ \), "\n", 
+    \(\(TrapezoidalLimit\  = \ 
+        Limit[TrapezoidalSum, n \[Rule] \[Infinity]];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<] using \>", 
+        n, \ "\< subintervals.\>"\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(x\_k\) = \>\"", \ X\_k];\)\ \), "\n", 
+    \(\(Print["\<The Trapezoidal Rule is:\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<(\!\(\(f[x\_k] + \
+f[x\_\(k + 1\)]\)\/2\))\[CapitalDelta]x = \>\"", \
+"\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \(f[X\_k] + f[X\_\(k + 1\)]\)\/2, \
+\[CapitalDelta]X\ \ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<(\!\(\(f[x\_k] + \
+f[x\_\(k + 1\)]\)\/2\))]\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=0\>"\)\
+\%\(n - 1\), \(\(f[X\_k] + 
+                f[X\_\(k + 1\)]\)\/2\) \[CapitalDelta]X\ \ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<(\!\(\(f[x\_k] + \
+f[x\_\(k + 1\)]\)\/2\))]\[CapitalDelta]x = \>\"", "\<\[Sum]\>"\+\("\<k=0\>"\)\
+\%\(n - 1\), 
+        Together[\(\(f[X\_k] + 
+                  f[X\_\(k + 1\)]\)\/2\) \[CapitalDelta]X]\ \ ];\)\ \), "\n", \
+
+    \(\(Print["\<\[Sum]\>"\+\("\<k=0\>"\)\%\(n - 1\), \*"\"\<(\!\(\(f[x\_k] + \
+f[x\_\(k + 1\)]\)\/2\))\[CapitalDelta]x = \>\"", 
+        TrapezoidalSum\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["(b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Find the limit of the trapezoidal rule sum in part (a)."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(FilledPlot[f[x], {x, 0, 1}, 
+        PlotRange \[Rule] {{0, 1.01}, {0, 
+              1.01}}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x], "\<  over [\>", a, "\<,\>", 
+        b, "\<].\>"\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The limit of the Trapezoidal Rule is:\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", \
+\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", 
+        TrapezoidalSum\ ];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(lim\+\(n \[Rule] \[Infinity]\)\) \>\"", "\<\[Sum]\>"\
+\+\("\<k=1\>"\)\%n, \*"\"\<f[\!\(x\_k\)]\[CapitalDelta]x = \>\"", 
+        MidpointLimit\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The area under the curve y = \>", f[x], "\< is  \>", 
+        TrapezoidalLimit];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for Riemann Sums.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[9\/2\ x]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Left Riemann Sum to approximate the value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 50, 60, 70, 
+          80, 100, 120};\)\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[j, {j, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 
+          20, \(j++\), \ \[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+              NumberForm[
+                LeftRiemannSum[a, b, 
+                  M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)], {8, 6}]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<LeftRiemannSum[a,b,m]\>"}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Left Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+LeftRiemann/LeftRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Left Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+LeftRiemann/LeftRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[9\/2\ x]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Right Riemann Sum to approximate the value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(b = 2.0; \ 
+    M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 50, 60, 70, 80, 
+        100, 120};\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[j, {j, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 
+          20, \(j++\), \ \[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+              NumberForm[
+                RightRiemannSum[a, b, 
+                  M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)], {8, 6}]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<RightRiemannSum[a,b,m]\>"}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Right Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+RightRiemann/RightRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Right Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+RightRiemann/RightRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "The following animations for the ",
+  ButtonBox["lower Riemann sums",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LowerSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " are included for illustration purposes."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(LowerRiemann[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, b = b0, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]X\_k_ = 
+            a + k\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]sum = 
+            0; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]Xv = 
+              Select[Xvals, 
+                X\_\(i - 1\) \[LessEqual] #1 \[LessEqual] 
+                    X\_i\  &]; \[IndentingNewLine]Ymin = \ 
+              Min[f[Xv]]; \ \[IndentingNewLine]sum = 
+              sum + Ymin\ \[CapitalDelta]X;\ \ ]; \ \
+\[IndentingNewLine]Return[\ \ sum\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[9\/2\ x]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Lower Riemann Sum to approximate the value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  This will be slow because many minimums need to be approximated. \nYou \
+can skip the calculation and look at the recorded results. Change ",
+  StyleBox["4",
+    FontFamily->"Courier New",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0, 0]],
+  " to ",
+  StyleBox["20",
+    FontFamily->"Courier New",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0, 0]],
+  " to get all of the table. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(f[x_] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(a = 0.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b = 2.0;\), 
+      " "}], "\[IndentingNewLine]", \(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 
+          24, 28, 32, 40, 50, 60, 70, 80, 100, 120};\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Xvals = Table[N[a + j \( b - a\)\/1200], {j, 0, 1200}];\), 
+      " "}], "\[IndentingNewLine]", \(tbl = 
+        Table[j, {j, 1, 
+            20}];\), "\[IndentingNewLine]", \(Print["\<\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          RowBox[{\(j = 1\), ",", 
+            RowBox[{"j", "\[LessEqual]", 
+              StyleBox["4",
+                FontColor->RGBColor[1, 0, 0]]}], ",", \(j++\), ",", " ", 
+            "\[IndentingNewLine]", \(tbl\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+                  NumberForm[
+                    LowerRiemann[a, b, 
+                      M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)], {8, 6}]};\)}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<LowerRiemann[a,b,m]\>"}}, TableSpacing \[Rule] {2, 1}]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+          Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+          Axes \[Rule] True, PlotStyle \[Rule] Magenta];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "\t\t",
+  Cell[BoxData[
+      StyleBox[
+        TagBox[GridBox[{
+              {"\<\"m sample points\"\>", "\<\"LowerRiemann[a,b,m]\"\>"},
+              {"1", 
+                TagBox[
+                  InterpretationBox["\<\"0.714411\"\>",
+                    .71441066719614321,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"2", 
+                TagBox[
+                  InterpretationBox["\<\"1.152795\"\>",
+                    1.1527945734058425,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"4", 
+                TagBox[
+                  InterpretationBox["\<\"1.192005\"\>",
+                    1.1920052914400046,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"6", 
+                TagBox[
+                  InterpretationBox["\<\"1.448477\"\>",
+                    1.4484770707408234,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"8", 
+                TagBox[
+                  InterpretationBox["\<\"1.601562\"\>",
+                    1.6015618319175127,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"10", 
+                TagBox[
+                  InterpretationBox["\<\"1.629124\"\>",
+                    1.6291240979360893,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"12", 
+                TagBox[
+                  InterpretationBox["\<\"1.660983\"\>",
+                    1.6609833575755364,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"14", 
+                TagBox[
+                  InterpretationBox["\<\"1.696402\"\>",
+                    1.6964019751528343,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"16", 
+                TagBox[
+                  InterpretationBox["\<\"1.726233\"\>",
+                    1.7262327872519143,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"20", 
+                TagBox[
+                  InterpretationBox["\<\"1.77785\"\>",
+                    1.7778497187934139,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"24", 
+                TagBox[
+                  InterpretationBox["\<\"1.817359\"\>",
+                    1.8173593902396175,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"28", 
+                TagBox[
+                  InterpretationBox["\<\"1.850113\"\>",
+                    1.8501133463953094,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"32", 
+                TagBox[
+                  InterpretationBox["\<\"1.872235\"\>",
+                    1.8722351658433305,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"40", 
+                TagBox[
+                  InterpretationBox["\<\"1.901302\"\>",
+                    1.9013022739840708,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"50", 
+                TagBox[
+                  InterpretationBox["\<\"1.924242\"\>",
+                    1.924242213853798,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"60", 
+                TagBox[
+                  InterpretationBox["\<\"1.940539\"\>",
+                    1.9405386214148073,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"70", 
+                TagBox[
+                  InterpretationBox["\<\"1.954392\"\>",
+                    1.9543917528591084,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"80", 
+                TagBox[
+                  InterpretationBox["\<\"1.959722\"\>",
+                    1.9597215236817103,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"100", 
+                TagBox[
+                  InterpretationBox["\<\"1.971264\"\>",
+                    1.9712636601325824,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]},
+              {"120", 
+                TagBox[
+                  InterpretationBox["\<\"1.978951\"\>",
+                    1.9789510615861701,
+                    AutoDelete->True],
+                  (NumberForm[ #, {8, 6}]&)]}
+              },
+            RowSpacings->2,
+            ColumnSpacings->1,
+            RowAlignments->Baseline,
+            ColumnAlignments->{Left}],
+          Function[ BoxForm`e$, 
+            TableForm[ 
+            BoxForm`e$, TableHeadings -> {None, {"m sample points", 
+              "LowerRiemann[a,b,m]"}}, TableSpacing -> {2, 1}]]],
+        FontWeight->"Bold"]]],
+  "\n"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Lower Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+LowerRiemann/LowerRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Lower Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+LowerRiemann/LowerRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "The following animations for the ",
+  ButtonBox["upper Riemann sums",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/UpperSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " are included for illustration purposes."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(UpperRiemann[a0_, b0_, 
+          n0_] := \[IndentingNewLine]Module[{a = a0, b = b0, n = n0, 
+            X}, \[IndentingNewLine]\[CapitalDelta]X = \(b - a\)\/n; \ \
+\[IndentingNewLine]X\_k_ = 
+            a + k\ \[CapitalDelta]X\ ; \ \[IndentingNewLine]sum = 
+            0; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] n, \(i++\), \[IndentingNewLine]Xv = 
+              Select[Xvals, 
+                X\_\(i - 1\) \[LessEqual] #1 \[LessEqual] 
+                    X\_i\  &]; \[IndentingNewLine]Ymax = \ 
+              Max[f[Xv]]; \ \[IndentingNewLine]sum = 
+              sum + Ymax\ \[CapitalDelta]X;\ \ ]; \ \
+\[IndentingNewLine]Return[\ \ sum\ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[9\/2\ x]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Upper Riemann Sum to approximate the value of the integral. "
+}], "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  This will be slow because many minimums need to be approximated. \nYou \
+can skip the calculation and look at the recorded results. Change ",
+  StyleBox["4",
+    FontFamily->"Courier New",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0, 0]],
+  " to ",
+  StyleBox["20",
+    FontFamily->"Courier New",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0, 0]],
+  " to get all of the table. "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(f[x_] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(a = 0.0;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(b = 2.0;\), 
+      " "}], "\[IndentingNewLine]", \(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 
+          24, 28, 32, 40, 50, 60, 70, 80, 100, 120};\), "\[IndentingNewLine]",
+   
+    RowBox[{\(Xvals = Table[N[a + j \( b - a\)\/1200], {j, 0, 1200}];\), 
+      " "}], "\[IndentingNewLine]", \(tbl = 
+        Table[j, {j, 1, 
+            20}];\), "\[IndentingNewLine]", \(Print["\<\>"];\), "\
+\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"For", "[", 
+          RowBox[{\(j = 1\), ",", 
+            RowBox[{"j", "\[LessEqual]", 
+              StyleBox["4",
+                FontColor->RGBColor[1, 0, 0]]}], ",", \(j++\), ",", " ", 
+            "\[IndentingNewLine]", \(tbl\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+                  NumberForm[
+                    UpperRiemann[a, b, 
+                      M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\)], {8, 6}]};\)}], " ", "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[
+          TableForm[tbl, 
+            TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<UpperRiemann[a,b,m]\>"}}, TableSpacing \[Rule] {2, 1}]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+          Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+          Axes \[Rule] True, PlotStyle \[Rule] Magenta];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  "\t\t",
+  Cell[BoxData[
+      TagBox[GridBox[{
+            {"\<\"m sample points\"\>", "\<\"UpperRiemann[a,b,m]\"\>"},
+            {"1", 
+              TagBox[
+                InterpretationBox["\<\"3.83949\"\>",
+                  3.8394904989794378,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"2", 
+              TagBox[
+                InterpretationBox["\<\"3.28371\"\>",
+                  3.2837098083758867,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"4", 
+              TagBox[
+                InterpretationBox["\<\"2.84307\"\>",
+                  2.843070419236152,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"6", 
+              TagBox[
+                InterpretationBox["\<\"2.508595\"\>",
+                  2.5085948996529588,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"8", 
+              TagBox[
+                InterpretationBox["\<\"2.427094\"\>",
+                  2.4270943958155868,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"10", 
+              TagBox[
+                InterpretationBox["\<\"2.365757\"\>",
+                  2.3657571120954777,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"12", 
+              TagBox[
+                InterpretationBox["\<\"2.304234\"\>",
+                  2.3042335389736981,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"14", 
+              TagBox[
+                InterpretationBox["\<\"2.27594\"\>",
+                  2.2759400677983934,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"16", 
+              TagBox[
+                InterpretationBox["\<\"2.240916\"\>",
+                  2.2409157364467349,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"20", 
+              TagBox[
+                InterpretationBox["\<\"2.204394\"\>",
+                  2.2043937087575318,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"24", 
+              TagBox[
+                InterpretationBox["\<\"2.176724\"\>",
+                  2.1767236324745873,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"28", 
+              TagBox[
+                InterpretationBox["\<\"2.152911\"\>",
+                  2.1529113329199485,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"32", 
+              TagBox[
+                InterpretationBox["\<\"2.137833\"\>",
+                  2.1378330451030689,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"40", 
+              TagBox[
+                InterpretationBox["\<\"2.115752\"\>",
+                  2.1157519958265159,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"50", 
+              TagBox[
+                InterpretationBox["\<\"2.096942\"\>",
+                  2.0969424323409829,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"60", 
+              TagBox[
+                InterpretationBox["\<\"2.084072\"\>",
+                  2.0840717245832834,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"70", 
+              TagBox[
+                InterpretationBox["\<\"2.072226\"\>",
+                  2.0722263684886593,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"80", 
+              TagBox[
+                InterpretationBox["\<\"2.067645\"\>",
+                  2.067645085406022,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"100", 
+              TagBox[
+                InterpretationBox["\<\"2.057659\"\>",
+                  2.0576585061804091,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]},
+            {"120", 
+              TagBox[
+                InterpretationBox["\<\"2.050951\"\>",
+                  2.0509508053654835,
+                  AutoDelete->True],
+                (NumberForm[ #, {8, 6}]&)]}
+            },
+          RowSpacings->2,
+          ColumnSpacings->1,
+          RowAlignments->Baseline,
+          ColumnAlignments->{Left}],
+        Function[ BoxForm`e$, 
+          TableForm[ 
+          BoxForm`e$, TableHeadings -> {None, {"m sample points", 
+            "UpperRiemann[a,b,m]"}}, TableSpacing -> {2, 1}]]]],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Upper Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+UpperRiemann/UpperRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Upper Riemann Sum",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+UpperRiemann/UpperRiemannaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Midpoint Rule to approximate the value of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 50, 60, 70, 
+          80, 100, 120};\)\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[j, {j, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 
+          20, \(j++\), \ \[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\), 
+              NumberForm[
+                MidPointRule[a, b, 
+                  M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)], {8, 6}]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<MidPointRule[a,b,m]\>"}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  AnimationDisplayTime->0.371293],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Midpoint/Midpointaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Midpoint Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/Midpoint/\
+Midpointaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 15.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the Trapezoidal Rule to approximate the value of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 15.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(M = {1, 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 50, 60, 70, 
+          80, 100, 120};\)\), "\[IndentingNewLine]", 
+    \(\(tbl = Table[j, {j, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(For[j = 1, 
+        j \[LessEqual] 
+          20, \(j++\), \ \[IndentingNewLine]\(tbl\_\(\(\[LeftDoubleBracket]\)\
+\(j\)\(\[RightDoubleBracket]\)\) = {M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\
+\[RightDoubleBracket]\)\) + 1, 
+              NumberForm[
+                TrapezoidalRule[a, b, 
+                  M\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\)], {8, 6}]};\)\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[tbl, 
+          TableHeadings \[Rule] {None, {"\<m sample points\>", \
+"\<TrapezoidalRule[a,b,m]\>"}}, 
+          TableSpacing \[Rule] {2, 1}]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, PlotStyle \[Rule] Magenta];\)\ \)}], "Input",
+  AnimationDisplayTime->0.371293],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidalaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidalaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+RiemannSum/RiemannSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+RiemannSum/RiemannSum.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Trapezoidal Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+Trapezoidal/Trapezoidal.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/RiemannSumBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Riemann Sums",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/RiemannSumBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 203, 5, 35, "Text"],
+Cell[1982, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3461, 112, 1732, 54, 132, "Text"],
+Cell[5196, 168, 614, 22, 33, "Text"],
+Cell[5813, 192, 732, 24, 33, "Text"],
+Cell[6548, 218, 744, 24, 33, "Text"],
+Cell[7295, 244, 593, 20, 33, "Text"],
+Cell[7891, 266, 193, 6, 33, "Text"],
+Cell[8087, 274, 206, 8, 33, "Text"],
+Cell[8296, 284, 146, 2, 33, "Text"],
+Cell[8445, 288, 412, 7, 147, "Input"],
+Cell[8860, 297, 199, 8, 33, "Text"],
+Cell[9062, 307, 147, 2, 33, "Text"],
+Cell[9212, 311, 405, 7, 147, "Input"],
+Cell[9620, 320, 299, 11, 36, "Text"],
+Cell[9922, 333, 451, 15, 55, "Text"],
+Cell[10376, 350, 143, 2, 33, "Text"],
+Cell[10522, 354, 458, 9, 160, "Input"],
+Cell[10983, 365, 397, 11, 33, "Text"],
+Cell[11383, 378, 146, 2, 33, "Text"],
+Cell[11532, 382, 437, 8, 147, "Input"],
+Cell[11972, 392, 347, 13, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[12344, 409, 101, 2, 33, "Text"],
+Cell[12448, 413, 1380, 25, 317, "Input"],
+Cell[13831, 440, 1380, 25, 317, "Input"],
+Cell[15214, 467, 1381, 25, 317, "Input"]
+}, Closed]],
+Cell[16610, 495, 348, 13, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[16983, 512, 101, 2, 33, "Text"],
+Cell[17087, 516, 1406, 26, 317, "Input"],
+Cell[18496, 544, 1406, 26, 317, "Input"],
+Cell[19905, 572, 1407, 26, 317, "Input"]
+}, Closed]],
+Cell[21327, 601, 343, 13, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[21695, 618, 101, 2, 33, "Text"],
+Cell[21799, 622, 1280, 24, 290, "Input"],
+Cell[23082, 648, 1280, 24, 290, "Input"],
+Cell[24365, 674, 1281, 24, 290, "Input"]
+}, Closed]],
+Cell[25661, 701, 346, 13, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[26032, 718, 101, 2, 33, "Text"],
+Cell[26136, 722, 1590, 29, 339, "Input"],
+Cell[27729, 753, 1590, 29, 339, "Input"],
+Cell[29322, 784, 1591, 29, 339, "Input"]
+}, Closed]],
+Cell[30928, 816, 407, 14, 49, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[31360, 834, 101, 2, 33, "Text"],
+Cell[31464, 838, 1143, 18, 217, "Input"]
+}, Closed]],
+Cell[32622, 859, 541, 20, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[33188, 883, 105, 2, 33, "Text"],
+Cell[33296, 887, 174, 5, 33, "Text"],
+Cell[33473, 894, 2228, 41, 538, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[35738, 940, 105, 2, 30, "Text"],
+Cell[35846, 944, 161, 5, 33, "Text"],
+Cell[36010, 951, 1699, 26, 282, "Input"]
+}, Closed]],
+Cell[37724, 980, 543, 20, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[38292, 1004, 105, 2, 33, "Text"],
+Cell[38400, 1008, 175, 5, 33, "Text"],
+Cell[38578, 1015, 2166, 41, 538, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[40781, 1061, 105, 2, 30, "Text"],
+Cell[40889, 1065, 162, 5, 33, "Text"],
+Cell[41054, 1072, 1682, 26, 282, "Input"]
+}, Closed]],
+Cell[42751, 1101, 543, 20, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[43319, 1125, 105, 2, 33, "Text"],
+Cell[43427, 1129, 187, 7, 33, "Text"],
+Cell[43617, 1138, 1296, 23, 381, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[44950, 1166, 105, 2, 30, "Text"],
+Cell[45058, 1170, 162, 5, 33, "Text"],
+Cell[45223, 1177, 1362, 22, 249, "Input"]
+}, Closed]],
+Cell[46600, 1202, 549, 20, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[47174, 1226, 105, 2, 33, "Text"],
+Cell[47282, 1230, 190, 7, 33, "Text"],
+Cell[47475, 1239, 1815, 33, 410, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[49327, 1277, 105, 2, 30, "Text"],
+Cell[49435, 1281, 165, 5, 33, "Text"],
+Cell[49603, 1288, 1117, 18, 216, "Input"]
+}, Closed]],
+Cell[50735, 1309, 298, 10, 32, "Text"],
+Cell[51036, 1321, 355, 12, 36, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[51416, 1337, 102, 2, 33, "Text"],
+Cell[51521, 1341, 1383, 27, 231, "Input"],
+Cell[52907, 1370, 785, 26, 33, "Text"]
+}, Closed]],
+Cell[53707, 1399, 356, 12, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[54088, 1415, 102, 2, 33, "Text"],
+Cell[54193, 1419, 1347, 27, 211, "Input"],
+Cell[55543, 1448, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[56349, 1477, 259, 7, 30, "Text"],
+Cell[56611, 1486, 715, 13, 227, "Input"],
+Cell[57329, 1501, 356, 12, 36, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[57710, 1517, 102, 2, 33, "Text"],
+Cell[57815, 1521, 537, 16, 53, "Text"],
+Cell[58355, 1539, 1761, 37, 265, "Input"],
+Cell[60119, 1578, 5104, 137, 484, "Text"],
+Cell[65226, 1717, 341, 6, 51, "Input"],
+Cell[65570, 1725, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[66376, 1754, 259, 7, 30, "Text"],
+Cell[66638, 1763, 715, 13, 227, "Input"],
+Cell[67356, 1778, 356, 12, 36, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[67737, 1794, 102, 2, 33, "Text"],
+Cell[67842, 1798, 537, 16, 53, "Text"],
+Cell[68382, 1816, 1761, 37, 265, "Input"],
+Cell[70146, 1855, 4817, 136, 465, "Text"],
+Cell[74966, 1993, 341, 6, 51, "Input"],
+Cell[75310, 2001, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[76116, 2030, 335, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[76476, 2045, 102, 2, 33, "Text"],
+Cell[76581, 2049, 1413, 28, 231, "Input"],
+Cell[77997, 2079, 767, 26, 33, "Text"]
+}, Closed]],
+Cell[78779, 2108, 338, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[79142, 2123, 102, 2, 33, "Text"],
+Cell[79247, 2127, 1423, 28, 231, "Input"],
+Cell[80673, 2157, 785, 26, 33, "Text"]
+}, Closed]],
+Cell[81473, 2186, 732, 24, 30, "Text"],
+Cell[82208, 2212, 744, 24, 33, "Text"],
+Cell[82955, 2238, 158, 3, 35, "Text"],
+Cell[83116, 2243, 544, 16, 33, "Text"],
+Cell[83663, 2261, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

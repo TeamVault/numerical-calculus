@@ -1,0 +1,5213 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    181386,       4885]*)
+(*NotebookOutlinePosition[    182070,       4909]*)
+(*  CellTagsIndexPosition[    182026,       4905]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Linear Programming - The Simplex Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background for Linear Programming",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\t",
+  ButtonBox["Linear programming",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/LinearProgramming.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " is an area of linear algebra in which the goal is to maximize or minimize \
+a linear function",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  StyleBox["  of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\)]],
+  "  variables ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]]],
+  " on a region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  whose boundary is defined by linear inequalities and equations.  In this \
+context, when we speak of a \"linear function of ",
+  Cell[BoxData[
+      \(n\)]],
+  " variables\" we mean that ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  StyleBox["  has the form \n\t\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", 
+          RowBox[{"(", 
+            StyleBox[\(X\&\[RightVector]\),
+              FontWeight->"Bold"], ")"}]}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{\(x\_1\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\)}], ")"}]}], " ", "=", 
+          " ", \(\[Sum]\+\(j = 1\)\%n\ \(c\_j\) x\_j\)}]}]]],
+  ". \n\nThe region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  is a convex polytope.  If all the vertices of  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  are known, then the maximum of  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  " will occur at one of these vertices.  \n\n\tThe solution can be \
+constructed using the simplex method and is attributed to ",
+  ButtonBox["George Dantzig",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Dantzig_\
+George.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (1914 - ) who was born in Portland, Oregon.  The simplex method starts at \
+the origin and follows a path along the edges of the polytope to the vertex \
+where the maximum occurs.  The history of the development of the simplex \
+method has been summarized in the article: ",
+  StyleBox[ButtonBox["An Interview with George B. Dantzig: The Father of \
+Linear Programming",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0746-8342%28198609%2917%3A4%3C292%\
+3AAIWGBD%3E2.0.CO%3B2-W"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  by Donald J. Albers; Constance Reid; in The College Mathematics Journal, \
+Vol. 17, No. 4. (Sep., 1986), pp. 292-314, Jstor.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Convex Polytope).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  In two dimensions a convex polytope is a region that is the intersection \
+of a finite set of half-planes (the general idea of a ",
+  ButtonBox["convex  polygon",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConvexPolygon.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ").  In three dimensions a convex polytope is solid region that is the \
+intersection of a finite set of half-spaces (the generalized idea of a ",
+  ButtonBox["convex polyhedron",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConvexPolyhedron.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ").  The generalization in ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " dimensions is called a ",
+  ButtonBox["polytope",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Polytope.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Two students Ann and Carl work ",
+  StyleBox["x",
+    FontFamily->"Courier New"],
+  " and ",
+  StyleBox["y",
+    FontFamily->"Courier New"],
+  " hours per week, respectively.  Together they can work at most 40 hours \
+per week.  According to the rules for part timers Ann can work at most 8 \
+hours more that Carl.  But Carl can work at most 6 hours more than Ann.  \
+There is an extra constraint  ",
+  Cell[BoxData[
+      \(18 \[LessEqual] 2  y + x\)]],
+  ".  Determine the region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  for these constraints.\n",
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  If Ann and Carl earn $15 and $17 per hour, respectively, then find their \
+maximum combined income per week. \n",
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  If Ann and Carl earn $17 and $15 per hour, respectively, then find their \
+maximum combined income per week. \n",
+  StyleBox["1 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  If Ann and Carl both earn $16 per hour, respectively, then find their \
+maximum combined income per week. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the linear function and the constraints. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = 15  x + 17  y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {80 \[LessEqual] 2  y + 4  x, 
+          y \[LessEqual] x + 4, x \[LessEqual] y + 8, x + y \[LessEqual] 40, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Graph the",
+  " region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  ",
+  "defined by the constraints."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 24}, \ {y, \ 0, \ 24}, 
+          PlotRange \[Rule] {{0, 25}, {0, 25}}, 
+          Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+          PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region R defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The solution will occur at one of the vertices of the convex polytope. We now \
+solve for these four points.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(eqns\_1 = {x \[Equal] y + 8, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_2 = {y \[Equal] x + 4, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_3 = {80 \[Equal] 2  y + 4  x, x \[Equal] y + 8};\)\ \), "\n", 
+    \(\(eqns\_4 = {80 \[Equal] 2  y + 4  x, y \[Equal] x + 4};\)\ \), "\n", 
+    \(For[i = 1, 
+      i \[LessEqual] 4, \(i++\), \[IndentingNewLine]solset\_i = 
+        Solve[eqns\_i, {x, y}]; \[IndentingNewLine]X\&\[RightVector]\_i = 
+        ReplaceAll[{x, 
+            y}, \(solset\_i\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]; \[IndentingNewLine]dots = 
+        Graphics[
+          Table[{Red, PointSize[0.03], Point[X\&\[RightVector]\_i]}, {i, 1, 
+              4}]]; \[IndentingNewLine]Print[
+        eqns\_i]; \ \[IndentingNewLine]Print["\<  \>", \*"\"\<\!\(X\&\
+\[RightVector]\)\>\""\_i, "\< = \>", X\&\[RightVector]\_i];]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[domain, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], 
+            Range[0, 25, 5]}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          4, \(i++\), \[IndentingNewLine]\(Print["\<f[\>", 
+            X\&\[RightVector]\_i, "\<] = \>", 
+            f[X\&\[RightVector]\_i]];\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum over the region R is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \
+Max[\>\"", {f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], 
+          f[X\&\[RightVector]\_4]}, "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \>\"", 
+        Max[f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], f[X\&\[RightVector]\_4]]];\)\)}], "Input"],
+
+Cell["Graph the level curves of the objective function.", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[50  i, {i, 1, 14}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, graph, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution point for the maximum is the furthest point in the region in \
+the direction of the gradient  ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". \nFind the gradient vector ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Fx[{x_, y_}] = \[PartialD]\_x\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Fy[{x_, y_}] = \[PartialD]\_y\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ {Fx[{x, y}], 
+          Fy[{x, y}]};\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ 
+        Together[gradF[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  f[\!\(X\&\[RightVector]\)] = \>\"", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_x\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_x\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fx[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_y\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_y\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fy[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", 
+        gradF[{x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`PlotField`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(grad = 
+        PlotVectorField[\ gradF[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          ScaleFactor \[Rule] 2.0, Axes \[Rule] True, 
+          ColorFunction \[Rule] Hue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_2]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[grad, domain, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<We have found the maximum over the region R.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", \ 
+        gradF[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", f[{x, y}], "\< = \>", \ 
+        f[X\&\[RightVector]\_2]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<It it the furthest point in the region in the direction \
+\[Del]f[\!\(X\&\[RightVector]\)]\>\""];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We are done! \n\nThe related problem of finding the minimum is solved in \
+a similar fashion.  All we need to do is check out the function values at the \
+vertices. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`PlotField`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(grad = 
+        PlotVectorField[\ gradF[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          ScaleFactor \[Rule] 2.0, Axes \[Rule] True, 
+          ColorFunction \[Rule] Hue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_3]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[grad, domain, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Suppose that we want to find the minimum over the region \
+R.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", \ 
+        gradF[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", f[{x, y}], "\< = \>", \ 
+        f[X\&\[RightVector]\_3]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The minimum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_3];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the linear function and the constraints. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = \(f[{x_, y_}] = 
+          17  x + 15  y\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {80 \[LessEqual] 2  y + 4  x, 
+          y \[LessEqual] x + 4, x \[LessEqual] y + 8, x + y \[LessEqual] 40, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Graph the",
+  " region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  ",
+  "defined by the constraints."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 24}, \ {y, \ 0, \ 24}, 
+          PlotRange \[Rule] {{0, 25}, {0, 25}}, 
+          Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+          PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region R defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The solution will occur at one of the vertices of the convex polytope. We now \
+solve for these four points.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(eqns\_1 = {x \[Equal] y + 8, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_2 = {y \[Equal] x + 4, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_3 = {80 \[Equal] 2  y + 4  x, x \[Equal] y + 8};\)\ \), "\n", 
+    \(\(eqns\_4 = {80 \[Equal] 2  y + 4  x, y \[Equal] x + 4};\)\ \), "\n", 
+    \(For[i = 1, 
+      i \[LessEqual] 4, \(i++\), \[IndentingNewLine]solset\_i = 
+        Solve[eqns\_i, {x, y}]; \[IndentingNewLine]X\&\[RightVector]\_i = 
+        ReplaceAll[{x, 
+            y}, \(solset\_i\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]; \[IndentingNewLine]dots = 
+        Graphics[
+          Table[{Red, PointSize[0.03], Point[X\&\[RightVector]\_i]}, {i, 1, 
+              4}]]; \[IndentingNewLine]Print[
+        eqns\_i]; \ \[IndentingNewLine]Print["\<  \>", \*"\"\<\!\(X\&\
+\[RightVector]\)\>\""\_i, "\< = \>", X\&\[RightVector]\_i];]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[domain, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], 
+            Range[0, 25, 5]}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          4, \(i++\), \[IndentingNewLine]\(Print["\<f[\>", 
+            X\&\[RightVector]\_i, "\<] = \>", 
+            f[X\&\[RightVector]\_i]];\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum over the region R is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \
+Max[\>\"", {f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], 
+          f[X\&\[RightVector]\_4]}, "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \>\"", 
+        Max[f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], f[X\&\[RightVector]\_4]]];\)\)}], "Input"],
+
+Cell["Graph the level curves of the objective function.", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[50  i, {i, 1, 14}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, graph, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution point for the maximum is the furthest point in the region in \
+the direction of the gradient  ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". \nFind the gradient vector ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Fx[{x_, y_}] = \[PartialD]\_x\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Fy[{x_, y_}] = \[PartialD]\_y\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ {Fx[{x, y}], 
+          Fy[{x, y}]};\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ 
+        Together[gradF[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  f[\!\(X\&\[RightVector]\)] = \>\"", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_x\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_x\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fx[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_y\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_y\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fy[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", 
+        gradF[{x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`PlotField`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(grad = 
+        PlotVectorField[\ gradF[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          ScaleFactor \[Rule] 2.0, Axes \[Rule] True, 
+          ColorFunction \[Rule] Hue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_1]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[grad, domain, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", \ 
+        gradF[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", f[{x, y}], "\< = \>", \ 
+        f[X\&\[RightVector]\_1]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<It it the furthest point in the region in the direction \
+\[Del]f[\!\(X\&\[RightVector]\)]\>\""];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Enter the linear function and the constraints. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_}] = \(f[{x_, y_}] = 
+          16  x + 16  y\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {80 \[LessEqual] 2  y + 4  x, 
+          y \[LessEqual] x + 4, x \[LessEqual] y + 8, x + y \[LessEqual] 40, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Graph the",
+  " region  ",
+  Cell[BoxData[
+      \(R\)]],
+  "  ",
+  "defined by the constraints."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 24}, \ {y, \ 0, \ 24}, 
+          PlotRange \[Rule] {{0, 25}, {0, 25}}, 
+          Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+          PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region R defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The solution will occur at one of the vertices of the convex polytope. We now \
+solve for these four points.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(eqns\_1 = {x \[Equal] y + 8, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_2 = {y \[Equal] x + 4, x + y \[Equal] 40};\)\ \), "\n", 
+    \(\(eqns\_3 = {80 \[Equal] 2  y + 4  x, x \[Equal] y + 8};\)\ \), "\n", 
+    \(\(eqns\_4 = {80 \[Equal] 2  y + 4  x, y \[Equal] x + 4};\)\ \), "\n", 
+    \(For[i = 1, 
+      i \[LessEqual] 4, \(i++\), \[IndentingNewLine]solset\_i = 
+        Solve[eqns\_i, {x, y}]; \[IndentingNewLine]X\&\[RightVector]\_i = 
+        ReplaceAll[{x, 
+            y}, \(solset\_i\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]; \[IndentingNewLine]dots = 
+        Graphics[
+          Table[{Red, PointSize[0.03], Point[X\&\[RightVector]\_i]}, {i, 1, 
+              4}]]; \[IndentingNewLine]Print[
+        eqns\_i]; \ \[IndentingNewLine]Print["\<  \>", \*"\"\<\!\(X\&\
+\[RightVector]\)\>\""\_i, "\< = \>", X\&\[RightVector]\_i];]\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Show[domain, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], 
+            Range[0, 25, 5]}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          4, \(i++\), \[IndentingNewLine]\(Print["\<f[\>", 
+            X\&\[RightVector]\_i, "\<] = \>", 
+            f[X\&\[RightVector]\_i]];\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum over the region R is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \
+Max[\>\"", {f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], 
+          f[X\&\[RightVector]\_4]}, "\<]\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Max[f[\!\(X\&\[RightVector]\_1\)],f[\!\(X\&\[RightVector]\
+\_2\)],f[\!\(X\&\[RightVector]\_3\)],f[\!\(X\&\[RightVector]\_4\)]] = \>\"", 
+        Max[f[X\&\[RightVector]\_1], f[X\&\[RightVector]\_2], 
+          f[X\&\[RightVector]\_3], f[X\&\[RightVector]\_4]]];\)\)}], "Input"],
+
+Cell["Graph the level curves of the objective function.", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[50  i, {i, 1, 14}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, graph, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<And\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The solution point for the maximum is the furthest point in the region in \
+the direction of the gradient  ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". \nFind the gradient vector ",
+  Cell[BoxData[
+      \(\[Del]f[X\&\[RightVector]]\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Fx[{x_, y_}] = \[PartialD]\_x\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Fy[{x_, y_}] = \[PartialD]\_y\ 
+          f[{x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ {Fx[{x, y}], 
+          Fy[{x, y}]};\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(gradF[{x_, y_}] = \ 
+        Together[gradF[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<  f[\!\(X\&\[RightVector]\)] = \>\"", 
+        f[{x, y}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_x\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_x\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fx[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[PartialD]\_y\)f[\!\(X\&\[RightVector]\)] = \>\"", \
+\*"\"\<\!\(\[PartialD]\_y\)(\>\"", \ f[{x, y}], "\<) = \>", 
+        Fy[{x, y}]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", 
+        gradF[{x, y}]\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`PlotField`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(grad = 
+        PlotVectorField[\ gradF[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          ScaleFactor \[Rule] 2.0, Axes \[Rule] True, 
+          ColorFunction \[Rule] Hue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 25}, {y, 0, 25}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_1]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[grad, domain, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<   \>", \*"\"\<\[Del]f[\!\(X\&\[RightVector]\)] = \>\"", \ 
+        gradF[{x, y}]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", f[{x, y}], "\< = \>", \ 
+        f[X\&\[RightVector]\_1]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The maximum occurs at \!\(X\&\[RightVector]\) = \>\"", 
+        X\&\[RightVector]\_2];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Both points are in the region and furthest in the \
+direction \[Del]f[\!\(X\&\[RightVector]\)]\>\""];\)\), "\[IndentingNewLine]", \
+
+    \(Print["\<For this case any point on the line joining them is also a \
+maximum.\>"]\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Standard Form of the Linear Programming Problem",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThe standard form of the linear programming problem is to \
+maximize  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"F", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  StyleBox["  of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\)]],
+  "  variables ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(X\&\[RightVector]\),
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_n\)}], ")"}]}]]],
+  ".  \n\t",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(1)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \tMaximize   \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"z", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"F", 
+            RowBox[{"(", 
+              RowBox[{\(x\_1\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\)}], ")"}]}], " ", "=", 
+          " ", \(\(\(c\_1\) x\_1 + \(c\_2\) x\_2 +  ... \) + \(c\_n\) 
+              x\_n\)}]}]]],
+  StyleBox["   \n\t\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"z", " ", "=", " ", 
+        RowBox[{
+          RowBox[{"F", 
+            RowBox[{"(", 
+              RowBox[{\(x\_1\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\)}], ")"}]}], " ", "=", 
+          "  ", \(\[Sum]\+\(j = 1\)\%n\( c\_j\) x\_j\)}]}]]],
+  " ",
+  StyleBox["    where     ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(0 \[LessEqual] c\_j\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(j = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  ",
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(2)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \tSubject to the m constraints  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) x\_2 +  ... \) + \(a\_\(i, 
+                n\)\) x\_n\ \  \[LessEqual] \ b\_i\)]],
+  "    ",
+  StyleBox[" where     ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(0 \[LessEqual] b\_i\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  ".  ",
+  StyleBox["\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(3)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \tWith the primary constraints   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(0 \[LessEqual] x\_j\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  " for   ",
+  Cell[BoxData[
+      RowBox[{\(j = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  ",
+  StyleBox["\n \n    The coefficients ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({c\_j}\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({a\_\(i, j\)}\)]],
+  StyleBox["  can be any real number.  It is often the case that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m > n\)]],
+  StyleBox[",  but the cases  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(m\)\(=\)\(n\)\(\ \ \)\)\)]],
+  StyleBox["or  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m < n\)]],
+  StyleBox["  can occur.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Setting up the Extended Simplex Tableau",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tFor computational purposes, we construct a tableau. The \
+first ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m\)]],
+  " rows consist of ",
+  StyleBox["the coefficients matrix ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\((a\_\(i, j\))\)\_\(m\[Times]n\)\)]],
+  ", the identity matrix ",
+  Cell[BoxData[
+      \(I\_\(m\[Times]m\)\)]],
+  " and the column vector ",
+  Cell[BoxData[
+      \(\((b\_i)\)\_\(m, 1\)\)]],
+  ". ",
+  StyleBox[" In the ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\((m + 1)\)\^st\)]],
+  StyleBox["-row of the tableau the first ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(n\)]],
+  " elements are the coefficients  ",
+  Cell[BoxData[
+      \({\(-c\_j\)}\)]],
+  ",  which are called the coefficients of the ",
+  StyleBox["augmented objective equation",
+    FontFamily->"Times New Roman"],
+  ".  The remainder of the bottom row is filled in with zeros.  An extra \
+column on the right will be used in the decision process in solving for the \
+variables. ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  "\n\t",
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{
+              StyleBox[GridBox[{
+                    {"Row", 
+                      StyleBox[\(\(\ \)\(Decision\ variables\)\),
+                        FontFamily->"Courier New"], 
+                      StyleBox[\(Slack\ variables\),
+                        FontFamily->"Courier New"], 
+                      StyleBox["Right",
+                        FontFamily->"Courier New",
+                        FontSize->12,
+                        FontSlant->"Plain",
+                        FontColor->GrayLevel[0],
+                        FontVariations->{"Underline"->False,
+                        "StrikeThrough"->False}]},
+                    {" ", 
+                      RowBox[{"   ", GridBox[{
+                            {\(x\_1\), \(\(\ \ \ \ \)\(x\_2\)\), \(\(\ \ \ \)\
+\(x\_3\)\), "...", \(\(\ \ \ \ \)\(x\_n\)\)}
+                            }]}], GridBox[{
+                          {\(x\_\(n + 1\)\), \(x\_\(n + 2\)\), \(x\_\(n + 
+                                  3\)\), "...", \(x\_\(n + m\)\)}
+                          }], 
+                      StyleBox["Side",
+                        FontFamily->"Courier New",
+                        FontSize->12,
+                        FontSlant->"Plain",
+                        FontColor->GrayLevel[0],
+                        FontVariations->{"Underline"->False,
+                        "StrikeThrough"->False}]},
+                    {GridBox[{
+                          {"1"},
+                          {"2"},
+                          {"3"},
+                          {"\[VerticalEllipsis]"},
+                          {"m"},
+                          {\(m + 1\)}
+                          }], GridBox[{
+                          {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), \(a\_\(1, 3\)\), 
+                            "...", \(a\_\(1, n\)\)},
+                          {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), 
+                            "...", \(a\_\(2, n\)\)},
+                          {\(a\_\(3, 1\)\), \(a\_\(3, 2\)\), \(a\_\(3, 3\)\), 
+                            "...", \(a\_\(3, n\)\)},
+                          {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                            "\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                            "\[VerticalEllipsis]"},
+                          {\(a\_\(m, 1\)\), \(a\_\(m, 2\)\), \(a\_\(m, 3\)\), 
+                            "...", \(a\_\(m, n\)\)},
+                          {\(-\ c\_1\), \(-\ c\_2\), \(-\ c\_3\), 
+                            "...", \(-\ c\_n\)}
+                          }], GridBox[{
+                          {\(\(1\)\(\ \ \ \ \ \)\), \(\(0\)\(\ \ \ \ \ \)\), \
+\(\(0\)\(\ \ \ \ \ \)\), "...", \(\(0\)\(\ \ \ \ \ \)\)},
+                          {\(\(0\)\(\ \ \ \ \ \)\), \(\(1\)\(\ \ \ \ \ \)\), \
+\(\(0\)\(\ \ \ \ \ \)\), "...", \(\(0\)\(\ \ \ \ \ \)\)},
+                          {\(\(0\)\(\ \ \ \ \ \)\), \(\(0\)\(\ \ \ \ \ \)\), \
+\(\(1\)\(\ \ \ \ \ \)\), "...", \(\(0\)\(\ \ \ \ \ \)\)},
+                          {\(\(\[VerticalEllipsis]\)\(\ \ \ \ \ \)\), \(\(\
+\[VerticalEllipsis]\)\(\ \ \ \ \ \)\), \(\(\[VerticalEllipsis]\)\(\ \ \ \ \ \
+\)\), "...", \(\(\[VerticalEllipsis]\)\(\ \ \ \ \ \)\)},
+                          {\(\(0\)\(\ \ \ \ \ \)\), \(\(0\)\(\ \ \ \ \ \)\), \
+\(\(0\)\(\ \ \ \ \ \)\), "...", \(\(1\)\(\ \ \ \ \ \)\)},
+                          {\(\(0\)\(\ \ \ \ \ \)\), \(\(0\)\(\ \ \ \ \ \)\), \
+\(\(0\)\(\ \ \ \ \ \)\), "...", \(\(0\)\(\ \ \ \ \ \)\)}
+                          }], GridBox[{
+                          {\(b\_1\)},
+                          {\(b\_2\)},
+                          {\(b\_3\)},
+                          {"\[VerticalEllipsis]"},
+                          {\(b\_m\)},
+                          {"0"}
+                          }]}
+                    },
+                  ColumnLines->True],
+                FontFamily->"Courier New",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   "}], GridBox[{
+                {\(Ratio' s\)},
+                {"Column"},
+                {GridBox[{
+                      {
+                        StyleBox[\(b\_1\),
+                          FontColor->GrayLevel[1]]},
+                      {
+                        StyleBox[\(b\_2\),
+                          FontColor->GrayLevel[1]]},
+                      {
+                        StyleBox[\(b\_3\),
+                          FontColor->GrayLevel[1]]},
+                      {
+                        StyleBox["\[VerticalEllipsis]",
+                          FontColor->GrayLevel[1]]},
+                      {
+                        StyleBox[\(b\_n\),
+                          FontColor->GrayLevel[1]]},
+                      {
+                        StyleBox["0",
+                          FontColor->GrayLevel[1]]}
+                      }]}
+                },
+              ColumnLines->True]}
+          },
+        ColumnLines->True]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tThe non-negative variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\)]],
+  StyleBox[" is called a slack variable and is the amount that the linear \
+combination  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) x\_2 +  ... \) + \(a\_\(i, 
+              n\)\) x\_n\)]],
+  StyleBox["  falls short of the bound  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\)]],
+  StyleBox[".  It's purpose is to change an inequality to an equation, i.e. \
+we have \n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) x\_2 +  ... \) + \(a\_\(i, 
+                n\)\) x\_n + x\_\(n + i\)\ \  = \ b\_i\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell["\<\
+\tThe goal of the simplex method is to exchange some of the columns of 1's \
+and 0's of the slack variables into columns of 1's and 0's of the decision \
+variables.  \
+\>", "Text"],
+
+Cell["A explanation of this tableau is given in the link below. ", "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Simplex Method Details",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LinearProgrammingProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Simplex Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find the minimum of",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"F", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["over the convex polytope ",
+    FontFamily->"New Century Schlbk"],
+  " ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(i)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["    Use non-negative slack variables  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(x\_\(n + 1\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_\(n + 2\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(x\_\(n + m\)\)}]]],
+  StyleBox["  and form a system of equations and the initial tableau. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(ii)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["   Determine the exchange variable, the pivot row and pivotal \
+element.  \n       The exchange variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_e\)]],
+  StyleBox[" is chosen in the pivot column ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(e\)]],
+  StyleBox[" where  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_e\)\)]],
+  StyleBox["  is the smallest negative coefficient",
+    FontFamily->"Times New Roman"],
+  ".  \n       ",
+  StyleBox["The pivot row  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox["  is chosen where the minimum ratio ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  StyleBox["occurs ",
+    FontFamily->"Times New Roman"],
+  "for all rows with",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(i, e\) > 0\)]],
+  StyleBox[".  \n       The pivot element is ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(a\_\(p, e\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(iii)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  Perform row operations to zero out elements in the pivotal \
+column ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(e\)]],
+  StyleBox[" above and below the pivot row ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["(iv)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  Repeat steps ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" and ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(iii)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" until there are no negative coefficients",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["in the bottom row.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["Linear Programming",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LinearProgrammingProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutines (Simplex Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find the minimum of",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"F", 
+        RowBox[{"(", 
+          StyleBox[\(X\&\[RightVector]\),
+            FontWeight->"Bold"], ")"}]}]]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["over the convex polytope ",
+    FontFamily->"New Century Schlbk"],
+  " ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  \nActivate the following four cells. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(ExchangeVar[e0_] := 
+        Module[{}, \ \ M\_\(\(\[LeftDoubleBracket]\)\(m + 1, n + m + 2\)\(\
+\[RightDoubleBracket]\)\) = "\<\>"; \[IndentingNewLine]e = 
+            e0; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              m, \(i++\), \ \
+\[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 2\)\(\
+\[RightDoubleBracket]\)\)\  = \[Infinity]; \ \[IndentingNewLine]If[\ 
+              M\_\(\(\[LeftDoubleBracket]\)\(i, \
+e\)\(\[RightDoubleBracket]\)\) > 
+                0, \ \(M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 2\)\(\
+\[RightDoubleBracket]\)\)\  = 
+                  N[M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 1\)\(\
+\[RightDoubleBracket]\)\)\/M\_\(\(\[LeftDoubleBracket]\)\(i, e\)\(\
+\[RightDoubleBracket]\)\)];\)\ ];\ ]; \ \ \[IndentingNewLine]ps = 
+            Flatten[Position[
+                Take[\ M\_\(\(\[LeftDoubleBracket]\)\(All, n + m + 2\)\(\
+\[RightDoubleBracket]\)\), m], 
+                Min[Take[\ 
+                    M\_\(\(\[LeftDoubleBracket]\)\(All, n + m + 2\)\(\
+\[RightDoubleBracket]\)\), m]]]]; \ \[IndentingNewLine]p = 
+            Min[ps]; \ \[IndentingNewLine]For[k = 1, 
+            k \[LessEqual] Length[ps], \(k++\), \[IndentingNewLine]If[
+              M\_\(\(\[LeftDoubleBracket]\)\(ps\_\(\(\[LeftDoubleBracket]\)\(\
+k\)\(\[RightDoubleBracket]\)\), e\)\(\[RightDoubleBracket]\)\) > 
+                M\_\(\(\[LeftDoubleBracket]\)\(p, \
+e\)\(\[RightDoubleBracket]\)\), 
+              p = ps\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)]]; \ \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              m, \(i++\), \ \(If[\ 
+                M\_\(\(\[LeftDoubleBracket]\)\(i, \
+e\)\(\[RightDoubleBracket]\)\) < 
+                  0, \ \(M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 2\)\(\
+\[RightDoubleBracket]\)\)\  = 
+                    N[M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 1\)\(\
+\[RightDoubleBracket]\)\)\/M\_\(\(\[LeftDoubleBracket]\)\(i, e\)\(\
+\[RightDoubleBracket]\)\)];\)\ ];\)]; \ \ \[IndentingNewLine]W = 
+            Table[{"\<\>"}, {m + 
+                  1}]; \ \ W\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\) = {"\<\[LongLeftArrow]\>"}; \[IndentingNewLine]W = 
+            Table[{{"\<\>"}, {"\<\>"}}, {m + 
+                  1}]; \ \ W\_\(\(\[LeftDoubleBracket]\)\(p, 1\)\(\
+\[RightDoubleBracket]\)\) = {"\<\[LongLeftArrow]\>"}; \[IndentingNewLine]W = 
+            Table[{"\<\>", "\<\>"}, {m + 
+                  1}]; \ \ W\_\(\(\[LeftDoubleBracket]\)\(p, 1\)\(\
+\[RightDoubleBracket]\)\) = "\<\[LongLeftArrow]\>"; \[IndentingNewLine]Z = 
+            Table["\< \>", {i, 1, 3}, {j, 1, n + m + 4}]; \ 
+          Z\_\(\(\[LeftDoubleBracket]\)\(1, e\)\(\[RightDoubleBracket]\)\) = \
+"\< \[UpArrow]\>"; \ 
+          Z\_\(\(\[LeftDoubleBracket]\)\(2, e\)\(\[RightDoubleBracket]\)\) = \
+"\<exchange\>"; \ 
+          Z\_\(\(\[LeftDoubleBracket]\)\(3, e\)\(\[RightDoubleBracket]\)\) = \
+"\<x\>"\_e; \[IndentingNewLine]\ \ Z\_\(\(\[LeftDoubleBracket]\)\(1, n + m + \
+3\)\(\[RightDoubleBracket]\)\) = "\<pivot\>"; \ \ \ Z\_\(\(\
+\[LeftDoubleBracket]\)\(2, n + m + 3\)\(\[RightDoubleBracket]\)\) = \
+"\<row\>"; \ 
+          Z\_\(\(\[LeftDoubleBracket]\)\(3, n + m + \
+3\)\(\[RightDoubleBracket]\)\) = p; \[IndentingNewLine]Print[
+            TableForm[AppendColumns[AppendRows[M, W], Z], 
+              TableHeadings \[Rule] {None, 
+                  Append[Append[
+                      Table["\<x\>"\_i, {i, 1, 
+                          n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\ \ ];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(PivotRow[p_] := 
+        Module[{}, \[IndentingNewLine]M\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\) = 
+            M\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\/M\_\
+\(\(\[LeftDoubleBracket]\)\(p, e\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              m + 1, \(i++\), \(If[\ i \[NotEqual] p, \ 
+                M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) \
+= \ M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) - \(M\_\(\(\
+\[LeftDoubleBracket]\)\(i, e\)\(\[RightDoubleBracket]\)\)\) 
+                      M\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\ \ ];\)\ ]; \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] m + 1, \(i++\), \ 
+            M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 2\)\(\
+\[RightDoubleBracket]\)\)\  = "\<\>"]; \ \[IndentingNewLine]Print[
+            TableForm[M, 
+              TableHeadings \[Rule] {None, 
+                  Append[Append[
+                      Table["\<x\>"\_i, {i, 1, 
+                          n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\ ];\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(SimplexMethod := 
+        Module[{}, \[IndentingNewLine]e = \(Position[Take[M\_\(\(\
+\[LeftDoubleBracket]\)\(m + 1\)\(\[RightDoubleBracket]\)\), m + n], \
+Min[Take[M\_\(\(\[LeftDoubleBracket]\)\(m + 1\)\(\[RightDoubleBracket]\)\), m \
++ n]]]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]j = 1; \ \[IndentingNewLine]While[\ 
+            And[\ M\_\(\(\[LeftDoubleBracket]\)\(m + 1, e\)\(\
+\[RightDoubleBracket]\)\) < 0, \ 
+              j \[LessEqual] 
+                m + n\ ], \[IndentingNewLine]Print["\<\n\>", "\<Iteration \
+\>", j]; \ \[IndentingNewLine]ExchangeVar[
+              e]; \ \ Print["\<\>"]; \ \[IndentingNewLine]PivotRow[
+              p]; \ \ Print["\<\>"]; \ \[IndentingNewLine]e = \
+\(Position[Take[M\_\(\(\[LeftDoubleBracket]\)\(m + 1\)\(\[RightDoubleBracket]\
+\)\), m + n], Min[Take[M\_\(\(\[LeftDoubleBracket]\)\(m + 1\)\(\
+\[RightDoubleBracket]\)\), m + n]]]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]j = 
+              j + 1;\ ]; \ \ \[IndentingNewLine]Print["\<\n\>", "\<Conclusion\
+\>"]; \[IndentingNewLine]For[i = 1, i \[LessEqual] m + 1, \(i++\), \ 
+            M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 2\)\(\
+\[RightDoubleBracket]\)\)\  = "\<\>"]; \ 
+          M\_\(\(\[LeftDoubleBracket]\)\(m, n + m + \
+2\)\(\[RightDoubleBracket]\)\) = "\<done\>"; \ 
+          M\_\(\(\[LeftDoubleBracket]\)\(m + 1, n + m + 2\)\(\
+\[RightDoubleBracket]\)\) = "\<\[LongLeftArrow]\>"; \[IndentingNewLine]Print[
+            TableForm[M, 
+              TableHeadings \[Rule] {None, 
+                  Append[Append[
+                      Table["\<x\>"\_i, {i, 1, 
+                          n + m}], \*"\"\<\!\(b\_i\)\>\""], "\<\>"]}]];\ ];\)\
+\)], "Input"],
+
+Cell[BoxData[
+    \(\(SetUpTableau\  := \ 
+        Module[{}, \[IndentingNewLine]{m, n} = 
+            Dimensions[M] - {1, 1}; \ \ \[IndentingNewLine]M1 = 
+            TakeColumns[M, n]; \ \[IndentingNewLine]M2 = 
+            TakeColumns[M, {n + 1}]; \ \[IndentingNewLine]T = 
+            Table[KroneckerDelta[i, j], {i, m + 1}, {j, 
+                m}]; \ \ \[IndentingNewLine]M = 
+            AppendRows[AppendRows[M1, T], M2]; \ \[IndentingNewLine]M = 
+            AppendRows[M, Table[{0}, {m + 1}]]; \[IndentingNewLine]Print[
+            TableForm[M, 
+              TableHeadings \[Rule] {None, 
+                  Append[Append[
+                      Table["\<x\>"\_i, {i, 1, 
+                          n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]]; \ \[IndentingNewLine]V\&\
+\[RightVector]\  = \ 
+            Table[x\_i, {i, 1, 
+                n}]; \ \[IndentingNewLine]S\&\[RightVector]\  = \ 
+            Table[x\_i, {i, n + 1, n + m}]; \ \[IndentingNewLine]Print[
+            V\&\[RightVector], "\<  are the non-basic variables.\>"]; \
+\[IndentingNewLine]Print[
+            S\&\[RightVector]\ , "\<  are the basic variables.\>"]; \
+\[IndentingNewLine]Print["\<The objective function is\>"]; \ \ \
+\[IndentingNewLine]Print["\<f[\>", 
+            V\&\[RightVector], "\<] = \>", \(-\(\[Sum]\+\(i = 1\)\%n\ \(M\_\(\
+\(\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+                  x\_i\)\)]; \[IndentingNewLine]Print["\<The constraints \
+are\>"]; \ \ \[IndentingNewLine]For[i = 1, 
+            i \[LessEqual] 
+              m, \(i++\), \[IndentingNewLine]\(Print[\ 
+                Take[M\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), n] . V\&\[RightVector], "\<  \[LessEqual]  \>", 
+                M\_\(\(\[LeftDoubleBracket]\)\(i, n + m + 1\)\(\
+\[RightDoubleBracket]\)\)];\)\ ];\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 1]],
+  "  The above subroutines are for pedagogical purposes to illustrate the \
+simplex method.  They will not work for certain cases when  ",
+  Cell[BoxData[
+      \(b\_i \[LessEqual] 0\)]],
+  ",  and in cases where more than one coefficient   ",
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  "  is set equal to zero in one step of the iteration.   For complicated \
+problems one of the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutines:  ",
+  StyleBox["ConstrainedMin",
+    FontFamily->"Courier New"],
+  ", ",
+  StyleBox["ConstrainedMax",
+    FontFamily->"Courier New"],
+  ", or ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  "  should be used. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the region ",
+  Cell[BoxData[
+      \(R\)]],
+  " in the plane defined by the inequalities:  \n\n\t\t",
+  Cell[BoxData[{
+      \(\ \ \ 2  x + y\  \[LessEqual] \ 30\), "\[IndentingNewLine]", 
+      \(\ \ \ x + 4  y\  \[LessEqual] \ 64\), "\[IndentingNewLine]", 
+      \(5  x + 6  y\  \[LessEqual] \ 110\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ x\  \[GreaterEqual] \ 0\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ y\  \[GreaterEqual] \ 0\)}]],
+  "   \n\n",
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], "]"}], 
+        "=", \(10  x + 20  y\)}]]],
+  "   over the region ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  \n",
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], "]"}], 
+        "=", \(10  x + 10  y\)}]]],
+  "   over the region ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Graph the domain defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {2  x + y \[LessEqual] 30, 
+          x + 4  y \[LessEqual] 64, 5  x + 6  y \[LessEqual] 110, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(O\&\[RightVector]\  = \ {0, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_1\  = \ {0, 16};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2\  = \ {4, 15};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3\  = \ {10, 10};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_4\  = \ {15, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_2]}, {Red, PointSize[0.03], 
+              Point[X\&\[RightVector]\_3]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}}];\)\), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 16.5}, \ {y, \ 0, \ 16.5}, 
+          PlotRange \[Rule] {{0, 16.5}, {0, 16.5}}, PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ , 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, dots, Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 10  x + 20  y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {2  x + y \[LessEqual] 30, 
+          x + 4  y \[LessEqual] 64, 5  x + 6  y \[LessEqual] 110, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y}], 
+          constraints[x, y], {x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pt = 
+        ReplaceAll[{x, y}, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-10\), \(-20\)}\), ",", 
+          RowBox[{"-", 
+            RowBox[{"(", GridBox[{
+                  {"2", "1"},
+                  {"1", "4"},
+                  {"5", "6"}
+                  }], ")"}]}], ",", \(-{30, 64, 110}\)}], "]"}], 
+      " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {"2", "1", "30"},
+                  {"1", "4", "64"},
+                  {"5", "6", "110"},
+                  {\(-10\), \(-20\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\)], "Input"],
+
+Cell["\<\
+The first step in the simplex method is to determine an exchange variable.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[M, 
+          TableHeadings \[Rule] {None, 
+              Append[Append[
+                  Table["\<x\>"\_i, {i, 1, 
+                      n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The first exchange variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_e = x\_2\)]],
+  StyleBox[" is chosen since the current coefficient  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_2\) = \(-20\)\)]],
+  StyleBox["  is negative and is smaller any of the other coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  ".  \nEliminate the exchange variable  ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  "  and use  ",
+  Cell[BoxData[
+      \(e = 2\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(ExchangeVar[2];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["To determine the pivot row we need to consider the ratios  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          RowBox[{\(b\_i\/a\_\(i, 2\)\), "  ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["all",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["rows",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(a\_\(i, 2\)\)}], ">", "0"}], 
+        "}"}]]],
+  ".  ",
+  StyleBox["The pivot row  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox["  is chosen to be the row where the minimum ratio occurs.  Since  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, 2\) = 16.0\)]],
+  "  is smallest, use simplex Gaussian elimination to eliminate ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  " using the pivot row   ",
+  Cell[BoxData[
+      \(p = 2\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PivotRow[2];\)\)], "Input"],
+
+Cell[TextData[{
+  "From column 2 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 16\)]],
+  ".  The new point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {0, 16}\)]],
+  "  is a ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from its previous point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {0, 0}\)]],
+  " along the edge  ",
+  Cell[BoxData[
+      \(x\_1 = 0\)]],
+  "  to the point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {0, 16}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(dot = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , 
+                  X\&\[RightVector]\_1}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\)}], "Input"],
+
+Cell["\<\
+The second step in the simplex method is to determine the next exchange \
+variable.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[M, 
+          TableHeadings \[Rule] {None, 
+              Append[Append[
+                  Table["\<x\>"\_i, {i, 1, 
+                      n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The second exchange variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_e = x\_1\)]],
+  StyleBox[" is chosen since the current coefficient  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_1\) = \(-5\)\)]],
+  StyleBox["  is negative and is smaller any of the other coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  ".  \nEliminate the exchange variable  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  "  and use  ",
+  Cell[BoxData[
+      \(e = 1\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(ExchangeVar[1];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["To determine the pivot row we need to consider the ratios  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          RowBox[{\(b\_i\/a\_\(i, 1\)\), "  ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["all",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["rows",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(a\_\(i, 1\)\)}], ">", "0"}], 
+        "}"}]]],
+  ".  ",
+  StyleBox["The pivot row  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox["  is chosen to be the row where the minimum ratio occurs.  Since  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, 1\) = 4.0\)]],
+  "  is smallest, use simplex Gaussian elimination to eliminate ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  " using the pivot row   ",
+  Cell[BoxData[
+      \(p = 3\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PivotRow[3];\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 3 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 4\)]],
+  ".  From column 2 and row 2 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 15\)]],
+  ".  The new point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {4, 15}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from its previous point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {0, 16}\)]],
+  " along the edge  ",
+  Cell[BoxData[
+      \(x\_1 + 4  x\_2 = 64\)]],
+  "  to the point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {4, 15}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_4\  = \ 340. \)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(dot = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}, {Red, PointSize[0.03], 
+              Point[X\&\[RightVector]\_2]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , X\&\[RightVector]\_1, 
+                  X\&\[RightVector]\_2}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", O\&\[RightVector], "\<] = \>", 
+        f[O\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\)}], "Input"],
+
+Cell["\<\
+Graph the domain defined by the constraints and the level curves of the \
+objective function.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[20  i, {i, 1, 23}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 16.5}, {y, 0, 16.5}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_2]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, graph, graphmax, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Graph the domain defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {2  x + y \[LessEqual] 30, 
+          x + 4  y \[LessEqual] 64, 5  x + 6  y \[LessEqual] 110, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(O\&\[RightVector]\  = \ {0, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_1\  = \ {0, 16};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2\  = \ {4, 15};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3\  = \ {10, 10};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_4\  = \ {15, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_2]}, {Red, PointSize[0.03], 
+              Point[X\&\[RightVector]\_3]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}}];\)\), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 16.5}, \ {y, \ 0, \ 16.5}, 
+          PlotRange \[Rule] {{0, 16.5}, {0, 16.5}}, PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ , 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, dots, Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 10  x + 10  y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {2  x + y \[LessEqual] 30, 
+          x + 4  y \[LessEqual] 64, 5  x + 6  y \[LessEqual] 110, 
+          x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y}], 
+          constraints[x, y], {x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(pt = 
+        ReplaceAll[{x, y}, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-10\), \(-10\)}\), ",", 
+          RowBox[{"-", 
+            RowBox[{"(", GridBox[{
+                  {"2", "1"},
+                  {"1", "4"},
+                  {"5", "6"}
+                  }], ")"}]}], ",", \(-{30, 64, 110}\)}], "]"}], 
+      " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {"2", "1", "30"},
+                  {"1", "4", "64"},
+                  {"5", "6", "110"},
+                  {\(-10\), \(-10\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\)], "Input"],
+
+Cell["\<\
+The first step in the simplex method is to determine an exchange variable.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[M, 
+          TableHeadings \[Rule] {None, 
+              Append[Append[
+                  Table["\<x\>"\_i, {i, 1, 
+                      n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["There is a tie for choosing the first exchange variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_e\)]],
+  " ",
+  StyleBox["is chosen since the current coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_1\) = \(\(-c\_2\) = \(-10\)\)\)]],
+  StyleBox["  are negative and is smaller any of the other coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  ".  \nThis time, let us eliminate the exchange variable  ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  "  and use  ",
+  Cell[BoxData[
+      \(e = 1\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(ExchangeVar[1];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["To determine the pivot row we need to consider the ratios  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          RowBox[{\(b\_i\/a\_\(i, 1\)\), "  ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["all",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["rows",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(a\_\(i, 1\)\)}], ">", "0"}], 
+        "}"}]]],
+  ".  ",
+  StyleBox["The pivot row  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox["  is chosen to be the row where the minimum ratio occurs.  Since  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, 1\) = 15.0\)]],
+  "  is smallest, use simplex Gaussian elimination to eliminate ",
+  Cell[BoxData[
+      \(x\_1\)]],
+  " using the pivot row   ",
+  Cell[BoxData[
+      \(p = 1\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PivotRow[1];\)\)], "Input"],
+
+Cell[TextData[{
+  "From column 1 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 15\)]],
+  ".  The new point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {15, 0}\)]],
+  "  in a ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from its previous point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {0, 0}\)]],
+  " along the edge  ",
+  Cell[BoxData[
+      \(x\_2 = 0\)]],
+  "  to the point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {15, 0}\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(dot = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , 
+                  X\&\[RightVector]\_4}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\)}], "Input"],
+
+Cell["\<\
+The second step in the simplex method is to determine the next exchange \
+variable.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[
+        TableForm[M, 
+          TableHeadings \[Rule] {None, 
+              Append[Append[
+                  Table["\<x\>"\_i, {i, 1, 
+                      n + m}], \*"\"\<\!\(b\_i\)\>\""], \
+\*"\"\<\!\(b\_i\/a\_\(i, e\)\)\>\""]}]];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["The second exchange variable ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_e = x\_2\)]],
+  StyleBox[" is chosen since the current coefficient  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_2\) = \(-5\)\)]],
+  StyleBox["  is negative and is smaller any of the other coefficients  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(-c\_j\)\)]],
+  ".  \nEliminate the exchange variable  ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  "  and use  ",
+  Cell[BoxData[
+      \(e = 2\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(ExchangeVar[2];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["To determine the pivot row we need to consider the ratios  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          RowBox[{\(b\_i\/a\_\(i, 2\)\), "  ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["all",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["rows",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox[" ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "  ", \(a\_\(i, 2\)\)}], ">", "0"}], 
+        "}"}]]],
+  ".  ",
+  StyleBox["The pivot row  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\)]],
+  StyleBox["  is chosen to be the row where the minimum ratio occurs.  Since  \
+",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, 2\) = 10.0\)]],
+  "  is smallest, use simplex Gaussian elimination to eliminate ",
+  Cell[BoxData[
+      \(x\_2\)]],
+  " using the pivot row   ",
+  Cell[BoxData[
+      \(p = 3\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PivotRow[3];\)\)], "Input"],
+
+Cell[TextData[{
+  "There are",
+  StyleBox[" no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 1 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 10\)]],
+  ".  From column 2 and row 3 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 10\)]],
+  ".  The new point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {10, 10}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from its previous point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {15, 0}\)]],
+  " along the edge  ",
+  Cell[BoxData[
+      \(2  x\_1 + x\_2 = 30\)]],
+  "  to the point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {10, 10}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_4\  = \ 200\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(dot = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_3]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , X\&\[RightVector]\_4, 
+                  X\&\[RightVector]\_3}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", O\&\[RightVector], "\<] = \>", 
+        f[O\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\)}], "Input"],
+
+Cell["\<\
+Graph the domain defined by the constraints and the level curves of the \
+objective function.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[20  i, {i, 1, 15}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 16.5}, {y, 0, 16.5}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_3]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, graph, graphmax, dot, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the region ",
+  Cell[BoxData[
+      \(R\)]],
+  " in the plane defined by the inequalities:  \n\n\t\t",
+  Cell[BoxData[{
+      \(\(-x\) + 2  y\  \[LessEqual] \ 36\), "\n", 
+      \(\ \ \ x + 6  y\  \[LessEqual] \ 132\), "\n", 
+      \(3\ x + 5\ y\  \[LessEqual] \ 136\), "\n", 
+      \(5\ x + 3\ y\  \[LessEqual] \ 136\), "\n", 
+      \(\ \ \ 6  x + y\  \[LessEqual] \ 132\), "\n", 
+      \(\ \ \ 2  x - y\  \[LessEqual] \ 36\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ x \[GreaterEqual] 0\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ y \[GreaterEqual] 0\)}]],
+  "  \n\n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], "]"}], 
+        "=", \(10  x + 10  y\)}]]],
+  "   over the region ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], "]"}], 
+        "=", \(10  x + 25  y\)}]]],
+  "   over the region ",
+  Cell[BoxData[
+      \(R\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Graph the domain defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {\(-x\) + 2  y \[LessEqual] 36, 
+          x + 6  y \[LessEqual] 132, 3\ x + 5\ y \[LessEqual] 136, 
+          5\ x + 3\ y \[LessEqual] 136, 6  x + y \[LessEqual] 132, 
+          2  x - y \[LessEqual] 36, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(O\&\[RightVector]\  = \ {0, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_1\  = \ {0, 18};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2\  = \ {6, 21};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3\  = \ {12, 20};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_4\  = \ {17, 17};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_5\  = \ {20, 12};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_6\  = \ {21, 6};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_7\  = \ {18, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}, {Orange, PointSize[0.03], 
+              Point[X\&\[RightVector]\_2]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_3]}, {Red, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_5]}, {Orange, PointSize[0.03], 
+              Point[X\&\[RightVector]\_6]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_7]}}];\)\), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 22}, \ {y, \ 0, \ 22}, 
+          PlotRange \[Rule] {{0, 22}, {0, 22}}, PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ , 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, dots, Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 10  x + 10  y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {\(-x\) + 2  y \[LessEqual] 36, 
+          x + 6  y \[LessEqual] 132, 3\ x + 5\ y \[LessEqual] 136, 
+          5\ x + 3\ y \[LessEqual] 136, 6  x + y \[LessEqual] 132, 
+          2  x - y \[LessEqual] 36, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y}], 
+          constraints[x, y], {x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-10\), \(-10\)}\), ",", 
+          RowBox[{"-", 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-1\), "2"},
+                    {"1", "6"},
+                    {"3", "5"},
+                    {"5", "3"},
+                    {"6", "1"},
+                    {"2", \(-1\)}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}], 
+          ",", \(-{36, 132, 136, 136, 132, 36}\)}], "]"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"]
+}, Open  ]],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {\(-1\), "2", "36"},
+                  {"1", "6", "132"},
+                  {"3", "5", "136"},
+                  {"5", "3", "136"},
+                  {"6", "1", "132"},
+                  {"2", \(-1\), "36"},
+                  {\(-10\), \(-10\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  "Run the subroutine  ",
+  StyleBox["SimplexMethod",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SimplexMethod;\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 6 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 17\)]],
+  ".  From column 2 and row 5 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 17\)]],
+  ".  The final point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {17, 17}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from the origin along the edges to the \
+point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {17, 17}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_7\  = \ 340\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , X\&\[RightVector]\_7, 
+                  X\&\[RightVector]\_6, X\&\[RightVector]\_5, 
+                  X\&\[RightVector]\_4}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", O\&\[RightVector], "\<] = \>", 
+        f[O\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_7, "\<] = \>", 
+        f[X\&\[RightVector]\_7]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_6, "\<] = \>", 
+        f[X\&\[RightVector]\_6]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_5, "\<] = \>", 
+        f[X\&\[RightVector]\_5]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\)}], "Input"],
+
+Cell["\<\
+Graph the domain defined by the constraints and the level curves of the \
+objective function.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[20  i, {i, 1, 23}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_4]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, graph, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Graph the domain defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {\(-x\) + 2  y \[LessEqual] 36, 
+          x + 6  y \[LessEqual] 132, 3\ x + 5\ y \[LessEqual] 136, 
+          5\ x + 3\ y \[LessEqual] 136, 6  x + y \[LessEqual] 132, 
+          2  x - y \[LessEqual] 36, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(O\&\[RightVector]\  = \ {0, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_1\  = \ {0, 18};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2\  = \ {6, 21};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3\  = \ {12, 20};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_4\  = \ {17, 17};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_5\  = \ {20, 12};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_6\  = \ {21, 6};\)\ \), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_7\  = \ {18, 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics[{{Black, PointSize[0.03], 
+              Point[O\&\[RightVector]\ ]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_1]}, {Orange, PointSize[0.03], 
+              Point[X\&\[RightVector]\_2]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_3]}, {Red, PointSize[0.03], 
+              Point[X\&\[RightVector]\_4]}, {Magenta, PointSize[0.03], 
+              Point[X\&\[RightVector]\_5]}, {Orange, PointSize[0.03], 
+              Point[X\&\[RightVector]\_6]}, {Blue, PointSize[0.03], 
+              Point[X\&\[RightVector]\_7]}}];\)\), "\[IndentingNewLine]", 
+    \(\(domain\  = \ 
+        InequalityPlot[\ 
+          constraints[x, y], \ {x, \ 0, \ 22}, \ {y, \ 0, \ 22}, 
+          PlotRange \[Rule] {{0, 22}, {0, 22}}, PlotStyle \[Rule] Green, 
+          Fills \[Rule] Honeydew\ , 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, dots, Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_}] = 10  x + 15  y;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_] = {\(-x\) + 2  y \[LessEqual] 36, 
+          x + 6  y \[LessEqual] 132, 3\ x + 5\ y \[LessEqual] 136, 
+          5\ x + 3\ y \[LessEqual] 136, 6  x + y \[LessEqual] 132, 
+          2  x - y \[LessEqual] 36, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y}], 
+          constraints[x, y], {x, y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-10\), \(-15\)}\), ",", 
+          RowBox[{"-", 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-1\), "2"},
+                    {"1", "6"},
+                    {"3", "5"},
+                    {"5", "3"},
+                    {"6", "1"},
+                    {"2", \(-1\)}
+                    }], ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}], 
+          ",", \(-{36, 132, 136, 136, 132, 36}\)}], "]"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {\(-1\), "2", "36"},
+                  {"1", "6", "132"},
+                  {"3", "5", "136"},
+                  {"5", "3", "136"},
+                  {"6", "1", "132"},
+                  {"2", \(-1\), "36"},
+                  {\(-10\), \(-15\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  "Run the subroutine  ",
+  StyleBox["SimplexMethod",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SimplexMethod;\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 2 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 17\)]],
+  ".  From column 2 and row 1 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 17\)]],
+  ".  The final point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {17, 17}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from the origin along the edges to the \
+point ",
+  Cell[BoxData[
+      \({x\_1, x\_2} = {17, 17}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_7\  = \ 425\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(edge = 
+        Graphics[{{Yellow, Thickness[0.02], 
+              Line[{O\&\[RightVector]\ , X\&\[RightVector]\_1, 
+                  X\&\[RightVector]\_2, X\&\[RightVector]\_3, 
+                  X\&\[RightVector]\_4}]}}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", O\&\[RightVector], "\<] = \>", 
+        f[O\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\)}], "Input"],
+
+Cell["\<\
+Graph the domain defined by the constraints and the level curves of the \
+objective function.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(cvalues = Table[25  i, {i, 1, 20}];\)\), "\[IndentingNewLine]", 
+    \(\(graph\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] cvalues, ContourStyle \[Rule] Cyan, 
+          ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphmax\  = \ 
+        ContourPlot[f[{x, y}], {x, 0, 22}, {y, 0, 22}, 
+          Contours \[Rule] {f[X\&\[RightVector]\_4]}, 
+          ContourStyle \[Rule] Blue, ContourShading \[Rule] False, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[domain, edge, graph, graphmax, dots, 
+        Ticks \[Rule] {Range[0, 25, 5], Range[0, 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<The level curves of the objective function\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y}] = \>", 
+        f[{x, y}], "\< = c\>"\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<c = \>"\ , cvalues];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The maximum is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_4, "\<] = \>", 
+        f[X\&\[RightVector]\_4]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "z"}], "]"}], 
+        "=", \(6  x + 4  y + 5  z\)}]]],
+  "   subject to the constraints: \n",
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[{
+      \(x + y + 2  z\  \[LessEqual] \ 12\), "\n", 
+      \(x + 2  y + z\  \[LessEqual] \ 12\), "\n", 
+      \(2  x + y + z\  \[LessEqual] \ 12\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\  \[GreaterEqual] \ 0\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\  \[GreaterEqual] \ 0\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\  \[GreaterEqual] \ 0\)}]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontColor->RGBColor[1, 0, 1],
+  Background->None]], "Text",
+  FontWeight->"Bold"],
+
+Cell["Graph the region defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_, z_] = {x + y + 2  z \[LessEqual] 12, 
+          x + 2  y + z \[LessEqual] 12, 2  x + y + z \[LessEqual] 12, 
+          x \[GreaterEqual] 0, y \[GreaterEqual] 0, 
+          z \[GreaterEqual] 0};\)\), "\[IndentingNewLine]", 
+    \(\(InequalityPlot3D[constraints[x, y, z], \ {x}, {y}, {z}, 
+        ViewPoint \[Rule] {7, 2, 2}, Axes \[Rule] True, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        Ticks \[Rule] {Range[1, 5, 1], Range[0, 6, 1], Range[0, 6, 1]}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+              1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y, z]]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The above graph might be a little hard to grasp.  If one solves for the \
+vertices for each face of the polytope, then a nicer graph can be made.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(face1 = 
+        Graphics3D[{SurfaceColor[Orange], 
+            Polygon[{{0, 0, 6}, {0, 4, 4}, {3, 3, 3}, {4, 0, 4}, {0, 0, 
+                  6}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(face2 = 
+        Graphics3D[{SurfaceColor[Green], 
+            Polygon[{{0, 6, 0}, {0, 4, 4}, {3, 3, 3}, {4, 4, 0}, {0, 6, 
+                  0}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(face3 = 
+        Graphics3D[{SurfaceColor[Cyan], 
+            Polygon[{{6, 0, 0}, {4, 4, 0}, {3, 3, 3}, {4, 0, 4}, {6, 0, 
+                  0}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[face1, face2, face3, ViewPoint \[Rule] {7, 2, 2}, 
+        Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        Ticks \[Rule] {Range[1, 5, 1], Range[0, 6, 1], Range[0, 6, 1]}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+              1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y, z]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_}] = 
+        6  x + 4  y + 5  z;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_, z_] = {x + y + 2  z \[LessEqual] 12, 
+          x + 2  y + z \[LessEqual] 12, 2  x + y + z \[LessEqual] 12, 
+          x \[GreaterEqual] 0, y \[GreaterEqual] 0, 
+          z \[GreaterEqual] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y, z}], 
+          constraints[x, y, z], {x, y, z}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[constraints[x, y, z]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-6\), \(-4\), \(-5\)}\), ",", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-1\), \(-1\), \(-2\)},
+                  {\(-1\), \(-2\), \(-1\)},
+                  {\(-2\), \(-1\), \(-1\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]], 
+          ",", \({\(-12\), \(-12\), \(-12\)}\)}], "]"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {"1", "1", "2", "12"},
+                  {"1", "2", "1", "12"},
+                  {"2", "1", "1", "12"},
+                  {\(-6\), \(-4\), \(-5\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  "Run the subroutine  ",
+  StyleBox["SimplexMethod",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SimplexMethod;\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 3 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 3\)]],
+  ".  From column 2 and row 2 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 3\)]],
+  ".  From column 3 and row 1 we see that ",
+  Cell[BoxData[
+      \(x\_3 = 3\)]],
+  ".  The final point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {3, 3, 3}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution",
+    FontFamily->"Times New Roman"],
+  ".  The simplex method has moved from the origin along the edges to the \
+point ",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {3, 3, 3}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_4\  = \ 45\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\ \(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(X\&\[RightVector]\_1 = {6, 0, 0};\)\), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2 = {4, 0, 4};\)\), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3 = {3, 3, 3};\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[{{Orange, PointSize[0.04], 
+              Point[X\&\[RightVector]\_1]}, {Magenta, PointSize[0.04], 
+              Point[X\&\[RightVector]\_2]}, {Red, PointSize[0.04], 
+              Point[X\&\[RightVector]\_3]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge1 = 
+        Graphics3D[{{Yellow, Thickness[0.02], 
+              Line[{X\&\[RightVector]\_1 + \(1\/20\) \((X\&\[RightVector]\_2 \
+- X\&\[RightVector]\_1)\), 
+                  X\&\[RightVector]\_2 + \(1\/20\) \((X\&\[RightVector]\_1 - 
+                          X\&\[RightVector]\_2)\)}]}}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(edge2 = 
+        Graphics3D[{{Yellow, Thickness[0.02], 
+              Line[{X\&\[RightVector]\_2 + \(1\/15\) \((X\&\[RightVector]\_3 \
+- X\&\[RightVector]\_2)\), 
+                  X\&\[RightVector]\_3 + \(1\/15\) \((X\&\[RightVector]\_2 - 
+                          X\&\[RightVector]\_3)\)}]}}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(solz = \(Solve[f[{x, y, z}] \[Equal] f[X\&\[RightVector]\_3], \
+{z}]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1, 2\)\(\[RightDoubleBracket]\)\);\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(g[x_, y_] = \ solz;\)\), "\[IndentingNewLine]", 
+    \(\({u, v} = 
+        ReplaceAll[{x, y}, 
+          solset\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)];\
+\)\), "\[IndentingNewLine]", 
+    \(\(plane\  = \ 
+        Graphics3D[{SurfaceColor[Cyan], 
+            Line[{{u + 1, v + 1, g[u + 1, v + 1]}, {u - 1, v + 1, 
+                  g[u - 1, v + 1]}, {u - 1, v - 1, g[u - 1, v - 1]}, {u + 1, 
+                  v - 1, g[u + 1, v - 1]}, {u + 1, v + 1, 
+                  g[u + 1, v + 1]}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(Show[face1, face2, face3, edge1, edge2, dots, plane, 
+        ViewPoint \[Rule] {7, 2, 2}, Axes \[Rule] True, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        Ticks \[Rule] {Range[1, 5, 1], Range[0, 6, 1], Range[0, 6, 1]}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+              1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "z"}], "]"}], 
+        "=", \(4  x + 6  y + 5  z\)}]]],
+  "   subject to the constraints: \n",
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[{
+      \(6\ x\  + 15\ y\  + 20\ z\  \[LessEqual] \ 180\), 
+    "\[IndentingNewLine]", 
+      \(6\ x\  + 30\ y\  + 10\ z\  \[LessEqual] \ 180\), 
+    "\[IndentingNewLine]", 
+      \(12\ x + 15\ y + 10\ z\  \[LessEqual] \ 180\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\  \
+\[GreaterEqual] \ 0\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\  \
+\[GreaterEqual] \ 0\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\  \
+\[GreaterEqual] \ 0\)}]],
+  "   "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontColor->RGBColor[1, 0, 1],
+  Background->None]], "Text",
+  FontWeight->"Bold"],
+
+Cell["Graph the region defined by the constraints.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`ImplicitPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`InequalityGraphics`\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Clear[constraints, f];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_, z_] = {6\ x + 15\ y + 20\ z \[LessEqual] 180, 
+          6\ x + 30\ y + 10\ z \[LessEqual] 180, 
+          12\ x + 15\ y + 10\ z \[LessEqual] 180, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0, 
+          z \[GreaterEqual] 0};\)\), "\[IndentingNewLine]", 
+    \(\(g1 = 
+        InequalityPlot3D[constraints[x, y, z], \ {x}, {y}, {z}, 
+          ViewPoint \[Rule] {7, 2, 2}, Axes \[Rule] True, 
+          AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          Ticks \[Rule] {Range[2, 14, 2], Range[0, 6, 1], Range[0, 9, 1]}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+                1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y, z]]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+The above graph might be a little hard to grasp.  If one solves for the \
+vertices for each face of the polytope, then a nicer graph can be made.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(face1 = 
+        Graphics3D[{SurfaceColor[Orange], 
+            Polygon[{{0, 0, 9}, {0, 4, 6}, {15\/2, 3, 9\/2}, {10, 0, 6}, {0, 
+                  0, 9}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(face2 = 
+        Graphics3D[{SurfaceColor[Green], 
+            Polygon[{{0, 6, 0}, {0, 4, 6}, {15\/2, 3, 9\/2}, {10, 4, 0}, {0, 
+                  6, 0}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(face3 = 
+        Graphics3D[{SurfaceColor[Cyan], 
+            Polygon[{{15, 0, 0}, {10, 4, 0}, {15\/2, 3, 9\/2}, {10, 0, 
+                  6}, {15, 0, 0}}]}];\)\), "\[IndentingNewLine]", 
+    \(\(g2 = 
+        Show[face1, face2, face3, ViewPoint \[Rule] {7, 2, 2}, 
+          Axes \[Rule] True, AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+          Ticks \[Rule] {Range[2, 14, 2], Range[0, 6, 1], Range[0, 9, 1]}, 
+          AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+                1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The region defined by\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints[x, y, z]]];\)\ \ \)}], "Input"],
+
+Cell["Enter the objective function. ", "Text"],
+
+Cell[BoxData[{
+    \(\(f[{x_, y_, z_}] = 
+        8  x + 12  y + 10  z;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(constraints[x_, y_, z_] = {6\ x + 15\ y + 20\ z \[LessEqual] 180, 
+          6\ x + 30\ y + 10\ z \[LessEqual] 180, 
+          12\ x + 15\ y + 10\ z \[LessEqual] 180, x \[GreaterEqual] 0, 
+          y \[GreaterEqual] 0, 
+          z \[GreaterEqual] 0};\)\), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x, y, z}], 
+          constraints[x, y, z], {x, y, z}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[{x,y,z}] = \>", 
+        f[{x, y, z}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[
+        TableForm[constraints[x, y, z]]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-8\), \(-12\), \(-10\)}\), ",", 
+          RowBox[{"-", 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {"6", "15", "20"},
+                    {"6", "30", "10"},
+                    {"12", "15", "10"}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}], ",", \(-{180, 180, 180}\)}], 
+        "]"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {"6", "15", "20", "180"},
+                  {"6", "30", "10", "180"},
+                  {"12", "15", "10", "180"},
+                  {\(-8\), \(-12\), \(-10\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  "Run the subroutine  ",
+  StyleBox["SimplexMethod",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SimplexMethod;\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 3 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 15\/2\)]],
+  ".  From column 2 and row 2 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 3\)]],
+  ".  From column 3 and row 1 we see that ",
+  Cell[BoxData[
+      \(x\_3 = 9\/2\)]],
+  ".  The final point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {15\/2, 3, 9\/2}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution.  ",
+    FontFamily->"Times New Roman"],
+  "The simplex method has moved from the origin along the edges to the point \
+",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {15\/2, 3, 9\/2}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_4\  = \ 141\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(X\&\[RightVector]\_1 = {0, 6, 0};\)\), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_2 = {0, 4, 6};\)\), "\[IndentingNewLine]", 
+    \(\(X\&\[RightVector]\_3 = {15\/2, 3, 9\/2};\)\), "\[IndentingNewLine]", 
+    \(\(dots = 
+        Graphics3D[{{Orange, PointSize[0.04], 
+              Point[X\&\[RightVector]\_1]}, {Magenta, PointSize[0.04], 
+              Point[X\&\[RightVector]\_2]}, {Red, PointSize[0.04], 
+              Point[X\&\[RightVector]\_3]}}];\)\), "\[IndentingNewLine]", 
+    \(\(edge1 = 
+        Graphics3D[{{Yellow, Thickness[0.02], 
+              Line[{X\&\[RightVector]\_1 + \(1\/20\) \((X\&\[RightVector]\_2 \
+- X\&\[RightVector]\_1)\), 
+                  X\&\[RightVector]\_2 + \(1\/20\) \((X\&\[RightVector]\_1 - 
+                          X\&\[RightVector]\_2)\)}]}}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(edge2 = 
+        Graphics3D[{{Yellow, Thickness[0.02], 
+              Line[{X\&\[RightVector]\_2 + \(1\/15\) \((X\&\[RightVector]\_3 \
+- X\&\[RightVector]\_2)\), 
+                  X\&\[RightVector]\_3 + \(1\/15\) \((X\&\[RightVector]\_2 - 
+                          X\&\[RightVector]\_3)\)}]}}];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Show[face1, face2, face3, edge1, edge2, dots, 
+        ViewPoint \[Rule] {7, 2, 2}, Axes \[Rule] True, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        Ticks \[Rule] {Range[2, 14, 2], Range[0, 6, 1], Range[0, 9, 1]}, 
+        AxesEdge \[Rule] {{1, \(-1\)}, {1, \(-1\)}, {\(-1\), 
+              1}}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The function increases as we move around the \
+region\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_1, "\<] = \>", 
+        f[X\&\[RightVector]\_1]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_2, "\<] = \>", 
+        f[X\&\[RightVector]\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", X\&\[RightVector]\_3, "\<] = \>", 
+        f[X\&\[RightVector]\_3]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "Find the maximum of   ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"f", "[", 
+          RowBox[{\(x\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_3\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_4\)}], "]"}], " ", "=", 
+        " ", \(5\ x\_1 + 9\ x\_2 + 8\ x\_3 + 6\ x\_4\)}]]],
+  "    subject to the constraints: \n\n\t\t",
+  Cell[BoxData[{
+      \(2\ x\_1 + 3\ x\_2 + 4\ x\_3\  \[LessEqual] \ 500\), "\n", 
+      \(3\ x\_2 + 2\ x\_3 + 5\ x\_4\  \[LessEqual] \ 300\), "\n", 
+      \(2\ x\_1 + 4\ x\_2 + 2\ x\_4\  \[LessEqual] \ 400\), "\n", 
+      \(4\ x\_1 + 5  x\_3 + 3\ x\_4\  \[LessEqual] \ 800\), "\n", 
+      \(\ \ x\_1 + x\_2 + x\_3 + x\_4\  \[LessEqual] \ 200\)}]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontColor->RGBColor[1, 0, 1],
+  Background->None]], "Text",
+  FontWeight->"Bold"],
+
+Cell["Enter the objective function and constraints. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[constraints, f, x, y, u, v];\)\ \), "\[IndentingNewLine]", 
+    \(\(constraints = {\ \ \[IndentingNewLine]2\ x\_1 + 3\ x\_2 + 
+              4\ x\_3 \[LessEqual] 
+            500, \[IndentingNewLine]3\ x\_2 + 2\ x\_3 + 5\ x\_4 \[LessEqual] 
+            300, \[IndentingNewLine]2\ x\_1 + 4\ x\_2 + 2\ x\_4 \[LessEqual] 
+            400, \[IndentingNewLine]4\ x\_1 + 5  x\_3 + 3\ x\_4 \[LessEqual] 
+            800, \[IndentingNewLine]x\_1 + x\_2 + x\_3 + x\_4 \[LessEqual] 
+            200\ \ }\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(f[{x_, y_, u_, v_}]\  = \ 
+        5  x + 9  y + 8  u + 6  v;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        ConstrainedMax[f[{x\_1, x\_2, x\_3, x\_4}], 
+          constraints, {x\_1, x\_2, x\_3, 
+            x\_4}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Find the maximum of\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[{\!\(x\_1\),\!\(x\_2\),\!\(x\_3\),\!\(x\_4\)}] = \
+\>\"", f[{x\_1, x\_2, x\_3, x\_4}]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Subject to the constraints\>"];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[TableForm[constraints]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The solution found by Mathematica is\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[solset];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine ",
+  StyleBox["LinearProgramming",
+    FontFamily->"Courier New"],
+  " to find the solution (note carefully the \"-\" signs in front of the \
+matrix and vector in the second and third arguments). "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"LinearProgramming", "[", 
+        RowBox[{\({\(-5\), \(-9\), \(-8\), \(-6\)}\), ",", 
+          RowBox[{"-", 
+            RowBox[{"(", GridBox[{
+                  {"2", "3", "4", "0"},
+                  {"0", "3", "2", "5"},
+                  {"2", "4", "0", "2"},
+                  {"4", "0", "5", "3"},
+                  {"1", "1", "1", "1"}
+                  }], ")"}]}], ",", \(-{500, 300, 400, 800, 200}\)}], "]"}], 
+      " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use the simplex algorithm to find this solution.",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell["\<\
+Enter the coefficients of the decision variables and right side of the \
+tableau.  \
+\>", "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"M", "=", 
+            RowBox[{"(", GridBox[{
+                  {"2", "3", "4", "0", "500"},
+                  {"0", "3", "2", "5", "300"},
+                  {"2", "4", "0", "2", "400"},
+                  {"4", "0", "5", "3", "800"},
+                  {"1", "1", "1", "1", "200"},
+                  {\(-5\), \(-9\), \(-8\), \(-6\), "0"}
+                  }], ")"}]}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will fill in the columns for the slack variables and append a column of \
+zeros which will be use to calculate the ratios ",
+  Cell[BoxData[
+      \(b\_i\/a\_\(i, e\)\)]],
+  " for determining the pivot rows. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(SetUpTableau;\)\)], "Input"],
+
+Cell[TextData[{
+  "Run the subroutine  ",
+  StyleBox["SimplexMethod",
+    FontFamily->"Courier New"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(SimplexMethod;\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "There ",
+  StyleBox["are no negative coefficients in the",
+    FontFamily->"Times New Roman"],
+  " ",
+  StyleBox["bottom row",
+    FontFamily->"Times New Roman"],
+  ", so we are done. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function "
+}], "Text"],
+
+Cell[TextData[{
+  "From column 1 and row 1 we see that ",
+  Cell[BoxData[
+      \(x\_1 = 96\)]],
+  ".  From column 2 and row 3 we see that ",
+  Cell[BoxData[
+      \(x\_2 = 44\)]],
+  ".  From column 3 and row 2 we see that ",
+  Cell[BoxData[
+      \(x\_3 = 44\)]],
+  ".  From column 4 and row 4 we see that ",
+  Cell[BoxData[
+      \(x\_4 = 16\)]],
+  ".  The final point  ",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {15\/2, 3, 9\/2}\)]],
+  "  is the optimal ",
+  StyleBox["feasible solution.  ",
+    FontFamily->"Times New Roman"],
+  "The simplex method has moved from the origin along the edges to the point \
+",
+  Cell[BoxData[
+      \({x\_1, x\_2, x\_3} = {15\/2, 3, 9\/2}\)]],
+  ".  The value of the objective function at the solution point is located in \
+the bottom row of the column \"",
+  Cell[BoxData[
+      \(b\_i\)]],
+  "\",  i.e.  ",
+  Cell[BoxData[
+      \(b\_6\  = \ 1324\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(P = 
+        Table[M[\([\(Position[N[M\_\(\(\[LeftDoubleBracket]\)\(All, i\)\(\
+\[RightDoubleBracket]\)\)], 1.0]\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\
+\[RightDoubleBracket]\)\), n + m + 1]\)], {i, 
+            n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", V\&\[RightVector], "\<] = \>", 
+        f[V\&\[RightVector]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[\>", P, "\<] = \>", f[P]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done!",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["The slack variables could be computed from ",
+    FontFamily->"Times New Roman"],
+  StyleBox["(4)",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" using the initial coefficients of the tableau:\n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_\(n + i\)\ \  = \ 
+        b\_i\  - \ \((\(\(a\_\(i, 1\)\) x\_1 + \(a\_\(i, 2\)\) 
+                    x\_2 +  ... \) + \(a\_\(i, n\)\) x\_n)\)\)]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman"],
+  "for rows   ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "m"}]]],
+  " ",
+  StyleBox[" in the tableau.  ",
+    FontFamily->"Times New Roman"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The bottom line of the tableau corresponds to the ",
+  StyleBox["augmented objective",
+    FontFamily->"Times New Roman"],
+  " function. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Q = Table[0, {m}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          m, \(i++\), \[IndentingNewLine]\(q\_\(n + i\)\  = \(Q\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\) = 
+              A\_\(\(\[LeftDoubleBracket]\)\(i, n + \
+1\)\(\[RightDoubleBracket]\)\)\  - \ \[Sum]\+\(j = 1\)\%n A\_\(\(\
+\[LeftDoubleBracket]\)\(i, j\)\(\[RightDoubleBracket]\)\)\ P\_\(\(\
+\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\)\);\)\ ];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", V\&\[RightVector], "\<,\>", 
+        S\&\[RightVector], "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              x\_i];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<F[\>", P, "\<,\>", Q, "\<] = \>", 
+        M\_\(\(\[LeftDoubleBracket]\)\(\(-1\), n + m + 1\)\(\
+\[RightDoubleBracket]\)\) - \[Sum]\+\(i = 1\)\%\(n + m\)\ \(M\_\(\(\
+\[LeftDoubleBracket]\)\(\(-1\), i\)\(\[RightDoubleBracket]\)\)\) 
+              q\_i\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Linear Programming",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/LinearProgrammingBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 217, 5, 35, "Text"],
+Cell[1996, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3144, 101, 5131, 141, 258, "Text"],
+Cell[8278, 244, 976, 25, 71, "Text"],
+Cell[9257, 271, 1256, 35, 109, "Text"],
+
+Cell[CellGroupData[{
+Cell[10538, 310, 105, 2, 33, "Text"],
+Cell[10646, 314, 63, 0, 33, "Text"],
+Cell[10712, 316, 695, 12, 150, "Input"],
+Cell[11410, 330, 128, 7, 33, "Text"],
+Cell[11541, 339, 710, 13, 150, "Input"],
+Cell[12254, 354, 132, 3, 33, "Text"],
+Cell[12389, 359, 900, 15, 217, "Input"],
+Cell[13292, 376, 1080, 19, 138, "Input"],
+Cell[14375, 397, 65, 0, 33, "Text"],
+Cell[14443, 399, 1037, 19, 195, "Input"],
+Cell[15483, 420, 294, 9, 52, "Text"],
+Cell[15780, 431, 1005, 18, 181, "Input"],
+Cell[16788, 451, 1804, 32, 326, "Input"],
+Cell[18595, 485, 279, 7, 71, "Text"],
+Cell[18877, 494, 1671, 30, 303, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[20585, 529, 105, 2, 30, "Text"],
+Cell[20693, 533, 63, 0, 33, "Text"],
+Cell[20759, 535, 724, 13, 150, "Input"],
+Cell[21486, 550, 128, 7, 33, "Text"],
+Cell[21617, 559, 710, 13, 150, "Input"],
+Cell[22330, 574, 132, 3, 33, "Text"],
+Cell[22465, 579, 900, 15, 217, "Input"],
+Cell[23368, 596, 1080, 19, 138, "Input"],
+Cell[24451, 617, 65, 0, 33, "Text"],
+Cell[24519, 619, 1037, 19, 195, "Input"],
+Cell[25559, 640, 294, 9, 52, "Text"],
+Cell[25856, 651, 1005, 18, 181, "Input"],
+Cell[26864, 671, 1706, 30, 306, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[28607, 706, 105, 2, 30, "Text"],
+Cell[28715, 710, 63, 0, 33, "Text"],
+Cell[28781, 712, 724, 13, 150, "Input"],
+Cell[29508, 727, 128, 7, 33, "Text"],
+Cell[29639, 736, 710, 13, 150, "Input"],
+Cell[30352, 751, 132, 3, 33, "Text"],
+Cell[30487, 756, 900, 15, 217, "Input"],
+Cell[31390, 773, 1080, 19, 138, "Input"],
+Cell[32473, 794, 65, 0, 33, "Text"],
+Cell[32541, 796, 1351, 24, 260, "Input"],
+Cell[33895, 822, 294, 9, 52, "Text"],
+Cell[34192, 833, 1005, 18, 181, "Input"],
+Cell[35200, 853, 2153, 38, 391, "Input"]
+}, Closed]],
+Cell[37368, 894, 8782, 260, 334, "Text"],
+Cell[46153, 1156, 6412, 152, 257, "Text"],
+Cell[52568, 1310, 1952, 59, 90, "Text"],
+Cell[54523, 1371, 190, 4, 33, "Text"],
+Cell[54716, 1377, 74, 0, 33, "Text"],
+Cell[54793, 1379, 293, 10, 33, "Text"],
+Cell[55089, 1391, 847, 29, 33, "Text"],
+Cell[55939, 1422, 1222, 34, 33, "Text"],
+Cell[57164, 1458, 1180, 40, 97, "Text"],
+Cell[58347, 1500, 448, 15, 33, "Text"],
+Cell[58798, 1517, 766, 24, 33, "Text"],
+Cell[59567, 1543, 449, 15, 33, "Text"],
+Cell[60019, 1560, 646, 21, 52, "Text"],
+Cell[60668, 1583, 3672, 67, 437, "Input"],
+Cell[64343, 1652, 1202, 22, 149, "Input"],
+Cell[65548, 1676, 1780, 31, 260, "Input"],
+Cell[67331, 1709, 1874, 34, 403, "Input"],
+Cell[69208, 1745, 792, 25, 71, "Text"],
+Cell[70003, 1772, 1816, 58, 202, "Text"],
+
+Cell[CellGroupData[{
+Cell[71844, 1834, 105, 2, 33, "Text"],
+Cell[71952, 1838, 60, 0, 33, "Text"],
+Cell[72015, 1840, 1915, 32, 360, "Input"],
+Cell[73933, 1874, 46, 0, 33, "Text"],
+Cell[73982, 1876, 1041, 21, 210, "Input"],
+Cell[75026, 1899, 306, 9, 33, "Text"],
+Cell[75335, 1910, 350, 10, 57, "Input"],
+Cell[75688, 1922, 132, 4, 33, "Text"],
+Cell[75823, 1928, 107, 3, 33, "Text"],
+Cell[75933, 1933, 341, 10, 73, "Input"],
+Cell[76277, 1945, 293, 8, 40, "Text"],
+Cell[76573, 1955, 50, 1, 30, "Input"],
+Cell[76626, 1958, 250, 8, 33, "Text"],
+Cell[76879, 1968, 339, 6, 49, "Input"],
+Cell[77221, 1976, 98, 2, 33, "Text"],
+Cell[77322, 1980, 287, 7, 46, "Input"],
+Cell[77612, 1989, 576, 20, 52, "Text"],
+Cell[78191, 2011, 52, 1, 30, "Input"],
+Cell[78246, 2014, 2846, 81, 59, "Text"],
+Cell[81095, 2097, 49, 1, 30, "Input"],
+Cell[81147, 2100, 510, 20, 52, "Text"],
+Cell[81660, 2122, 679, 14, 97, "Input"],
+Cell[82342, 2138, 107, 3, 33, "Text"],
+Cell[82452, 2143, 287, 7, 46, "Input"],
+Cell[82742, 2152, 576, 20, 52, "Text"],
+Cell[83321, 2174, 52, 1, 30, "Input"],
+Cell[83376, 2177, 2844, 81, 59, "Text"],
+Cell[86223, 2260, 49, 1, 30, "Input"],
+Cell[86275, 2263, 216, 8, 33, "Text"],
+Cell[86494, 2273, 828, 29, 71, "Text"],
+Cell[87325, 2304, 447, 8, 75, "Input"],
+Cell[87775, 2314, 1666, 52, 109, "Text"],
+Cell[89444, 2368, 169, 5, 33, "Text"],
+Cell[89616, 2375, 1155, 21, 180, "Input"],
+Cell[90774, 2398, 1112, 21, 163, "Input"],
+Cell[91889, 2421, 117, 3, 33, "Text"],
+Cell[92009, 2426, 1262, 23, 235, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[93308, 2454, 105, 2, 30, "Text"],
+Cell[93416, 2458, 60, 0, 33, "Text"],
+Cell[93479, 2460, 1915, 32, 360, "Input"],
+Cell[95397, 2494, 46, 0, 33, "Text"],
+Cell[95446, 2496, 1041, 21, 210, "Input"],
+Cell[96490, 2519, 306, 9, 33, "Text"],
+Cell[96799, 2530, 350, 10, 57, "Input"],
+Cell[97152, 2542, 132, 4, 33, "Text"],
+Cell[97287, 2548, 107, 3, 33, "Text"],
+Cell[97397, 2553, 341, 10, 73, "Input"],
+Cell[97741, 2565, 293, 8, 40, "Text"],
+Cell[98037, 2575, 50, 1, 30, "Input"],
+Cell[98090, 2578, 250, 8, 33, "Text"],
+Cell[98343, 2588, 339, 6, 49, "Input"],
+Cell[98685, 2596, 98, 2, 33, "Text"],
+Cell[98786, 2600, 287, 7, 46, "Input"],
+Cell[99076, 2609, 639, 21, 52, "Text"],
+Cell[99718, 2632, 52, 1, 30, "Input"],
+Cell[99773, 2635, 2846, 81, 59, "Text"],
+Cell[102622, 2718, 49, 1, 30, "Input"],
+Cell[102674, 2721, 510, 20, 52, "Text"],
+Cell[103187, 2743, 679, 14, 97, "Input"],
+Cell[103869, 2759, 107, 3, 33, "Text"],
+Cell[103979, 2764, 287, 7, 46, "Input"],
+Cell[104269, 2773, 577, 20, 52, "Text"],
+Cell[104849, 2795, 52, 1, 30, "Input"],
+Cell[104904, 2798, 2846, 81, 59, "Text"],
+Cell[107753, 2881, 49, 1, 30, "Input"],
+Cell[107805, 2884, 216, 8, 33, "Text"],
+Cell[108024, 2894, 837, 30, 71, "Text"],
+Cell[108864, 2926, 447, 8, 75, "Input"],
+Cell[109314, 2936, 1666, 52, 109, "Text"],
+Cell[110983, 2990, 169, 5, 33, "Text"],
+Cell[111155, 2997, 1155, 21, 180, "Input"],
+Cell[112313, 3020, 1113, 21, 163, "Input"],
+Cell[113429, 3043, 117, 3, 33, "Text"],
+Cell[113549, 3048, 1262, 23, 235, "Input"]
+}, Closed]],
+Cell[114826, 3074, 1913, 60, 256, "Text"],
+
+Cell[CellGroupData[{
+Cell[116764, 3138, 105, 2, 33, "Text"],
+Cell[116872, 3142, 60, 0, 33, "Text"],
+Cell[116935, 3144, 2448, 39, 446, "Input"],
+Cell[119386, 3185, 46, 0, 33, "Text"],
+Cell[119435, 3187, 987, 18, 190, "Input"],
+Cell[120425, 3207, 306, 9, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[120756, 3220, 609, 16, 105, "Input"],
+Cell[121368, 3238, 132, 4, 33, "Text"]
+}, Open  ]],
+Cell[121515, 3245, 107, 3, 33, "Text"],
+Cell[121625, 3250, 458, 13, 121, "Input"],
+Cell[122086, 3265, 293, 8, 40, "Text"],
+Cell[122382, 3275, 50, 1, 30, "Input"],
+Cell[122435, 3278, 120, 5, 33, "Text"],
+Cell[122558, 3285, 61, 1, 30, "Input"],
+Cell[122622, 3288, 216, 8, 33, "Text"],
+Cell[122841, 3298, 716, 25, 71, "Text"],
+Cell[123560, 3325, 447, 8, 75, "Input"],
+Cell[124010, 3335, 1666, 52, 109, "Text"],
+Cell[125679, 3389, 169, 5, 33, "Text"],
+Cell[125851, 3396, 1155, 21, 180, "Input"],
+Cell[127009, 3419, 1147, 21, 186, "Input"],
+Cell[128159, 3442, 117, 3, 33, "Text"],
+Cell[128279, 3447, 1259, 23, 235, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[129575, 3475, 105, 2, 30, "Text"],
+Cell[129683, 3479, 60, 0, 33, "Text"],
+Cell[129746, 3481, 2448, 39, 446, "Input"],
+Cell[132197, 3522, 46, 0, 33, "Text"],
+Cell[132246, 3524, 987, 18, 190, "Input"],
+Cell[133236, 3544, 306, 9, 33, "Text"],
+Cell[133545, 3555, 595, 16, 105, "Input"],
+Cell[134143, 3573, 132, 4, 33, "Text"],
+Cell[134278, 3579, 107, 3, 33, "Text"],
+Cell[134388, 3584, 458, 13, 121, "Input"],
+Cell[134849, 3599, 293, 8, 40, "Text"],
+Cell[135145, 3609, 50, 1, 30, "Input"],
+Cell[135198, 3612, 120, 5, 33, "Text"],
+Cell[135321, 3619, 61, 1, 30, "Input"],
+Cell[135385, 3622, 216, 8, 33, "Text"],
+Cell[135604, 3632, 716, 25, 71, "Text"],
+Cell[136323, 3659, 447, 8, 75, "Input"],
+Cell[136773, 3669, 1666, 52, 109, "Text"],
+Cell[138442, 3723, 169, 5, 33, "Text"],
+Cell[138614, 3730, 1155, 21, 180, "Input"],
+Cell[139772, 3753, 1147, 21, 186, "Input"],
+Cell[140922, 3776, 117, 3, 33, "Text"],
+Cell[141042, 3781, 1259, 23, 235, "Input"]
+}, Closed]],
+Cell[142316, 3807, 1458, 40, 161, "Text"],
+
+Cell[CellGroupData[{
+Cell[143799, 3851, 121, 3, 33, "Text"],
+Cell[143923, 3856, 60, 0, 33, "Text"],
+Cell[143986, 3858, 1066, 17, 190, "Input"],
+Cell[145055, 3877, 169, 3, 33, "Text"],
+Cell[145227, 3882, 1111, 20, 170, "Input"],
+Cell[146341, 3904, 46, 0, 33, "Text"],
+Cell[146390, 3906, 964, 19, 190, "Input"],
+Cell[147357, 3927, 306, 9, 33, "Text"],
+Cell[147666, 3938, 511, 12, 57, "Input"],
+Cell[148180, 3952, 132, 4, 33, "Text"],
+Cell[148315, 3958, 107, 3, 33, "Text"],
+Cell[148425, 3963, 361, 10, 73, "Input"],
+Cell[148789, 3975, 293, 8, 40, "Text"],
+Cell[149085, 3985, 50, 1, 30, "Input"],
+Cell[149138, 3988, 120, 5, 33, "Text"],
+Cell[149261, 3995, 61, 1, 30, "Input"],
+Cell[149325, 3998, 216, 8, 33, "Text"],
+Cell[149544, 4008, 811, 28, 71, "Text"],
+Cell[150358, 4038, 449, 8, 75, "Input"],
+Cell[150810, 4048, 1666, 52, 109, "Text"],
+Cell[152479, 4102, 169, 5, 33, "Text"],
+Cell[152651, 4109, 1155, 21, 180, "Input"],
+Cell[153809, 4132, 2721, 50, 437, "Input"]
+}, Closed]],
+Cell[156545, 4185, 1629, 45, 161, "Text"],
+
+Cell[CellGroupData[{
+Cell[158199, 4234, 121, 3, 33, "Text"],
+Cell[158323, 4239, 60, 0, 33, "Text"],
+Cell[158386, 4241, 1130, 19, 190, "Input"],
+Cell[159519, 4262, 169, 3, 33, "Text"],
+Cell[159691, 4267, 1161, 21, 212, "Input"],
+Cell[160855, 4290, 46, 0, 33, "Text"],
+Cell[160904, 4292, 1005, 20, 190, "Input"],
+Cell[161912, 4314, 306, 9, 33, "Text"],
+Cell[162221, 4325, 522, 13, 57, "Input"],
+Cell[162746, 4340, 132, 4, 33, "Text"],
+Cell[162881, 4346, 107, 3, 33, "Text"],
+Cell[162991, 4351, 373, 10, 73, "Input"],
+Cell[163367, 4363, 293, 8, 40, "Text"],
+Cell[163663, 4373, 50, 1, 30, "Input"],
+Cell[163716, 4376, 120, 5, 33, "Text"],
+Cell[163839, 4383, 61, 1, 30, "Input"],
+Cell[163903, 4386, 216, 8, 33, "Text"],
+Cell[164122, 4396, 833, 28, 77, "Text"],
+Cell[164958, 4426, 447, 8, 75, "Input"],
+Cell[165408, 4436, 1666, 52, 109, "Text"],
+Cell[167077, 4490, 169, 5, 33, "Text"],
+Cell[167249, 4497, 1155, 21, 180, "Input"],
+Cell[168407, 4520, 1995, 36, 327, "Input"]
+}, Closed]],
+Cell[170417, 4559, 1723, 45, 142, "Text"],
+
+Cell[CellGroupData[{
+Cell[172165, 4608, 121, 3, 33, "Text"],
+Cell[172289, 4613, 62, 0, 33, "Text"],
+Cell[172354, 4615, 1336, 23, 310, "Input"],
+Cell[173693, 4640, 306, 9, 33, "Text"],
+Cell[174002, 4651, 486, 12, 89, "Input"],
+Cell[174491, 4665, 132, 4, 33, "Text"],
+Cell[174626, 4671, 107, 3, 33, "Text"],
+Cell[174736, 4676, 481, 12, 105, "Input"],
+Cell[175220, 4690, 293, 8, 40, "Text"],
+Cell[175516, 4700, 50, 1, 30, "Input"],
+Cell[175569, 4703, 120, 5, 33, "Text"],
+Cell[175692, 4710, 61, 1, 30, "Input"],
+Cell[175756, 4713, 216, 8, 33, "Text"],
+Cell[175975, 4723, 250, 8, 33, "Text"],
+Cell[176228, 4733, 914, 31, 74, "Text"],
+Cell[177145, 4766, 447, 8, 75, "Input"],
+Cell[177595, 4776, 1666, 52, 109, "Text"],
+Cell[179264, 4830, 169, 5, 33, "Text"],
+Cell[179436, 4837, 1155, 21, 180, "Input"]
+}, Closed]],
+Cell[180606, 4861, 158, 3, 32, "Text"],
+Cell[180767, 4866, 319, 9, 33, "Text"],
+Cell[181089, 4877, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

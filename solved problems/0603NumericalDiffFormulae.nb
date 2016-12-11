@@ -1,0 +1,1822 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     55322,       1685]*)
+(*NotebookOutlinePosition[     56565,       1724]*)
+(*  CellTagsIndexPosition[     56521,       1720]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Derivation of Numerical Differentiation \
+Formulae",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Computer Derivations of Numerical Differentiation Formulae \
+(Classroom Notes)",
+    FontFamily->"New York",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\nJohn Mathews\n",
+    FontFamily->"New York",
+    FontColor->RGBColor[0, 0, 1]],
+  ButtonBox["Int. J. of Math. Education in Sci. and Tech., V 34, No 2 \
+(March-April 2003), pp.280-287.",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/articles/2003NumericalDiffFormulae.\
+pdf"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  "\tThe traditional \"pencil and paper\" derivations for numerical \
+differentiation formulas for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " are done independently as if there was no connection among the \
+derivations.  This new approach gives a parallel development of the formulas. \
+ It requires the solution of a \"linear system\" that includes symbolic \
+quantities as coefficients and constants.",
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " The power of a computer algebra system such as ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is used to elegantly solve the linear system for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ".  The extension to proofs of higher order numerical differentiation \
+formulas for the central, forward or backward differences is easy to \
+accomplish.  The notation convention using square brackets \"",
+  StyleBox["[",
+    FontWeight->"Bold"],
+  "\" and \"",
+  StyleBox["]",
+    FontWeight->"Bold"],
+  "\" instead of parenthesis is used to make all the formulas look compatible \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " input and output that is used.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  StyleBox["The Three Point Central Difference Formulas",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tUsing three points ",
+  Cell[BoxData[
+      \(f[x\_0 - h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", and ",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  "we give a parallel development of the numerical differentiation formulas \
+for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ".  Start with the Taylor series for ",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)]],
+  " expanded in powers of  ",
+  Cell[BoxData[
+      \(h\)]],
+  ".  Terms must be included so that the remainder term is included.  Using \
+degree ",
+  Cell[BoxData[
+      \(n = 4\)]],
+  " will suffice.    "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(n = 4;\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(s[h_] = Series[f[x\_0 + h], {h, 0, n}];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(x\_0\)+h] = \>\"", s[h]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " notation for the remainder term is  ",
+  Cell[BoxData[
+      RowBox[{
+        InterpretationBox[\(O[h]\^\(n + 1\)\),
+          SeriesData[ h, 0, {}, 0, 3, 1]], "=", 
+        InterpretationBox[\(O[h]\^5\),
+          SeriesData[ h, 0, {}, 0, 3, 1]]}]]],
+  ".  The term ",
+  Cell[BoxData[
+      \(O[h]\^5\)]],
+  " is removed from the series with the command ",
+  StyleBox["Normal",
+    FontWeight->"Bold"],
+  ", and a Taylor polynomial of degree ",
+  Cell[BoxData[
+      \(n = 4\)]],
+  " is formed.  However, we must remember that the accuracy for the Taylor \
+polynomial is  ",
+  Cell[BoxData[
+      InterpretationBox[\(O[h]\^5\),
+        SeriesData[ h, 0, {}, 0, 3, 1]]]],
+  ".   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(s[h_] = 
+        Normal[Series[
+            f[x\_0 + h], {h, 0, n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(x\_0\)+h] \[TildeTilde] \>\"", 
+        s[h]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Construct two \"equations\" by setting the series equal to the function at \
+",
+  Cell[BoxData[
+      \(x = x\_0 \[PlusMinus] h\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ".    "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(eqns = {s[\(-\ h\)] \[Equal] f[x\_0 - \ h], 
+          s[\ h] \[Equal] f[x\_0 + \ h]};\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\)}], "Input",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  "We have two equations in the two unknown ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", and all the other quantities ",
+  Cell[BoxData[
+      \(h\)]],
+  ",  ",
+  Cell[BoxData[
+      \(f[x\_0 - h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " are considered as constants.  Now use the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command \"",
+  StyleBox["Solve",
+    FontWeight->"Bold"],
+  "\" to solve for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ".    "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(solset = 
+        Solve[eqns, {\(f'\)[x\_0], \(f''\)[
+              x\_0]}];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The result is not too easy to read, so we can use the commands ",
+  Cell[BoxData[
+      StyleBox["ExpandAll",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["Collect",
+        FontWeight->"Bold"]]],
+  " to manipulate the formula.  In the print statements we add  \"",
+  Cell[BoxData[
+      StyleBox[\(+ ... \),
+        FontWeight->"Bold"]]],
+  "\"  to remind us that we are using truncated infinite series.  The \
+following commands will create a nicer looking printout for the above \
+solution.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(sol1 = 
+        Collect[ExpandAll[
+            solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, 2\)\(\
+\[RightDoubleBracket]\)\)], h];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(sol1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\) = 
+        Together[
+          sol1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\
+\ \ \), "\[IndentingNewLine]", 
+    \(\(sol2 = 
+        Collect[ExpandAll[
+            solset\_\(\(\[LeftDoubleBracket]\)\(1, 2, 2\)\(\
+\[RightDoubleBracket]\)\)], h];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\< f'[\!\(x\_0\)] = \>\"", 
+        sol1, "\< + ...\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f''[\!\(x\_0\)] = \>\"", 
+        sol2, "\< + ...\>"];\)\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Thus, we have derived the numerical differentiation formula for   ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  "  and   ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and the first term in the series expansion for the remainder which \
+involves, ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " or  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  ", respectively.  Since the \"numerical differentiation formulae\" are \
+\"truncated\" infinite series, we know that the ellipses \"",
+  Cell[BoxData[
+      StyleBox["...",
+        FontWeight->"Bold"]]],
+  "\" means that there are infinitely many more term which are not shown.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  "\tWhen we do not include the  \"",
+  Cell[BoxData[
+      StyleBox["...",
+        FontWeight->"Bold"]]],
+  "\", we must evaluate the lowest order derivative in the series for the \
+remainder at the value ",
+  Cell[BoxData[
+      \(x = c\)]],
+  " instead of ",
+  Cell[BoxData[
+      \(x = x\_0\)]],
+  ", then we can \"chop off\" the infinite series at the term involving  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", "c", "]"}]]],
+  " or  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", "c", "]"}]]],
+  ", respectively.  The ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command  ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " is used to accomplish this task.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"sol11", "=", 
+          RowBox[{"ReplaceAll", "[", 
+            RowBox[{\(Take[sol1, 2]\), ",", 
+              RowBox[{
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((k_)\),
+                      Derivative],
+                    MultilineFunction->None], "[", \(x\_0\), "]"}], "\[Rule]",
+                 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((k)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}]}], "]"}]}], 
+        ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"sol22", "=", 
+          RowBox[{"ReplaceAll", "[", 
+            RowBox[{\(Take[sol2, 2]\), ",", 
+              RowBox[{
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((k_)\),
+                      Derivative],
+                    MultilineFunction->None], "[", \(x\_0\), "]"}], "\[Rule]",
+                 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((k)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}]}], "]"}]}], 
+        ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\< f'[\!\(x\_0\)] = \>\"", sol11];\), 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<f''[\!\(x\_0\)] = \>\"", sol22];\), 
+      "   "}]}], "Input"],
+
+Cell[TextData[{
+  "\tWe have obtained the desired numerical differentiation formulas and \
+their remainder terms.  We should mention that new in version 4.1 of  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is symbolic recognition of order of approximation for divided difference \
+formulas.  We can add the term ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  " to the numerical differentiation formula term, and ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will conclude that it is the derivative plus ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  ".   The following commands illustrate this feature of ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\(\(-f[\(-h\) + x\_0]\) + f[h + x\_0]\)\/\(2  \
+h\)\)+ \!\(O[h]\^2\) = \>\"", \(\(-f[\(-h\) + x\_0]\) + f[h + x\_0]\)\/\(2\ h\
+\) + \ O[h]\^2];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[StyleBox["   ",
+  FontSize->6]], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(\(\(-2\) f[x\_0] + f[\(-h\) + x\_0] + f[h + \
+x\_0]\)\/h\^2\)+ \!\(O[h]\^2\) = \>\"", \(\(-2\)\ f[x\_0] + f[\(-h\) + x\_0] \
++ f[h + x\_0]\)\/h\^2 + \ O[h]\^2];\)\)], "Input"],
+
+Cell[TextData[{
+  "Therefore, we have established the numerical differentiation formulas   \n\
+\n\t",
+  Cell[BoxData[
+      \(\(\(\ \ \)\(\(\(f'\)[x\_0]\)\(=\)\(\ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 + h]\  - \ f[x\_0 - h]\)\/\(2\ h\)\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(-\ \(1\/6\)\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((3)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], \(h\^2\)}]}]]],
+  "  \nand\n\t",
+  Cell[BoxData[
+      \(\(\(\(f''\)[x\_0]\)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 - h]\  - \ 2\ f[x\_0]\  + \ f[x\_0 + h]\)\/h\^2\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(-\ \(1\/12\)\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((4)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}], " ", \(h\^2\)}]}]]],
+  "\n\nAnd the corresponding formulas with the big \"O\" notation  ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  " are   \n\n\t",
+  Cell[BoxData[
+      \(\(\(\ \ \)\(\(\(f'\)[x\_0]\)\(=\)\(\ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 + h]\  - \ f[x\_0 - h]\)\/\(2\ h\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^2\)\)\)]],
+  "  \nand\n\t",
+  Cell[BoxData[
+      \(\(\(\(f''\)[x\_0]\)\(=\)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 - h]\  - \ 2\ f[x\_0]\  + \ f[x\_0 + h]\)\/h\^2\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^2\)\)\)]]
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  StyleBox["Comparison with the Traditional Derivations",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe above derivation differs only slightly from the traditional \
+derivations which also start with the two equations  \n\n\t",
+  Cell[BoxData[
+      \(\(\(f[x\_0 - h]\)\(\ \)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(f[x\_0] - h\ \(f'\)[x\_0] + 1\/2\ h\^2\ \(f''\)[x\_0]\)]],
+  " ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{\(-\ \(1\/6\)\), " ", \(h\^3\), " ", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((3)\),
+                  Derivative],
+                MultilineFunction->None], "[", \(x\_0\), "]"}]}], "+", 
+          RowBox[{\(1\/24\), " ", \(h\^4\), " ", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((4)\),
+                  Derivative],
+                MultilineFunction->None], "[", \(x\_0\), "]"}]}], "+"}], " ", 
+        "..."}]]],
+  "  \n(1) \n\t",
+  Cell[BoxData[
+      \(\(\(f[h + x\_0]\)\(\ \)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(f[x\_0] + h\ \(f'\)[x\_0] + 1\/2\ h\^2\ \(f''\)[x\_0]\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{\(+\ \(1\/6\)\), " ", \(h\^3\), " ", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((3)\),
+                    Derivative],
+                  MultilineFunction->None], "[", \(x\_0\), "]"}]}], "+", 
+            RowBox[{\(1\/24\), " ", \(h\^4\), " ", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((4)\),
+                    Derivative],
+                  MultilineFunction->None], "[", \(x\_0\), "]"}]}], "+"}], 
+          " ", "..."}]}]]],
+  "  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  "\tWhen deriving the numerical differentiation formula for ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " the equations (1) are subtracted and the terms involving  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " cancel and manipulations are used to solve for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and its truncation error term.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  " \tThe traditional derivation of the numerical differentiation formula for \
+",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " starts with the same equations (1).  But this time the equations are \
+added and the terms involving  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " cancel and manipulations are used to solve for  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and its truncation error term.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell["\<\
+ \tThere is no \"big deal\" made about the fact that the starting place is \
+the same.  We shall see for the higher order formulas that using the same \
+starting place will be the key to successful computer derivations of \
+numerical differentiation formulas.  \
+\>", "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  StyleBox["The Five Point Central Difference Formulas",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tUsing five points ",
+  Cell[BoxData[
+      \(f[x\_0 - 2  h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 - h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ",",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", and ",
+  Cell[BoxData[
+      \(f[x\_0 + 2  h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  "we can give a parallel development of the numerical differentiation \
+formulas for  ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ",  ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  ".  Start with the Taylor series for ",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)]],
+  " expanded in powers of  ",
+  Cell[BoxData[
+      \(h\)]],
+  ".  Terms must be included so that the remainder term is included.  Using \
+degree ",
+  Cell[BoxData[
+      \(n = 6\)]],
+  " will suffice.  Since the remainder term  ",
+  Cell[BoxData[
+      RowBox[{
+        InterpretationBox[\(O[h]\^\(n + 1\)\),
+          SeriesData[ h, 0, {}, 0, 3, 1]], "=", 
+        InterpretationBox[\(O[h]\^7\),
+          SeriesData[ h, 0, {}, 0, 3, 1]]}]]],
+  ", we will use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["Normal",
+    FontWeight->"Bold"],
+  " command to remove it from the series, and form the Taylor polynomial of \
+degree ",
+  Cell[BoxData[
+      \(n = 6\)]],
+  ".   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(k = 2; \ n = 2  k + 2;\ \ \ \), "\[IndentingNewLine]", 
+    \(\(s[h_] = 
+        Normal[Series[
+            f[x\_0 + h], {h, 0, n}]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f[\!\(x\_0\)+h] \[TildeTilde] \>\"", 
+        s[h]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Use five points and set up the \"equations\" by setting  ",
+  Cell[BoxData[
+      \(s[x\_0 + k\ h] \[Equal] f[x\_0 + k\ h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " for  ",
+  Cell[BoxData[
+      RowBox[{\(k = \(-2\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(-1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "0", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2"}]],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", which is automated by using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["Table",
+    FontWeight->"Bold"],
+  " command.  Although the value   ",
+  Cell[BoxData[
+      \(k = 0\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", will produce  ",
+  Cell[BoxData[
+      \(f[x\_0] \[Equal] f[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " which is the boolean value True, it will do no harm when solving the set \
+of equations and we will see that the generations of higher order formulas \
+which require more complicated sets of equations is more easily automated \
+with the use of a table.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(eqns = 
+        Table[s[j\ h] \[Equal] f[x\_0 + \ j\ h], {j, \(-k\), 
+            k}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We can consider that these are four equations in the four unknowns ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ",  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  ", and all the other quantities ",
+  Cell[BoxData[
+      \(h\)]],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 - 2  h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 - h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 + h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(f[x\_0 - 2  h]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((5)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((6)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " are constants.  Now use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " to solve for ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ", ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  ",  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  ".  Since this requires typing of four derivatives to be solved, we will \
+automate this process too, by using a table to construct the \"variables.\"  \
+"
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"vars", " ", "=", " ", 
+          RowBox[{"Table", "[", 
+            RowBox[{
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((k)\),
+                    Derivative],
+                  MultilineFunction->None], "[", \(x\_0\), "]"}], 
+              ",", \({k, 1, 2  k}\)}], "]"}]}], ";"}], 
+      "  "}], "\[IndentingNewLine]", \(Print["\<The variables in the above \
+equations are\>"];\), "\[IndentingNewLine]", \(Print[\ vars\ ];\)}], "Input"],
+
+Cell[TextData[{
+  "Amazingly, the algebra involved in solving the four equations will result \
+in the cancellation of ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((6)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  "in the odd order derivatives and the term  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((5)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " will cancel in the even order derivatives.  This can be accomplished \
+using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["Solve",
+    FontWeight->"Bold"],
+  " procedure.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    \(\(solset = Solve[eqns, vars];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the equations\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[eqns]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The output is not too clear to read, so we shall use the formula \
+manipulation commands ",
+  Cell[BoxData[
+      StyleBox["ExpandAll",
+        FontWeight->"Bold"]]],
+  " and ",
+  Cell[BoxData[
+      StyleBox["Collect",
+        FontWeight->"Bold"]]],
+  " to group the numerical differentiation portion, and then use the ",
+  StyleBox["ReplaceAll",
+    FontWeight->"Bold"],
+  " command to change ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((5)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((6)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " to ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((5)\),
+            Derivative],
+          MultilineFunction->None], "[", "c", "]"}]]],
+  " and  ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((6)\),
+            Derivative],
+          MultilineFunction->None], "[", "c", "]"}]]],
+  ", then a final use of ",
+  StyleBox["Together",
+    FontWeight->"Bold"],
+  " will clean up the numerical differentiation formula part.  All this will \
+be accomplished in the following three ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " commands.  If the reader is curious about exactly what is happening in \
+each step, then the semi-colons can be deleted and the results of each \
+operation will be shown.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[{
+    RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\) = 
+          Collect[ExpandAll[
+              solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)], h];\), "  "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+              2\)\(\[RightDoubleBracket]\)\)\), "=", 
+          RowBox[{"ReplaceAll", "[", 
+            
+            RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                  2\)\(\[RightDoubleBracket]\)\)\), ",", 
+              RowBox[{
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((i_)\),
+                      Derivative],
+                    MultilineFunction->None], "[", \(x\_0\), "]"}], "\[Rule]",
+                 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((i)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}]}], "]"}]}], 
+        ";"}], "  "}], "\n", 
+    RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\
+\[RightDoubleBracket]\)\) = 
+        Together[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\
+\[RightDoubleBracket]\)\)]; \ 
+      Print[\*"\"\< f'[\!\(x\_0\)] = \>\"", 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\)];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<f''[\!\(x\_0\)] = \>\"", 
+          solset\_\(\(\[LeftDoubleBracket]\)\(1, 2, \
+2\)\(\[RightDoubleBracket]\)\)];\), "   "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((3)\),
+Derivative],
+MultilineFunction->None]\)[\!\(x\_0\)] = \>\"", 
+            ",", \(solset\_\(\(\[LeftDoubleBracket]\)\(1, 3, 
+                2\)\(\[RightDoubleBracket]\)\)\)}], "]"}], ";"}], 
+      "   "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((4)\),
+Derivative],
+MultilineFunction->None]\)[\!\(x\_0\)] = \>\"", 
+            ",", \(solset\_\(\(\[LeftDoubleBracket]\)\(1, 4, 
+                2\)\(\[RightDoubleBracket]\)\)\)}], "]"}], ";"}], 
+      "   "}]}], "Input"],
+
+Cell[TextData[{
+  "Notice that the formula for approximating ",
+  Cell[BoxData[
+      \(\(f'\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " and ",
+  Cell[BoxData[
+      \(\(f''\)[x\_0]\)],
+    ImageRegion->{{0, 1}, {0, 1}}],
+  " have truncation error terms involving  ",
+  Cell[BoxData[
+      \(h\^4\)]],
+  " so they are numerical differentiation formulas of order ",
+  Cell[BoxData[
+      \(O[h]\^4\)]],
+  ".   But the formula for approximating ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((3)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " and ",
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox["f", 
+          TagBox[\((4)\),
+            Derivative],
+          MultilineFunction->None], "[", \(x\_0\), "]"}]]],
+  " have truncation error terms involving  ",
+  Cell[BoxData[
+      \(h\^2\)]],
+  " so they are numerical differentiation formulas of order ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  ".  This is one of the many surprises in the theory of numerical analysis.  \
+ "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  "Again, we can uses ",
+  StyleBox["Mathematica'",
+    FontSlant->"Italic"],
+  "s 4.1 ability to symbolic recognize the order of approximation for divided \
+difference formulas.  If we add the term  ",
+  Cell[BoxData[
+      \(O[h]\^4\)]],
+  " or ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  " to the numerical differentiation formula then we will be surprised to \
+learn that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will tell us that it is the derivative plus  ",
+  Cell[BoxData[
+      \(O[h]\^4\)]],
+  " or ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  " .   The following commands illustrate this point.   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\(f[\(-2\) h + x\_0] - 8  f[\(-h\) + x\_0] + 8  \
+f[h + x\_0] - f[2  h + x\_0]\)\/\(12  h\)\)+ \!\(O[h]\^4\) = \>\"", \
+\(f[\(-2\)\ h + x\_0] - 8\ f[\(-h\) + x\_0] + 8\ f[h + x\_0] - f[2\ h + x\_0]\
+\)\/\(12\ h\) + \ O[h]\^4];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[StyleBox["   ",
+  FontSize->6]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\(\(-30\) f[x\_0] - f[\(-2\) h + x\_0] + 16  \
+f[\(-h\) + x\_0] + 16  f[h + x\_0] - f[2  h + x\_0]\)\/\(12  h\^2\)\)+ \
+\!\(O[h]\^4\) = \>\"", \(\(-30\)\ f[x\_0] - f[\(-2\)\ h + x\_0] + 16\ \
+f[\(-h\) + x\_0] + 16\ f[h + x\_0] - f[2\ h + x\_0]\)\/\(12\ h\^2\) + \ 
+          O[h]\^4];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[StyleBox["   ",
+  FontSize->6]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\(\(-f[\(-2\) h + x\_0]\) + 2  f[\(-h\) + x\_0] - \
+2  f[h + x\_0] + f[2  h + x\_0]\)\/\(2  h\^3\)\)+ \!\(O[h]\^2\) = \>\"", \
+\(\(-f[\(-2\)\ h + x\_0]\) + 2\ f[\(-h\) + x\_0] - 2\ f[h + x\_0] + f[2\ h + \
+x\_0]\)\/\(2\ h\^3\) + \ O[h]\^2];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[StyleBox["   ",
+  FontSize->6]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(\(6  f[x\_0] + f[\(-2\) h + x\_0] - 4  f[\(-h\) + \
+x\_0] - 4  f[h + x\_0] + f[2  h + x\_0]\)\/h\^4\) +\!\(O[h]\^2\) = \>\"", \(6\
+\ f[x\_0] + f[\(-2\) h + x\_0] - 4  f[\(-h\) + x\_0] - 4  f[h + x\_0] + f[2  \
+h + x\_0]\)\/h\^4\  + O[h]\^2];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Therefore, we have established the numerical differentiation formulas   \n\
+\n\t",
+  Cell[BoxData[
+      \(\(\(\ \)\(\(\(f'\)[x\_0]\)\(=\)\(\ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 - 2\ h]\  - \ 8\ f[x\_0 - h]\  + \ 8\ f[x\_0 + h]\  - \ \
+f[x\_0 + 2\ h]\)\/\(12\ h\)\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(+\(1\/30\)\), " ", \(h\^4\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((5)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}]}]}]]],
+  "    \n\n\n\t",
+  Cell[BoxData[
+      \(\(\(\(f''\)[x\_0]\)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(\(\(-f[x\_0 - 2  h]\)\  + \ 16\ f[x\_0 - h]\  - \ 30\ f[x\_0]\  + \ \
+16\ f[x\_0 + h]\  - \ f[x\_0 + 2  h]\)\/\(12\ h\^2\)\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(+\(1\/90\)\), " ", \(h\^4\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((6)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}]}]}]]],
+  "  \n\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((3)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_0\), "]"}], "=", " "}]]],
+  Cell[BoxData[
+      \(\(\(-f[x\_0 - 2  h]\)\  + \ 2\ f[x\_0 - h]\  - \ 2\ f[x\_0 + h]\  + \ \
+f[x\_0 + 2  h]\)\/\(2\ h\^3\)\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(-\(1\/4\)\), " ", \(h\^2\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((5)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}]}]}]]],
+  "   \n\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((4)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_0\), "]"}], "=", " "}]]],
+  Cell[BoxData[
+      \(\(f[x\_0 - 2  h]\  - \ 4\ f[x\_0 - h]\  + \ 6\ f[x\_0]\  - \ 4\ \
+f[x\_0 + h]\  + \ f[x\_0 + 2  h]\)\/h\^4\)]],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{\(-\(1\/6\)\), " ", \(h\^2\), " ", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((6)\),
+                Derivative],
+              MultilineFunction->None], "[", "c", "]"}]}]}]]],
+  "   \n"
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  "These formulas can be written with the big \"O\" notation ",
+  Cell[BoxData[
+      \(O[h]\^4\)]],
+  " and ",
+  Cell[BoxData[
+      \(O[h]\^2\)]],
+  " if desired.\n\n\t",
+  Cell[BoxData[
+      \(\(\(\ \)\(\(\(f'\)[x\_0]\)\(=\)\(\ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(f[x\_0 - 2\ h]\  - \ 8\ f[x\_0 - h]\  + \ 8\ f[x\_0 + h]\  - \ \
+f[x\_0 + 2\ h]\)\/\(12\ h\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^4\)\)\)]],
+  "    \n\n\n\t",
+  Cell[BoxData[
+      \(\(\(\(f''\)[x\_0]\)\(=\)\(\ \)\)\)]],
+  Cell[BoxData[
+      \(\(\(-f[x\_0 - 2  h]\)\  + \ 16\ f[x\_0 - h]\  - \ 30\ f[x\_0]\  + \ \
+16\ f[x\_0 + h]\  - \ f[x\_0 + 2  h]\)\/\(12\ h\^2\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^4\)\)\)]],
+  "   \n\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((3)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_0\), "]"}], "=", " "}]]],
+  Cell[BoxData[
+      \(\(\(-f[x\_0 - 2  h]\)\  + \ 2\ f[x\_0 - h]\  - \ 2\ f[x\_0 + h]\  + \ \
+f[x\_0 + 2  h]\)\/\(2\ h\^3\)\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^2\)\)\)]],
+  "   \n\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((4)\),
+              Derivative],
+            MultilineFunction->None], "[", \(x\_0\), "]"}], "=", " "}]]],
+  Cell[BoxData[
+      \(\(f[x\_0 - 2  h]\  - \ 4\ f[x\_0 - h]\  + \ 6\ f[x\_0]\  - \ 4\ \
+f[x\_0 + h]\  + \ f[x\_0 + 2  h]\)\/h\^4\)]],
+  Cell[BoxData[
+      \(\(\(\ \)\(+\ O[h]\^2\)\)\)]],
+  "   "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[TextData[{
+  StyleBox["Appendix. Subroutines for Generating Numerical Differentiation \
+Formulae",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nThe central difference formulae use an odd number of points  ",
+  Cell[BoxData[
+      \(m = 2  k + 1\)]],
+  ",  and an even number of  ",
+  Cell[BoxData[
+      \(n = 2  k\)]],
+  " equations.  Since we want to include the remainder terms, we need to use \
+series expansions of order  ",
+  Cell[BoxData[
+      \(n = 2  k + 2\)]],
+  ".  The remainder term in these formulas all involve even powers of  h  and \
+even and odd derivatives depending on the situation.  Also, the subroutine \
+requires a replacement of the point where the remainder term is evaluated to \
+be ",
+  Cell[BoxData[
+      \(x = c\)]],
+  " instead of  ",
+  Cell[BoxData[
+      \(x = x\_0\)]],
+  ".  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(CentralDiff[k0_]\), ":=", 
+          RowBox[{"Module", "[", 
+            RowBox[{\({k = k0}\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(Clear[h, i, j, n, f, s, x]\), ";", "  ", 
+                "\[IndentingNewLine]", \(s[h_] = 
+                  Normal[Series[f[x\_0 + h], {h, 0, 2  k + 2}]]\), ";", "  ", 
+                "\[IndentingNewLine]", \(eqns = 
+                  Table[s[j\ h] \[Equal] f[x\_0 + \ j\ h], {j, \(-k\), k}]\), 
+                ";", "    ", "\[IndentingNewLine]", 
+                RowBox[{"vars", " ", "=", " ", 
+                  RowBox[{"Table", "[", 
+                    RowBox[{
+                      RowBox[{
+                        SuperscriptBox["f", 
+                          TagBox[\((k)\),
+                            Derivative],
+                          MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                      ",", \({k, 1, 2  k}\)}], "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \(pts\  = \ 
+                  Table[{x\_0, f[x\_0 + \ j\ h]}, {j, \(-k\), k}]\), ";", 
+                "  ", "\[IndentingNewLine]", \(solset = Solve[eqns, vars]\), 
+                ";", "  ", 
+                "\[IndentingNewLine]", \
+\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\[RightDoubleBracket]\)\) \
+= Collect[ExpandAll[
+                      solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)], h]\), ";", "  ", "\[IndentingNewLine]", 
+                
+                RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                      2\)\(\[RightDoubleBracket]\)\)\), "=", 
+                  RowBox[{"ReplaceAll", "[", 
+                    
+                    RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                          2\)\(\[RightDoubleBracket]\)\)\), ",", 
+                      RowBox[{
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i_)\),
+                              Derivative],
+                            MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                        "\[Rule]", 
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i)\),
+                              Derivative],
+                            MultilineFunction->None], "[", "c", "]"}]}]}], 
+                    "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \
+\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\[RightDoubleBracket]\)\
+\) = Together[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\
+\[RightDoubleBracket]\)\)]\), ";", "  ", 
+                "\[IndentingNewLine]", \(Print["\<Central difference formulas \
+for numerical differentiation\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print["\<Using the \>", 
+                  2  k + 1, "\< points\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print[\ pts, "\<\n\>"\ ]\), ";", 
+                "\[IndentingNewLine]", \(Print[
+                  TableForm[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]]\), ";"}]}], " ", "]"}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["The Five Point Central Difference Formulae",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThese are to difficult to do by hand, so we use the computer.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    \(\(\(CentralDiff[2]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Higher order formulas are easy to obtain with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(CentralDiff[3]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(CentralDiff[4]\)\(\ \ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Subroutines for Generating the Forward and Backward Difference \
+Formulae",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\nOnce we have the idea for the central difference formula, all we need \
+to do is adjust the set of to be forward step sizes or backward step sizes \
+and we can generate the forward and backward differentiation formulas.  "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(ForwardDiff[k0_]\), ":=", 
+          RowBox[{"Module", "[", 
+            RowBox[{\({k = k0}\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(Clear[h, i, j, n, f, s, x]\), ";", "  ", 
+                "\[IndentingNewLine]", \(s[h_] = 
+                  Normal[Series[f[x\_0 + h], {h, 0, k + 1}]]\), ";", "  ", 
+                "\[IndentingNewLine]", \(eqns = 
+                  Table[s[j\ h] \[Equal] f[x\_0 + \ j\ h], {j, 0, k}]\), ";", 
+                "    ", "\[IndentingNewLine]", 
+                RowBox[{"vars", " ", "=", " ", 
+                  RowBox[{"Table", "[", 
+                    RowBox[{
+                      RowBox[{
+                        SuperscriptBox["f", 
+                          TagBox[\((k)\),
+                            Derivative],
+                          MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                      ",", \({k, 1, k}\)}], "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \(pts\  = \ 
+                  Table[{x\_0, f[x\_0 + \ j\ h]}, {j, 0, k}]\), ";", "  ", 
+                "\[IndentingNewLine]", \(solset = Solve[eqns, vars]\), ";", 
+                "  ", "\[IndentingNewLine]", \(solset\_\(\(\
+\[LeftDoubleBracket]\)\(1, All, 2\)\(\[RightDoubleBracket]\)\) = 
+                  Collect[
+                    ExpandAll[
+                      solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)], h]\), ";", "  ", "\[IndentingNewLine]", 
+                
+                RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                      2\)\(\[RightDoubleBracket]\)\)\), "=", 
+                  RowBox[{"ReplaceAll", "[", 
+                    
+                    RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                          2\)\(\[RightDoubleBracket]\)\)\), ",", 
+                      RowBox[{
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i_)\),
+                              Derivative],
+                            MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                        "\[Rule]", 
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i)\),
+                              Derivative],
+                            MultilineFunction->None], "[", "c", "]"}]}]}], 
+                    "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \
+\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\[RightDoubleBracket]\)\
+\) = Together[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\
+\[RightDoubleBracket]\)\)]\), ";", "  ", 
+                "\[IndentingNewLine]", \(Print["\<Forward difference formulas \
+for numerical differentiation\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print["\<Using the \>", 
+                  k + 1, "\< points\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print[\ pts, "\<\n\>"\ ]\), ";", 
+                "\[IndentingNewLine]", \(Print[
+                  TableForm[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]]\), ";"}]}], " ", "]"}]}], ";"}], "  "}]], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(BackwardDiff[k0_]\), ":=", 
+          RowBox[{"Module", "[", 
+            RowBox[{\({k = k0}\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(Clear[h, j, n, f, s, x]\), ";", "  ", 
+                "\[IndentingNewLine]", \(s[h_] = 
+                  Normal[Series[f[x\_0 + h], {h, 0, k + 1}]]\), ";", "  ", 
+                "\[IndentingNewLine]", \(eqns = 
+                  Table[s[\(-j\)\ h] \[Equal] f[x\_0 - \ j\ h], {j, 0, k}]\), 
+                ";", "    ", "\[IndentingNewLine]", 
+                RowBox[{"vars", " ", "=", " ", 
+                  RowBox[{"Table", "[", 
+                    RowBox[{
+                      RowBox[{
+                        SuperscriptBox["f", 
+                          TagBox[\((k)\),
+                            Derivative],
+                          MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                      ",", \({k, 1, k}\)}], "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \(pts\  = \ 
+                  Table[{x\_0, f[x\_0 + \ j\ h]}, {j, 0, k}]\), ";", "  ", 
+                "\[IndentingNewLine]", \(solset = Solve[eqns, vars]\), ";", 
+                "  ", "\[IndentingNewLine]", \(solset\_\(\(\
+\[LeftDoubleBracket]\)\(1, All, 2\)\(\[RightDoubleBracket]\)\) = 
+                  Collect[
+                    ExpandAll[
+                      solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2\)\(\
+\[RightDoubleBracket]\)\)], h]\), ";", "  ", "\[IndentingNewLine]", 
+                
+                RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                      2\)\(\[RightDoubleBracket]\)\)\), "=", 
+                  RowBox[{"ReplaceAll", "[", 
+                    
+                    RowBox[{\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 
+                          2\)\(\[RightDoubleBracket]\)\)\), ",", 
+                      RowBox[{
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i_)\),
+                              Derivative],
+                            MultilineFunction->None], "[", \(x\_0\), "]"}], 
+                        "\[Rule]", 
+                        RowBox[{
+                          SuperscriptBox["f", 
+                            TagBox[\((i)\),
+                              Derivative],
+                            MultilineFunction->None], "[", "c", "]"}]}]}], 
+                    "]"}]}], ";", "  ", 
+                "\[IndentingNewLine]", \
+\(solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\[RightDoubleBracket]\)\
+\) = Together[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1, All, 2, 1\)\(\
+\[RightDoubleBracket]\)\)]\), ";", "  ", 
+                "\[IndentingNewLine]", \(Print["\<Backward difference \
+formulas for numerical differentiation\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print["\<Using the \>", 
+                  k + 1, "\< points\>"]\), ";", 
+                "\[IndentingNewLine]", \(Print[\ pts, "\<\n\>"\ ]\), ";", 
+                "\[IndentingNewLine]", \(Print[
+                  TableForm[
+                    solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)]]\), ";"}]}], " ", "]"}]}], ";"}], "  "}]], "Input"],
+
+Cell[TextData[StyleBox["Explorations with the Higher Order Formulas",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[BoxData[
+    \(BackwardDiff[3]\)], "Input"],
+
+Cell[BoxData[
+    \(ForwardDiff[3]\)], "Input"],
+
+Cell[TextData[{
+  "Higher order formulas are easy to obtain with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ". "
+}], "Text",
+  ImageRegion->{{0, 1}, {0, 1}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Exploration",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(BackwardDiff[4]\)], "Input"],
+
+Cell[BoxData[
+    \(ForwardDiff[4]\)], "Input"],
+
+Cell["", "Text"],
+
+Cell[BoxData[
+    \(BackwardDiff[5]\)], "Input"],
+
+Cell[BoxData[
+    \(ForwardDiff[5]\)], "Input"],
+
+Cell["", "Text"],
+
+Cell[BoxData[
+    \(BackwardDiff[6]\)], "Input"],
+
+Cell[BoxData[
+    \(ForwardDiff[6]\)], "Input"],
+
+Cell["", "Text"],
+
+Cell[BoxData[
+    \(BackwardDiff[7]\)], "Input"],
+
+Cell[BoxData[
+    \(ForwardDiff[7]\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Reference",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n",
+  ButtonBox["John Mathews, Computer Derivations of Numerical Differentiation \
+Formulae (Classroom Notes)",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/articles/2003NumericalDiffFormulae.\
+pdf"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[",  ",
+    FontFamily->"New York"],
+  StyleBox["International Journal of Mathematics Education in Science and \
+Technology",
+    FontFamily->"Times New Roman"],
+  StyleBox[", Volume 34 No 2 (March-April 2003), pp.280-287",
+    FontFamily->"New York"],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NumericalDiffBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NumericalDiffBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowToolbars->{},
+CellGrouping->Manual,
+WindowSize->{990, 634},
+WindowMargins->{{Automatic, 12}, {Automatic, 2}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PageHeaders->{{Inherited, Inherited, Inherited}, {None, Inherited, None}},
+PageHeaderLines->{Inherited, False},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {36, 36}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->False,
+"PrintMultipleHorizontalPages"->False,
+"FirstPageHeader"->False,
+"FirstPageFooter"->False},
+PrivateNotebookOptions->{"ColorPalette"->{RGBColor, -1}},
+ShowCellLabel->True,
+ShowCellTags->False,
+RenderingOptions->{"ObjectDithering"->True,
+"RasterDithering"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 203, 5, 35, "Text"],
+Cell[1982, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3461, 112, 670, 20, 68, "Text"],
+Cell[4134, 134, 1456, 41, 109, "Text"],
+Cell[5593, 177, 995, 37, 90, "Text"],
+Cell[6591, 216, 212, 3, 70, "Input"],
+Cell[6806, 221, 807, 27, 52, "Text"],
+Cell[7616, 250, 217, 5, 50, "Input"],
+Cell[7836, 257, 241, 8, 33, "Text"],
+Cell[8080, 267, 229, 4, 50, "Input"],
+Cell[8312, 273, 1316, 54, 52, "Text"],
+Cell[9631, 329, 465, 10, 110, "Input"],
+Cell[10099, 341, 589, 17, 52, "Text"],
+Cell[10691, 360, 767, 16, 110, "Input"],
+Cell[11461, 378, 1024, 31, 71, "Text"],
+Cell[12488, 411, 965, 34, 52, "Text"],
+Cell[13456, 447, 1521, 40, 92, "Input"],
+Cell[14980, 489, 730, 20, 71, "Text"],
+Cell[15713, 511, 207, 3, 43, "Input"],
+Cell[15923, 516, 54, 1, 26, "Text"],
+Cell[15980, 519, 214, 3, 42, "Input"],
+Cell[16197, 524, 1519, 46, 237, "Text"],
+Cell[17719, 572, 1820, 51, 153, "Text"],
+Cell[19542, 625, 514, 15, 52, "Text"],
+Cell[20059, 642, 578, 17, 52, "Text"],
+Cell[20640, 661, 318, 6, 52, "Text"],
+Cell[20961, 669, 2025, 76, 128, "Text"],
+Cell[22989, 747, 279, 6, 70, "Input"],
+Cell[23271, 755, 2035, 60, 71, "Text"],
+Cell[25309, 817, 194, 4, 50, "Input"],
+Cell[25506, 823, 2296, 89, 71, "Text"],
+Cell[27805, 914, 541, 13, 71, "Input"],
+Cell[28349, 929, 765, 25, 52, "Text"],
+Cell[29117, 956, 416, 8, 110, "Input"],
+Cell[29536, 966, 1597, 52, 90, "Text"],
+Cell[31136, 1020, 2332, 59, 133, "Input"],
+Cell[33471, 1081, 1114, 38, 71, "Text"],
+Cell[34588, 1121, 683, 23, 52, "Text"],
+Cell[35274, 1146, 290, 4, 43, "Input"],
+Cell[35567, 1152, 54, 1, 26, "Text"],
+Cell[35624, 1155, 348, 5, 78, "Input"],
+Cell[35975, 1162, 54, 1, 26, "Text"],
+Cell[36032, 1165, 304, 4, 43, "Input"],
+Cell[36339, 1171, 54, 1, 26, "Text"],
+Cell[36396, 1174, 305, 4, 76, "Input"],
+Cell[36704, 1180, 2349, 70, 276, "Text"],
+Cell[39056, 1252, 1601, 51, 257, "Text"],
+Cell[40660, 1305, 884, 26, 109, "Text"],
+Cell[41547, 1333, 3256, 64, 294, "Input"],
+Cell[44806, 1399, 250, 6, 71, "Text"],
+Cell[45059, 1407, 63, 1, 30, "Input"],
+Cell[45125, 1410, 171, 6, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[45321, 1420, 101, 2, 33, "Text"],
+Cell[45425, 1424, 63, 1, 30, "Input"],
+Cell[45491, 1427, 63, 1, 30, "Input"]
+}, Closed]],
+Cell[45569, 1431, 437, 9, 87, "Text"],
+Cell[46009, 1442, 3258, 64, 294, "Input"],
+Cell[49270, 1508, 3262, 64, 294, "Input"],
+Cell[52535, 1574, 166, 3, 33, "Text"],
+Cell[52704, 1579, 48, 1, 30, "Input"],
+Cell[52755, 1582, 47, 1, 30, "Input"],
+Cell[52805, 1585, 171, 6, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[53001, 1595, 101, 2, 33, "Text"],
+Cell[53105, 1599, 48, 1, 30, "Input"],
+Cell[53156, 1602, 47, 1, 30, "Input"],
+Cell[53206, 1605, 16, 0, 33, "Text"],
+Cell[53225, 1607, 48, 1, 30, "Input"],
+Cell[53276, 1610, 47, 1, 30, "Input"],
+Cell[53326, 1613, 16, 0, 33, "Text"],
+Cell[53345, 1615, 48, 1, 30, "Input"],
+Cell[53396, 1618, 47, 1, 30, "Input"],
+Cell[53446, 1621, 16, 0, 33, "Text"],
+Cell[53465, 1623, 48, 1, 30, "Input"],
+Cell[53516, 1626, 47, 1, 30, "Input"]
+}, Closed]],
+Cell[53578, 1630, 697, 21, 87, "Text"],
+Cell[54278, 1653, 158, 3, 35, "Text"],
+Cell[54439, 1658, 583, 17, 33, "Text"],
+Cell[55025, 1677, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

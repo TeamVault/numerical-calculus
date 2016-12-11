@@ -1,0 +1,2672 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     79763,       2463]*)
+(*NotebookOutlinePosition[     80807,       2494]*)
+(*  CellTagsIndexPosition[     80763,       2490]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Fixed Point Iteration",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "\tA fundamental principle in computer science is ",
+  StyleBox["iteration",
+    FontSlant->"Italic"],
+  ".  As the name suggests, a process is repeated until an answer is \
+achieved. Iterative techniques are used to find roots of equations, solutions \
+of linear and nonlinear systems of equations, and solutions of differential \
+equations."
+}], "Text"],
+
+Cell[TextData[{
+  "\tA rule or function ",
+  Cell[BoxData[
+      \(g \((x)\)\)]],
+  " for computing successive terms is needed, together with a starting value \
+",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  ".  Then a sequence of values ",
+  Cell[BoxData[
+      \({p\_k}\)],
+    AspectRatioFixed->False],
+  " is obtained using the iterative rule ",
+  Cell[BoxData[
+      \(p\_\(k + 1\) = g \((p\_k)\)\)],
+    AspectRatioFixed->False],
+  ".   The sequence has the pattern\n\t   ",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  "\t\t\t(starting value)\n\t   ",
+  Cell[BoxData[
+      \(p\_1 = g \((p\_0)\)\)],
+    AspectRatioFixed->False],
+  "\n\t   ",
+  Cell[BoxData[
+      \(p\_2 = g \((p\_1)\)\)],
+    AspectRatioFixed->False],
+  "\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          RowBox[{" ", 
+            StyleBox["       ",
+              FontWeight->"Bold"]}]], 
+        StyleBox["\[VerticalEllipsis]",
+          FontWeight->"Bold"]}]],
+    AspectRatioFixed->False],
+  "  \n\t   ",
+  Cell[BoxData[
+      \(p\_k = g \((p\_\(k - 1\))\)\)],
+    AspectRatioFixed->False],
+  "\n\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\) = g \((p\_k)\)\)],
+    AspectRatioFixed->False],
+  "\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          RowBox[{" ", 
+            StyleBox["       ",
+              FontWeight->"Bold"]}]], 
+        StyleBox["\[VerticalEllipsis]",
+          FontWeight->"Bold"]}]],
+    AspectRatioFixed->False],
+  "  "
+}], "Text"],
+
+Cell["\<\
+\tWhat can we learn from an unending sequence of numbers?  If the \
+numbers tend to a limit, we suspect that it is the answer.  \
+\>", "Text"],
+
+Cell[TextData[StyleBox["Finding Fixed Points",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["FixedPoint",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MapFixedPoint.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " A fixed point of a function ",
+  Cell[BoxData[
+      \(g \((x)\)\)],
+    AspectRatioFixed->False],
+  " is a number ",
+  Cell[BoxData[
+      \(P\)],
+    AspectRatioFixed->False],
+  " such that ",
+  Cell[BoxData[
+      \(P = g \((P)\)\)],
+    AspectRatioFixed->False],
+  ".  \n\n",
+  StyleBox["Caution.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.996109, 0.500008, 0.500008]],
+  "  A fixed point is ",
+  StyleBox["not",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " a root of the equation  ",
+  Cell[BoxData[
+      \(0 = g \((x)\)\)],
+    AspectRatioFixed->False],
+  ",  it is a solution of the equation  ",
+  Cell[BoxData[
+      \(x = g \((x)\)\)],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tGeometrically, the fixed points of a function  ",
+  Cell[BoxData[
+      \(g \((x)\)\)],
+    AspectRatioFixed->False],
+  "  are the point(s) of intersection of the curve  ",
+  Cell[BoxData[
+      \(y = g \((x)\)\)],
+    AspectRatioFixed->False],
+  "  and the line  ",
+  Cell[BoxData[
+      \(y = x\)],
+    AspectRatioFixed->False],
+  ".  \n\n\t\t",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: 1 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+2.77556e-017 0.333333 2.77556e-017 0.333333 [
+[.33333 -0.0125 -3 -9 ]
+[.33333 -0.0125 3 0 ]
+[.66667 -0.0125 -5 -12.5625 ]
+[.66667 -0.0125 5 0 ]
+[1 -0.0125 -3 -9 ]
+[1 -0.0125 3 0 ]
+[1.025 0 0 -6.28125 ]
+[1.025 0 10 6.28125 ]
+[-0.0125 .33333 -6 -4.5 ]
+[-0.0125 .33333 0 4.5 ]
+[-0.0125 .66667 -40 -6.28125 ]
+[-0.0125 .66667 0 6.28125 ]
+[-0.0125 1 -6 -4.5 ]
+[-0.0125 1 0 4.5 ]
+[0 1.025 -5 0 ]
+[0 1.025 5 12.5625 ]
+[ 0 0 0 0 ]
+[ 1 1 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.33333 0 m
+.33333 .00625 L
+s
+[(1)] .33333 -0.0125 0 1 Mshowa
+.66667 0 m
+.66667 .00625 L
+s
+gsave
+.66667 -0.0125 -66 -16.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(P) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+1 0 m
+1 .00625 L
+s
+[(3)] 1 -0.0125 0 1 Mshowa
+0 0 m
+1 0 L
+s
+gsave
+1.025 0 -61 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 .33333 m
+.00625 .33333 L
+s
+[(1)] -0.0125 .33333 1 0 Mshowa
+0 .66667 m
+.00625 .66667 L
+s
+gsave
+-0.0125 .66667 -101 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(P) show
+69.000 12.813 moveto
+%%IncludeResource: font Math1Mono
+%%IncludeFont: Math1Mono
+/Math1Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(=) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(g) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+81.000 12.813 moveto
+(H) show
+87.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(P) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+93.000 12.813 moveto
+(L) show
+99.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 1 m
+.00625 1 L
+s
+[(3)] -0.0125 1 1 0 Mshowa
+0 0 m
+0 1 L
+s
+gsave
+0 1.025 -66 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+0 0 m
+1 0 L
+1 1 L
+0 1 L
+closepath
+clip
+newpath
+0 1 0 r
+.5 Mabswid
+0 0 m
+.07437 .07437 L
+.15548 .15548 L
+.23166 .23166 L
+.30492 .30492 L
+.3829 .3829 L
+.45796 .45796 L
+.53774 .53774 L
+.61461 .61461 L
+.68855 .68855 L
+.76722 .76722 L
+.84297 .84297 L
+.9158 .9158 L
+.99336 .99336 L
+s
+.99336 .99336 m
+1 1 L
+s
+1 0 1 r
+0 .66667 m
+.07437 .73274 L
+.11308 .76057 L
+.15548 .78589 L
+.19492 .8046 L
+.23166 .81783 L
+.25186 .82338 L
+.27096 .8275 L
+.28811 .83027 L
+.29779 .83144 L
+.30672 .83227 L
+.31132 .83261 L
+.31569 .83287 L
+.31809 .83299 L
+.32072 .83309 L
+.32314 .83318 L
+.32533 .83324 L
+.32759 .83328 L
+.32971 .83331 L
+.33195 .83333 L
+.33437 .83333 L
+.3365 .83332 L
+.33874 .83329 L
+.34066 .83325 L
+.34277 .8332 L
+.34543 .83311 L
+.34795 .83301 L
+.35268 .83277 L
+.35777 .83244 L
+.3633 .83199 L
+.37326 .83094 L
+.38247 .82971 L
+.401 .82646 L
+.4184 .82248 L
+.45806 .81 L
+.49691 .7932 L
+.53253 .77381 L
+.60881 .7195 L
+.68217 .65081 L
+.76025 .55995 L
+.83541 .45521 L
+.91529 .32532 L
+.99226 .18206 L
+s
+.99226 .18206 m
+1 .1659 L
+s
+0 g
+gsave
+.66667 .8 -87 -10.2813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 20.5625 translate 1 -1 scale
+63.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 12.813 moveto
+(H) show
+69.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(P) show
+75.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+81.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(g) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+87.000 12.813 moveto
+(H) show
+93.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(P) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+99.000 12.813 moveto
+(L) show
+105.000 12.813 moveto
+(L) show
+111.000 12.813 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+1 0 0 r
+.02 w
+.66667 .66667 Mdot
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 288},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P000181000`40O003h00Oogoo8Goo003oOolQ
+Ool00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00
+ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo003oOolQ
+Ool007Eoo`D009Aoo`80011oo`00Mgoo00<007ooOol0AWoo0`00BWoo00@007ooOol000moo`00Mgoo
+00<007ooOol0Agoo00<007ooOol0Bgoo00<007ooOol03Woo001gOol00`00Oomoo`17Ool3001<Ool0
+0`00Oomoo`0=Ool007Moo`03001oogoo04Moo`04001oogoo0018Ool01000Oomoo`003goo001fOol2
+0019Ool01000Oomoo`00BGoo0P0047oo0030Ool4001LOol00?moob5oo`00ogoo8Goo003oOolQOol0
+0?mooaQoo`800003Ool0000000Aoo`00:Woo00<3h0000000h`0027oo00<007oo00001Goo000ZOol0
+0`000n1oo`1:Ool00`00Oomoo`19Ool00`00Oomoo`19Ool00`00Oomoo`07Ool00`00Oomoo`04Ool0
+02Yoo`03001oo`?P04Yoo`03001oogoo04Uoo`03001oogoo04Uoo`03001oogoo00Eoo`800003Ool0
+000000Aoo`00:Woo00@007ooOol3h?9oo`00:Woo00D007ooOomoo`?P0?5oo`00:Woo00<007ooOol0
+0Woo00<3h7ooOol0kWoo000ZOol00`00Oomoo`03Ool00`?POomoo`3]Ool002Yoo`03001oogoo00Ao
+o`030n1oogoo0>aoo`00:Woo00<007ooOol01Goo00<3h7ooOol0jgoo000ZOol00`00Oomoo`06Ool0
+0`?POomoo`3ZOol002Yoo`03001oogoo00Moo`030n1oogoo0>Uoo`00:Woo00<007ooOol027oo00<3
+h7ooOol0j7oo000ZOol00`00Oomoo`09Ool00`?POomoo`3WOol002Yoo`03001oogoo00Yoo`030n1o
+ogoo0>Ioo`00:Woo00<007ooOol02goo00<3h7ooOol0iGoo000ZOol00`00Oomoo`0<Ool00`?POomo
+o`3TOol002Yoo`03001oogoo00eoo`030n1oogoo0>=oo`00:Woo00<007ooOol03Woo00<3h7ooOol0
+hWoo000ZOol00`00Oomoo`0?Ool00`?POomoo`3QOol002Yoo`03001oogoo011oo`030n1oogoo0>1o
+o`00:Woo00<007ooOol04Goo00<3h7ooOol0ggoo000ZOol00`00Oomoo`0BOol00`?POomoo`3NOol0
+02Yoo`03001oogoo01=oo`030n1oogoo0=eoo`00:Woo00<007ooOol057oo00<3h7ooOol0g7oo000Z
+Ool00`00Oomoo`0EOol00`?POomoo`3KOol002Yoo`03001oogoo01Ioo`030n1oogoo0=Yoo`00:Woo
+00<007ooOol05goo00<3h7ooOol0fGoo000ZOol00`00Oomoo`0HOol00`?POomoo`3HOol002Yoo`03
+001oogoo01Uoo`030n1oogoo0=Moo`00:Woo00<007ooOol06Woo00<3h7ooOol0eWoo000ZOol00`00
+Oomoo`0KOol00`?POomoo`3EOol002Yoo`03001oogoo01aoo`030n1oogoo0=Aoo`00:Woo00<007oo
+Ool07Goo00<3h7ooOol0dgoo000ZOol00`00Oomoo`0NOol00`?POomoo`3BOol002Yoo`03001oogoo
+01moo`030n1oogoo0=5oo`00:Woo00<007ooOol087oo00<3h7ooOol0d7oo000ZOol00`00Oomoo`0Q
+Ool00`?POomoo`3?Ool002Yoo`03001oogoo029oo`030n1oogoo0<ioo`00:Woo00<007ooOol08goo
+00<3h7ooOol0_7oo00=l7gooOol03Woo000ZOol00`00Oomoo`0TOol00`?POomoo`2jOol00g`OOomo
+o`0?Ool002Yoo`03001oogoo02Eoo`030n1oogoo0;Uoo`03O1moogoo00moo`00:Woo00<007ooOol0
+9Woo00<3h7ooOol0]goo00=l7gooOol047oo000ZOol00`00Oomoo`0WOol00`?POomoo`2fOol00g`O
+Oomoo`0@Ool002Yoo`03001oogoo02Qoo`030n1oogoo0;Aoo`03O1moogoo015oo`00:Woo00<007oo
+Ool0:Goo00<3h7ooOol0/goo00=l7gooOol04Goo000ZOol00`00Oomoo`0ZOol00`?POomoo`2aOol0
+0g`OOomoo`0BOol002Yoo`03001oogoo02]oo`030n1oogoo0;1oo`03O1moogoo019oo`00:Woo00<0
+07ooOol0;7oo00<3h7ooOol0[Woo00=l7gooOol04goo000ZOol00`00Oomoo`0]Ool00`?POomoo`2]
+Ool00g`OOomoo`0COol002Yoo`03001oogoo02ioo`030n1oogoo0:]oo`03O1moogoo01Aoo`00:Woo
+00<007ooOol0;goo00<3h7ooOol0ZWoo00=l7gooOol057oo000ZOol00`00Oomoo`0`Ool00`?POomo
+o`2XOol00g`OOomoo`0EOol002Yoo`03001oogoo035oo`030n1oogoo0:Moo`03O1moogoo01Eoo`00
+:Woo00<007ooOol0<Woo00<3h7ooOol0YGoo00=l7gooOol05Woo000ZOol00`00Oomoo`0cOol00`?P
+Oomoo`2SOol00g`OOomoo`0GOol002Yoo`03001oogoo03Aoo`030n1oogoo0:9oo`03O1moogoo01Mo
+o`00:Woo00<007ooOol0=Goo00<3h7ooOol0X7oo00=l7gooOol067oo000ZOol00`00Oomoo`0fOol0
+0`?POomoo`2OOol00g`OOomoo`0HOol002Yoo`03001oogoo03Moo`030n1oogoo09eoo`03O1moogoo
+01Uoo`00:Woo00<007ooOol0>7oo00<3h7ooOol0W7oo00=l7gooOol06Goo000ZOol00`00Oomoo`0i
+Ool00`?POomoo`2JOol00g`OOomoo`0JOol002Yoo`03001oogoo03Yoo`030n1oogoo09Uoo`03O1mo
+ogoo01Yoo`00:Woo00<007ooOol0>goo00<3h7ooOol0Ugoo00=l7gooOol06goo000ZOol00`00Oomo
+o`0lOol00`?POomoo`2FOol00g`OOomoo`0KOol002Yoo`03001oogoo03eoo`030n1oogoo09Aoo`03
+O1moogoo01aoo`00:Woo00<007ooOol0?Woo00<3h7ooOol0TWoo00=l7gooOol07Goo000ZOol00`00
+Oomoo`0oOol00`?POomoo`2AOol00g`OOomoo`0MOol002Yoo`03001oogoo041oo`030n1oogoo08mo
+o`03O1moogoo01ioo`00:Woo00<007ooOol0@Goo00<3h7ooOol0SWoo00=l7gooOol07Woo000ZOol0
+0`00Oomoo`12Ool00`?POomoo`2<Ool00g`OOomoo`0OOol002Yoo`03001oogoo04=oo`030n1oogoo
+08]oo`03O1moogoo01moo`00:Woo00<007ooOol0A7oo00<3h7ooOol0RGoo00=l7gooOol087oo000Z
+Ool00`00Oomoo`15Ool00`?POomoo`28Ool00g`OOomoo`0POol002Yoo`03001oogoo04Ioo`030n1o
+ogoo08Ioo`03O1moogoo025oo`008goo1@000Woo00<007ooOol0Agoo00<3h7ooOol0QGoo00=l7goo
+Ool08Goo000UOol00`00Oomoo`02Ool00`00Oomoo`18Ool00`?POomoo`23Ool00g`OOomoo`0ROol0
+02Eoo`03001oogoo009oo`<004Uoo`030n1oogoo085oo`03O1moogoo02=oo`009Goo00<007ooOol0
+0Woo00<007ooOol0BWoo00<3h7ooOol0P7oo00=l7gooOol08goo000UOol00`00Oomoo`02Ool00`00
+Oomoo`1;Ool00`?POomoo`1nOol00g`OOomoo`0TOol002Aoo`8000Aoo`03001oogoo04aoo`030n1o
+ogoo07eoo`03O1moogoo02Aoo`00:Woo00<007ooOol0CGoo00<3h7ooOol0Ngoo00=l7gooOol09Goo
+000ZOol00`00Oomoo`1>Ool00`?POomoo`1iOol00g`OOomoo`0VOol002Yoo`03001oogoo04moo`03
+0n1oogoo07Qoo`03O1moogoo02Ioo`00:Woo00<007ooOol0D7oo00<3h7ooOol0MWoo00=l7gooOol0
+9goo000ZOol00`00Oomoo`1AOol00`?POomoo`1dOol00g`OOomoo`0XOol002Yoo`03001oogoo059o
+o`030n1oogoo07=oo`03O1moogoo02Qoo`00:Woo00<007ooOol0Dgoo00<3h7ooOol0LGoo00=l7goo
+Ool0:Goo000ZOol00`00Oomoo`1DOol00`?POomoo`1`Ool00g`OOomoo`0YOol002Yoo`03001oogoo
+05Eoo`030n1oogoo06ioo`03O1moogoo02Yoo`00:Woo00<007ooOol0EWoo00<3h7ooOol0K7oo00=l
+7gooOol0:goo000ZOol00`00Oomoo`1GOol00`?POomoo`1[Ool00g`OOomoo`0[Ool002Yoo`03001o
+ogoo05Qoo`030n1oogoo06Uoo`03O1moogoo02aoo`00:Woo00<007ooOol0FGoo00<3h7ooOol0Igoo
+00=l7gooOol0;Goo000ZOol00`00Oomoo`1JOol00`?POomoo`1VOol00g`OOomoo`0]Ool002Yoo`03
+001oogoo05]oo`030n1oogoo06Aoo`03O1moogoo02ioo`00:Woo00<007ooOol0G7oo00<3h7ooOol0
+Hgoo00=l7gooOol0;Woo000ZOol00`00Oomoo`1MOol00`?POomoo`1QOol00g`OOomoo`0_Ool002Yo
+o`03001oogoo05ioo`030n1oogoo05moo`03O1moogoo031oo`00:Woo00<007ooOol0Ggoo00<3h7oo
+Ool0GWoo00=l7gooOol0<7oo000ZOol00`00Oomoo`1POol00`?POomoo`1LOol00g`OOomoo`0aOol0
+02Yoo`03001oogoo065oo`030n1oogoo05Yoo`03O1moogoo039oo`00:Woo00<007ooOol0HWoo00<3
+h7ooOol0FGoo00=l7gooOol0<Woo000ZOol00`00Oomoo`1SOol00`?POomoo`1GOol00g`OOomoo`0c
+Ool002Yoo`03001oogoo06Aoo`030n1oogoo05Ioo`03O1moogoo03=oo`00:Woo00<007ooOol0IGoo
+00<3h7ooOol0E7oo00=l7gooOol0=7oo000ZOol00`00Oomoo`1VOol00`?POomoo`1BOol00g`OOomo
+o`0eOol002Yoo`03001oogoo06Moo`030n1oogoo055oo`03O1moogoo03Eoo`00:Woo00<007ooOol0
+J7oo00<3h7ooOol0Cgoo00=l7gooOol0=Woo000ZOol00`00Oomoo`1YOol00`?POomoo`1=Ool00g`O
+Oomoo`0gOol002Yoo`03001oogoo06Yoo`030n1oogoo04]oo`03O1moogoo03Qoo`00:Woo00<007oo
+Ool0Jgoo00<3h7ooOol0BWoo00=l7gooOol0>7oo000ZOol00`00Oomoo`1/Ool00`?POomoo`18Ool0
+0g`OOomoo`0iOol002Yoo`03001oogoo06eoo`030n1oogoo04Ioo`03O1moogoo03Yoo`00:Woo00<0
+07ooOol0KWoo00<3h7ooOol0AGoo00=l7gooOol0>Woo000ZOol00`00Oomoo`1_Ool00`?POomoo`13
+Ool00g`OOomoo`0kOol002Yoo`03001oogoo071oo`030n1oogoo045oo`03O1moogoo03aoo`00:Woo
+00<007ooOol0LGoo00<3h7ooOol0?goo00=l7gooOol0?Goo000ZOol00`00Oomoo`1bOol00`?POomo
+o`0nOol00g`OOomoo`0mOol002Yoo`03001oogoo07=oo`030n1oogoo03aoo`03O1moogoo03ioo`00
+:Woo00<007ooOol0M7oo00<3h7ooOol0>Woo00=l7gooOol0?goo000ZOol00`00Oomoo`1eOol00`?P
+Oomoo`0iOol00g`OOomoo`0oOol002Yoo`03001oogoo07Ioo`030n1oogoo03Moo`03O1moogoo041o
+o`00:Woo00<007ooOol0Mgoo00<3h7ooOol0=Goo00=l7gooOol0@Goo000ZOol00`00Oomoo`1hOol0
+0`?POomoo`0dOol00g`OOomoo`11Ool002Yoo`03001oogoo07Uoo`030n1oogoo039oo`03O1moogoo
+049oo`00:Woo00<007ooOol0NWoo00<3h7ooOol0<7oo00=l7gooOol0@goo000ZOol00`00Oomoo`1k
+Ool00`?POomoo`0^Ool00g`OOomoo`14Ool002Yoo`03001oogoo07aoo`030n1oogoo02eoo`03O1mo
+ogoo04Aoo`00:Woo00<007ooOol0OGoo00<3h7ooOol0:goo00=l7gooOol0AGoo000ZOol00`00Oomo
+o`1nOol00`?POomoo`0YOol00g`OOomoo`16Ool002Yoo`03001oogoo07moo`030n1oogoo02Moo`03
+O1moogoo04Moo`00:Woo00<007ooOol0P7oo00<3h7ooOol09Goo00=l7gooOol0B7oo000ZOol00`00
+Oomoo`21Ool00`?POomoo`0TOol00g`OOomoo`18Ool002Yoo`03001oogoo089oo`030n1oogoo029o
+o`03O1moogoo04Uoo`00:Woo00<007ooOol0Pgoo00<3h7ooOol087oo00=l7gooOol0BWoo000ZOol0
+0`00Oomoo`24Ool00`?POomoo`0NOol00g`OOomoo`1;Ool002Yoo`03001oogoo08Eoo`030n1oogoo
+01aoo`03O1moogoo04aoo`00:Woo00<007ooOol0QWoo00<3h7ooOol06Woo00=l7gooOol0CGoo000Z
+Ool00`00Oomoo`27Ool00`?POomoo`0HOol00g`OOomoo`1>Ool002Yoo`03001oogoo08Qoo`030n1o
+ogoo01Moo`03O1moogoo04ioo`00:Woo00<007ooOol0RGoo00<3h7ooOol05Goo00=l7gooOol0Cgoo
+000ZOol00`00Oomoo`2:Ool00`?POomoo`0COol00g`OOomoo`1@Ool002Yoo`03001oogoo08]oo`03
+0n1oogoo015oo`03O1moogoo055oo`00:Woo00<007ooOol0S7oo00<3h7ooOol03goo00=l7gooOol0
+DWoo000ZOol00`00Oomoo`2=Ool00`?POomoo`0=Ool00g`OOomoo`1COol002Yoo`03001oogoo08io
+o`030n1oogoo00]oo`03O1moogoo05Aoo`00:Woo00<007ooOol0Sgoo00<3h7ooOol02Woo00=l7goo
+Ool0E7oo000ZOol00`00Oomoo`2@Ool00`?POomoo`08Ool00g`OOomoo`1EOol002Yoo`03001oogoo
+095oo`030n1oogoo00Ioo`03O1moogoo05Ioo`003goo0`001Woo00<007ooOol01Woo00<007ooOol0
+1Woo00<007ooOol0TWoo00<3h7ooOol017oo00=l7gooOol0Egoo000BOol00`00Oomoo`02Ool00`00
+Oomoo`08Ool00`00Oomoo`05Ool00`00Oomoo`2COol00`?POomoo`02Ool00g`OOomoo`1HOol0009o
+o`<000Aoo`@000=oo`<000=oo`04001oogooOol30006Ool00`00Oomoo`04Ool00`00Oomoo`2DOol0
+10?PO01l07`OFgoo0003Ool00`00Oomoo`09Ool01000Oomoo`000goo00<007ooOol00Woo00<007oo
+Ool01Goo00<007ooOol017oo00<007ooOol0U7oo17`0Fgoo0003Ool30003Ool40002Ool01000Oomo
+o`000goo00<007ooOol00Woo0`001Goo00<007ooOol017oo00=l7`000000U7oo17`0Fgoo0003Ool0
+1000Oomoo`002Goo10000Woo00<007ooOol00Woo00@007ooOol000Aoo`03001oogoo00Aoo`03001l
+7goo09Aoo`04O1ml07`00n1KOol000=oo`04001oogoo000@Ool01@00Oomoogoo00000Woo00D007oo
+Oomoo`0000Moo`03001oog`O09=oo`03O1moogoo009oo`030n1oogoo05Qoo`000Woo10004Woo00<0
+07oo00000`000goo00<007ooOol01Woo00@007ooOoml7i5oo`03O1moogoo00Aoo`030n1oogoo05Mo
+o`00:Woo00@007ooOomoo`9l7heoo`9l7`Qoo`030n1oogoo05Ioo`00:Woo00<007ooOol00goo00=l
+7gooOol0RGoo00=l7gooOol02Goo00<3h7ooOol0EGoo000ZOol00`00Oomoo`04Ool00g`OOomoo`27
+Ool00g`OOomoo`0;Ool00`?POomoo`1DOol002Yoo`03001oogoo00Eoo`03O1moogoo08Eoo`03O1mo
+ogoo00eoo`030n1oogoo05=oo`00:Woo00<007ooOol01Woo00=l7gooOol0Pgoo00=l7gooOol03goo
+00<3h7ooOol0DWoo000ZOol00`00Oomoo`07Ool00g`OOomoo`21Ool00g`OOomoo`0AOol00`?POomo
+o`1AOol002Yoo`03001oogoo00Qoo`03O1moogoo07moo`03O1moogoo01=oo`030n1oogoo051oo`00
+:Woo00<007ooOol02Goo0W`OOWoo00=l7gooOol05Goo00<3h7ooOol0Cgoo000ZOol00`00Oomoo`0;
+Ool00g`OOomoo`1jOol00g`OOomoo`0GOol00`?POomoo`1>Ool002Yoo`03001oogoo00aoo`03O1mo
+ogoo07Moo`9l7a]oo`030n1oogoo04eoo`00:Woo00<007ooOol03Goo00=l7gooOol0MGoo00=l7goo
+Ool077oo00<3h7ooOol0C7oo000ZOol00`00Oomoo`0>Ool00g`OOomoo`1cOol00g`OOomoo`0NOol0
+0`?POomoo`1;Ool002Yoo`03001oogoo00moo`9l7g5oo`9l7b9oo`030n1oogoo04Yoo`00:Woo00<0
+07ooOol04Goo00=l7gooOol0KGoo00=l7gooOol08goo00<3h7ooOol0BGoo000ZOol00`00Oomoo`0B
+Ool2O1m[Ool2O1lWOol00`?POomoo`18Ool002Yoo`03001oogoo01Aoo`03O1moogoo06Moo`03O1mo
+ogoo02Qoo`030n1oogoo04Moo`00:Woo00<007ooOol05Goo0W`OIGoo0W`O;7oo00<3h7ooOol0AWoo
+000ZOol00`00Oomoo`0GOol00g`OOomoo`1QOol00g`OOomoo`0]Ool00`?POomoo`15Ool002Yoo`03
+001oogoo01Qoo`9l7f1oo`03O1moogoo02moo`030n1oogoo04Aoo`00:Woo00<007ooOol06Woo0W`O
+G7oo0W`O<goo00<3h7ooOol0@goo000ZOol00`00Oomoo`0LOol00g`OOomoo`1HOol00g`OOomoo`0d
+Ool00`?POomoo`12Ool002Yoo`03001oogoo01eoo`9l7eIoo`9l7cQoo`030n1oogoo045oo`00:Woo
+00<007ooOol07goo0W`ODgoo00=l7gooOol0>Goo00<3h7ooOol0@7oo000ZOol00`00Oomoo`0QOol2
+O1m?Ool2O1l>Ool00`00Oomoo`0<Ool30006Ool00`00Oomoo`06Ool00`00Oomoo`03Ool00`00Oomo
+o`05Ool00`?POomoo`0oOol002Yoo`03001oogoo02=oo`9l7d]oo`9l7`moo`03001oogoo00Qoo`03
+001oogoo00Eoo`03001oogoo009oo`03001oogoo00Qoo`03001oogoo00=oo`03001oogoo00Eoo`03
+0n1oogoo03ioo`00:Woo00<007ooOol09Goo0W`OAgoo0W`O47oo00@007ooOomoo`<000Eoo`03001o
+ogoo00=oo`<000=oo`04001oogooOol30006Ool00`00Oomoo`03Ool00`00Oomoo`05Ool00`?POomo
+o`0mOol002Yoo`03001oogoo02Moo`9l7d9oo`=l7a9oo`03001oogoo009oo`03001oogoo00Eoo`05
+001oogooOol00002Ool01@00Oomoogoo000017oo00<007ooOol01Goo00<007ooOol00goo00<007oo
+Ool01Woo00<3h7ooOol0?7oo000ZOol00`00Oomoo`0YOol3O1llOol3O1lEOol00`00Oomoo`02Ool3
+0009Ool01000Oomoo`000goo00<007ooOol00Woo0`001Goo00<007ooOol00goo00<007ooOol01goo
+00<3h7ooOol0>goo000ZOol00`00Oomoo`0/Ool2O1lgOol3O1lHOol00`00Oomoo`02Ool01000Oomo
+o`002Goo10000Woo00<007ooOol00Woo00@007ooOol000Aoo`03001oogoo00=oo`03001oogoo00Qo
+o`030n1oogoo03Yoo`00:Woo00<007ooOol0;Woo0g`O<Goo0g`O77oo00D007ooOomoo`00009oo`03
+001oogoo00ioo`05001oogooOol00002Ool01@00Oomoogoo00001Goo00<007ooOol02Woo00<3h7oo
+Ool0>Goo000ZOol00`00Oomoo`0aOol4O1lZOol3O1lPOol00`00Ool00003000BOol00`00Ool00003
+0003Ool00`00Oomoo`03Ool00`00Oomoo`0<Ool00`?POomoo`0hOol002Yoo`03001oogoo03Eoo`Al
+7b=oo`=l7eYoo`030n1oogoo03Moo`00:Woo00<007ooOol0>Goo17`O6goo17`OGWoo00<3h7ooOol0
+=Woo000ZOol00`00Oomoo`0mOol7O1l<Ool8O1mSOol00`?POomoo`0eOol002Yoo`03001oogoo04Ao
+o`al7faoo`030n1oogoo03Aoo`00:Woo00<007ooOol0_Goo00<3h7ooOol0<goo000ZOol00`00Oomo
+o`2nOol00`?POomoo`0bOol002Yoo`03001oogoo0;moo`030n1oogoo035oo`00:Woo00<007ooOol0
+`7oo00<3h7ooOol0<7oo000ZOol00`00Oomoo`31Ool00`?POomoo`0_Ool002Yoo`03001oogoo0<9o
+o`030n1oogoo02ioo`00:Woo00<007ooOol0`goo00<3h7ooOol0;Goo000ZOol00`00Oomoo`34Ool0
+0`?POomoo`0/Ool002Yoo`03001oogoo0<Eoo`030n1oogoo02]oo`00:Woo00<007ooOol0aWoo00<3
+h7ooOol0:Woo000ZOol00`00Oomoo`37Ool00`?POomoo`0YOol002Yoo`03001oogoo0<Qoo`030n1o
+ogoo02Qoo`00:Woo00<007ooOol0bGoo00<3h7ooOol09goo000ZOol00`00Oomoo`3:Ool00`?POomo
+o`0VOol002Yoo`03001oogoo0<]oo`030n1oogoo02Eoo`00:Woo00<007ooOol0c7oo00<3h7ooOol0
+97oo000ZOol00`00Oomoo`3=Ool00`?POomoo`0SOol002Yoo`03001oogoo0<ioo`030n1oogoo029o
+o`00:Woo00<007ooOol0cgoo00<3h7ooOol08Goo000ZOol00`00Oomoo`3@Ool00`?POomoo`0POol0
+02Yoo`03001oogoo0=5oo`030n1oogoo01moo`00:Woo00<007ooOol0dWoo00<3h7ooOol07Woo000Z
+Ool00`00Oomoo`3COol00`?POomoo`0MOol002Yoo`03001oogoo0=Aoo`030n1oogoo01aoo`00:Woo
+00<007ooOol0eGoo00<3h7ooOol06goo000ZOol00`00Oomoo`3FOol00`?POomoo`0JOol002Yoo`03
+001oogoo0=Moo`030n1oogoo01Uoo`00:Woo00<007ooOol0f7oo00<3h7ooOol067oo000ZOol00`00
+Oomoo`3IOol00`?POomoo`0GOol002Yoo`03001oogoo0=Yoo`030n1oogoo01Ioo`00:Woo00<007oo
+Ool0fgoo00<3h7ooOol05Goo000ZOol00`00Oomoo`3LOol00`?POomoo`0DOol002Yoo`03001oogoo
+0=eoo`030n1oogoo01=oo`00:Woo00<007ooOol0gWoo00<3h7ooOol04Woo000ZOol00`00Oomoo`3O
+Ool00`?POomoo`0AOol002Aoo`8000Aoo`03001oogoo0>1oo`030n1oogoo011oo`008goo00@007oo
+Ool000=oo`03001oogoo0>5oo`030n1oogoo00moo`009Goo00<007ooOol00Woo0`00hWoo00<3h7oo
+Ool03Woo000VOol00`00Oomoo`3gOol002=oo`04001oogoo003iOol002Aoo`800?Yoo`00ogoo8Goo
+003oOolQOol00?moob5oo`00ogoo8Goo000XOol2003fOol002Uoo`03001oogoo0?Aoo`00:Woo00<0
+07ooOol0lgoo000YOol00`00Ool0003dOol002Qoo`04001oogoo003dOol002Moo`<00003Ool00000
+0?=oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo
+003oOolQOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo003oOolQOol00?mo
+ob5oo`00ogoo8Goo003oOolQOol00001\
+\>"],
+    ImageRangeCache->{{{0, 287}, {287, 0}} -> {0, 0, 0, 0}}],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Fixed Point Iteration).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " The iteration ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  " for ",
+  Cell[BoxData[
+      \(n = 0, 1,  ... \)]],
+  " is called fixed point iteration.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (For a converging sequence).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that ",
+  Cell[BoxData[
+      \(g \((x)\)\)],
+    AspectRatioFixed->False],
+  " is a ",
+  ButtonBox["continuous function",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ContinuousFunction.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " and that ",
+  Cell[BoxData[
+      \({p\_n}\_\(n = 0\)\%\[Infinity]\)]],
+  " is a sequence generated by fixed point iteration.\n\nIf  ",
+  Cell[BoxData[
+      \(\(\(\(\ \)\(lim\)\(\ \)\)\+\(n \[Rule] \[Infinity]\)\) p\_n = P\)]],
+  ",  then ",
+  Cell[BoxData[
+      \(P\)]],
+  " is a fixed point of ",
+  Cell[BoxData[
+      \(g \((x)\)\)],
+    AspectRatioFixed->False],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell["\<\
+\tThe following two theorems establish conditions for the existence \
+of a fixed point and the convergence of the fixed-point iteration process to \
+a fixed point.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["First Fixed Point Theorem",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/FixedPointTheorem.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that ",
+  Cell[BoxData[
+      RowBox[{"g", "\[Element]", 
+        RowBox[{
+          StyleBox["C",
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  ", i. e.  ",
+  Cell[BoxData[
+      \(g \((x)\)\)]],
+  "  is continuous on  ",
+  Cell[BoxData[
+      StyleBox[\([a, b]\),
+        FontWeight->"Plain"]], "Input"],
+  ".  \nThen we have the following conclusions. \n",
+  StyleBox["(i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf the range of the mapping ",
+  Cell[BoxData[
+      \(y = g \((x)\)\)]],
+  " satisfies ",
+  Cell[BoxData[
+      StyleBox[\(y \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  " for all ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  ", then  ",
+  Cell[BoxData[
+      \(g\)],
+    AspectRatioFixed->False],
+  " has a fixed point in ",
+  Cell[BoxData[
+      \(\([a, b]\)\)],
+    AspectRatioFixed->False],
+  ". \n",
+  StyleBox["(ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tFurthermore, suppose that ",
+  Cell[BoxData[
+      StyleBox[\(g' \((x)\)\),
+        FontWeight->"Plain"]], "Input"],
+  " is defined over ",
+  Cell[BoxData[
+      StyleBox[\((a, b)\),
+        FontWeight->"Plain"]], "Input"],
+  " and that a positive constant ",
+  Cell[BoxData[
+      StyleBox[\(K < 1\),
+        FontWeight->"Plain"]], "Input"],
+  " exists with \n\t",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(\[LessEqual]\)\(\ \)\(K\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all  ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((a, b)\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then ",
+  Cell[BoxData[
+      StyleBox["g",
+        FontWeight->"Plain"]], "Input"],
+  " has a unique fixed point ",
+  Cell[BoxData[
+      \(P\)]],
+  " in ",
+  Cell[BoxData[
+      \(\([a, b]\)\)],
+    AspectRatioFixed->False],
+  ".    "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Second Fixed Point Theorem).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that the following hypothesis hold true.  \n",
+  StyleBox["(a)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Plain"]], "Input"],
+  " is a fixed point of a function ",
+  Cell[BoxData[
+      StyleBox["g",
+        FontWeight->"Plain"]], "Input"],
+  ",\n",
+  StyleBox["(b)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      RowBox[{"g", ",", 
+        RowBox[{\(g'\), "\[Element]", 
+          RowBox[{
+            StyleBox["C",
+              FontWeight->"Bold"], "[", \(a, b\), "]"}]}]}]]],
+  ", \n",
+  StyleBox["(c)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox["K",
+        FontWeight->"Plain"]], "Input"],
+  " is a positive constant,\n",
+  StyleBox["(d)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(p\_0 \[Element] \((a, b)\)\),
+        FontWeight->"Plain"]], "Input"],
+  ", and \n",
+  StyleBox["(e)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      StyleBox[\(g \((x)\) \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all  ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  ".  \nThen we have the following conclusions. \n",
+  StyleBox["(i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(K\)\(<\)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will converge to the \n\tunique fixed point ",
+  Cell[BoxData[
+      RowBox[{"P", 
+        StyleBox["\[Element]",
+          FontWeight->"Plain"], 
+        StyleBox[\((a, b)\),
+          FontWeight->"Plain"]}]], "Input",
+    FontWeight->"Plain"],
+  ".  In this case, ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Plain"]], "Input"],
+  " is said to be an attractive fixed point.  \n",
+  StyleBox["(ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\tIf ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(>\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \([a, b]\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will not converge to ",
+  Cell[BoxData[
+      \(P\)], "Input",
+    FontWeight->"Plain"],
+  ".  \n\tIn this case, ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Plain"]], "Input"],
+  " is said to be a repelling fixed point and the iteration exhibits local \
+divergence.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FixedPointProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  It is assumed that ",
+  Cell[BoxData[
+      \(p\_0 \[NotEqual] P\)],
+    AspectRatioFixed->False],
+  " in statement (ii). \n\n",
+  StyleBox["Remark 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Because ",
+  Cell[BoxData[
+      StyleBox["g",
+        FontWeight->"Plain"]], "Input"],
+  "  is continuous on an interval containing ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Plain"]], "Input"],
+  ", it is permissible to use the simpler criterion ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((P)\)\)\(|\)\(\(\[LessEqual]\)\(\ \
+\)\(K\)\(<\)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  and  ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((P)\)\)\(|\)\(\(>\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  " in (i) and (ii), respectively.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Corollary.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontWeight->"Bold"],
+  " Assume that ",
+  Cell[BoxData[
+      \(g\)]],
+  "  satisfies hypothesis ",
+  StyleBox["(a)-(e)",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  of the previous theorem.  Bounds for the error involved when using  ",
+  Cell[BoxData[
+      \(p\_n\)],
+    AspectRatioFixed->False],
+  "  to approximate  ",
+  Cell[BoxData[
+      \(P\)],
+    AspectRatioFixed->False],
+  "  are given by         \n\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(P\  - \ 
+          p\_n\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(K\^n\)\)\(\ \)\(|\)\(P\  \
+- \ p\_0\)\(|\)\)\)]],
+  "          \tfor  ",
+  Cell[BoxData[
+      \(n \[GreaterEqual] 1\)]],
+  ",  \nand\n\t",
+  Cell[BoxData[
+      \(\(\(|\)\(P\  - \ 
+          p\_n\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \)\(K\^n\/\(1 - 
+                K\)\)\)\(\ \)\(|\)\(p\_1\  - \ p\_0\)\(|\)\)\)]],
+  "  \tfor  ",
+  Cell[BoxData[
+      \(n \[GreaterEqual] 1\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Graphical Interpretation of Fixed-point Iteration",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "\tSince we seek a fixed point ",
+  Cell[BoxData[
+      StyleBox["P",
+        FontWeight->"Plain"]], "Input"],
+  " to ",
+  Cell[BoxData[
+      \(g \((x)\)\)]],
+  ",  it is necessary that the graph of the curve  ",
+  Cell[BoxData[
+      \(y = g \((x)\)\)],
+    AspectRatioFixed->False],
+  "  and the line  ",
+  Cell[BoxData[
+      \(y = x\)],
+    AspectRatioFixed->False],
+  "  intersect at the point ",
+  Cell[BoxData[
+      RowBox[{"(", 
+        StyleBox[\(P, P\),
+          FontWeight->"Plain"], 
+        StyleBox[")",
+          FontWeight->"Plain"]}]], "Input"],
+  ".  \nThe following animations illustrate two types iteration: monotone and \
+oscillating.      "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (Fixed Point Iteration).",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  To find a solution to the equation  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(x = g \((x)\)\)],
+    AspectRatioFixed->False],
+  StyleBox[" ",
+    FontFamily->"New Century Schlbk",
+    FontSlant->"Italic"],
+  StyleBox["by starting with  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  StyleBox[" and iterating  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  StyleBox[".",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/FixedPointProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FixedPointProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica S",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["ubroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Fixed Point Iteration).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(FixedPointIteration[x0_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]p\_0\  = \
+\ N[x0]; \ \[IndentingNewLine]k\  = \ 
+            0; \ \[IndentingNewLine]Print["\<  p\>"\_0, "\< = \>", 
+            PaddedForm[p\_0, {15, 15}]]; \ \[IndentingNewLine]While[
+            k < max, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]p\_1\ \
+ = \ g[p\_0]; \ \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<  p\>"\_k, "\< = \>", 
+                  PaddedForm[
+                    p\_1, {15, 15}]\ ]; \ \[IndentingNewLine]p\_0\  = \ 
+                  p\_1;\ ];\)\ ]; \ \[IndentingNewLine]p\  = \ 
+            p\_0; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The function is g[x] = \>", 
+            g[x]]; \ \[IndentingNewLine]Print["\<  p  = \>", 
+            PaddedForm[
+              p, {15, 15}]]; \ \[IndentingNewLine]Print["\<g[p] = \>", 
+            PaddedForm[g[p], {15, 15}]];\ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use fixed point iteration to find the fixed point(s) for the function   \
+",
+  Cell[BoxData[
+      \(g \((x)\) = 1 + x - x\^2\/3\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Plot the function and determine graphically that there are two solutions \
+to the equation  ",
+  Cell[BoxData[
+      \(x = g \((x)\)\)]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 1 + x - x\^2\/3;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1\  = 
+        Plot[{x, g[x]}, {x, \(-2\), 4}, 
+          PlotStyle \[Rule] {Green, Magenta}];\)\ \), "\n", 
+    \(\(Print["\<The function is g[x] = \>", g[x]];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+Will iteration prove successful as a computational tool to \
+numerically find these two fixed points.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 1 + x - x\^2\/3;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(gr1\  = 
+        Plot[{x, g[x]}, {x, 0, 4.82}, PlotRange \[Rule] {{0, 4}, {0, 3}}, 
+          AspectRatio \[Rule] 3\/4, 
+          PlotStyle \[Rule] {Green, Magenta}];\)\ \), "\n", 
+    \(\(Print["\<The function is g[x] = \>", g[x]];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+Use fixed point iteration to find a numerical approximation.
+First, do the iteration one step at a time.  Type each of the following \
+commands in a separate cell and execute them one at a time.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(p\_0\)\(=\)\(3.0\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p\_1\)\(=\)\(g[p\_0]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p\_2\)\(=\)\(g[p\_1]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p\_3\)\(=\)\(g[p\_2]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p\_4\)\(=\)\(g[p\_3]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(p\_5\)\(=\)\(g[p\_4]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Now use the FixedPointIteration subroutine to perform the \
+computations.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(FixedPointIteration[3.0, 7];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Are 7 iterations enough to locate the fixed point? \n\nHow many decimal \
+places agreement do you see to the equation  ",
+  Cell[BoxData[
+      \(p\_7 = g[p\_6]\)]],
+  " ?\n\nIf it is not sufficient for your purposes you must request more \
+iterations!"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(FixedPointIteration[3.0, 20];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Comparison 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.500008, 0.996109]],
+  " Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in \"FindRoot\" subroutine for numerically finding solutions."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(eqn = g[x] \[Equal] x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ FindRoot[eqn, {x, 0.5}];\)\ \ \), "\n", 
+    \(\(p = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[eqn];\)\ \ \), "\n", 
+    \(\(Print[solset];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\n", 
+    \(\(Print["\<   p = \>", 
+        NumberForm[p, 16]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\n", 
+    \(\(Print["\<g[p] = \>", NumberForm[g[p], 16]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Did ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " get all of the digits?  Why?\nThere are options to every built in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine. For FindRoot it is:\n",
+  StyleBox["Options[FindRoot]\n",
+    FontWeight->"Bold"],
+  "{AccuracyGoal\[Rule]Automatic,Compiled\[Rule]True,DampingFactor\[Rule]1, \
+Jacobian\[Rule]Automatic,MaxIterations\[Rule]15,WorkingPrecision\[Rule]16}\n\
+It is the purpose of numerical analysis to study the last two items \
+\"MaxIterations,\"  \"WorkingPrecision.\""
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Comparison 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.500008, 0.996109]],
+  " Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in \"Solve\" subroutine for symbolically finding solutions."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(eqn = g[x] \[Equal] x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ Solve[g[x] \[Equal] x, x];\)\ \ \), "\n", 
+    \(\(p = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(2, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\n", 
+    \(\(Print[eqn];\)\ \ \), "\n", 
+    \(\(Print[solset];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\n", 
+    \(\(Print["\<   p = \>", p];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\n", 
+    \(\(Print["\<g[p] = \>", g[p]];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s answers are \"mathematically perfect.\""
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Now investigate fixed point iteration near the other fixed point,  ",
+  Cell[BoxData[
+      \(p = \(-\@3\)\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(gr2\  = \ 
+        Plot[{x, g[x]}, {x, \(-7\), 0}, 
+          PlotRange \[Rule] {{\(-7\), 0}, {\(-7\), 0}}, 
+          AspectRatio \[Rule] 1, 
+          PlotStyle \[Rule] {Green, 
+              Magenta}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", g[x]];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Now use the FixedPointIteration subroutine to perform the \
+computations.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(FixedPointIteration[\(-2.0\), 5];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " You need to look carefully at the above output and determine what it \
+means !  Did it converge ?"
+}], "Text"],
+
+Cell[TextData[{
+  "The distinguishing property for determining convergence is the size of  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[p]\)\(|\)\)\)]],
+  ".\n\nIf  ",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  "  is near the fixed point  p  and    ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[p]\)\(|\)\(\(<\)\(\ \)\(1\)\)\)\)]],
+  "  then the iteration will converge to  p.\n\nIf  ",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  "  is near the fixed point  p  and    ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[p]\)\(|\)\(\(>\)\(\ \)\(1\)\)\)\)]],
+  "  then the iteration will not converge to  p."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<The  function  is  g[x] = \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The derivative is g'[x] = \>", \(g'\)[
+          x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p = \@3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  g'[\>", 
+        p, "\<] = \>", \(g'\)[p]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|g'[\>", p, "\<]| = \>", 
+        Abs[\(g'\)[p]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|g'[\>", p, "\<]| = \>", 
+        N[Abs[\(g'\)[p]]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p = \(-\@3\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<  g'[\>", 
+        p, "\<] = \>", \(g'\)[p]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|g'[\>", p, "\<]| = \>", 
+        Abs[\(g'\)[p]]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<|g'[\>", p, "\<]| = \>", 
+        N[Abs[\(g'\)[p]]]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The distinguishing property for determining convergence is the size of  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[p]\)\(|\)\)\)]],
+  ".\n\nIf  ",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  "  is near the fixed point  ",
+  Cell[BoxData[
+      \(p = \@3\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[x]\)\(|\)\(\(<\)\(\ \)\(1\)\)\)\)]],
+  "  in the neighborhood, then the iteration will converge to  ",
+  Cell[BoxData[
+      \(p = \@3\)]],
+  ".\n\nIf  ",
+  Cell[BoxData[
+      \(p\_0\)],
+    AspectRatioFixed->False],
+  "  is near the fixed point  ",
+  Cell[BoxData[
+      \(p = \(-\@3\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(g'\)[x]\)\(|\)\(\(>\)\(\ \)\(1\)\)\)\)]],
+  "  in the neighborhood, then the iteration will not converge to  ",
+  Cell[BoxData[
+      \(p = \(-\@3\)\)]],
+  "."
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in subroutine \"FixedPointList\" and experiment finding the fixed \
+point(s) for the function   ",
+  Cell[BoxData[
+      \(g \((x)\) = 1 + x - x\^2\/4\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Investigate iteration near the \"attractive fixed point.\"", "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 1 + x - x\^2\/3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", g[x]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(P\)\(=\)\(FixedPointList[g, 3.0, 5]\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+How could we generate this list ?  Execute the following cells one \
+cell at a time. 
+It will start with a list of one number and \"Append\" numbers to the list.\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(P = {3.0};\)\ \ \), "\n", 
+    \(\(For[\ i = 2, 
+        i \[LessEqual] 8, \(i++\), \[IndentingNewLine]P = 
+          Append[P, 
+            g[P\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\)]\
+\ ]\ ];\)\ \ \), "\n", 
+    \(P\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "Thus we have constructed the essential ideas for ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s  \"FixedPointList\" subroutine.\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " It has become \"pop math\" to see all those crazy figures about \
+\"chaos\", etc. They all depend on drawing line segments between points. This \
+graphical excursion is not the usual academic treatment of numerical \
+analysis.  It is just for fun!"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(pts = \
+{{P\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+            0}};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(For[\ i = 1, 
+        i \[LessEqual] Length[P] - 1, \(i++\), \[IndentingNewLine]pts = 
+          Append[pts, {P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+              P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\[RightDoubleBracket]\)\
+\)}\ ]; \ \ \[IndentingNewLine]pts = 
+          Append[pts, {P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\), 
+              P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\[RightDoubleBracket]\)\
+\)}\ ];\ \ \[IndentingNewLine]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(pts\ \ \)}], "Input"],
+
+Cell["\<\
+Consider the following graph consisting of line segments joining \
+the points given above.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(lin1 = 
+        ListPlot[pts, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {{0, 4.82}, {0, 2.1}}, 
+          AspectRatio \[Rule] 2.1\/4.82, 
+          PlotStyle \[Rule] Blue];\)\(\ \)\)\)], "Input"],
+
+Cell["Show this graph and the one in Example 1 on the same plot.", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[gr1, lin1, PlotRange \[Rule] {{0, 4}, {0, 3}}, 
+        AspectRatio \[Rule] 3\/4];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The sequence of fixed point iterates is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<P = \>", P];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in subroutine \"FixedPointList\" and continue investigation of \
+the \"repulsive fixed point\" for the function   ",
+  Cell[BoxData[
+      \(g \((x)\) = 1 + x - x\^2\/3\)]],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(g[x_] = 1 + x - x\^2\/3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", g[x]];\)\ \ \)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(P\)\(=\)\(FixedPointList[g, \(-1.8\), 10]\)\(\ \ \)\)\)], "Input"],
+
+Cell["Let's generate a list of points and plot that nifty graph.", "Text"],
+
+Cell[BoxData[{
+    \(\(pts = \
+{{P\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), 
+            0}};\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] Length[P] - 1, \(i++\), \[IndentingNewLine]pts = 
+          Append[pts, {P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+              P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\[RightDoubleBracket]\)\
+\)}\ ]; \ \[IndentingNewLine]pts = 
+          Append[pts, {P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\), 
+              P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\[RightDoubleBracket]\)\
+\)}\ ];\ \ \[IndentingNewLine]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(pts\ \ \)}], "Input"],
+
+Cell["\<\
+Consider the following graph consisting of line segments joining \
+the points given above.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(lin2 = 
+        ListPlot[pts, PlotJoined \[Rule] True, 
+          PlotRange \[Rule] {{\(-7\), 0}, {\(-7\), 0}}, 
+          AspectRatio \[Rule] 1, 
+          PlotStyle \[Rule] Blue];\)\(\ \)\)\)], "Input"],
+
+Cell["Show this graph and the one in Example 1 on the same plot.", "Text"],
+
+Cell[BoxData[{
+    \(\(Show[gr2, lin2, PlotRange \[Rule] {{\(-7\), 0}, {\(-7\), 0}}, 
+        AspectRatio \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The function is g[x] = \>", 
+        g[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The sequence of fixed point iterates is\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<P = \>", P];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for Fixed Point \
+Iteration.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence: Monotone Increasing",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \@\(2  x\)\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 0.1\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = \@\(2  x\);\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 0.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(<\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((1\/2, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will converge to the fixed point  ",
+  Cell[BoxData[
+      \(p = 2\)], "Input",
+    FontWeight->"Plain"],
+  ".  In this case, ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  is said to be an attractive fixed point.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  -1 < g'[x] < 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[\(-1\) < \(g'\)[x] < 1, 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence: Monotone Decreasing",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \@\(2  x\)\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 4.0\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = \@\(2  x\);\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(<\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((1\/2, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will converge to the fixed point  ",
+  Cell[BoxData[
+      \(p = 2\)], "Input",
+    FontWeight->"Plain"],
+  ".  In this case, ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  is said to be an attractive fixed point.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  -1 < g'[x] < 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[\(-1\) < \(g'\)[x] < 1, 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 2.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointbb.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence: Spiral",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \ 8\/\(x + 2\)\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 4.0\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(g[x_] = 8\/\(x + 2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(p0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(<\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((2\ \((\(-1\) + \@2)\), \[Infinity])\) = \
+\((0.828427, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will converge to the fixed point  ",
+  Cell[BoxData[
+      \(p = 2\)], "Input",
+    FontWeight->"Plain"],
+  ".  In this case, ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  is said to be an attractive fixed point.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  -1 < g'[x] < 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[\(-1\) < \(g'\)[x] < 1, 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 3.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointcc.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Divergence: Monotone Increasing",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \ x\^2\/4 + x\/2\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 2.03\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = x\^2\/4 + x\/2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p0 = 2.03;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 15];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(>\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((1, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will not converge to ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " .  In this case,  ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " is said to be a repelling fixed point and the iteration exhibits local \
+divergence.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  1 < g'[x]\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[1 < \(g'\)[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointdd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Convergence: Monotone Decreasing",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \ x\^2\/4 + x\/2\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.95\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(g[x_] = x\^2\/4 + x\/2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(p0 = 1.95;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 30];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[0] = \>", g[0]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[0] = \>", \(g'\)[0]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since ",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(<\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((\(-3\), 1)\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will converge to the fixed point  ",
+  Cell[BoxData[
+      \(p = 0\)], "Input",
+    FontWeight->"Plain"],
+  ".  In this case, ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 0\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  is said to be an attractive fixed point.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  -1 < g'[x] < 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[\(-1\) < \(g'\)[x] < 1, 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(>\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((1, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will not converge to ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " .  In this case,  ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " is said to be a repelling fixed point and the iteration exhibits local \
+divergence.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  g'[x] > 1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[1 < \(g'\)[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9. ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["Divergence: Spiral",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  ",
+  "Find the solution to  ",
+  Cell[BoxData[
+      \(x\  = \ \(g[x]\  = \ \(-\(x\^2\/4\)\) - x\/2 + 4\)\)]],
+  ".  Use the starting approximation  ",
+  Cell[BoxData[
+      \(p\_0 = 1.97\)]],
+  "  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(g[x_] = \(-\(x\^2\/4\)\) - x\/2 + 4;\)\), "\[IndentingNewLine]", 
+    \(\(p0 = 1.97;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(FixedPointIteration[p0, 20];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{g[x], x}, {x, 0.0, 4.05}, 
+        PlotStyle \[Rule] {Magenta, Green}];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\< g[2] = \>", g[2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[2] = \>", \(g'\)[2]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Since",
+  Cell[BoxData[
+      StyleBox[\(\(|\)\(g' \((x)\)\)\(|\)\(\(>\)\(\ \)\(1\)\)\),
+        FontWeight->"Plain"]], "Input"],
+  "  for all   ",
+  Cell[BoxData[
+      StyleBox[\(x \[Element] \((1, \[Infinity])\)\),
+        FontWeight->"Plain"]], "Input"],
+  ",  then the iteration  ",
+  Cell[BoxData[
+      \(p\_n = g \((p\_\(n - 1\))\)\)],
+    AspectRatioFixed->False],
+  "  will not converge to ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " .  In this case,  ",
+  Cell[BoxData[
+      StyleBox[\(\(\ \)\(p = 2\)\),
+        FontWeight->"Plain"]], "Input"],
+  " is said to be a repelling fixed point and the iteration exhibits local \
+divergence.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Algebra`InequalitySolve`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<g'[x] = \>", \(g'\)[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve  g'[x] < -1\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        InequalitySolve[\(g'\)[x] < \(-1\), x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get    \>", solset];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/Fixpointff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/RootFinding/\
+FixedPoint/FixedPoint.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/RootFinding/\
+FixedPoint/FixedPoint.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations. "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/FixedPointBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Fixed Point Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/FixedPointBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+SpellingOptions->{"AlwaysStop"->"RepeatedWords"},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Qn", "Sn", "Xn", "Yn", "pts0", "eqn", "solset", 
+    "pts", "lin1", "lin2", "lin3", "gr2"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 174, 4, 35, "Text"],
+Cell[1953, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3432, 111, 373, 8, 49, "Text"],
+Cell[3808, 121, 1500, 58, 185, "Text"],
+Cell[5311, 181, 152, 3, 33, "Text"],
+Cell[5466, 186, 110, 2, 33, "Text"],
+Cell[5579, 190, 1158, 44, 71, "Text"],
+Cell[6740, 236, 22623, 571, 345, "Text"],
+Cell[29366, 809, 380, 14, 33, "Text"],
+Cell[29749, 825, 817, 29, 78, "Text"],
+Cell[30569, 856, 626, 21, 33, "Text"],
+Cell[31198, 879, 187, 4, 33, "Text"],
+Cell[31388, 885, 2361, 87, 109, "Text"],
+Cell[33752, 974, 626, 21, 33, "Text"],
+Cell[34381, 997, 3174, 112, 223, "Text"],
+Cell[37558, 1111, 626, 21, 33, "Text"],
+Cell[38187, 1134, 918, 30, 71, "Text"],
+Cell[39108, 1166, 1051, 38, 112, "Text"],
+Cell[40162, 1206, 139, 2, 33, "Text"],
+Cell[40304, 1210, 695, 25, 52, "Text"],
+Cell[41002, 1237, 776, 25, 33, "Text"],
+Cell[41781, 1264, 605, 19, 33, "Text"],
+Cell[42389, 1285, 337, 10, 33, "Text"],
+Cell[42729, 1297, 1046, 18, 330, "Input"],
+Cell[43778, 1317, 304, 11, 37, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[44107, 1332, 101, 2, 33, "Text"],
+Cell[44211, 1336, 174, 6, 33, "Text"],
+Cell[44388, 1344, 346, 7, 106, "Input"],
+Cell[44737, 1353, 125, 3, 33, "Text"],
+Cell[44865, 1358, 417, 8, 120, "Input"],
+Cell[45285, 1368, 266, 6, 52, "Text",
+  Evaluatable->False],
+Cell[45554, 1376, 63, 1, 30, "Input"],
+Cell[45620, 1379, 67, 1, 30, "Input"],
+Cell[45690, 1382, 67, 1, 30, "Input"],
+Cell[45760, 1385, 67, 1, 30, "Input"],
+Cell[45830, 1388, 67, 1, 30, "Input"],
+Cell[45900, 1391, 67, 1, 30, "Input"],
+Cell[45970, 1394, 97, 3, 33, "Text"],
+Cell[46070, 1399, 75, 1, 30, "Input"],
+Cell[46148, 1402, 284, 7, 109, "Text"],
+Cell[46435, 1411, 76, 1, 30, "Input"],
+Cell[46514, 1414, 330, 10, 33, "Text",
+  Evaluatable->False],
+Cell[46847, 1426, 754, 15, 230, "Input"],
+Cell[47604, 1443, 630, 16, 109, "Text",
+  Evaluatable->False],
+Cell[48237, 1461, 328, 10, 33, "Text",
+  Evaluatable->False],
+Cell[48568, 1473, 697, 14, 230, "Input"],
+Cell[49268, 1489, 174, 6, 33, "Text",
+  Evaluatable->False],
+Cell[49445, 1497, 196, 7, 33, "Text",
+  Evaluatable->False],
+Cell[49644, 1506, 332, 7, 50, "Input"],
+Cell[49979, 1515, 97, 3, 33, "Text"],
+Cell[50079, 1520, 106, 2, 30, "Input"],
+Cell[50188, 1524, 211, 6, 33, "Text"],
+Cell[50402, 1532, 648, 19, 109, "Text"],
+Cell[51053, 1553, 1033, 20, 254, "Input"],
+Cell[52089, 1575, 864, 31, 109, "Text"]
+}, Closed]],
+Cell[52968, 1609, 397, 14, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[53390, 1627, 101, 2, 33, "Text"],
+Cell[53494, 1631, 74, 0, 33, "Text"],
+Cell[53571, 1633, 152, 2, 66, "Input"],
+Cell[53726, 1637, 84, 1, 30, "Input"],
+Cell[53813, 1640, 187, 5, 52, "Text"],
+Cell[54003, 1647, 280, 7, 90, "Input"],
+Cell[54286, 1656, 511, 12, 90, "Text"],
+Cell[54800, 1670, 715, 14, 130, "Input"],
+Cell[55518, 1686, 114, 3, 33, "Text"],
+Cell[55635, 1691, 231, 5, 42, "Input"],
+Cell[55869, 1698, 74, 0, 33, "Text"],
+Cell[55946, 1700, 384, 7, 103, "Input"]
+}, Closed]],
+Cell[56345, 1710, 415, 14, 34, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[56785, 1728, 101, 2, 33, "Text"],
+Cell[56889, 1732, 152, 2, 66, "Input"],
+Cell[57044, 1736, 90, 1, 30, "Input"],
+Cell[57137, 1739, 74, 0, 33, "Text"],
+Cell[57214, 1741, 709, 14, 130, "Input"],
+Cell[57926, 1757, 114, 3, 33, "Text"],
+Cell[58043, 1762, 228, 5, 30, "Input"],
+Cell[58274, 1769, 74, 0, 33, "Text"],
+Cell[58351, 1771, 387, 7, 90, "Input"]
+}, Closed]],
+Cell[58753, 1781, 167, 4, 32, "Text"],
+Cell[58923, 1787, 398, 14, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[59346, 1805, 101, 2, 33, "Text"],
+Cell[59450, 1809, 364, 6, 112, "Input"],
+Cell[59817, 1817, 142, 2, 50, "Input"],
+Cell[59962, 1821, 679, 22, 36, "Text"],
+Cell[60644, 1845, 406, 7, 110, "Input"],
+Cell[61053, 1854, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[61857, 1883, 404, 15, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[62286, 1902, 101, 2, 33, "Text"],
+Cell[62390, 1906, 364, 6, 112, "Input"],
+Cell[62757, 1914, 142, 2, 50, "Input"],
+Cell[62902, 1918, 679, 22, 36, "Text"],
+Cell[63584, 1942, 406, 7, 110, "Input"],
+Cell[63993, 1951, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[64797, 1980, 394, 15, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[65216, 1999, 101, 2, 33, "Text"],
+Cell[65320, 2003, 349, 6, 124, "Input"],
+Cell[65672, 2011, 142, 2, 50, "Input"],
+Cell[65817, 2015, 728, 23, 33, "Text"],
+Cell[66548, 2040, 406, 7, 110, "Input"],
+Cell[66957, 2049, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[67761, 2078, 409, 15, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[68195, 2097, 101, 2, 33, "Text"],
+Cell[68299, 2101, 375, 6, 127, "Input"],
+Cell[68677, 2109, 142, 2, 50, "Input"],
+Cell[68822, 2113, 736, 23, 33, "Text"],
+Cell[69561, 2138, 381, 6, 110, "Input"],
+Cell[69945, 2146, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[70749, 2175, 410, 15, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[71184, 2194, 101, 2, 33, "Text"],
+Cell[71288, 2198, 375, 6, 127, "Input"],
+Cell[71666, 2206, 142, 2, 50, "Input"],
+Cell[71811, 2210, 671, 22, 33, "Text"],
+Cell[72485, 2234, 406, 7, 110, "Input"],
+Cell[72894, 2243, 142, 2, 50, "Input"],
+Cell[73039, 2247, 736, 23, 33, "Text"],
+Cell[73778, 2272, 381, 6, 110, "Input"],
+Cell[74162, 2280, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[74966, 2309, 409, 15, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[75400, 2328, 101, 2, 33, "Text"],
+Cell[75504, 2332, 365, 6, 127, "Input"],
+Cell[75872, 2340, 142, 2, 50, "Input"],
+Cell[76017, 2344, 736, 23, 33, "Text"],
+Cell[76756, 2369, 387, 6, 110, "Input"],
+Cell[77146, 2377, 789, 26, 33, "Text"]
+}, Closed]],
+Cell[77950, 2406, 787, 24, 30, "Text"],
+Cell[78740, 2432, 158, 3, 35, "Text"],
+Cell[78901, 2437, 562, 16, 33, "Text"],
+Cell[79466, 2455, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

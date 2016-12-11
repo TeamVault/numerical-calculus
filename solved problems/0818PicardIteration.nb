@@ -1,0 +1,3879 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    142491,       3624]*)
+(*NotebookOutlinePosition[    143491,       3655]*)
+(*  CellTagsIndexPosition[    143447,       3651]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Picard's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods and Differential Equations",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews, 2005",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Picard Iteration Revisited\n",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["by\nJohn H. Mathews",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Introduction",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontSlant->"Italic"],
+  "The term \"Picard iteration\" occurs two places in undergraduate \
+mathematics.  In numerical analysis it is used when discussing fixed point \
+iteration for finding a numerical approximation to the equation  ",
+  Cell[BoxData[
+      \(x = g \((x)\)\)]],
+  ".  In differential equations, Picard iteration is a constructive procedure \
+for establishing the existence of a solution to a differential equation  ",
+  Cell[BoxData[
+      RowBox[{\(y'\), "=", 
+        RowBox[{"f", 
+          RowBox[{"(", 
+            RowBox[{"x", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "y"}], ")"}]}]}]]],
+  " that passes through the point  ",
+  Cell[BoxData[
+      RowBox[{"(", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(y\_0\)}], ")"}]]],
+  ". "
+}], "Text"],
+
+Cell["\<\
+\tThe first type of Picard iteration uses computations to generate \
+a \"sequence of numbers\" which converges to a solution.  We will not present \
+this application, but mention that it involves the traditional role of \
+computer software as a \"number cruncher.\"  \
+\>", "Text"],
+
+Cell[TextData[{
+  "\tThe goal of this article is to illustrate the second application of \
+Picard iteration; i. e. how to use a computer to efficiently generate a \
+\"sequence of functions\" which converges to a solution.  We will see that \
+computer software can perform the more sophisticated task of \"symbol \
+cruncher.\"  For years, software such as ",
+  ButtonBox["Mathematica",
+    ButtonData:>{
+      URL[ "http://www.wolfram.com/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["Maple",
+    ButtonData:>{
+      URL[ "http://www.maplesoft.com/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["Scientific Work Place",
+    ButtonData:>{
+      URL[ "http://www.mackichan.com/index.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["MuPad",
+    ButtonData:>{
+      URL[ "http://research.mupad.de/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["Derive",
+    ButtonData:>{
+      URL[ 
+      "http://education.ti.com/us/product/software/derive/features/features.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["LiveMath",
+    ButtonData:>{
+      URL[ "http://www.livemath.com/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["Macsyma",
+    ButtonData:>{
+      URL[ "http://www.scientek.com/macsyma/mxmain.htm"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["REDUCE",
+    ButtonData:>{
+      URL[ "http://www.uni-koeln.de/REDUCE/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", ",
+  ButtonBox["Mathcad",
+    ButtonData:>{
+      URL[ "http://www.mathcad.com/"], None},
+    ButtonStyle->"Hyperlink"],
+  ", and ",
+  ButtonBox["Matlab",
+    ButtonData:>{
+      URL[ "http://www.mathworks.com/"], None},
+    ButtonStyle->"Hyperlink"],
+  " have been introduced in undergraduate mathematics courses to assist in \
+keeping track of equations during complicated symbolic manipulations, see \
+references [3 to 7].   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n",
+  StyleBox["\n",
+    FontSlant->"Italic"],
+  "\tMost differential equations texts give a proof for the existence and \
+uniqueness of the solution to a first order differential equation.  Then \
+exercises are given for performing the laborious details involved in the \
+method of successive approximations.  The concept seems straightforward, just \
+repeated integration, but students get bogged down with the details.  Now \
+computers can do all the drudgery and we can get a better grasp on how the \
+process works.  \n\n",
+  StyleBox["Theorem 1 (Existence Theorem).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  If both  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}], "  ", 
+        StyleBox["and",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "  ", \(f\_y\), 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  "  are continuous on the rectangle  ",
+  Cell[BoxData[
+      RowBox[{"R", " ", "=", " ", 
+        RowBox[{"{", 
+          RowBox[{
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{"x", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "y"}], ")"}], 
+              ":", \(a \[LessEqual] x \[LessEqual] b\)}], 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(c \[LessEqual] y \[LessEqual] d\)}],
+           "}"}]}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(y\_0\)}], ")"}], "\[Element]", 
+        "R"}]]],
+  ",  then there exists a unique solution to the initial value problem \
+(I.V.P.) \n\n(1)\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{"x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "    ", "y", \((x\_0)\)}], 
+          "=", \(y\_0\)}]}]]],
+  "  \n\nfor all values of  x  in some (smaller) interval  ",
+  Cell[BoxData[
+      \(x\_0 - \[Delta]\  \[LessEqual] \ x\  \[LessEqual] \ 
+        x\_0 + \[Delta]\)]],
+  " contained in  ",
+  Cell[BoxData[
+      \(a\  \[LessEqual] \ x\  \[LessEqual] \ b\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Picard's Method for D.E.'s",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe method of successive approximations uses the equivalent integral \
+equation for (1) and an iterative method for constructing approximations to \
+the solution.  This is a traditional way to prove (1) and appears in most all \
+differential equations textbooks.   It is attributed to the French \
+mathematician ",
+  ButtonBox["Charles Emile Picard",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Picard_\
+Emile.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " (1856-1941).  \n\t\n",
+  StyleBox["Theorem 2 (Successive Approximations - Picard Iteration).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The solution to the I.V.P in (1) is found by constructing recursively a \
+sequence  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((x)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  of functions \n\n\t\t",
+  Cell[BoxData[
+      \(\(Y\_0\) \((x)\)\  = \ \ y\_0\)]],
+  ",   and \n(2)\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(\(Y\_\(n + 1\)\) \((x)\)\), " ", "=", "  ", 
+        RowBox[{
+          RowBox[{\(y\_0\), "  ", "+", "  ", 
+            RowBox[{\(\[Integral]\_\(x\_0\)\%x\), " ", 
+              RowBox[{"f", 
+                RowBox[{"(", 
+                  RowBox[{"t", 
+                    StyleBox[",",
+                      FontFamily->"Times New Roman",
+                      FontSize->12,
+                      FontWeight->"Plain",
+                      FontSlant->"Plain",
+                      FontColor->GrayLevel[0],
+                      FontVariations->{"Underline"->False,
+                      "StrikeThrough"->False}], \(\(Y\_n\) \((t)\)\)}], 
+                  ")"}], \(\[DifferentialD]t\), "    ", 
+                StyleBox["for",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "    ", "n"}]}]}], 
+          "\[GreaterEqual]", "0"}]}]]],
+  ". \n\nThen the solution ",
+  Cell[BoxData[
+      \(y \((x)\)\)]],
+  " to (1) is given by the limit: \n\n(3)\t\t",
+  Cell[BoxData[
+      \(y \((x)\)\ \  = \ \ lim\+\(n \[Rule] \[Infinity]\)\ \(Y\_n\) \
+\((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Picard Iteration Theorem 2",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/picarditeration/\
+PicardIterationProof/Links/PicardIterationProof_lnk_2.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Symbolic Analysis",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tComputer algebra systems are useful for performing the arduous task \
+of repeated integrations.  To perform Picard iteration using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " one must define  ",
+  Cell[BoxData[
+      RowBox[{"f", 
+        RowBox[{"(", 
+          RowBox[{"x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "y"}], ")"}]}]]],
+  ",  and supply the initial value  ",
+  Cell[BoxData[
+      \(y\_0\)]],
+  ",  and the number of iterations ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  ".  The following subroutine will compute the first ",
+  Cell[BoxData[
+      \(n = max\)],
+    AspectRatioFixed->False],
+  " approximations. "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Picard Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration[x0_, y0_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]Y\_0[
+              x_]\  = \ y0; \ \[IndentingNewLine]k\  = \ 
+            0; \ \[IndentingNewLine]Print["\<Y\>"\_0, "\<(x) = \>", 
+            Y\_0[x]\ ]; \ \[IndentingNewLine]While[
+            k < max, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]Y\_1[
+                    x_]\  = \ 
+                  y0\  + \ \[Integral]\_x0\%x\ 
+                      f[t, Y\_0[
+                            t]] \[DifferentialD]t; \ \[IndentingNewLine]Y\_1[
+                    x_]\  = \ 
+                  Normal[Series[
+                      Y\_1[x], {x, x0, 100}]]; \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(x) = \>", 
+                  Y\_1[x]\ ]; \ \[IndentingNewLine]Y\_0[x_]\  = \ 
+                  Y\_1[x];\ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \[IndentingNewLine]Print["\< \
+ y' = \>", f[x, y], "\<   with   y(\>", x0, "\<) = \>", \ 
+            y0]; \[IndentingNewLine]Print["\<After  \>", 
+            k, "\<  iterations, we have the approximation\>"]; \ \
+\[IndentingNewLine]Print["\<y(x) \[TildeTilde] \>", 
+            Y\_0[x]\ ];\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution of the I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{"y", " ", "-", " ", 
+            RowBox[{"x", "   ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((0)\)}]}], " ", "=", 
+          " ", "2"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\)]],
+  "  and the initial condition  ",
+  Cell[BoxData[
+      \(y\_0\  = \ 2\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = \ y\  - \ x;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration[x\_0, y\_0, 6];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "\tTechniques from calculus can be used to find the solution  ",
+  Cell[BoxData[
+      \(y \((x)\) = 1 + x + \[ExponentialE]\^x\)]],
+  ".  \n\nNotice that when the last term in the Picard approximation is \
+dropped, what is left is a Maclaurin (or Taylor) polynomial approximation.  \n\
+\nWe can express  ",
+  Cell[BoxData[
+      \(y \((x)\) = 1 + x + \[ExponentialE]\^x\)]],
+  "  as a Maclaurin series and observe that the sequence  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((x)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  is converging to the solution. \n\n\t  ",
+  Cell[BoxData[{
+      RowBox[{\(y \((x)\)\  = \ \((1 + x)\) + \[ExponentialE]\^x\), 
+        "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{
+        " ", \(y \((x)\)\  = \ \(\((1 + x)\) + 1 + 
+                  x + \(1\/\(2!\)\) x\^2 + \(1\/\(3!\)\) x\^3 + \(1\/\(4!\)\) 
+                    x\^4 + \(1\/\(5!\)\) x\^5 +  ... \) + \(1\/\(n!\)\) 
+                x\^n ... \), "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{
+        " ", \(y \((x)\)\  = \ \(2 + 
+                  2  x + \(1\/\(2!\)\) x\^2 + \(1\/\(3!\)\) 
+                    x\^3 + \(1\/\(4!\)\) x\^4 + \(1\/\(5!\)\) 
+                    x\^5 +  ... \) + \(1\/\(n!\)\) x\^n ... \), 
+        "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{
+        StyleBox[\(which\ is\ the\ same\ as\),
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "\[IndentingNewLine]"}], 
+    "\[IndentingNewLine]", 
+      RowBox[{
+        " ", \(y \((x)\) = \ \(2 + 2  x + x\^2\/2 + x\^3\/6 + x\^4\/24 + 
+                  x\^5\/120 +  ... \) + \(1\/\(n!\)\) x\^n ... \)}]}]],
+  "   "
+}], "Text"],
+
+Cell["\<\
+Mathematica can sum the infinite series to obtain the analytic \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(s[x_]\  = \ 
+        2\  + \ 2  
+            x\  + \ \[Sum]\+\(n = 2\)\%\[Infinity]\ \(1\/\(n!\)\) 
+              x\^n;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y(x) = 2 + 2x + \!\(\[Sum]\+\(n = 2\)\%\[Infinity]\) \
+\!\(1\/\(n!\)\)\!\(x\^n\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", s[x]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution of the I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"1", " ", "+", " ", 
+            RowBox[{\(y\^2\), "   ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((0)\)}]}], " ", "=", 
+          " ", "0"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y)\)\)]],
+  "  and the initial condition  ",
+  Cell[BoxData[
+      \(y\_0\  = \ 2\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = \ 1\  + \ y\^2;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration[x\_0, y\_0, 5];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "\tTechniques from calculus can be used to find the solution  ",
+  Cell[BoxData[
+      \(y \((x)\) = tan \((x)\)\)]],
+  ",  and it is easy to verify this fact using the rules of differentiation \
+and a trigonometric identity .   \n\n\t\t  ",
+  Cell[BoxData[{
+      \(\(\(y' \((x)\)\  = \ 
+        1\  + \ \((tan \((x)\))\)\^2\)\(\[IndentingNewLine]\)
+      \)\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\(\(=\)\(\ \)\(\((sec \((x)\))\)\^2\)\)\
+\(\ \)\(\[IndentingNewLine]\)
+      \)\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\(=\)\(\ \ \)\(\(d\/dx\) 
+          tan \((x)\)\)\)\)}]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The first five terms of the Picard approximation are the same as the \
+Maclaurin series for  ",
+  Cell[BoxData[
+      \(y \((x)\) = tan \((x)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S = Series[Tan[x], {x, 0, 9}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", Tan[x], "\< = \>", S];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Getting the Graphs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIf we want to graph several solution, we will need to store them \
+somewhere.  The following version of the Picard subroutine uses the vector  \
+",
+  Cell[BoxData[
+      StyleBox["Y",
+        FontWeight->"Bold"]],
+    AspectRatioFixed->False],
+  ".  Since the subscript for the elements of a vector start with ",
+  Cell[BoxData[
+      \(Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)],
+    AspectRatioFixed->False],
+  ", the notation for the sequence of stored functions will be  ",
+  Cell[BoxData[
+      \({Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 1\)\%max\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Vector Form for Picard \
+Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration[x0_, y0_, 
+          max_] := \[IndentingNewLine]Module[{i, k}, \[IndentingNewLine]Y = 
+            Table[0, {i, 
+                max + 1}]; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\
+\(1\)\(\[RightDoubleBracket]\)\)\  = \ y0; \ \[IndentingNewLine]k\  = \ 
+            1; \ \[IndentingNewLine]Print["\<Y\>"\_1, "\<(x) = \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]While[
+            k < max + 
+                1, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]Y\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) = \ 
+                  y0\  + \ \[Integral]\_x0\%x\ 
+                      f[t, ReplaceAll[
+                            Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), x \[Rule] 
+                              t]\ ] \[DifferentialD]t; \ \[IndentingNewLine]Y\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[\ 
+                      Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {x, x0, 100}]]; \ \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(x) = \>", 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ];\ \ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \[IndentingNewLine]Print["\< \
+ y' = \>", f[x, y], "\<   with   y(\>", x0, "\<) = \>", \ 
+            y0]; \ \[IndentingNewLine]Print["\<After  \>", 
+            k - 1, "\<  iterations, we have\>"]; \ \[IndentingNewLine]Print["\
+\<y(x) \[TildeTilde] \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ];\
+\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find and plot approximations for the  solution \
+of the I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{"y", " ", "-", " ", 
+            RowBox[{"x", "   ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((0)\)}]}], " ", "=", 
+          " ", "2"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = \ y\  - \ x;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PicardIteration[x\_0, y\_0, 6];\)\)], "Input"],
+
+Cell["\<\
+We can graph the analytic solution and the Picard iterations.\
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[\ {\(y'\)[x]\  \[Equal] \ f[x, y[x]], y[x\_0] \[Equal] y\_0}, 
+          y[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Psi][x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(dot = 
+        Graphics[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0}]}];\)\), "\[IndentingNewLine]", 
+    \(\(graph0\  = \ 
+        Plot[\[Psi][x], {x, \(-3\), 3}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, 3]], {x, \(-3\), 3}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-8\), 25}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-5\), 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, 3]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, \(-3\)]], {x, \(-3\), 3}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-8\), 25}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-5\), 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The next 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, \(-3\)]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Y], {x, \(-3\), 3}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-3\), 3}, {\(-8\), 25}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-5\), 25, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 6 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Y];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find and plot approximations for the  solution \
+of the I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{\(-2\), " ", "x", " ", "y", "   ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "   ", "y", \((1)\)}], " ", "=", " ", 
+          "1"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_]\  = \ \(-2\)\ x\ y;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PicardIteration[x\_0, y\_0, 6];\)\)], "Input"],
+
+Cell["\<\
+We can graph the analytic solution and the Picard iterations.\
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[\ {\(y'\)[x]\  \[Equal] \ f[x, y[x]], y[x\_0] \[Equal] y\_0}, 
+          y[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Psi][x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(dot = 
+        Graphics[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0}]}];\)\), "\[IndentingNewLine]", 
+    \(\(graph0\  = \ 
+        Plot[\[Psi][x], {x, \(-1.7\), 1.7}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, 3]], {x, \(-1.7\), 1.7}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-1.7\), 1.7}, {0.0, 2.75}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, 3]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, \(-3\)]], {x, \(-1.7\), 1.7}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-1.7\), 1.7}, {0.0, 2.75}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The next 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, \(-3\)]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Y], {x, \(-1.7\), 1.7}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-1.7\), 1.7}, {0.0, 2.75}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", f[x, y], "\<   with   y(\>", x\_0, "\<) = \>", \ 
+        y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 6 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Y];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Extension to First Order Systems in 2D",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSuppose that we want to solve the initial value problem for a system \
+of two differential equations\n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(x'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman"], "    ", "x", \((t\_0)\)}], " ", 
+          "=", " ", \(x\_0\)}]}]]],
+  ",    and  \n(7)\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman"], "    ", "y", \((t\_0)\)}], " ", 
+          "=", " ", \(y\_0\)}]}]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "Picard iteration can be used to generate two sequences  ",
+  Cell[BoxData[
+      \({\(X\_n\) \((t)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((t)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  which converge to the solutions  ",
+  Cell[BoxData[
+      \(x \((t)\)\)]],
+  StyleBox["  ",
+    FontSlant->"Italic"],
+  "and  ",
+  Cell[BoxData[
+      \(y \((t)\)\)]],
+  ",  respectively, see reference [2].  They are defined recursively by\n\n\t\
+\t",
+  Cell[BoxData[
+      \(\(X\_0\) \((t)\)\  = \ x\_0\)]],
+  ",  \n\t\t",
+  Cell[BoxData[
+      \(\(Y\_0\) \((t)\)\  = \ y\_0\)]],
+  ",   and \n(8)\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(X\_\(n + 1\)\) \((t)\)\), " ", "=", "  ", 
+          RowBox[{\(y\_0\), "  ", "+", "  ", 
+            RowBox[{\(\[Integral]\_\(t\_0\)\%t\), 
+              RowBox[{" ", "f", 
+                RowBox[{"(", 
+                  RowBox[{"s", 
+                    StyleBox[",",
+                      FontFamily->"Times New Roman",
+                      FontSize->12,
+                      FontWeight->"Plain",
+                      FontSlant->"Plain",
+                      FontColor->GrayLevel[0],
+                      FontVariations->{"Underline"->False,
+                      "StrikeThrough"->False}], \(\(X\_n\) \((s)\)\), 
+                    StyleBox[",",
+                      FontFamily->"Times New Roman",
+                      FontSize->12,
+                      FontWeight->"Plain",
+                      FontSlant->"Plain",
+                      FontColor->GrayLevel[0],
+                      FontVariations->{"Underline"->False,
+                      "StrikeThrough"->False}], \(\(Y\_n\) \((s)\)\)}], 
+                  ")"}], \(\[DifferentialD]s\)}]}]}]}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{\(\(Y\_\(n + 1\)\) \((t)\)\), " ", "=", "  ", 
+          RowBox[{
+            RowBox[{\(y\_0\), "  ", "+", "  ", 
+              RowBox[{\(\[Integral]\_\(t\_0\)\%t\), 
+                RowBox[{" ", "g", 
+                  RowBox[{"(", 
+                    RowBox[{"s", 
+                      StyleBox[",",
+                        FontFamily->"Times New Roman",
+                        FontSize->12,
+                        FontWeight->"Plain",
+                        FontSlant->"Plain",
+                        FontColor->GrayLevel[0],
+                        FontVariations->{"Underline"->False,
+                        "StrikeThrough"->False}], \(\(X\_n\) \((s)\)\), 
+                      StyleBox[",",
+                        FontFamily->"Times New Roman",
+                        FontSize->12,
+                        FontWeight->"Plain",
+                        FontSlant->"Plain",
+                        FontColor->GrayLevel[0],
+                        FontVariations->{"Underline"->False,
+                        "StrikeThrough"->False}], \(\(Y\_n\) \((s)\)\)}], 
+                    ")"}], \(\[DifferentialD]s\), "     ", 
+                  StyleBox["for",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "    ", "n"}]}]}], 
+            "\[GreaterEqual]", "0"}]}]}]]],
+  "   \n\nThe sequence of approximations will converge to the solution, i.e. \
+\n\n(9)\t\t",
+  Cell[BoxData[{\(lim\+\(n \[Rule] \[Infinity]\)\ \ \ \(X\_n\) \((t)\)\ \  = \
+\ \ x \((t)\)\), "\[IndentingNewLine]", 
+      StyleBox["and",
+        FontFamily->"Times New Roman",
+        FontSize->12,
+        FontWeight->"Plain",
+        FontSlant->"Plain",
+        FontColor->GrayLevel[0],
+        FontVariations->{"Underline"->False,
+        "StrikeThrough"->False}], 
+    "\[IndentingNewLine]", \(lim\+\(n \[Rule] \[Infinity]\)\ \ \ \(Y\_n\) \
+\((t)\)\ \  = \ \ y \((t)\)\)}]]
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Picard Iteration in 2D).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration2D[t0_, x0_, y0_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]X\_0[
+              t_]\  = \ x0; \ \[IndentingNewLine]Y\_0[t_]\  = \ 
+            y0; \ \[IndentingNewLine]k\  = \ 
+            0; \ \[IndentingNewLine]Print["\<X\>"\_0, "\<(t) = \>", 
+            X\_0[t]\ ]; \ \[IndentingNewLine]Print["\<Y\>"\_0, "\<(t) = \>", 
+            Y\_0[t]\ ]; \ \[IndentingNewLine]While[
+            k < max, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]X\_1[
+                    t_]\  = \ 
+                  x0\  + \ \[Integral]\_t0\%t\ 
+                      f[s, X\_0[s], 
+                          Y\_0[s]] \[DifferentialD]s; \ \
+\[IndentingNewLine]Y\_1[t_]\  = \ 
+                  y0\  + \ \[Integral]\_t0\%t\ 
+                      g[s, X\_0[s], 
+                          Y\_0[s]] \[DifferentialD]s; \ \
+\[IndentingNewLine]X\_1[t_]\  = \ 
+                  Normal[Series[
+                      X\_1[t], {t, t0, 100}]]; \ \[IndentingNewLine]Y\_1[
+                    t_]\  = \ 
+                  Normal[Series[
+                      Y\_1[t], {t, t0, 100}]]; \ \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<\n\>", "\<X\>"\_k, \
+"\<(t) = \>", 
+                  X\_1[t]\ ]; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(t) = \
+\>", Y\_1[t]\ ]; \ \[IndentingNewLine]X\_0[t_]\  = \ 
+                  X\_1[t]; \ \[IndentingNewLine]Y\_0[t_]\  = \ 
+                  Y\_1[t];\ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \[IndentingNewLine]Print["\< \
+ x' = \>", f[t, x, y], "\<   with   x(\>", t0, "\<) = \>", \ 
+            x0]; \ \[IndentingNewLine]Print["\<  y' = \>", 
+            g[t, x, y], "\<   with   y(\>", t0, "\<) = \>", \ 
+            y0]; \ \[IndentingNewLine]Print["\<After  \>", 
+            k, "\<  iterations, we have the approximation\>"]; \ \
+\[IndentingNewLine]Print["\<x(t) \[TildeTilde] \>", 
+            X\_0[t]\ ]; \ \[IndentingNewLine]Print["\<y(t) \[TildeTilde] \>", 
+            Y\_0[t]\ ];\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution to the system of differential \
+equations \n\n\t\t",
+  Cell[BoxData[{
+      RowBox[{\(x'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(-x\), "-", 
+              RowBox[{"2", "y", "     ", 
+                StyleBox["with",
+                  FontFamily->"Times New Roman"], "    ", "x", \((0)\)}]}], 
+            " ", "=", " ", \(x\_0\  = \(-1\)\)}]}]}], "\[IndentingNewLine]", 
+      StyleBox["and",
+        FontFamily->"Times New Roman"], "\n", 
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(3  x\), "+", 
+              RowBox[{"4", "y", "     ", 
+                StyleBox["with",
+                  FontFamily->"Times New Roman"], "    ", "y", \((0)\)}]}], 
+            " ", "=", " ", \(y\_0\  = \ \ 2\)}]}]}]}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the functions  ",
+  Cell[BoxData[
+      \(f \((t, x, y)\), \ g \((t, x, y)\)\)]],
+  "  and the initial conditions  ",
+  Cell[BoxData[
+      \(\(\(\ \)\(x\_0\  = \ \(-1\), \ \ y\_0\  = \ 2\)\)\)]],
+  "  by typing: "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, x_, y_]\  = \ \(-x\)\  - \ 2  y;\)\ \), "\[IndentingNewLine]", 
+    \(\(g[t_, x_, y_]\  = \ 3  x\  + \ 4  y;\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ \(-1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f[t, x, y], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", g[t, x, y], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration2D[t\_0, x\_0, y\_0, 6];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "\tTechniques from calculus can be used to find the analytic solutions   ",
+  Cell[BoxData[
+      \(x \((t)\)\  = \ \ \[ExponentialE]\^t\  - \ 
+          2  \[ExponentialE]\^\(2  t\)\)]],
+  "   and   ",
+  Cell[BoxData[
+      \(y \((t)\)\  = \ \(-\ \[ExponentialE]\^t\)\  + \ 
+          3  \[ExponentialE]\^\(2  t\)\)]],
+  ".  \n\nNotice that when the last term in the Picard approximation is \
+dropped, what is left is a Maclaurin (or Taylor) polynomial approximation.  "
+}], "Text"],
+
+Cell[TextData[{
+  "We can express the analytic solutions as Maclaurin series and observe that \
+the sequences  ",
+  Cell[BoxData[
+      \({\(X\_n\) \((t)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  and  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((t)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  are converging to the solution \n\n\t  ",
+  Cell[BoxData[{
+      RowBox[{\(x \((t)\)\  = \ \[ExponentialE]\^t\  - \ 
+            2  \[ExponentialE]\^\(2  t\)\), "  "}], 
+    "\[IndentingNewLine]", \(x \((t)\)\  = \ \(1 + t + t\^2\/\(2!\) + 
+              t\^3\/\(3!\) + t\^4\/\(4!\) + t\^5\/\(5!\) +  ... \)\  - \ 
+          2 \((1 + 
+                  2  t + \(\(2\^2\) t\^2\)\/\(2!\) + \(\(2\^3\) \
+t\^3\)\/\(3!\) + \(\(2\^4\) t\^4\)\/\(4!\) + \(\(2\^5\) t\^5\)\/\(5!\) +  \
+... )\)\), "\[IndentingNewLine]", 
+      StyleBox[\(\(which\ is\ the\ same\ as\)\(\ \)\),
+        FontFamily->"Times New Roman",
+        FontSize->12,
+        FontWeight->"Plain",
+        FontSlant->"Plain",
+        FontColor->GrayLevel[0],
+        FontVariations->{"Underline"->False,
+        "StrikeThrough"->False}], "\[IndentingNewLine]", 
+      RowBox[{
+        " ", \(\(x \((t)\)\)\(=\)\(\ \)\(\(-1\) - 
+              3\ t - \(7\ t\^2\)\/2 - \(5\ t\^3\)\/2 - \(31\ t\^4\)\/24 - \
+\(21\ t\^5\)\/40 -  ... \)\(\ \ \)\)}]}]],
+  "     \n\t  \n\t  ",
+  Cell[BoxData[{
+      RowBox[{\(y \((t)\)\  = \ \(-\ \[ExponentialE]\^t\)\  + \ 
+            3  \[ExponentialE]\^\(2  t\)\), "  "}], 
+    "\[IndentingNewLine]", \(y \((t)\)\  = \ \(\(-1\) - t - t\^2\/\(2!\) - 
+              t\^3\/\(3!\) - t\^4\/\(4!\) - t\^5\/\(5!\) -  ... \)\  + \ 
+          3 \((1 + 
+                  2  t + \(\(2\^2\) t\^2\)\/\(2!\) + \(\(2\^3\) \
+t\^3\)\/\(3!\) + \(\(2\^4\) t\^4\)\/\(4!\) + \(\(2\^5\) t\^5\)\/\(5!\) +  \
+... )\)\), "\[IndentingNewLine]", 
+      StyleBox[\(\(which\ is\ the\ same\ as\)\(\ \)\),
+        FontFamily->"Times New Roman",
+        FontSize->12,
+        FontWeight->"Plain",
+        FontSlant->"Plain",
+        FontColor->GrayLevel[0],
+        FontVariations->{"Underline"->False,
+        "StrikeThrough"->False}], "\[IndentingNewLine]", 
+      RowBox[{
+        " ", \(\(y \((t)\)\)\(=\)\(\ \)\(2 + 
+              5\ t + \(11\ t\^2\)\/2 + \(23\ t\^3\)\/6 + \(47\ t\^4\)\/24 + \
+\(19\ t\^5\)\/24 ... \)\(\ \ \)\)}]}]],
+  "   "
+}], "Text"],
+
+Cell["\<\
+Mathematica can sum the infinite series to obtain the analytic \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(s\_1[t_]\  = \ \[Sum]\+\(n = 0\)\%\[Infinity]\ t\^n\/\(n!\)\  - \ 
+          2 \(\[Sum]\+\(n = 0\)\%\[Infinity]\ \(\(2\^n\) t\^n\)\/\(n!\)\);\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<x(t)  =  \!\(\[Sum]\+\(n = 0\)\%\[Infinity]\) \!\(t\^n\/\
+\(n!\)\) - 2\!\(\[Sum]\+\(n = 0\)\%\[Infinity]\) \!\(\(\(2\^n\) \
+t\^n\)\/\(n!\)\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x(t)  =  \>", s\_1[t]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(s\_2[
+          t_]\  = \ \(-\ \(\[Sum]\+\(n = 0\)\%\[Infinity]\ 
+              t\^n\/\(n!\)\)\)\  + \ 
+          3 \(\[Sum]\+\(n = 0\)\%\[Infinity]\ \(\(2\^n\) t\^n\)\/\(n!\)\);\)\ \
+\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y(t)  = - \!\(\[Sum]\+\(n = 0\)\%\[Infinity]\) \
+\!\(t\^n\/\(n!\)\) + 3\!\(\[Sum]\+\(n = 0\)\%\[Infinity]\) \!\(\(\(2\^n\) \
+t\^n\)\/\(n!\)\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(t)  =  \>", s\_2[t]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!    \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " commands will solve the system of D. E. 's.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F[t_, x_, y_]\  = \ \(-\ x[t]\) - 
+          2  y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(G[t_, x_, y_]\  = \ 3  x[t] + 4  y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ \(-1\);\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(eqns = {\(x'\)[t] \[Equal] F[t, x, y], \(y'\)[t] \[Equal] 
+            G[t, x, y]};\)\ \), "\[IndentingNewLine]", 
+    \(\(ics = {x[0] \[Equal] \ x\_0, 
+          y[0] \[Equal] y\_0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        DSolve[Flatten[{eqns, ics}], {y[t], x[t]}, 
+          t];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = MapAll[Expand, solset];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f[t, x, y], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", g[t, x, y], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution to the system of differential \
+equations \n\n\t\t",
+  Cell[BoxData[{
+      RowBox[{
+        RowBox[{\(x'\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"f", 
+              RowBox[{"(", 
+                RowBox[{"t", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "x", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", "  ", 
+            
+            RowBox[{
+              RowBox[{"x", "  ", "+", " ", 
+                RowBox[{"2", "y", "     ", 
+                  StyleBox["with",
+                    FontFamily->"Times New Roman"], "    ", "x", \((0)\)}]}], 
+              " ", "=", " ", \(x\_0\  = \ 1\)}]}]}], " "}], 
+    "\[IndentingNewLine]", 
+      StyleBox["and",
+        FontFamily->"Times New Roman"], "\n", 
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(-\ x\), " ", "-", "  ", 
+              RowBox[{"y", "      ", 
+                StyleBox["with",
+                  FontFamily->"Times New Roman"], "    ", "y", \((0)\)}]}], 
+            " ", "=", " ", \(y\_0\  = \ 1\)}]}]}]}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the functions  ",
+  Cell[BoxData[
+      \(f \((t, x, y)\), \ g \((t, x, y)\)\)]],
+  "  and the initial conditions  ",
+  Cell[BoxData[
+      \(\(\(\ \)\(x\_0\  = \ 1, \ \ y\_0\  = \ 1\)\)\)]],
+  "  by typing: "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, x_, y_]\  = \ \ \ x\ \  + \ 2  y;\)\), "\[IndentingNewLine]", 
+    \(\(g[t_, x_, y_]\  = \ \(-\ x\)\  - \ \ y;\)\), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f[t, x, y], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", g[t, x, y], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(PicardIteration2D[t\_0, x\_0, y\_0, 6];\)\)], "Input"],
+
+Cell[TextData[{
+  "\tTechniques from calculus can be used to find the solutions   ",
+  Cell[BoxData[
+      \(x \((t)\)\  = \ \ \(-Cos[t]\) + 3\ Sin[t]\)]],
+  "   and   ",
+  Cell[BoxData[
+      \(y \((t)\)\  = \ 2\ Cos[t] - Sin[t]\)]],
+  ".  \n\nThe first few terms of these series can be shown to match the first \
+few terms in the Picard iterations. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\ \(S\_1[
+          t_]\  = \ \ Series[\(-Cos[t]\) + 3\ Sin[t], {t, 0, 
+            6}];\)\ \), "\[IndentingNewLine]", 
+    \(\ \(S\_2[t_]\  = \ \ Series[
+          2\ Cos[t] - Sin[t], {t, 0, 6}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<- Cos[t] + 3 Sin[t] = \>", \ 
+        S\_1[t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<2 Cos[t] -  Sin[t]  = \>", \ S\_2[t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Mathematica can sum the infinite series to obtain the analytic \
+solution.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(s\_1[
+          t_]\  = \ \(-\ \(\[Sum]\+\(k = 0\)\%\[Infinity]\ \
+\(\((\(-1\))\)\^k\) t\^\(2  k\)\/\(\((2  k)\)!\)\)\)\  + \ 
+          3 \(\[Sum]\+\(k = 1\)\%\[Infinity]\ \(\((\(-1\))\)\^\(k - 1\)\) 
+                t\^\(2  k - 1\)\/\(\((2  k - 1)\)!\)\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<x(t) = - \!\(\[Sum]\+\(k = 0\)\%\[Infinity]\) \
+\!\(\((\(-1\))\)\^k\)\!\(t\^\(2  k\)\/\(\((2  k)\)!\)\) + 3\!\(\[Sum]\+\(k = \
+1\)\%\[Infinity]\) \!\(\((\(-1\))\)\^\(k - 1\)\)\!\(t\^\(2  k - 1\)\/\(\((2  \
+k - 1)\)!\)\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x(t) = \>", PowerExpand[s\_1[t]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(s\_2[t_]\  = \ 
+        2\ \(\[Sum]\+\(k = 0\)\%\[Infinity]\ \(\((\(-1\))\)\^k\) 
+                t\^\(2  k\)\/\(\((2  k)\)!\)\)\  - \[Sum]\+\(k = 1\)\%\
+\[Infinity]\ \(\((\(-1\))\)\^\(k - 1\)\) 
+              t\^\(2  k - 1\)\/\(\((2  k - 1)\)!\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<y(t) = 2 \!\(\[Sum]\+\(k = 0\)\%\[Infinity]\) \
+\!\(\((\(-1\))\)\^k\)\!\(t\^\(2  k\)\/\(\((2  k)\)!\)\) -\!\(\[Sum]\+\(k = \
+1\)\%\[Infinity]\) \!\(\((\(-1\))\)\^\(k - 1\)\)\!\(t\^\(2  k - 1\)\/\(\((2  \
+k - 1)\)!\)\)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(t) = \>", PowerExpand[s\_2[t]]\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We are done!    \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " commands will solve the system of D. E. 's.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F[t_, x_, y_]\  = \ x[t] + 2  y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(G[t_, x_, y_]\  = \(-x[t]\) - y[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(eqns = {\(x'\)[t] \[Equal] F[t, x, y], \(y'\)[t] \[Equal] 
+            G[t, x, y]};\)\ \), "\[IndentingNewLine]", 
+    \(\(ics = {x[t\_0] \[Equal] \ x\_0, 
+          y[t\_0] \[Equal] y\_0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        DSolve[Flatten[{eqns, ics}], {y[t], x[t]}, 
+          t];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = MapAll[Expand, solset];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", F[t, x, y], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", G[t, x, y], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          MapAll[ComplexExpand, 
+            solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\
+]]\ ];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(solset\  = \ 
+        MapAll[TrigExpand, 
+          MapAll[ComplexExpand, solset]];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Phi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\n", 
+    \(\(\[CurlyPhi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 2, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(funs = {\[Phi][t], \[CurlyPhi][t]};\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(ParametricPlot[\ Evaluate[funs], {t, \(-\[Pi]\), \[Pi]}, 
+        PlotRange \[Rule] {{\(-3.2\), 3.2}, {\(-2.5\), 2.5}}, 
+        PlotStyle \[Rule] {Magenta}, 
+        AspectRatio \[Rule] 1];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\n", 
+    \(\(Print["\<x' = \>", f[t, x, y], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\n", 
+    \(\(Print["\<y' = \>", g[t, x, y], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\), "\n", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\n", 
+    \(\(Print["\<x(t) = \>", \[Phi][t]];\)\ \), "\n", 
+    \(\(Print["\<y(t) = \>", \[CurlyPhi][t]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Getting the Graphs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIf we want to graph several solution, we will need to store them \
+somewhere.  The following version of the Picard subroutine uses the vectors  \
+",
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]],
+    AspectRatioFixed->False],
+  "  and  ",
+  Cell[BoxData[
+      StyleBox["Y",
+        FontWeight->"Bold"]],
+    AspectRatioFixed->False],
+  ".  The sequences of stored functions will be  ",
+  Cell[BoxData[
+      \({X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 1\)\%max\)]],
+  "  and  ",
+  Cell[BoxData[
+      \({Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 1\)\%max\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Vector Form for Picard \
+Iteration in 2D).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration2D[
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]X\  = \ \
+\(Y\  = \ Table[
+                0, {i, max + 
+                    1}]\); \ \[IndentingNewLine]X\_\(\(\[LeftDoubleBracket]\)\
+\(1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            x\_0; \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            y\_0; \[IndentingNewLine]Print["\<X\>"\_0, "\<(t) = \>", 
+            X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]Print["\<Y\>"\_0, "\<(t) = \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]k\  = \ 1; \ \[IndentingNewLine]While[
+            k < max + 
+                1, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]X\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  x\_0\  + \ \[Integral]\_\(t\_0\)\%t\ 
+                      f[s, ReplaceAll[{X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)}, 
+                            t \[Rule] 
+                              s]\ ] \[DifferentialD]s; \ \[IndentingNewLine]Y\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  y\_0\  + \ \[Integral]\_\(t\_0\)\%t\ 
+                      g[s, ReplaceAll[{X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)}, 
+                            t \[Rule] 
+                              s]\ ] \[DifferentialD]s; \ \[IndentingNewLine]X\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[
+                      X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {t, t\_0, 
+                        100}]]; \
+\[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[
+                      Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {t, t\_0, 100}]]; \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<\n\>", "\<X\>"\_k, \
+"\<(t) = \>", 
+                  X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ]; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(t) = \>", 
+                  
+                  Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ];\ \ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \
+\[IndentingNewLine]Print["\<x' = \>", f[t, {x, y}], "\<   with   x(\>", 
+            t\_0, "\<) = \>", \ x\_0]; \[IndentingNewLine]Print["\<y' = \>", 
+            g[t, {x, y}], "\<   with   y(\>", t\_0, "\<) = \>", \ 
+            y\_0]; \[IndentingNewLine]Print["\<After  \>", 
+            k - 1, "\<  iterations, we have the approximation\>"]; \ \
+\[IndentingNewLine]Print["\<x(t) \[TildeTilde] \>", 
+            X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ]; \
+\[IndentingNewLine]Print["\<y(t) \[TildeTilde] \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ];\
+\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use Picard iteration to find and plot approximations for the  solution of \
+the I.V.P.  \n\n\t\t",
+  Cell[BoxData[{
+      RowBox[{
+        RowBox[{\(x'\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"f", 
+              RowBox[{"(", 
+                RowBox[{"t", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "x", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", "  ", 
+            
+            RowBox[{
+              RowBox[{"x", "  ", "+", " ", 
+                RowBox[{"2", "y", "    ", 
+                  StyleBox["with",
+                    FontFamily->"Times New Roman"], "    ", "x", \((0)\)}]}], 
+              " ", "=", " ", \(x\_0 = 1\)}]}]}], " "}], "\[IndentingNewLine]",
+     
+      StyleBox["and",
+        FontFamily->"Times New Roman"], "\n", 
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y"}], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{\(-\ x\), " ", "-", "  ", 
+              RowBox[{"y", "     ", 
+                StyleBox["with",
+                  FontFamily->"Times New Roman"], "    ", "y", \((0)\)}]}], 
+            " ", "=", " ", \(y\_0\  = \ 1\)}]}]}]}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, {x_, y_}]\  = \ \ \ x\ \  + \ 
+          2  y;\)\), "\[IndentingNewLine]", 
+    \(\(g[
+          t_, {x_, y_}]\  = \ \(-\ 
+            x\)\  - \ \ y;\)\), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f[t, {x, y}], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", g[t, {x, y}], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration2D[6];\)\(\ \)\)\)], "Input"],
+
+Cell["Now we can graph the Picard approximations. ", "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\n", 
+    RowBox[{\(solset\  = \ 
+          DSolve[\ {\(x'\)[t]\  \[Equal] \ 
+                f[t, {x[t], y[t]}], \(y'\)[t]\  \[Equal] \ 
+                g[t, {x[t], y[t]}], x[t\_0] \[Equal] x\_0, 
+              y[t\_0] \[Equal] y\_0}, {x[t], y[t]}, t];\), " "}], "\n", 
+    RowBox[{\(solset\  = \ 
+          MapAll[TrigExpand, MapAll[ComplexExpand, solset]];\), 
+      " "}], "\n", \(\[Phi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\), "\n", \(\[CurlyPhi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 2, \
+2\)\(\[RightDoubleBracket]\)\);\), "\n", \(dot = 
+        Graphics[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0}]}];\), "\[IndentingNewLine]", \(graph0\  = \ 
+        ParametricPlot[{\[Phi][t], \[CurlyPhi][t]}, {t, \(-\[Pi]\), \[Pi]}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\), "\n", 
+    RowBox[{\(funs\  = Transpose[{Take[X, {2, 4}], Take[Y, {2, 4}]}];\), 
+      " "}], "\n", \(graphs\  = \ 
+        ParametricPlot[\ Evaluate[funs], {t, \(-2\), 2}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\), "\[IndentingNewLine]", \(Show[
+        graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-3.2\), 3.2}, {\(-2.3\), 2.3}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", \(Print["\<Solve \
+the I.V.P.\>"];\), "\n", \(Print["\<x' = \>", 
+        f[t, {x, y}], "\<   with   x(\>", t\_0, "\<) = \>", \ 
+        x\_0];\), "\[IndentingNewLine]", \(Print["\<y' = \>", 
+        g[t, {x, y}], "\<   with   y(\>", t\_0, "\<) = \>", \ y\_0];\), "\n", 
+  
+    RowBox[{\(Print["\<The analytic solution is known to be\>"];\), 
+      " "}], "\n", 
+    RowBox[{\(Print["\<x(t) = \>", \[Phi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<y(t) = \>", \[CurlyPhi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<The first 3 Picard approximations are\>"];\), 
+      " "}], "\n", 
+    RowBox[{\(W = Transpose[{Take[X, {2, 4}], Take[Y, {2, 4}]}];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)}
+                  }], "\[NoBreak]", ")"}], "]"}], ",", 
+          "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{\(funs\  = Transpose[{Take[X, {5, 7}], Take[Y, {5, 7}]}];\), 
+      " "}], "\n", \(graphs\  = \ 
+        ParametricPlot[\ Evaluate[funs], {t, \(-2\), 2}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(Show[graph0, graphs, 
+        dot, PlotRange \[Rule] {{\(-3.2\), 3.2}, {\(-2.3\), 2.3}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", \(Print["\<Solve \
+the I.V.P.\>"];\), "\n", \(Print["\<x' = \>", 
+        f[t, {x, y}], "\<   with   x(\>", t\_0, "\<) = \>", \ 
+        x\_0];\), "\[IndentingNewLine]", \(Print["\<y' = \>", 
+        g[t, {x, y}], "\<   with   y(\>", t\_0, "\<) = \>", \ y\_0];\), "\n", 
+  
+    RowBox[{\(Print["\<The analytic solution is known to be\>"];\), 
+      " "}], "\n", 
+    RowBox[{\(Print["\<x(t) = \>", \[Phi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<y(t) = \>", \[CurlyPhi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<The second 3 Picard approximations are\>"];\), 
+      " "}], "\n", 
+    RowBox[{\(W = Transpose[{Take[X, {5, 7}], Take[Y, {5, 7}]}];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)}
+                  }], "\[NoBreak]", ")"}], "]"}], ",", 
+          "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}]}], "Input"],
+
+Cell[BoxData[{\(funs\  = 
+        Transpose[{Take[X, {2, 7}], 
+            Take[Y, {2, 7}]}];\), "\n", \(graphs\  = \ 
+        ParametricPlot[\ Evaluate[funs], {t, \(-2\), 2}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(Show[graph0, graphs, 
+        dot, PlotRange \[Rule] {{\(-3.2\), 3.2}, {\(-2.3\), 2.3}}, 
+        Ticks \[Rule] {Range[\(-3\), 3, 1], Range[\(-3\), 3, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", \(Print["\<Solve \
+the I.V.P.\>"];\), "\n", \(Print["\<x' = \>", 
+        f[t, {x, y}], "\<   with   x(\>", t\_0, "\<) = \>", \ 
+        x\_0];\), "\[IndentingNewLine]", \(Print["\<y' = \>", 
+        g[t, {x, y}], "\<   with   y(\>", t\_0, "\<) = \>", \ y\_0];\), "\n", 
+  
+    RowBox[{\(Print["\<The analytic solution is\>"];\), " "}], "\n", 
+    RowBox[{\(Print["\<x(t) = \>", \[Phi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<y(t) = \>", \[CurlyPhi][t]];\), " "}], "\n", 
+    RowBox[{\(Print["\<The first 6 Picard approximations are\>"];\), 
+      " "}], "\n", 
+    RowBox[{\(W = Transpose[{Take[X, {2, 7}], Take[Y, {2, 7}]}];\), 
+      " "}], "\n", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)}
+                  }], "\[NoBreak]", ")"}], "]"}], ",", 
+          "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}], "\[IndentingNewLine]", \(Print["\<        \[TildeTilde] \>", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)], \
+"\<, \>", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\)], \
+"\<, \>", 
+        MatrixForm[
+          
+          W\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)]];\)}]\
+, "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Extension to First Order Systems in 3D",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tSuppose that we want to solve the initial value problem for a system \
+of three differential equations\n\t\n\t\t",
+  Cell[BoxData[{
+      RowBox[{\(x'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"f", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "z"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman"], "    ", "x", \((0)\)}], " ", 
+          "=", " ", \(x\_0\)}]}], "\n", 
+      StyleBox["and",
+        FontFamily->"Times New Roman"], "\n", 
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "z"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman"], "    ", "y", \((0)\)}], " ", 
+          "=", " ", \(y\_0\)}]}], "\[IndentingNewLine]", 
+      StyleBox["and",
+        FontFamily->"Times New Roman"], "\n", 
+      RowBox[{\(z'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"h", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "z"}], ")"}], "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman"], "    ", "z", \((0)\)}], " ", 
+          "=", " ", \(z\_0\)}]}]}]],
+  "  \n\nThe following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine extends the 2D case to 3D. "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Vector Form for Picard \
+Iteration in 3D).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration3D[
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]Z\  = \ \
+\(X\  = \ \(Y\  = \ 
+                Table[0, {i, 
+                    max + 1}]\)\); \ \[IndentingNewLine]X\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            x\_0; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            y\_0; \ \[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+            z\_0; \ \[IndentingNewLine]Print["\<  X\>"\_0, "\<(t) = \>", 
+            X\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]Print["\<  Y\>"\_0, "\<(t) = \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]Print["\<  Z\>"\_0, "\<(t) = \>", 
+            Z\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]k\  = \ 1; \ \[IndentingNewLine]While[
+            k < max + 
+                1, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]X\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  x\_0\  + \ \[Integral]\_\(t\_0\)\%t\ 
+                      f[s, ReplaceAll[{X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Z\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)}, 
+                            t \[Rule] 
+                              s]\ ] \[DifferentialD]s; \ \[IndentingNewLine]Y\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  y\_0\  + \ \[Integral]\_\(t\_0\)\%t\ 
+                      g[s, ReplaceAll[{X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Z\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)}, 
+                            t \[Rule] 
+                              s]\ ] \[DifferentialD]s; \ \[IndentingNewLine]Z\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  z\_0\  + \ \[Integral]\_\(t\_0\)\%t\ 
+                      h[s, ReplaceAll[{X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), 
+                              Z\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\)}, 
+                            t \[Rule] 
+                              s]\ ] \[DifferentialD]s; \ \[IndentingNewLine]X\
+\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[
+                      X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {t, t\_0, 
+                        100}]]; \
+\[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[
+                      Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {t, t\_0, 
+                        100}]]; \
+\[IndentingNewLine]Z\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[
+                      Z\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {t, t\_0, 100}]]; \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<\n\>", "\<  X\>"\_k, "\
+\<(t) = \>", 
+                  X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ]; \ \[IndentingNewLine]Print["\<  Y\>"\_k, "\<(t) = \>", 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ]; \[IndentingNewLine]Print["\<  Z\>"\_k, "\<(t) = \>", 
+                  Z\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ];\ \ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \[IndentingNewLine]Print["\< \
+ x' = \>", f[t, {x, y, z}], "\<   with   x(\>", t\_0, "\<) = \>", \ 
+            x\_0]; \[IndentingNewLine]Print["\<  y' = \>", 
+            g[t, {x, y, z}], "\<   with   y(\>", t\_0, "\<) = \>", \ 
+            y\_0]; \[IndentingNewLine]Print["\<  z' = \>", 
+            h[t, {x, y, z}], "\<   with   z(\>", t\_0, "\<) = \>", \ 
+            z\_0]; \[IndentingNewLine]Print["\<After  \>", 
+            k - 1, "\<  iterations, we have the approximation\>"]; \ \
+\[IndentingNewLine]Print["\<x(t) \[TildeTilde] \>", 
+            X\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ]; \
+\[IndentingNewLine]Print["\<y(t) \[TildeTilde] \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ]; \
+\[IndentingNewLine]Print["\<z(t) \[TildeTilde] \>", 
+            
+            Z\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ];\
+\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Use Picard iteration to find and plot approximations for the  solution of \
+the I.V.P.  \n\n\t\t",
+  Cell[BoxData[{
+      RowBox[{
+        RowBox[{\(x'\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"f", 
+              RowBox[{"(", 
+                RowBox[{"t", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "x", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "y", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "z"}], ")"}]}], " ", "=", "   ",
+             
+            RowBox[{
+              RowBox[{"x", " ", "+", \(2  y\), " ", "-", " ", 
+                RowBox[{"z", "      ", 
+                  StyleBox["with",
+                    FontFamily->"Times New Roman"], "      ", 
+                  "x", \((0)\)}]}], " ", "=", " ", \(x\_0\  = \ 1\)}]}]}], 
+        "\n"}], "\[IndentingNewLine]", 
+      RowBox[{
+        RowBox[{\(y'\), " ", "=", " ", 
+          RowBox[{
+            RowBox[{"g", 
+              RowBox[{"(", 
+                RowBox[{"t", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "x", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "y", 
+                  StyleBox[",",
+                    FontFamily->"Times New Roman",
+                    FontSize->12,
+                    FontWeight->"Plain",
+                    FontSlant->"Plain",
+                    FontColor->GrayLevel[0],
+                    FontVariations->{"Underline"->False,
+                    "StrikeThrough"->False}], "z"}], ")"}]}], " ", "=", " ", 
+            RowBox[{
+              RowBox[{\(\(-2\)\ x\), "+", "y", "-", 
+                RowBox[{"2", "z", "     ", 
+                  StyleBox["with",
+                    FontFamily->"Times New Roman"], "      ", 
+                  "y", \((0)\)}]}], "=", "  ", \(y\_0\  = \ 1\)}]}]}], 
+        "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+      RowBox[{\(y'\), " ", "=", " ", 
+        RowBox[{
+          RowBox[{"g", 
+            RowBox[{"(", 
+              RowBox[{"t", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "x", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "y", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "z"}], ")"}]}], " ", "=", "  ", 
+          RowBox[{
+            RowBox[{"x", " ", "+", " ", \(2  y\), " ", "+", " ", 
+              RowBox[{"z", "      ", 
+                StyleBox["with",
+                  FontFamily->"Times New Roman"], "      ", "z", \((0)\)}]}], 
+            " ", "=", " ", \(z\_0\  = \ 1\)}]}]}]}]],
+  "    "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[t_, {x_, y_, z_}]\  = \ \ \ \ \ \ x\ \ \  + \ 
+          2  y\  - \ \ \ z;\)\), "\[IndentingNewLine]", 
+    \(\(g[t_, {x_, y_, z_}]\  = \ \(-\ 2\) x\  + \ \ \ y\ \ \  - \ 
+          2  z;\)\), "\[IndentingNewLine]", 
+    \(\(h[t_, {x_, y_, z_}]\  = \ \ \ \ \ \ x\ \ \  + \ 
+          2\ y\ \ \  + \ \ z;\)\), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(z\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", f[t, {x, y, z}], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", g[t, {x, y, z}], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", h[t, {x, y, z}], "\<   with   z(\>", 
+        t\_0, "\<) = \>", \ z\_0];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIteration3D[6];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done! \n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " can find the analytic solution. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(F[t_, x_, y_, z_]\  = \ \ x[t] + 2  y[t] - 
+          z[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(G[t_, x_, y_, z_]\  = \(-2\) x[t] + y[t] - 
+          2  z[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(H[t_, x_, y_, z_]\  = \ \ x[t] + 2  y[t] + 
+          z[t];\)\ \), "\[IndentingNewLine]", 
+    \(\(t\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(z\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(eqns = {\[IndentingNewLine]\(x'\)[t] \[Equal] 
+            F[t, x, y, z], \[IndentingNewLine]\(y'\)[t] \[Equal] 
+            G[t, x, y, z], \[IndentingNewLine]\(z'\)[t] \[Equal] 
+            H[t, x, y, z]};\)\ \), "\[IndentingNewLine]", 
+    \(\(ics = {x[t\_0] \[Equal] \ x\_0, y[t\_0] \[Equal] y\_0, 
+          z[t\_0] \[Equal] z\_0};\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = 
+        DSolve[Flatten[{eqns, ics}], {y[t], x[t], z[t]}, 
+          t];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset = MapAll[Expand, solset];\)\), "\[IndentingNewLine]", 
+    \(\(solset = MapAll[ComplexExpand, solset];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<x' = \>", F[t, x, y, z], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", G[t, x, y, z], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", H[t, x, y, z], "\<   with   z(\>", 
+        t\_0, "\<) = \>", \ z\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\)}], "Input"],
+
+Cell["We can plot the analytic solution.  ", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Graphics3D`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(\[Phi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\n", 
+    \(\(\[CurlyPhi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 2, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(\[Psi][t_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 3, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(lpts0 = 
+        Table[{\[Phi][t]\ , \[CurlyPhi][t], \[Psi][t]}, {t, \(-1. \), 1.0, 
+            0.01}];\)\), "\[IndentingNewLine]", 
+    \(\(dot = 
+        Graphics3D[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0, z\_0}]}];\)\), "\[IndentingNewLine]", 
+    \(\(graph0 = 
+        ScatterPlot3D[lpts0, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Magenta, Thickness[0.004]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, dot, 
+        PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.2}}, Ticks \[Rule] {Range[\(-5\), 5, 1], Range[\(-5\), 5, 1], 
+            Range[\(-5\), 5, 1]}, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>", "\<z\>"}, 
+        ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\n", 
+    \(\(Print["\<x' = \>", F[t, x, y, z], "\<   with   x(\>", 
+        t\_0, "\<) = \>", \ x\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y' = \>", G[t, x, y, z], "\<   with   y(\>", 
+        t\_0, "\<) = \>", \ y\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<z' = \>", H[t, x, y, z], "\<   with   z(\>", 
+        t\_0, "\<) = \>", \ z\_0];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is \>"];\)\ \), "\n", 
+    \(\(Print["\<x(t) = \>", \[Phi][t]\ ];\)\ \), "\n", 
+    \(\(Print["\<y(t) = \>", \[CurlyPhi][
+          t]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<z(t) = \>", \[Psi][t]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+We can plot the analytic solution and the first three Picard \
+approximations. \
+\>", "Text"],
+
+Cell[BoxData[{\(W = 
+        Transpose[{Take[X, {2, 7}], Take[Y, {2, 7}], 
+            Take[Z, {2, 7}]}];\), "\[IndentingNewLine]", \(lpts1 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1.0\), 1.0, 0.01}];\), "\n", \(graph1 = 
+        ScatterPlot3D[lpts1, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Red, Thickness[0.004]}, 
+          DisplayFunction \[Rule] 
+            Identity];\), "\[IndentingNewLine]", \(lpts2 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1. \), 1.0, 0.01}];\), "\n", \(graph2 = 
+        ScatterPlot3D[lpts2, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Green, Thickness[0.004]}, 
+          DisplayFunction \[Rule] 
+            Identity];\), "\[IndentingNewLine]", \(lpts3 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1. \), 1.0, 0.01}];\), "\n", \(graph3 = 
+        ScatterPlot3D[lpts3, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Blue, Thickness[0.004]}, 
+          DisplayFunction \[Rule] Identity];\), "\[IndentingNewLine]", \(Show[
+        graph0, graph1, dot, 
+        PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-3.5\), 2.5}, {\(-1.0\), 
+              3.0}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph2, dot, 
+        PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-3.5\), 2.5}, {\(-1.0\), 
+              3.0}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph3, dot, 
+        PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-3.5\), 2.5}, {\(-1.0\), 
+              3.0}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph1, graph2, graph3, dot, 
+        PlotRange \[Rule] {{\(-1.0\), 2.0}, {\(-3.5\), 2.5}, {\(-1.0\), 
+              3.0}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\n", \(Print["\<The \
+analytic solution is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< = \>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(\[Phi][t]\)},
+                  {\(\[CurlyPhi][t]\)},
+                  {\(\[Psi][t]\)}
+                  }], ")"}], "]"}]}], "]"}], ";"}], "\n", 
+    RowBox[{\(Print["\<The first 3 Picard approximations are\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}]}], "Input"],
+
+Cell["\<\
+We can plot the analytic solution and the second three Picard \
+approximations. \
+\>", "Text"],
+
+Cell[BoxData[{\(lpts4 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1. \), 1.0, 0.01}];\), "\n", \(graph4 = 
+        ScatterPlot3D[lpts4, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Red, Thickness[0.004]}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(lpts5 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1. \), 1.0, 0.01}];\), "\n", \(graph5 = 
+        ScatterPlot3D[lpts5, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Green, Thickness[0.004]}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(lpts6 = 
+        Table[W\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\), \
+{t, \(-1. \), 1.0, 0.01}];\), "\n", \(graph6 = 
+        ScatterPlot3D[lpts6, PlotJoined \[Rule] True, 
+          PlotStyle \[Rule] {Blue, Thickness[0.004]}, 
+          DisplayFunction \[Rule] Identity];\), "\n", \(Show[graph0, graph4, 
+        dot, PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.2}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph5, dot, 
+        PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.2}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph6, dot, 
+        PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.2}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Show[graph0, graph4, dot, graph5, graph6, 
+        PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.2}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Print["\<The analytic solution is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< = \>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(\[Phi][t]\)},
+                  {\(\[CurlyPhi][t]\)},
+                  {\(\[Psi][t]\)}
+                  }], ")"}], "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The second 3 Picard approximations are\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}]}], "Input"],
+
+Cell["\<\
+We can plot the analytic solution and the first six Picard \
+approximations. \
+\>", "Text"],
+
+Cell[BoxData[{\(Show[graph0, graph1, graph2, graph3, graph4, graph5, graph6, 
+        dot, PlotRange \[Rule] {{\(-2.8\), 1.2}, {\(-3.5\), 2.2}, {\(-1.0\), 
+              2.3}}, ViewPoint \[Rule] {3, \(-4\), 1}, 
+        DisplayFunction \[Rule] $DisplayFunction];\), "\[IndentingNewLine]", \
+\(Print["\<The analytic solution is\>"];\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< = \>\"", ",", 
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(\[Phi][t]\)},
+                  {\(\[CurlyPhi][t]\)},
+                  {\(\[Psi][t]\)}
+                  }], ")"}], "]"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The first 6 Picard approximations are\>"];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{
+          RowBox[{"MatrixForm", "[", 
+            RowBox[{"(", GridBox[{
+                  {\(x[t]\)},
+                  {\(y[t]\)},
+                  {\(z[t]\)}
+                  }], ")"}], "]"}], ",", "\"\< \[TildeTilde] \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]\), 
+          ",", "\"\<, \>\"", 
+          ",", \(MatrixForm[
+            W\_\(\(\[LeftDoubleBracket]\)\(3\)\(\[RightDoubleBracket]\)\)]\)}]\
+, "]"}], ";"}], "\[IndentingNewLine]", \(Print["\<        \[TildeTilde] \>", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(4\)\(\[RightDoubleBracket]\)\)], \
+"\<, \>", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(5\)\(\[RightDoubleBracket]\)\)], \
+"\<, \>", 
+        MatrixForm[
+          W\_\(\(\[LeftDoubleBracket]\)\(6\)\(\[RightDoubleBracket]\)\)]];\)}]\
+, "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Picard's Method for Higher Order D.E.'s",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIt is easy to extend the idea of Picard iteration to higher order \
+problems.  For illustration purposes we will solve second order D.E.'s. \n\t\n\
+",
+  StyleBox["Theorem 3 (Picard Iteration for Second Order D. E.'s).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Given the second order initial value problem  \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \ \)\(y''\  = \ f \((x, y, y')\)\)\)\)]],
+  ",   with  \n(10)\t\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y \((x\_0)\)\), "=", 
+        RowBox[{
+          RowBox[{\(y\_0\), 
+            StyleBox["    ",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], 
+            StyleBox["and",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "    ", \(y'\), \((x\_0)\)}], 
+          "=", \(y\_1\)}]}]]],
+  ".  \n\nThe solution to the I.V.P in (10) is found by constructing \
+recursively a sequence ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((x)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  " of functions \n\n\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \)\(\(Y\_0\) \((x)\)\  = \ \ y\_0\  + \ \(y\_1\) \((x - 
+                x\_0)\)\)\)\)]],
+  ",   and  \n(11)\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(\(Y\_\(n + 1\)\) \((x)\)\), "=", "  ", 
+        RowBox[{\(y\_0\), " ", "+", " ", \(\(y\_1\) \((x - x\_0)\)\), "+", 
+          RowBox[{\(\[Integral]\_\(x\_0\)\%x\), 
+            RowBox[{
+              RowBox[{"(", 
+                RowBox[{\(\[Integral]\_\(x\_0\)\%s\), 
+                  RowBox[{"f", 
+                    RowBox[{"(", 
+                      RowBox[{"t", 
+                        StyleBox[",",
+                          
+                          FontFamily->
+                            "Times New Roman"], \(\(Y\_n\) \((t)\)\), 
+                        StyleBox[",",
+                          
+                          FontFamily->
+                            "Times New Roman"], \(\(Y\_n\%'\) \((t)\)\)}], 
+                      ")"}], \(\[DifferentialD]t\)}]}], 
+                ")"}], \(\[DifferentialD]s\)}]}]}]}]]],
+  "    for   ",
+  Cell[BoxData[
+      \(n \[GreaterEqual] 0\)]],
+  ".  \n\nThen the solution ",
+  Cell[BoxData[
+      \(y \((x)\)\)]],
+  " to (10) is given by the limit: \n\n(12)\t\t",
+  Cell[BoxData[
+      \(\(\(\ \ \ \ \)\(y \((x)\)\  = \ 
+        lim\+\(n \[Rule] \[Infinity]\)\ \(Y\_n\) \((x)\)\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Picard Iteration Theorem 3",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/picarditeration/\
+PicardIterationProof/Links/PicardIterationProof_lnk_3.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Symbolic Analysis",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tFor the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subrouine one must first define  ",
+  Cell[BoxData[
+      \(f \((x, y, y')\)\)]],
+  ",  and supply the initial values  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  ", ",
+  Cell[BoxData[
+      \(y\_0\)]],
+  ", ",
+  Cell[BoxData[
+      \(y\_1\)]],
+  ",  and the number of iterations ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  ".  The subroutine ",
+  Cell[BoxData[
+      \(PicardIterationOrder2\)]],
+  " will compute the first ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  " approximations."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Picard Iteration for Second \
+Order Equations).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2[x0_, y0_, y1_, 
+          max_] := \[IndentingNewLine]Module[{}, \[IndentingNewLine]Y\_0[
+              x_]\  = \ 
+            y0\  + \ y1 \((x - x0)\); \ \[IndentingNewLine]k\  = \ 
+            0; \ \[IndentingNewLine]Print["\<Y\>"\_0, "\<(x) = \>", 
+            Y\_0[x]\ ]; \ \[IndentingNewLine]While[
+            k < max, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]Y\_1[
+                    x_]\  = \ 
+                  y0\  + \ 
+                    y1 \((x - 
+                          x0)\)\  + \ \[Integral]\_x0\%x\((\[Integral]\_x0\%s\
+\ f[t, Y\_0[t], \(Y\_0'\)[
+                                  t]] \[DifferentialD]t)\) \[DifferentialD]s; \
+\ \[IndentingNewLine]Y\_1[x_]\  = \ 
+                  Expand[\ Y\_1[x]\ ]; \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(x) = \>", 
+                  Y\_1[x]\ ]; \ \[IndentingNewLine]Y\_0[x_]\  = \ 
+                  Y\_1[x];\ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \
+\[IndentingNewLine]Print["\<y'' = \>", 
+            f[x, y, y']]; \[IndentingNewLine]Print["\<with   y(\>", 
+            x0, "\<) = \>", \ y0, "\<   and   y'(\>", x0, "\<) = \>", \ 
+            y1]; \[IndentingNewLine]Print["\<After  \>", 
+            k, "\<  iterations, we have the approximation\>"]; \ \
+\[IndentingNewLine]Print["\<y(x) \[TildeTilde] \>", 
+            Y\_0[x]\ ];\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution of the second order I.V.P.  \n\
+\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y''\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{"y", "    ", 
+            StyleBox["with",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "   ", "y", \((0)\)}], " ", "=", " ", 
+          
+          RowBox[{
+            RowBox[{"1", "    ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", \(y'\), \((0)\)}], " ", "=", 
+            " ", "1"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y, y')\)\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  " and the initial conditions  ",
+  Cell[BoxData[
+      \(y\_0\  = \ \(y \((x\_0)\) = \(y \((0)\) = 1\)\)\)]],
+  "    ",
+  Cell[BoxData[
+      \(y\_1\  = \ \(y' \((x\_0)\) = \(y' \((0)\) = 2\)\)\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_, z_]\  = \ \ y;\)\ \), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(y\_1\  = \ 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The second order I.V.P. is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2[x\_0, y\_0, y\_1, 6];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done. \n\nTechniques from calculus can be used to find the solution \
+ ",
+  Cell[BoxData[
+      \(y \((x)\) = \[ExponentialE]\^x\)]],
+  ". \n\nWe can express  ",
+  Cell[BoxData[
+      \(y \((x)\) = \[ExponentialE]\^x\)]],
+  "  as a Maclaurin series and observe that the sequence  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((x)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  is converging to the solution"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S\  = \ 
+        Series[\[ExponentialE]\^x\ , {x, 0, 
+            13}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", S];\)\)}], "Input"],
+
+Cell["\<\
+For this example all the terms in the Picard approximation agree \
+with all of the terms in the Maclaurin series.  \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " solve the differential equation.  This is just for fun. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x, y];\)\ \), "\[IndentingNewLine]", 
+    \(\(de\  = \ {\(y''\)[x] \[Equal] y[x]};\)\ \), "\[IndentingNewLine]", 
+    \(\(ics\  = \ {y[0] \[Equal] 1, \(y'\)[0] \[Equal] 
+            1};\)\), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[Union[de, ics], y[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the second order I.V.P.\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[de]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[ics]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find the solution of the second order I.V.P.  \n\
+\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y''\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{\(\(-\ 2\) y'\), " ", "-", 
+            RowBox[{"y", "    ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((0)\)}]}], " ", "=", 
+          " ", 
+          RowBox[{
+            RowBox[{"1", "    ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", \(y'\), \((0)\)}], " ", "=", 
+            " ", "2"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y, y')\)\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  " and the initial conditions  ",
+  Cell[BoxData[
+      \(y\_0\  = \ \(y \((x\_0)\) = \(y \((0)\) = 1\)\)\)]],
+  "    ",
+  Cell[BoxData[
+      \(y\_1\  = \ \(y' \((x\_0)\) = \(y' \((0)\) = 2\)\)\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_, z_]\  = \ \(-\ 2\) z\  - \ y;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_1\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The second order I.V.P. is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2[x\_0, y\_0, y\_1, 6];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "We are done. \n\nTechniques from calculus can be used to find the solution \
+ ",
+  Cell[BoxData[
+      \(y \((x)\) = \[ExponentialE]\^\(-x\)\ \((1 + 3\ x)\)\)]],
+  ". \n\nWe can express  ",
+  Cell[BoxData[
+      \(y \((x)\) = \[ExponentialE]\^\(-x\)\ \((1 + 3\ x)\)\)]],
+  "  as a Maclaurin series and observe that the sequence  ",
+  Cell[BoxData[
+      \({\(Y\_n\) \((x)\)}\_\(n = 0\)\%\[Infinity]\)]],
+  "  is converging to the solution"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S\  = \ 
+        Series[\[ExponentialE]\^\(-x\)\ \((1 + 3\ x)\)\ , {x, 0, 
+            11}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", S];\)\)}], "Input"],
+
+Cell["\<\
+Observe that the first six terms of the Picard iteration agrees \
+with the first six terms of the Maclaurin series.  \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can let ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " solve the differential equation.  This is just for fun. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[x, y];\)\ \), "\[IndentingNewLine]", 
+    \(\(de\  = \ {\(y''\)[x] \[Equal] \(-2\) \(y'\)[x] - 
+              y[x]};\)\ \), "\[IndentingNewLine]", 
+    \(\(ics\  = \ {y[0] \[Equal] 1, \(y'\)[0] \[Equal] 
+            2};\)\), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[Union[de, ics], y[x], x];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the second order I.V.P.\>"];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[de]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ TableForm[ics]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Get\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\ 
+        TableForm[
+          solset\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]\
+\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Getting the Graphs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIf we want to graph several solution, we will need to store them \
+somewhere.  The following version of the Picard subroutine uses the vector  \
+",
+  Cell[BoxData[
+      StyleBox["Y",
+        FontWeight->"Bold"]],
+    AspectRatioFixed->False],
+  ".  Since the subscript for the elements of a vector start with ",
+  Cell[BoxData[
+      \(Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\)],
+    AspectRatioFixed->False],
+  ", the notation for the sequence of stored functions will be  ",
+  Cell[BoxData[
+      \({Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)}\_\(k \
+= 1\)\%max\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Vector Form for Picard \
+Iteration).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2D[x0_, y0_, y1_, 
+          max_] := \[IndentingNewLine]Module[{i, k}, \[IndentingNewLine]Y = 
+            Table[0, {i, 
+                max + 1}]; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\
+\(1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            y0\  + \ y1 \((x - x0)\); \ \[IndentingNewLine]k\  = \ 
+            1; \ \[IndentingNewLine]Print["\<Y\>"\_1, "\<(x) = \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\ ]; \
+\ \[IndentingNewLine]While[
+            k < max + 
+                1, \[IndentingNewLine]\(Module[{}, \[IndentingNewLine]Y\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1\)\(\[RightDoubleBracket]\)\) = \ 
+                  y0\  + \ 
+                    y1 \((x - 
+                          x0)\)\  + \ \[Integral]\_x0\%x\((\[Integral]\_x0\%s\
+\ f[t, ReplaceAll[
+                                  Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), x \[Rule] t], 
+                                ReplaceAll[
+                                  D[Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\), x], x \[Rule] 
+                                    t]] \[DifferentialD]t)\) \
+\[DifferentialD]s; \ \[IndentingNewLine]Y\_\(\(\[LeftDoubleBracket]\)\(k + \
+1\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  Normal[Series[\ 
+                      Y\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\), {x, x0, 100}]]; \ \[IndentingNewLine]k\  = \ 
+                  k + 1; \ \[IndentingNewLine]Print["\<Y\>"\_k, "\<(x) = \>", 
+                  Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\
+\)\ ];\ \ ];\)\ ]; \ \[IndentingNewLine]Print["\< \>"]; \ \
+\[IndentingNewLine]Print["\<The I.V.P. is\>"]; \ \
+\[IndentingNewLine]Print["\<y'' = \>", 
+            f[x, y, y']]; \[IndentingNewLine]Print["\<with   y(\>", 
+            x0, "\<) = \>", \ y0, "\<   and   y'(\>", x0, "\<) = \>", \ 
+            y1]; \[IndentingNewLine]Print["\<After  \>", 
+            k - 1, "\<  iterations, we have\>"]; \ \[IndentingNewLine]Print["\
+\<y(x) \[TildeTilde] \>", 
+            Y\_\(\(\[LeftDoubleBracket]\)\(k\)\(\[RightDoubleBracket]\)\)\ ];\
+\ \ \ ];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find and plot approximations for solution of the \
+second order I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y''\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{\(\(-\ 2\) y'\), " ", "-", 
+            RowBox[{"y", "    ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((0)\)}]}], " ", "=", 
+          " ", 
+          RowBox[{
+            RowBox[{"1", "    ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", \(y'\), \((0)\)}], " ", "=", 
+            " ", "2"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y, y')\)\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  " and the initial conditions  ",
+  Cell[BoxData[
+      \(y\_0\  = \ \(y \((x\_0)\) = \(y \((0)\) = 1\)\)\)]],
+  "    ",
+  Cell[BoxData[
+      \(y\_1\  = \ \(y' \((x\_0)\) = \(y' \((0)\) = 2\)\)\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_, z_]\  = \ \(-\ 2\) z\  - \ y;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 0;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_1\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The second order I.V.P. is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2D[x\_0, y\_0, y\_1, 6];\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+We can graph the analytic solution and the Picard iterations.\
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[\ {\(y''\)[x]\  \[Equal] \ f[x, y[x], \(y'\)[x]], 
+            y[x\_0] \[Equal] y\_0, \(y'\)[x\_0] \[Equal] y\_1}, y[x], 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Psi][x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(dot = 
+        Graphics[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0}]}];\)\), "\[IndentingNewLine]", 
+    \(\(graph0\  = \ 
+        Plot[\[Psi][x], {x, \(-2\), 2}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, 3]], {x, \(-2\), 2}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-2\), 2}, {\(-10\), 10}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, 3]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, \(-3\)]], {x, \(-3\), 3}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-2\), 2}, {\(-10\), 10}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The next 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, \(-3\)]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Y], {x, \(-2\), 2}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, 
+        PlotRange \[Rule] {{\(-2\), 2}, {\(-10\), 10}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 5]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 6 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Y];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Picard iteration to find and plot approximations for solution of the \
+second order I.V.P.  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(y''\), "  ", "=", "  ", 
+        RowBox[{
+          RowBox[{\(\(-\ 2\) y'\), " ", "-", 
+            RowBox[{"y", "    ", 
+              StyleBox["with",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", "y", \((1)\)}]}], " ", "=", 
+          " ", 
+          RowBox[{
+            RowBox[{"1", "    ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "   ", \(y'\), \((1)\)}], " ", "=", 
+            " ", "2"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "First define the function  ",
+  Cell[BoxData[
+      \(f \((x, y, y')\)\)]],
+  ", and  ",
+  Cell[BoxData[
+      \(x\_0 = 1\)]],
+  " and the initial conditions  ",
+  Cell[BoxData[
+      \(y\_0\  = \ \(y \((x\_0)\) = \(y \((1)\) = 1\)\)\)]],
+  "    ",
+  Cell[BoxData[
+      \(y\_1\  = \ \(y' \((x\_0)\) = \(y' \((1)\) = 2\)\)\)]],
+  "  by typing:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_, y_, z_]\  = \ \(-\ 2\) z\  - \ y;\)\), "\[IndentingNewLine]", 
+    \(\(x\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_0\  = \ 1;\)\), "\[IndentingNewLine]", 
+    \(\(y\_1\  = \ 2;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The second order I.V.P. is\>"];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Picard iteration for generating the first six approximations is started \
+with the ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " command:"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PicardIterationOrder2D[x\_0, y\_0, y\_1, 6];\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+We can graph the analytic solution and the Picard iterations.\
+\>", \
+"Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(solset\  = \ 
+        DSolve[\ {\(y''\)[x]\  \[Equal] \ f[x, y[x], \(y'\)[x]], 
+            y[x\_0] \[Equal] y\_0, \(y'\)[x\_0] \[Equal] y\_1}, y[x], 
+          x];\)\), "\[IndentingNewLine]", 
+    \(\(\[Psi][x_] = 
+        solset\_\(\(\[LeftDoubleBracket]\)\(1, 1, \
+2\)\(\[RightDoubleBracket]\)\);\)\), "\[IndentingNewLine]", 
+    \(\(dot = 
+        Graphics[{Red, PointSize[0.02], 
+            Point[{x\_0, y\_0}]}];\)\), "\[IndentingNewLine]", 
+    \(\(graph0\  = \ 
+        Plot[\[Psi][x], {x, 0, 2.5}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, 3]], {x, 0, 2.5}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, PlotRange \[Rule] {{0, 2.5}, {\(-6\), 5}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, 3]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Take[Y, \(-3\)]], {x, \(-3\), 3}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, PlotRange \[Rule] {{0, 2.5}, {\(-6\), 5}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The next 3 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Take[Y, \(-3\)]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(graphs\  = \ 
+        Plot[Evaluate[Y], {x, \(-2\), 2.5}, 
+          PlotStyle \[Rule] {Red, Green, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[graph0, graphs, dot, PlotRange \[Rule] {{0, 2.5}, {\(-6\), 5}}, 
+        Ticks \[Rule] {Range[\(-2\), 2, 1], Range[\(-10\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the I.V.P.\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<y'' = \>", 
+        f[x, y[x], \(y'\)[x]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<with   y(\>", x\_0, "\<) = \>", \ y\_0, "\<   and   y'(\>", 
+        x\_0, "\<) = \>", y\_1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The analytic solution is known to be\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) = \>", \[Psi][x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The first 6 Picard approximations are\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<y(x) \[TildeTilde] \>", Y];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Acknowledgement",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThis module is was originally developed by the author using the \
+obsolete computer algebra system ",
+  ButtonBox["muMATH",
+    ButtonData:>{
+      URL[ "http://wombat.doc.ic.ac.uk/foldoc/foldoc.cgi?MuMath"], None},
+    ButtonStyle->"Hyperlink"],
+  " (implemented on the Apple II computer).  It has been upgraded and \
+improved using ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ".  The previous manuscript was:\n\t\nJohn H. Mathews, ",
+  ButtonBox["Symbolic Computational Algebra Applied to Picard Iteration",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/articles/1989PicardIteration.pdf"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[",  Mathematics and Computer Education Journal, Spring, 1989, Vol. \
+23, No. 2, pp. 117-122. ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[StyleBox["References in the previous manuscript",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "1.  Garrett Birkhoff; and Gian-Carlo Rota, ",
+  StyleBox["Ordinary Differential Equations, ",
+    FontSlant->"Italic"],
+  "3rd Ed., John Wiley and Sons, New York, NY, 1978, p. 23. "
+}], "Text"],
+
+Cell[TextData[{
+  "2.  Einar Hille, ",
+  StyleBox["Lectures on Ordinary Differential Equations, ",
+    FontSlant->"Italic"],
+  "Addison-Wesley Pub. Co., Reading, MA, 1969, pp. 32-41. "
+}], "Text"],
+
+Cell["\<\
+3.  Ralph Freese; Pertti Lounesto; and David A Stegenga, \"The Use \
+of muMATH in the Calculus Classroom\", Journal of Computers in Mathematics \
+and Science Teaching, 1986, Vol. 6, pp. 52-55. \
+\>", "Text"],
+
+Cell["\<\
+4.  Mary K. Heid, \"Calculus with muMATH Implications for \
+Curriculum Reform,\" The Computing Teacher, 1983, Vol. 11, No. 4, pp. 46-49. \
+\
+\>", "Text"],
+
+Cell[TextData[{
+  "5.  Don Small; John Hosack; and Kenneth Lane, ",
+  ButtonBox["\"Computer Algebra Systems in Undergraduate Instruction (in \
+Computer Corner)\"",
+    ButtonData:>{
+      URL[ 
+      "http://links.jstor.org/sici?sici=0746-8342%28198611%2917%3A5%3C423%\
+3ACASIUI%3E2.0.CO%3B2-L"], None},
+    ButtonStyle->"Hyperlink"],
+  ", The College Mathematics Journal, Vol. 17, No. 5. (Nov., 1986), pp. \
+423-433. "
+}], "Text"],
+
+Cell["\<\
+6.  B. Winkelmann, \"The Impact of the Computer on the Teaching of \
+Analysis,\" International Journal of Mathematical Education in Science and \
+Technology, 1984, Vol. 15, No. 6, pp. 675-689.  \
+\>", "Text"],
+
+Cell["\<\
+7.  Paul Zorn, \"Computer Symbolic Manipulation in Elementary \
+Calculus,\" MAA Notes, No. 6, Mathematical Association of America, 1986, pp. \
+237-249. \
+\>", "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Picard Iteration",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/PicardIterationBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Picard Iteration",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PicardIterationBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{892, 632},
+WindowMargins->{{11, Automatic}, {Automatic, 2}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PageHeaders->{{Inherited, Inherited, Inherited}, {None, Inherited, None}},
+PageHeaderLines->{Inherited, False},
+PrintingOptions->{"PrintingMargins"->{{36, 36}, {36, 36}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->False,
+"PrintMultipleHorizontalPages"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 168, 4, 35, "Text"],
+Cell[1947, 59, 1465, 49, 99, "Text"]
+}, Closed]],
+Cell[3427, 111, 222, 7, 68, "Text"],
+Cell[3652, 120, 1435, 39, 109, "Text"],
+Cell[5090, 161, 291, 5, 52, "Text"],
+Cell[5384, 168, 1920, 60, 90, "Text"],
+Cell[7307, 230, 4472, 121, 242, "Text"],
+Cell[11782, 353, 2427, 61, 322, "Text"],
+Cell[14212, 416, 429, 14, 33, "Text"],
+Cell[14644, 432, 1039, 32, 90, "Text"],
+Cell[15686, 466, 146, 2, 33, "Text"],
+Cell[15835, 470, 1335, 23, 368, "Input"],
+Cell[17173, 495, 716, 20, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[17914, 519, 101, 2, 33, "Text"],
+Cell[18018, 523, 196, 8, 33, "Text"],
+Cell[18217, 533, 356, 6, 110, "Input"],
+Cell[18576, 541, 182, 6, 33, "Text"],
+Cell[18761, 549, 78, 1, 30, "Input"],
+Cell[18842, 552, 1853, 41, 315, "Text"],
+Cell[20698, 595, 98, 3, 33, "Text"],
+Cell[20799, 600, 365, 7, 114, "Input"]
+}, Closed]],
+Cell[21179, 610, 719, 20, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[21923, 634, 101, 2, 33, "Text"],
+Cell[22027, 638, 196, 8, 33, "Text"],
+Cell[22226, 648, 359, 6, 110, "Input"],
+Cell[22588, 656, 182, 6, 33, "Text"],
+Cell[22773, 664, 78, 1, 30, "Input"],
+Cell[22854, 667, 664, 16, 150, "Text"],
+Cell[23521, 685, 186, 6, 33, "Text"],
+Cell[23710, 693, 150, 2, 50, "Input"]
+}, Closed]],
+Cell[23875, 698, 747, 20, 87, "Text"],
+Cell[24625, 720, 164, 3, 33, "Text"],
+Cell[24792, 725, 1825, 31, 368, "Input"],
+Cell[26620, 758, 747, 21, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[27392, 783, 101, 2, 33, "Text"],
+Cell[27496, 787, 356, 6, 110, "Input"],
+Cell[27855, 795, 182, 6, 33, "Text"],
+Cell[28040, 803, 68, 1, 30, "Input"],
+Cell[28111, 806, 87, 3, 33, "Text"],
+Cell[28201, 811, 1608, 31, 290, "Input"],
+Cell[29812, 844, 979, 18, 190, "Input"],
+Cell[30794, 864, 952, 18, 190, "Input"]
+}, Closed]],
+Cell[31761, 885, 711, 20, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[32497, 909, 101, 2, 33, "Text"],
+Cell[32601, 913, 359, 6, 110, "Input"],
+Cell[32963, 921, 182, 6, 33, "Text"],
+Cell[33148, 929, 68, 1, 30, "Input"],
+Cell[33219, 932, 87, 3, 33, "Text"],
+Cell[33309, 937, 1613, 31, 290, "Input"],
+Cell[34925, 970, 980, 18, 190, "Input"],
+Cell[35908, 990, 953, 18, 190, "Input"]
+}, Closed]],
+Cell[36876, 1011, 2257, 58, 144, "Text"],
+Cell[39136, 1071, 4229, 104, 307, "Text"],
+Cell[43368, 1177, 152, 2, 33, "Text"],
+Cell[43523, 1181, 2129, 38, 541, "Input"],
+Cell[45655, 1221, 2514, 64, 107, "Text"],
+
+Cell[CellGroupData[{
+Cell[48194, 1289, 101, 2, 33, "Text"],
+Cell[48298, 1293, 258, 8, 33, "Text"],
+Cell[48559, 1303, 641, 10, 170, "Input"],
+Cell[49203, 1315, 182, 6, 33, "Text"],
+Cell[49388, 1323, 86, 1, 30, "Input"],
+Cell[49477, 1326, 501, 11, 71, "Text"],
+Cell[49981, 1339, 2294, 53, 251, "Text"],
+Cell[52278, 1394, 98, 3, 33, "Text"],
+Cell[52379, 1399, 454, 7, 114, "Input"],
+Cell[52836, 1408, 492, 9, 114, "Input"],
+Cell[53331, 1419, 258, 9, 71, "Text"],
+Cell[53592, 1430, 1336, 25, 310, "Input"]
+}, Closed]],
+Cell[54943, 1458, 2619, 67, 104, "Text"],
+
+Cell[CellGroupData[{
+Cell[57587, 1529, 101, 2, 33, "Text"],
+Cell[57691, 1533, 253, 8, 33, "Text"],
+Cell[57947, 1543, 630, 10, 170, "Input"],
+Cell[58580, 1555, 182, 6, 33, "Text"],
+Cell[58765, 1563, 76, 1, 30, "Input"],
+Cell[58844, 1566, 364, 9, 71, "Text"],
+Cell[59211, 1577, 422, 8, 90, "Input"],
+Cell[59636, 1587, 98, 3, 33, "Text"],
+Cell[59737, 1592, 660, 11, 126, "Input"],
+Cell[60400, 1605, 648, 11, 126, "Input"],
+Cell[61051, 1618, 258, 9, 71, "Text"],
+Cell[61312, 1629, 1278, 24, 290, "Input"],
+Cell[62593, 1655, 1227, 23, 250, "Input"]
+}, Closed]],
+Cell[63835, 1681, 777, 25, 87, "Text"],
+Cell[64615, 1708, 170, 3, 33, "Text"],
+Cell[64788, 1713, 3350, 60, 528, "Input"],
+Cell[68141, 1775, 2616, 67, 107, "Text"],
+
+Cell[CellGroupData[{
+Cell[70782, 1846, 101, 2, 33, "Text"],
+Cell[70886, 1850, 667, 13, 170, "Input"],
+Cell[71556, 1865, 182, 6, 33, "Text"],
+Cell[71741, 1873, 68, 1, 30, "Input"],
+Cell[71812, 1876, 60, 0, 33, "Text"],
+Cell[71875, 1878, 2891, 58, 422, "Input"],
+Cell[74769, 1938, 1907, 39, 282, "Input"],
+Cell[76679, 1979, 2252, 48, 303, "Input"]
+}, Closed]],
+Cell[78946, 2030, 4465, 111, 218, "Text"],
+Cell[83414, 2143, 170, 3, 33, "Text"],
+Cell[83587, 2148, 5026, 90, 685, "Input"],
+Cell[88616, 2240, 4875, 118, 145, "Text"],
+
+Cell[CellGroupData[{
+Cell[93516, 2362, 101, 2, 33, "Text"],
+Cell[93620, 2366, 1003, 17, 230, "Input"],
+Cell[94626, 2385, 182, 6, 33, "Text"],
+Cell[94811, 2393, 68, 1, 30, "Input"],
+Cell[94882, 2396, 228, 9, 71, "Text"],
+Cell[95113, 2407, 1803, 33, 430, "Input"],
+Cell[96919, 2442, 52, 0, 33, "Text"],
+Cell[96974, 2444, 2121, 41, 370, "Input"],
+Cell[99098, 2487, 103, 3, 33, "Text"],
+Cell[99204, 2492, 3471, 71, 453, "Input"],
+Cell[102678, 2565, 104, 3, 33, "Text"],
+Cell[102785, 2570, 3302, 66, 433, "Input"],
+Cell[106090, 2638, 101, 3, 33, "Text"],
+Cell[106194, 2643, 2084, 48, 216, "Input"]
+}, Closed]],
+Cell[108293, 2694, 2892, 75, 376, "Text"],
+Cell[111188, 2771, 430, 14, 33, "Text"],
+Cell[111621, 2787, 694, 29, 90, "Text"],
+Cell[112318, 2818, 175, 3, 33, "Text"],
+Cell[112496, 2823, 1526, 27, 388, "Input"],
+Cell[114025, 2852, 1100, 31, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[115150, 2887, 101, 2, 33, "Text"],
+Cell[115254, 2891, 375, 14, 33, "Text"],
+Cell[115632, 2907, 540, 10, 150, "Input"],
+Cell[116175, 2919, 182, 6, 33, "Text"],
+Cell[116360, 2927, 90, 1, 30, "Input"],
+Cell[116453, 2930, 428, 12, 109, "Text"],
+Cell[116884, 2944, 172, 4, 50, "Input"],
+Cell[117059, 2950, 139, 3, 33, "Text"],
+Cell[117201, 2955, 240, 8, 33, "Text"],
+Cell[117444, 2965, 738, 15, 190, "Input"]
+}, Closed]],
+Cell[118197, 2983, 1167, 32, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[119389, 3019, 102, 2, 33, "Text"],
+Cell[119494, 3023, 375, 14, 33, "Text"],
+Cell[119872, 3039, 543, 10, 150, "Input"],
+Cell[120418, 3051, 182, 6, 33, "Text"],
+Cell[120603, 3059, 90, 1, 30, "Input"],
+Cell[120696, 3062, 470, 12, 109, "Text"],
+Cell[121169, 3076, 193, 4, 50, "Input"],
+Cell[121365, 3082, 141, 3, 33, "Text"],
+Cell[121509, 3087, 240, 8, 33, "Text"],
+Cell[121752, 3097, 772, 16, 190, "Input"]
+}, Closed]],
+Cell[122539, 3116, 747, 20, 87, "Text"],
+Cell[123289, 3138, 164, 3, 33, "Text"],
+Cell[123456, 3143, 2231, 40, 388, "Input"],
+Cell[125690, 3185, 1191, 32, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[126906, 3221, 102, 2, 33, "Text"],
+Cell[127011, 3225, 375, 14, 33, "Text"],
+Cell[127389, 3241, 543, 10, 150, "Input"],
+Cell[127935, 3253, 182, 6, 33, "Text"],
+Cell[128120, 3261, 91, 1, 30, "Input"],
+Cell[128214, 3264, 87, 3, 33, "Text"],
+Cell[128304, 3269, 1772, 34, 310, "Input"],
+Cell[130079, 3305, 1090, 20, 210, "Input"],
+Cell[131172, 3327, 1063, 20, 210, "Input"]
+}, Closed]],
+Cell[132250, 3350, 1191, 32, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[133466, 3386, 102, 2, 33, "Text"],
+Cell[133571, 3390, 375, 14, 33, "Text"],
+Cell[133949, 3406, 543, 10, 150, "Input"],
+Cell[134495, 3418, 182, 6, 33, "Text"],
+Cell[134680, 3426, 91, 1, 30, "Input"],
+Cell[134774, 3429, 87, 3, 33, "Text"],
+Cell[134864, 3434, 1752, 33, 310, "Input"],
+Cell[136619, 3469, 1076, 19, 210, "Input"],
+Cell[137698, 3490, 1051, 19, 210, "Input"]
+}, Closed]],
+Cell[138764, 3512, 942, 24, 144, "Text"],
+Cell[139709, 3538, 127, 2, 33, "Text"],
+Cell[139839, 3542, 212, 5, 33, "Text"],
+Cell[140054, 3549, 196, 5, 33, "Text"],
+Cell[140253, 3556, 217, 4, 52, "Text"],
+Cell[140473, 3562, 163, 4, 33, "Text"],
+Cell[140639, 3568, 431, 11, 52, "Text"],
+Cell[141073, 3581, 218, 4, 52, "Text"],
+Cell[141294, 3587, 176, 4, 33, "Text"],
+Cell[141473, 3593, 158, 3, 35, "Text"],
+Cell[141634, 3598, 557, 16, 33, "Text"],
+Cell[142194, 3616, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

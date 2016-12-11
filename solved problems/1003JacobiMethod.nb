@@ -1,0 +1,1355 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     46336,       1225]*)
+(*NotebookOutlinePosition[     47030,       1249]*)
+(*  CellTagsIndexPosition[     46986,       1245]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Jacobi Iteration for Eigenvectors",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Jacobi\[CloseCurlyQuote]s Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Jacobi\[CloseCurlyQuote]s method is an easily understood \
+algorithm for finding all eigenpairs for a symmetric matrix. It is a reliable \
+method that produces uniformly accurate answers for the results. For matrices \
+of order up to 10\[Times]10, the algorithm is competitive with more \
+sophisticated ones. If speed is not a major consideration, it is quite \
+acceptable for matrices up to order 20\[Times]20. A solution is guaranteed \
+for all real symmetric matrices when Jacobi\[CloseCurlyQuote]s method is \
+used. This limitation is not severe since many practical problems of applied \
+mathematics and engineering involve symmetric matrices. From a theoretical \
+viewpoint, the method embodies techniques that are found in more \
+sophisticated algorithms. For instructive purposes, it is worthwhile to \
+investigate the details of Jacobi\[CloseCurlyQuote]s method.  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Jacobi Series of Transformations",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Start with the real symmetric matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[". Then construct the sequence of orthogonal matrices  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["R",
+            FontWeight->"Bold"], "1"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        SubscriptBox[
+          StyleBox["R",
+            FontWeight->"Bold"], "2"], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        SubscriptBox[
+          StyleBox["R",
+            FontWeight->"Bold"], "n"]}]]],
+  StyleBox["  as follows:\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["D",
+            FontWeight->"Bold"], "0"], " ", "=", " ", 
+        StyleBox["A",
+          FontWeight->"Bold"]}]]],
+  "\n\tand\n\t\t",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["D",
+            FontWeight->"Bold"], "j"], " ", "=", " ", 
+        RowBox[{
+          SubsuperscriptBox[
+            StyleBox["R",
+              FontWeight->"Bold"], "j", "T"], " ", 
+          SubscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], "j"], 
+          SubscriptBox[
+            StyleBox["R",
+              FontWeight->"Bold"], "j"]}]}]]],
+  "   for   j = 1, 2, ...  .\n\nIt is possible to ",
+  StyleBox["construct the sequence  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({R\_j}\)]],
+  " ",
+  StyleBox[" so that\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(lim\+\(j \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["D",
+              FontWeight->"Bold"], "j"]}], " ", "=", " ", 
+        RowBox[{
+          StyleBox["D",
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"diag", 
+            RowBox[{"(", 
+              RowBox[{\(\[Lambda]\_1\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_2\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_n\)}], 
+              ")"}]}]}]}]]],
+  StyleBox[".  \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["In practice we will stop when the off-diagonal elements are close \
+to zero. Then we will have\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["D",
+            FontWeight->"Bold"], "m"], " ", "\[TildeTilde]", " ", 
+        StyleBox["D",
+          FontWeight->"Bold"]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/JacobiMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/JacobiMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Current research by James W. Demmel and Kresimir Veselic (1992) indicate \
+that Jacobi's method is more accurate than QR.  You can check out their \
+research by following the link in the list of internet resources.  The \
+abstract for their research follows below. \n",
+  StyleBox["Abstract.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We show that Jacobi's method (with a proper stopping criterion) computes \
+small eigenvalues of symmetric positive definite matrices with a uniformly \
+better relative accuracy bound than QR, divide and conquer, traditional \
+bisection, or any algorithm which first involves tridiagonalizing the matrix. \
+In fact, modulo an assumption based on extensive numerical tests, we show \
+that Jacobi's method is optimally accurate in the following sense: if the \
+matrix is such that small relative errors in its entries cause small relative \
+errors in its eigenvalues, Jacobi will compute them with nearly this \
+accuracy. In other words, as long as the initial matrix has small relative \
+errors in each component, even using infinite precision will not improve on \
+Jacobi (modulo factors of dimensionality). ..."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[" ",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/JacobiMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/JacobiMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Jacobi iteration for eigenvectors).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To compute the full set of eigen-pairs  ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{\(\[Lambda]\_1\), ",", 
+            SubscriptBox[
+              StyleBox["V",
+                FontWeight->"Bold"], "1"]}], "}"}], 
+        StyleBox[\(j = 1\),
+          FontSize->10], 
+        StyleBox[\(j = n\),
+          FontSize->10]]]],
+  "  of the  n by n  real symmetric matrix  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ".  Jacobi iteration is used to find all eigenvalue-eigenvector pairs.  "
+}], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(ZeroPQ[A0_, p_, q_]\), ":=", "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({A = A0, c, s, i, \[Theta], R, t}\), ",", 
+              "\[IndentingNewLine]", 
+              
+              RowBox[{\(\[Theta]\  = \ \(A\_\(\(\[LeftDoubleBracket]\)\(q, \
+q\)\(\[RightDoubleBracket]\)\)\  - \ A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)\)\/\(2\ A\_\(\(\[LeftDoubleBracket]\)\(p, q\)\(\
+\[RightDoubleBracket]\)\)\)\), ";", " ", 
+                "\[IndentingNewLine]", \(If[\ \[Theta] < 
+                    10\^19, \[IndentingNewLine]t\  = \ 
+                    1\/\(Abs[\[Theta]] + \@\(\[Theta]\^2 + 1\)\), \
+\[IndentingNewLine]t\  = \ 1\/Abs[2\ \[Theta]]]\), ";", " ", 
+                "\[IndentingNewLine]", \(If[\ \[Theta] < 0, \ 
+                  t = \(-\ t\)\ ]\), ";", " ", 
+                "\[IndentingNewLine]", \(c\ \  = \ \ 1\/\@\(t\^2 + 1\)\), ";",
+                 " ", "\[IndentingNewLine]", \(s\ \  = \ \ c\ t\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"R", " ", "=", " ", 
+                  RowBox[{"(", GridBox[{
+                        {"c", "s"},
+                        {\(-s\), "c"}
+                        }], ")"}]}], ";", " ", 
+                "\[IndentingNewLine]", \(A\_\(\(\[LeftDoubleBracket]\)\(All, \
+{p, q}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  A\_\(\(\[LeftDoubleBracket]\)\(All, {p, q}\)\(\
+\[RightDoubleBracket]\)\) . R\), ";", 
+                StyleBox[
+                  RowBox[{"  ", 
+                    StyleBox[" ",
+                      FontColor->RGBColor[0, 1, 1]]}]], 
+                StyleBox[\( (*compute\ A . RotationMatrix*) \),
+                  FontColor->RGBColor[0, 0, 1]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 0, 1]], " ", 
+                "\[IndentingNewLine]", \(A\_\(\(\[LeftDoubleBracket]\)\({p, \
+q}, All\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  Transpose[R] . 
+                    A\_\(\(\[LeftDoubleBracket]\)\({p, q}, All\)\(\
+\[RightDoubleBracket]\)\)\), ";", " ", 
+                
+                "\[IndentingNewLine]", \(V\_\(\(\[LeftDoubleBracket]\)\(All, \
+{p, q}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                  V\_\(\(\[LeftDoubleBracket]\)\(All, {p, q}\)\(\
+\[RightDoubleBracket]\)\) . R\), ";", 
+                StyleBox[
+                  RowBox[{"  ", 
+                    StyleBox[" ",
+                      FontColor->RGBColor[0, 0, 1]]}]], 
+                StyleBox[\( (*compute\ V . RotationMatrix*) \),
+                  FontColor->RGBColor[0, 0, 1]], 
+                StyleBox[";",
+                  FontColor->RGBColor[0, 0, 1]], " ", 
+                "\[IndentingNewLine]", \(Return[A]\), ";"}]}], " ", "]"}]}], 
+        ";"}], " "}]], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(JacobiClassic[
+          A0_, \[Epsilon]_] := \[IndentingNewLine]Module[{A\  = \ N[A0], i, 
+            n\  = \ Length[A0], state, iterating, 
+            finished}, \[IndentingNewLine]V\  = \ 
+            IdentityMatrix[n]; \ \[IndentingNewLine]state\  = \ 
+            iterating; \ \[IndentingNewLine]While[\ 
+            state \[Equal] iterating, \[IndentingNewLine]M = 
+              Abs[A - DiagonalMatrix[
+                    Table[A\_\(\(\[LeftDoubleBracket]\)\(i, i\)\(\
+\[RightDoubleBracket]\)\), {i, n}]]]; \ \[IndentingNewLine]{p, 
+                q} = \(Position[M, Max[M]]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\
+\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]Amax = \ 
+              Abs[A\_\(\(\[LeftDoubleBracket]\)\(p, \
+q\)\(\[RightDoubleBracket]\)\)]; \ \[IndentingNewLine]A = 
+              ZeroPQ[A, p, 
+                q]; \ \[IndentingNewLine]If[\ \ Amax < \[Epsilon]\ \@\(\(1\/n\
+\) \(\[Sum]\+\(j = 1\)\%n\((A\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\
+\[RightDoubleBracket]\)\))\)\^2\)\), 
+              state = finished];]; \ \[IndentingNewLine]Return[{A, 
+              V}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(JacobiCyclic[A0_, \[Epsilon]_, 
+          m_] := \[IndentingNewLine]Module[{A\  = \ N[A0], count = 0, 
+            n = Length[A0], state, iterating, 
+            finished}, \[IndentingNewLine]V\  = \ 
+            IdentityMatrix[n]; \ \[IndentingNewLine]state\  = \ 
+            iterating; \ \[IndentingNewLine]While[\ 
+            And[state \[Equal] iterating, 
+              count < m], \[IndentingNewLine]count\  = \ 
+              count + 1; \ \[IndentingNewLine]T\  = \ \@\(\(1\/n\) \(\[Sum]\+\
+\(j = 1\)\%n\((A\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\
+\))\)\^2\)\); \ \ \[IndentingNewLine]state\  = \ 
+              finished; \ \[IndentingNewLine]For[\ p = 1, \ 
+              p \[LessEqual] 
+                n - 1, \ \(p++\), \[IndentingNewLine]\(For[\ q = p + 1, \ 
+                  q \[LessEqual] 
+                    n, \ \(q++\), \[IndentingNewLine]\(If[\ 
+                      Abs[A\_\(\(\[LeftDoubleBracket]\)\(p, q\)\(\
+\[RightDoubleBracket]\)\)] > \[Epsilon]\ T, \[IndentingNewLine]A = 
+                        ZeroPQ[A, p, q]; \ \[IndentingNewLine]state = 
+                        iterating;\ ];\)\ ];\)\ ];\ ]; \ \
+\[IndentingNewLine]Return[{A, V}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the classic Jacobi method to find all the eigenvalues and \
+eigenvectors of the symmetric matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"8", \(-1\), "3", \(-1\)},
+              {\(-1\), "6", "2", "0"},
+              {"3", "2", "9", "1"},
+              {\(-1\), "0", "1", "7"}
+              }], ")"}]}]],
+    AspectRatioFixed->True],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"8", \(-1\), "3", \(-1\)},
+                {\(-1\), "6", "2", "0"},
+                {"3", "2", "9", "1"},
+                {\(-1\), "0", "1", "7"}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\({\[CapitalLambda], V} = JacobiClassic[A, 10\^\(-11\)];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\[CapitalLambda] = \>", 
+          MatrixForm[Chop[\[CapitalLambda]]]];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<V = \>", MatrixForm[Chop[V]]];\), "  "}]}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Check our work by multiplying  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  by  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        SubscriptBox[
+          StyleBox["V",
+            FontWeight->"Bold"], "1"]}]]],
+  ",  etc."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(For[k = 1, 
+      k \[LessEqual] 
+        4\ , \(k++\), \[IndentingNewLine]\[Lambda] = \[CapitalLambda]\_\(\(\
+\[LeftDoubleBracket]\)\(k, k\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]X = \(Transpose[V]\)\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]Print["\<\>"]; \ \ \
+\[IndentingNewLine]Print["\<The eigenvalue  is  \>", "\<\[Lambda]\>"\_k, "\< \
+= \>", \[Lambda]]; \ \[IndentingNewLine]Print["\<The eigenvector is  \>", \
+"\<X\>"\_k, "\< = \>", 
+        MatrixForm[
+          X]]; \ \[IndentingNewLine]Print["\<\>"]; \[IndentingNewLine]Print["\
+\<A \>", "\<X\>"\_k, "\< = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[
+          A . X]]; \[IndentingNewLine]Print["\<\[Lambda]\>"\_k, "\<X\>"\_k, "\
+\< = \>", \[Lambda]\ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]]; \ \[IndentingNewLine]Print["\<\>"];\ \ \ \ \
+]\)], "Input"],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Observe that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " returns unit length eigenvectors."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[N[A]];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\),\
+ "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(X\_i\)} = \>\"", 
+        TableForm[
+          Transpose[
+            sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]]]\
+;\)\ \ \)}], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the cyclic Jacobi method to find all the eigenvalues and \
+eigenvectors of the symmetric matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"8", \(-1\), "3", \(-1\)},
+              {\(-1\), "6", "2", "0"},
+              {"3", "2", "9", "1"},
+              {\(-1\), "0", "1", "7"}
+              }], ")"}]}]],
+    AspectRatioFixed->True],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"8", \(-1\), "3", \(-1\)},
+                {\(-1\), "6", "2", "0"},
+                {"3", "2", "9", "1"},
+                {\(-1\), "0", "1", "7"}
+                }], ")"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\({\[CapitalLambda], V} = JacobiCyclic[A, 10\^\(-11\), 50];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\[CapitalLambda] = \>", 
+          MatrixForm[Chop[\[CapitalLambda]]]];\), 
+      "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<V = \>", MatrixForm[Chop[V]]];\), "  "}]}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Check our work by multiplying  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  by  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        SubscriptBox[
+          StyleBox["V",
+            FontWeight->"Bold"], "1"]}]]],
+  ",  etc."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(For[k = 1, 
+      k \[LessEqual] 
+        4\ , \(k++\), \[IndentingNewLine]\[Lambda] = \[CapitalLambda]\_\(\(\
+\[LeftDoubleBracket]\)\(k, k\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]X = \(Transpose[V]\)\_\(\(\[LeftDoubleBracket]\)\(k\)\(\
+\[RightDoubleBracket]\)\); \ \[IndentingNewLine]Print["\<\>"]; \ \ \
+\[IndentingNewLine]Print["\<The eigenvalue  is  \>", "\<\[Lambda]\>"\_k, "\< \
+= \>", \[Lambda]]; \ \[IndentingNewLine]Print["\<The eigenvector is  \>", \
+"\<X\>"\_k, "\< = \>", 
+        MatrixForm[
+          X]]; \ \[IndentingNewLine]Print["\<\>"]; \[IndentingNewLine]Print["\
+\<A \>", "\<X\>"\_k, "\< = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[
+          A . X]]; \[IndentingNewLine]Print["\<\[Lambda]\>"\_k, "\<X\>"\_k, "\
+\< = \>", \[Lambda]\ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]]; \ \[IndentingNewLine]Print["\<\>"];\ \ \ \ \
+]\)], "Input"],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Observe that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " returns unit length eigenvectors."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[N[A]];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<{\!\(\[Lambda]\_i\)} = \>\"", 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)];\)\),\
+ "\n", 
+    \(\(Print["\<\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(X\_i\)} = \>\"", 
+        TableForm[
+          Transpose[
+            sol\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\)\)]]]\
+;\)\ \ \)}], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Determine which method is faster: the original Jacobi method or the \
+cyclic Jacobi method.\nThe statement in the text says that the search for the \
+maximum element becomes time consuming. \nHowever, it might be the \
+computation of  ",
+  Cell[BoxData[
+      \(\(\(\ \)\(\@\(\(1\/n\) \(\[Sum]\+\(j = 1\)\%n\((A\_\(\(\
+\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\))\)\^2\)\)\)\)\)],
+    AspectRatioFixed->True],
+  "  for each step which is time consuming.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Here is a test for 5\[Times]5 matrices.  
+Run the simulation several times.  
+Which method seems faster for 5\[Times]5 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+Here is a test for 10\[Times]10 matrices.  
+Run the simulation several times.  
+Which method seems faster for 10\[Times]10 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \)}], "Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+Here is a test for 20\[Times]20 matrices.  
+Run the simulation several times.  
+Which method seems faster for 20\[Times]20 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \)}], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  How fast are our subroutines compared to ",
+  StyleBox["Mathematica'",
+    FontSlant->"Italic"],
+  "s ?"
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell["\<\
+Here is a test for 10\[Times]10 matrices.  
+Run the simulation several times.  
+Which method seems faster for 10\[Times]10 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 10;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Time3 = 
+        Timing[\({\[CapitalLambda], V} = 
+              Eigensystem[N[A]];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica = \>", Time3];\)\ \ \ \)}], "Input"],
+
+Cell["\<\
+Here is a test for 20\[Times]20 matrices.  
+Run the simulation several times.  
+Which method seems faster for 20\[Times]20 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 20;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Time3 = 
+        Timing[\({\[CapitalLambda], V} = 
+              Eigensystem[N[A]];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica = \>", Time3];\)\ \ \ \)}], "Input"],
+
+Cell["\<\
+Here is a test for 30\[Times]30 matrices.  
+Run the simulation several times.  
+Which method seems faster for 30\[Times]30 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 30;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time1 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiClassic[A, 
+                10\^\(-8\)];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Classic Jacobi = \>", 
+        Time1];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Time3 = 
+        Timing[\({\[CapitalLambda], V} = 
+              Eigensystem[N[A]];\)];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica = \>", Time3];\)\ \ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Since the cyclic Jacobi method seems faster, we should mention that \
+calling the subroutine costs time.\nWe could put it all together in one part \
+and it will be faster.  \nHowever, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  ", Maple, Matlab are all in some sense interpreted languages such as BASIC. \
+ \nBecause the instruction code we write is ",
+  StyleBox["not",
+    FontColor->RGBColor[1, 0, 0]],
+  " compiled.  Complied languages such as FORTRAN and C will ",
+  StyleBox["always",
+    FontColor->RGBColor[1, 0, 1]],
+  " be the fast ones. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{\(JacobiFast[A0_, \[Epsilon]_, m_]\), ":=", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Module", "[", 
+            
+            RowBox[{\({A\  = \ N[A0], count = 0, n = Length[A0], state, 
+                iterating, finished}\), ",", "\[IndentingNewLine]", 
+              
+              RowBox[{\(V\  = \ IdentityMatrix[n]\), ";", " ", 
+                "\[IndentingNewLine]", \(state\  = \ iterating\), ";", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"While", "[", " ", 
+                  
+                  RowBox[{\(And[state \[Equal] iterating, count < m]\), ",", 
+                    "\[IndentingNewLine]", 
+                    
+                    RowBox[{\(count\  = \ count + 1\), ";", " ", 
+                      "\[IndentingNewLine]", \(T\  = \ \@\(\(1\/n\) \
+\(\[Sum]\+\(j = 1\)\%n\((A\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\
+\[RightDoubleBracket]\)\))\)\^2\)\)\), ";", "  ", 
+                      "\[IndentingNewLine]", \(state\  = \ finished\), ";", 
+                      " ", "\[IndentingNewLine]", 
+                      RowBox[{"For", "[", " ", 
+                        
+                        RowBox[{\(p = 1\), ",", " ", \(p \[LessEqual] n - 1\),
+                           ",", " ", \(p++\), ",", "\[IndentingNewLine]", 
+                          RowBox[{
+                            RowBox[{"For", "[", " ", 
+                              
+                              RowBox[{\(q = p + 1\), ",", 
+                                " ", \(q \[LessEqual] n\), ",", " ", \(q++\), 
+                                ",", "\[IndentingNewLine]", 
+                                RowBox[{
+                                  RowBox[{"If", "[", " ", 
+                                    
+                                    RowBox[{\(Abs[
+                                        A\_\(\(\[LeftDoubleBracket]\)\(p, q\)\
+\(\[RightDoubleBracket]\)\)] > \[Epsilon]\ T\), ",", "\[IndentingNewLine]", 
+                                      
+                                      RowBox[{\(\[Theta]\  = \ \(A\_\(\(\
+\[LeftDoubleBracket]\)\(q, q\)\(\[RightDoubleBracket]\)\)\  - \ A\_\(\(\
+\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\)\)\/\(2\ A\_\(\(\
+\[LeftDoubleBracket]\)\(p, q\)\(\[RightDoubleBracket]\)\)\)\), ";", " ", 
+                                        "\[IndentingNewLine]", \(If[\ \
+\[Theta] < 10\^19, \[IndentingNewLine]t\  = \ 
+                                        1\/\(Abs[\[Theta]] + \@\(\[Theta]\^2 \
++ 1\)\), \[IndentingNewLine]t\  = \ 1\/Abs[2\ \[Theta]]]\), ";", " ", 
+                                        "\[IndentingNewLine]", \(If[\ \
+\[Theta] < 0, \ t = \(-\ t\)\ ]\), ";", " ", 
+                                        "\[IndentingNewLine]", \(c\ \  = \ \ \
+1\/\@\(t\^2 + 1\)\), ";", " ", "\[IndentingNewLine]", \(s\ \  = \ \ c\ t\), 
+                                        ";", " ", "\[IndentingNewLine]", 
+                                        RowBox[{"R", " ", "=", " ", 
+                                        RowBox[{"(", GridBox[{
+                                        {"c", "s"},
+                                        {\(-s\), "c"}
+                                        }], ")"}]}], ";", " ", 
+                                        "\[IndentingNewLine]", \(A\_\(\(\
+\[LeftDoubleBracket]\)\(All, {p, q}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                                        A\_\(\(\[LeftDoubleBracket]\)\(All, \
+{p, q}\)\(\[RightDoubleBracket]\)\) . R\), ";", 
+                                        StyleBox[
+                                        RowBox[{"  ", 
+                                        StyleBox[" ",
+                                        FontColor->RGBColor[0, 1, 1]]}]], 
+                                        
+                                        StyleBox[\( (*compute\ A . 
+                                        RotationMatrix*) \),
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox[";",
+                                        FontColor->RGBColor[0, 0, 1]], " ", 
+                                        "\[IndentingNewLine]", \(A\_\(\(\
+\[LeftDoubleBracket]\)\({p, q}, All\)\(\[RightDoubleBracket]\)\)\  = \ 
+                                        Transpose[R] . 
+                                        A\_\(\(\[LeftDoubleBracket]\)\({p, \
+q}, All\)\(\[RightDoubleBracket]\)\)\), ";", " ", 
+                                        "\[IndentingNewLine]", \(V\_\(\(\
+\[LeftDoubleBracket]\)\(All, {p, q}\)\(\[RightDoubleBracket]\)\)\  = \ 
+                                        V\_\(\(\[LeftDoubleBracket]\)\(All, \
+{p, q}\)\(\[RightDoubleBracket]\)\) . R\), ";", 
+                                        StyleBox[
+                                        RowBox[{"  ", 
+                                        StyleBox[" ",
+                                        FontColor->RGBColor[0, 0, 1]]}]], 
+                                        
+                                        StyleBox[\( (*compute\ V . 
+                                        RotationMatrix*) \),
+                                        FontColor->RGBColor[0, 0, 1]], 
+                                        StyleBox[";",
+                                        FontColor->RGBColor[0, 0, 1]], " ", 
+                                        "\[IndentingNewLine]", \(state = 
+                                        iterating\), ";"}]}], " ", "]"}], 
+                                  ";"}]}], " ", "]"}], ";"}]}], " ", "]"}], 
+                      ";"}]}], " ", "]"}], ";", " ", 
+                "\[IndentingNewLine]", \(Return[{A, V}]\), ";"}]}], " ", 
+            "]"}]}], ";"}], " "}]], "Input",
+  AspectRatioFixed->True],
+
+Cell["\<\
+Here is a test for 10\[Times]10 matrices.  
+Run the simulation several times.  
+Which method seems faster for 10\[Times]10 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Time4 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiFast[A, 10\^\(-11\), 
+                50];\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Faster  Jacobi = \>", Time4];\)\ \)}], "Input"],
+
+Cell["\<\
+Here is a test for 20\[Times]20 matrices.  
+Run the simulation several times.  
+Which method seems faster for 20\[Times]20 matrices ?\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(n0 = 20;\)\ \), "\[IndentingNewLine]", 
+    \(\(A = 
+        Table[Random[
+            Integer, {\(-10\), 
+              10}], {n0}, {n0}];\)\ \), "\[IndentingNewLine]", 
+    \(\(A = A + Transpose[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Time2 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiCyclic[A, 10\^\(-11\), 
+                50];\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Cyclic  Jacobi = \>", Time2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Time4 = 
+        Timing[\({\[CapitalLambda], V} = 
+              JacobiFast[A, 10\^\(-11\), 
+                50];\)];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Faster  Jacobi = \>", Time4];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  An eigenvalue movie.  Cleve Moler, inventor of the software ",
+  Cell[BoxData[
+      \(TraditionalForm\`Matlab\^TM\)]],
+  " used graphs to illustrate convergence of eigenvalues.  In Matlab, \
+eigmovie(A), shows a \"movie\" that depicts the computation of the \
+eigenvalues of a symmetric matrix.  (",
+  ButtonBox["Cleve Moler",
+    ButtonData:>{
+      URL[ 
+      "http://www.mathworks.com/company/newsletter/clevescorner/win00.cleve.\
+shtml"], None},
+    ButtonStyle->"Hyperlink"],
+  " is chairman and cofounder of The MathWorks.)   The following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " animation has the \"spirit\" of Cleve \"eigmovie.\" "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(JacobiMovie[A0_, \[Epsilon]_, 
+          m_] := \[IndentingNewLine]Module[{A\  = \ N[A0], count = 0, 
+            n = Length[A0], state, iterating, 
+            finished}, \[IndentingNewLine]V\  = \ 
+            IdentityMatrix[n]; \ \[IndentingNewLine]state\  = \ 
+            iterating; \ \[IndentingNewLine]While[\ 
+            And[state \[Equal] iterating, 
+              count < m], \[IndentingNewLine]count\  = \ 
+              count + 1; \ \[IndentingNewLine]T\  = \ \@\(\(1\/n\) \(\[Sum]\+\
+\(j = 1\)\%n\((A\_\(\(\[LeftDoubleBracket]\)\(j, j\)\(\[RightDoubleBracket]\)\
+\))\)\^2\)\); \ \ \[IndentingNewLine]state\  = \ 
+              finished; \ \[IndentingNewLine]For[\ p = 1, \ 
+              p \[LessEqual] 
+                n - 1, \ \(p++\), \[IndentingNewLine]\(For[\ q = p + 1, \ 
+                  q \[LessEqual] 
+                    n, \ \(q++\), \[IndentingNewLine]\(If[\ 
+                      Abs[A\_\(\(\[LeftDoubleBracket]\)\(p, q\)\(\
+\[RightDoubleBracket]\)\)] > \[Epsilon]\ T, \[IndentingNewLine]A = 
+                        ZeroPQ[A, p, q]; \ \[IndentingNewLine]ListPlot3D[A, 
+                        AxesLabel \[Rule] {"\<t(j)\>", "\<x(i)\>", "\<u\>"}, 
+                        ViewPoint \[Rule] {4, \(-2\), 2}, 
+                        PlotRange \[Rule] {\(-4\), 14}, 
+                        ColorFunction \[Rule] 
+                          Hue]; \ \ \[IndentingNewLine]state = 
+                        iterating;\ ];\)\ ];\)\ ];\ ]; \ \
+\[IndentingNewLine]Return[{A, V}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell["Enter the matrix and look at its graph.", "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"8", \(-1\), "3", \(-4\), "4"},
+                {\(-1\), "6", "2", "0", "5"},
+                {"3", "2", "9", "1", "1"},
+                {\(-4\), "0", "1", "7", "0"},
+                {"4", "5", "1", "0", "1"}
+                }], ")"}]}], ";"}], "  "}], "\[IndentingNewLine]", 
+    RowBox[{\(ListPlot3D[A, 
+          AxesLabel \[Rule] {"\<t(j)\>", "\<x(i)\>", "\<u\>"}, 
+          ViewPoint \[Rule] {4, \(-2\), 2}, PlotRange \[Rule] {\(-4\), 14}, 
+          ColorFunction \[Rule] Hue];\), " "}]}], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Perform Jacobi iteration, but look at the graph of the matrix after each \
+\"cycle.\"  After the list of graphs have been drawn, select the output cell \
+that contains all of them with the pointer. Then go to the menu \"Cell\" and \
+the submenu \"Animate Selected Graphics.\"  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " will \"flip through\" the graphs creating an animation. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(JacobiMovie[A, 0.2, 50];\)\(\ \ \)\)\)], "Input",
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/JacobiMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   ",
+  StyleBox[ButtonBox["Jacobi's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/JacobiMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 190, 4, 35, "Text"],
+Cell[1969, 59, 1464, 49, 96, "Text"]
+}, Closed]],
+Cell[3448, 111, 1172, 21, 144, "Text"],
+Cell[4623, 134, 4518, 136, 299, "Text"],
+Cell[9144, 272, 620, 21, 33, "Text"],
+Cell[9767, 295, 1283, 22, 147, "Text"],
+Cell[11053, 319, 670, 22, 33, "Text"],
+Cell[11726, 343, 919, 27, 52, "Text"],
+Cell[12648, 372, 2878, 59, 388, "Input"],
+Cell[15529, 433, 1172, 21, 259, "Input"],
+Cell[16704, 456, 1265, 22, 319, "Input"],
+Cell[17972, 480, 610, 20, 73, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[18607, 504, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[18760, 510, 682, 16, 139, "Input"],
+Cell[19445, 528, 356, 15, 33, "Text",
+  Evaluatable->False],
+Cell[19804, 545, 932, 17, 211, "Input"],
+Cell[20739, 564, 283, 10, 33, "Text",
+  Evaluatable->False],
+Cell[21025, 576, 467, 11, 90, "Input"]
+}, Closed]],
+Cell[21507, 590, 609, 20, 70, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[22141, 614, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[22294, 620, 686, 16, 139, "Input"],
+Cell[22983, 638, 356, 15, 33, "Text",
+  Evaluatable->False],
+Cell[23342, 655, 932, 17, 211, "Input"],
+Cell[24277, 674, 283, 10, 33, "Text",
+  Evaluatable->False],
+Cell[24563, 686, 467, 11, 90, "Input"]
+}, Closed]],
+Cell[25045, 700, 635, 15, 86, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[25705, 719, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[25858, 725, 153, 4, 71, "Text"],
+Cell[26014, 731, 836, 19, 172, "Input"],
+Cell[26853, 752, 157, 4, 71, "Text"],
+Cell[27013, 758, 837, 19, 172, "Input"],
+Cell[27853, 779, 157, 4, 71, "Text"],
+Cell[28013, 785, 837, 19, 172, "Input"]
+}, Closed]],
+Cell[28865, 807, 269, 10, 30, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[29159, 821, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[29312, 827, 157, 4, 71, "Text"],
+Cell[29472, 833, 1023, 22, 212, "Input"],
+Cell[30498, 857, 157, 4, 71, "Text"],
+Cell[30658, 863, 1023, 22, 212, "Input"],
+Cell[31684, 887, 157, 4, 71, "Text"],
+Cell[31844, 893, 1023, 22, 212, "Input"]
+}, Closed]],
+Cell[32882, 918, 727, 19, 87, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[33634, 941, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[33787, 947, 5767, 98, 618, "Input"],
+Cell[39557, 1047, 157, 4, 71, "Text"],
+Cell[39717, 1053, 792, 17, 172, "Input"],
+Cell[40512, 1072, 157, 4, 71, "Text"],
+Cell[40672, 1078, 792, 17, 172, "Input"]
+}, Closed]],
+Cell[41479, 1098, 825, 22, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[42329, 1124, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[42482, 1130, 1575, 27, 339, "Input"],
+Cell[44060, 1159, 55, 0, 33, "Text"],
+Cell[44118, 1161, 651, 15, 116, "Input"],
+Cell[44772, 1178, 424, 8, 52, "Text"],
+Cell[45199, 1188, 99, 2, 30, "Input"]
+}, Closed]],
+Cell[45313, 1193, 158, 3, 32, "Text"],
+Cell[45474, 1198, 562, 17, 33, "Text"],
+Cell[46039, 1217, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

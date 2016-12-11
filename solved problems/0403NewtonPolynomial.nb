@@ -1,0 +1,5028 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    163069,       4677]*)
+(*NotebookOutlinePosition[    163781,       4702]*)
+(*  CellTagsIndexPosition[    163737,       4698]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Newton Polynomial",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text",
+  TextAlignment->Center],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods Using Mathematica \nComplementary Supplement \n\
+for ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Numerical Analysis - Numerical Methods",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["(c) ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n",
+    FontSize->14,
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2005",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+  TextAlignment->Center]
+}, Closed]],
+
+Cell[TextData[StyleBox["Background.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "\tWe have seen how to expand a function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " in a Maclaurin polynomial about ",
+  Cell[BoxData[
+      \(x\_0 = 0\)]],
+  " involving the powers ",
+  Cell[BoxData[
+      \(x\^k\)]],
+  " and a Taylor polynomial about ",
+  Cell[BoxData[
+      \(x\_0 \[NotEqual] 0\)]],
+  " involving the powers ",
+  Cell[BoxData[
+      \(\((x - x\_0)\)\^k\)]],
+  ".  These polynomials have a single \"center\" ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  ".  Polynomial interpolation can be used to construct the polynomial of  \
+degree  ",
+  Cell[BoxData[
+      \(\(\(\[LessEqual]\)\(n\)\)\)]],
+  "  that passes through the n+1 points  ",
+  Cell[BoxData[
+      \(\((x\_k, y\_k)\)\  = \ \((x\_k, f \((x\_k)\))\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(k = 0, 1, \[CenterEllipsis], n\)]],
+  ".  If multiple \"centers\"    ",
+  Cell[BoxData[
+      \(x\_0, x\_1,  ... , x\_n\)]],
+  "  are used, then the result is the so called Newton polynomial.  We \
+attribute much of the founding theory to ",
+  StyleBox[ButtonBox["Sir Isaac Newton",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Newton.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1643-1727). "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/\
+NewtonsDividedDifferenceInterpolationFormula.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that  ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^\(n + 1\)\),
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  " and  ",
+  Cell[BoxData[
+      \(x\_k \[Element] \([a, b]\)\)]],
+  " for  ",
+  Cell[BoxData[
+      \(k = 0, 1, \[CenterEllipsis], n\)]],
+  "  are distinct  values.  Then \n\n\t",
+  Cell[BoxData[
+      \(f \((x)\) = \(P\_n\) \((x)\) + \(R\_n\) \((x)\)\)]],
+  ",\n\t\nwhere ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " is a polynomial that can be used to approximate  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ", \n\n\t",
+  Cell[BoxData[{
+      \(\(P\_n\) \((x)\)\  = \ 
+        a\_0\  + \ \(a\_1\) \((x - x\_0)\)\  + \ \(a\_2\) \((x - 
+                x\_0)\)\ \((x - x\_1)\)\  + \ \(a\_3\) \((x - x\_0)\)\ \((x - 
+                x\_1)\)\ \((x - x\_2)\)\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\  ... \)\), 
+    "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\(+\ \ a\_n\) \
+\((x - x\_0)\)\ \((x - x\_1)\)\ \((x - x\_2)\)\  ... \) \((x - 
+            x\_\(n - 1\))\)\)}]],
+  "  \n\nand we write  \n\n\t",
+  Cell[BoxData[
+      \(f \((x)\) \[TildeTilde] \(P\_n\) \((x)\)\)]],
+  ".\n\nThe Newton polynomial goes through the ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  " points  ",
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          RowBox[{"(", 
+            RowBox[{\(x\_k\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(y\_k\)}], ")"}], "}"}], \(k = 0\),
+         "n"]]],
+  ",  i.e.\n\n\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x\_k)\)\  = \ f \((x\_k)\)\)]],
+  "    for   ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[\(\(...\)\(.\)\),
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\nThe remainder term  ",
+  Cell[BoxData[
+      \(\(R\_n\) \((x)\)\)]],
+  " has the form\n\n\t",
+  Cell[BoxData[
+      RowBox[{\(\(R\_n\) \((x)\)\), "=", 
+        RowBox[{
+          RowBox[{
+            RowBox[{
+              FractionBox[
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((n + 1)\),
+                      Derivative],
+                    
+                    MultilineFunction->None], \((c)\)}], \(\((n + 
+                      1)\)!\)], \((x - x\_0)\), " ", \((x - x\_1)\), 
+              " ", \((x - x\_2)\)}], " ", 
+            "..."}], \((x - x\_\(n - 1\))\), \((x - x\_n)\)}]}]]],
+  ",\n\nfor some value ",
+  Cell[BoxData[
+      \(c = c \((x)\)\)]],
+  " that lies in the interval ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ".  The coefficients  ",
+  Cell[BoxData[
+      \(a\_i\)]],
+  "  are constructed using divided differences."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Divided Differences.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  "The divided differences for a function ",
+  Cell[BoxData[
+      \(f[x]\)]],
+  " are defined as follows:\n\n\t",
+  Cell[BoxData[{
+      \(f[x\_\(i - 1\), 
+          x\_i] = \(f[x\_i]\  - \ f[x\_\(i - 1\)]\)\/\(\(x\_i\  - \ x\_\(i - \
+1\)\)\(\n\)
+          \)\), "\n", 
+      \(f[x\_\(i - 2\), x\_\(i - 1\), 
+          x\_i] = \(f[x\_\(i - 1\), x\_i]\  - \ f[x\_\(i - 2\), x\_\(i - 1\)]\
+\)\/\(\(x\_i\  - \ x\_\(i - 2\)\)\(\n\)
+          \)\), "\n", 
+      \(f[x\_\(i - 3\), x\_\(i - 2\), x\_\(i - 1\), 
+          x\_i] = \(f[x\_\(i - 2\), x\_\(i - 1\), x\_i\ ] - \ f[x\_\(i - 3\), \
+x\_\(i - 2\), x\_\(i - 1\)]\)\/\(\(x\_\(\(i\)\(\ \)\) - \ x\_\(i - 3\)\)\(\n\
+\)
+          \)\), "\n", 
+      \(f[x\_\(i - j\), x\_\(i - j + 1\),  ... , 
+          x\_i] = \(f[x\_\(i - j + 1\),  ... , x\_i]\  - \ f[x\_\(i - j\),  \
+... , x\_\(i - 1\)]\)\/\(x\_i\  - \ x\_\(i - j\)\)\)}]],
+  "  \n"
+}], "Text"],
+
+Cell[TextData[{
+  "The divided difference formulae are used to construct the divided \
+difference table:\n\n",
+  Cell[BoxData[GridBox[{
+          {\(x\_i\), \(f[x\_i]\)},
+          {GridBox[{
+                {\(x\_0\)},
+                {\(x\_1\)},
+                {\(x\_2\)},
+                {\(x\_3\)},
+                {\(x\_4\)}
+                }], GridBox[{
+                {\(f[x\_0]\)},
+                {\(f[x\_1]\)},
+                {\(f[x\_2]\)},
+                {\(f[x\_3]\)},
+                {\(f[x\_4]\)}
+                }]}
+          },
+        GridFrame->True,
+        RowLines->True,
+        ColumnLines->True]]],
+  Cell[BoxData[GridBox[{
+          {\(f[x\_\(i - 1\), x\_i]\), \(f[x\_\(i - 2\), x\_\(i - 1\), 
+              x\_i]\)},
+          {GridBox[{
+                {"  "},
+                {\(f[x\_0, x\_1]\)},
+                {\(f[x\_1, x\_2]\)},
+                {\(f[x\_2, x\_3]\)},
+                {\(f[x\_3, x\_4]\)}
+                }], GridBox[{
+                {"  "},
+                {"   "},
+                {\(f[x\_0, x\_1, x\_2]\)},
+                {\(f[x\_1, x\_2, x\_3]\)},
+                {\(f[x\_2, x\_3, x\_4]\)}
+                }]}
+          },
+        GridFrame->True,
+        RowLines->True,
+        ColumnLines->True]]],
+  Cell[BoxData[GridBox[{
+          {\(f[x\_\(i - 3\), x\_\(i - 2\), x\_\(i - 1\), x\_i]\), \(f[
+              x\_\(i - 4\), x\_\(i - 3\), x\_\(i - 2\), x\_\(i - 1\), 
+              x\_i]\)},
+          {GridBox[{
+                {"  "},
+                {"   "},
+                {"   "},
+                {\(f[x\_0, x\_1, x\_2, x\_3]\)},
+                {\(f[x\_1, x\_2, x\_3, x\_4]\)}
+                }], GridBox[{
+                {"  "},
+                {"   "},
+                {"   "},
+                {"   "},
+                {\(f[x\_0, x\_1, x\_2, x\_3, x\_4]\)}
+                }]}
+          },
+        GridFrame->True,
+        RowLines->True,
+        ColumnLines->True]]],
+  "   "
+}], "Text"],
+
+Cell[TextData[{
+  "The coefficient ",
+  Cell[BoxData[
+      \(a\_i\)]],
+  " of the Newton polynomial  ",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\)]],
+  " is  ",
+  Cell[BoxData[
+      \(a\_i = f[x\_0, x\_1,  ... , x\_i]\)]],
+  "  and it is the top element in the column of the i-th divided \
+differences."
+}], "Text"],
+
+Cell[TextData[{
+  "The Newton polynomial of  degree  ",
+  Cell[BoxData[
+      \(\(\(\[LessEqual]\)\(n\)\)\)]],
+  "  that passes through the  ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  " points  ",
+  Cell[BoxData[
+      \(\((x\_k, y\_k)\)\  = \ \((x\_k, f \((x\_k)\))\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(k = 0, 1, \[CenterEllipsis], n\)]],
+  "  is  \n\n\t",
+  Cell[BoxData[{
+      \(\(P\_n\) \((x)\)\  = \ 
+        a\_0\  + \ \(a\_1\) \((x - x\_0)\)\  + \ \(a\_2\) \((x - 
+                x\_0)\)\ \((x - x\_1)\)\  + \ \(a\_3\) \((x - x\_0)\)\ \((x - 
+                x\_1)\)\ \((x - x\_2)\)\), "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\  ... \)\), 
+    "\n", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\(+\ \ a\_n\) \
+\((x - x\_0)\)\ \((x - x\_1)\)\ \((x - x\_2)\)\  ... \) \((x - 
+            x\_\(n - 1\))\)\)}]],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe cubic curve in the figure below illustrates a Newton polynomial of \
+degree n = 3.  \n\t\n\t",
+  Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .6 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+-1.38778e-017 0.181818 -7.12863e-018 0.142857 [
+[.18182 -0.0125 -3 -9 ]
+[.18182 -0.0125 3 0 ]
+[.36364 -0.0125 -3 -9 ]
+[.36364 -0.0125 3 0 ]
+[.54545 -0.0125 -3 -9 ]
+[.54545 -0.0125 3 0 ]
+[.72727 -0.0125 -3 -9 ]
+[.72727 -0.0125 3 0 ]
+[.90909 -0.0125 -3 -9 ]
+[.90909 -0.0125 3 0 ]
+[-0.0125 .14286 -6 -4.5 ]
+[-0.0125 .14286 0 4.5 ]
+[-0.0125 .28571 -6 -4.5 ]
+[-0.0125 .28571 0 4.5 ]
+[-0.0125 .42857 -6 -4.5 ]
+[-0.0125 .42857 0 4.5 ]
+[-0.0125 .57143 -6 -4.5 ]
+[-0.0125 .57143 0 4.5 ]
+[ 0 0 0 0 ]
+[ 1 .6 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 g
+.25 Mabswid
+[ ] 0 setdash
+.18182 0 m
+.18182 .00625 L
+s
+[(1)] .18182 -0.0125 0 1 Mshowa
+.36364 0 m
+.36364 .00625 L
+s
+[(2)] .36364 -0.0125 0 1 Mshowa
+.54545 0 m
+.54545 .00625 L
+s
+[(3)] .54545 -0.0125 0 1 Mshowa
+.72727 0 m
+.72727 .00625 L
+s
+[(4)] .72727 -0.0125 0 1 Mshowa
+.90909 0 m
+.90909 .00625 L
+s
+[(5)] .90909 -0.0125 0 1 Mshowa
+0 0 m
+1 0 L
+s
+0 .14286 m
+.00625 .14286 L
+s
+[(1)] -0.0125 .14286 1 0 Mshowa
+0 .28571 m
+.00625 .28571 L
+s
+[(2)] -0.0125 .28571 1 0 Mshowa
+0 .42857 m
+.00625 .42857 L
+s
+[(3)] -0.0125 .42857 1 0 Mshowa
+0 .57143 m
+.00625 .57143 L
+s
+[(4)] -0.0125 .57143 1 0 Mshowa
+0 0 m
+0 .6 L
+s
+0 0 m
+1 0 L
+1 .6 L
+0 .6 L
+closepath
+clip
+newpath
+0 0 1 r
+.5 Mabswid
+.18182 .28571 m
+.21132 .3448 L
+.22668 .36912 L
+.2435 .39103 L
+.25932 .40737 L
+.27372 .41884 L
+.28866 .42754 L
+.29688 .43099 L
+.30058 .43225 L
+.30465 .43342 L
+.30822 .43428 L
+.31205 .43502 L
+.31417 .43535 L
+.31611 .4356 L
+.31807 .43582 L
+.3199 .43597 L
+.32157 .43608 L
+.32251 .43612 L
+.32335 .43615 L
+.32429 .43618 L
+.32529 .43619 L
+.32625 .4362 L
+.32712 .43619 L
+.32794 .43618 L
+.32871 .43616 L
+.32956 .43613 L
+.33046 .43609 L
+.3323 .43598 L
+.33398 .43585 L
+.33765 .43544 L
+.34155 .43486 L
+.34856 .4334 L
+.35609 .43126 L
+.36441 .42826 L
+.37919 .42137 L
+.39511 .41188 L
+.42653 .38781 L
+.45679 .35936 L
+.48589 .32867 L
+.51686 .29409 L
+.54668 .26054 L
+.57837 .2264 L
+.6089 .19671 L
+.63827 .17271 L
+.65315 .16275 L
+.66952 .15381 L
+.67701 .15048 L
+.68507 .14749 L
+.69267 .14525 L
+.69961 .14371 L
+Mistroke
+.70326 .14311 L
+.70526 .14283 L
+.70715 .14262 L
+.70891 .14246 L
+.71082 .14232 L
+.71166 .14227 L
+.71255 .14222 L
+.71336 .14219 L
+.71414 .14217 L
+.71512 .14215 L
+.71602 .14214 L
+.71699 .14215 L
+.71754 .14215 L
+.71805 .14216 L
+.71889 .14218 L
+.71981 .14222 L
+.72078 .14226 L
+.72169 .14232 L
+.72377 .14247 L
+.72568 .14266 L
+.72997 .14326 L
+.7336 .14393 L
+.73748 .14484 L
+.74445 .14696 L
+.75275 .15033 L
+.76027 .1542 L
+.77495 .16409 L
+.79084 .17847 L
+.80605 .19601 L
+.82213 .21882 L
+.8511 .27175 L
+.88195 .34622 L
+.90909 .42857 L
+Mfstroke
+1 0 0 r
+.02 w
+.18182 .28571 Mdot
+.36364 .42857 Mdot
+.72727 .14286 Mdot
+.90909 .42857 Mdot
+0 g
+gsave
+.2 .28571 -61 -10.7813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(0) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.38182 .44286 -61 -10.7813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(1) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.72727 .12857 -90.5938 -17.5625 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(2) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+gsave
+.89091 .42857 -120.188 -10.7813 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+0 21.5625 translate 1 -1 scale
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding WindowsANSIEncoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+63.000 13.688 moveto
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+%%BeginResource: font Courier-MISO
+%%BeginFont: Courier-MISO
+/Courier /Courier-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+63.000 13.688 moveto
+(H) show
+71.438 13.688 moveto
+%%IncludeResource: font Courier-Italic
+%%IncludeFont: Courier-Italic
+%%BeginResource: font Courier-Italic-MISO
+%%BeginFont: Courier-Italic-MISO
+/Courier-Italic /Courier-Italic-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(x) show
+79.875 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+86.375 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(,) show
+94.813 13.688 moveto
+%%IncludeResource: font Courier-Italic-MISO
+%%IncludeFont: Courier-Italic-MISO
+/Courier-Italic-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(y) show
+103.250 15.813 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 9.938 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(3) show
+%%IncludeResource: font Math2Mono
+%%IncludeFont: Math2Mono
+/Math2Mono findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+109.750 13.688 moveto
+(L) show
+118.188 13.688 moveto
+%%IncludeResource: font Courier-MISO
+%%IncludeFont: Courier-MISO
+/Courier-MISO findfont 14.000 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+    ImageSize->{288, 172.75},
+    ImageMargins->{{0, 0}, {0, 0}},
+    ImageRegion->{{0, 1}, {0, 1}},
+    ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40004P0000[1000`40O003h00Oogoo8Goo000mOol5
+000[Ool4000^Ool2000_Ool3000/Ool2000OOol003moo`03001oogoo02]oo`03001oogoo02ioo`04
+001oogoo000_Ool00`00Oomoo`0ZOol01000Oomoo`007Woo000oOol00`00Oomoo`0/Ool00`00Oomo
+o`0_Ool00`00Oomoo`0[Ool5000^Ool00`00Oomoo`0LOol003moo`03001oogoo02eoo`03001oogoo
+02moo`03001oogoo02Yoo`04001oogoo000]Ool2000OOol003moo`03001oogoo02]oo`04001oogoo
+000]Ool01000Oomoo`00;Goo00<007oo0000;Goo00<007ooOol07Woo000nOol2000^Ool2000_Ool2
+000_Ool2000]Ool3000NOol00?moob5oo`00ogoo8Goo003oOolQOol00?moob5oo`00ogoo8Goo000?
+Oooo000<0006Ool000moo`03001oogoo02eoo`03001oogoo02eoo`03001oogoo02ioo`03001oogoo
+02eoo`03001oogoo02eoo`03001oogoo01eoo`003goo00<007ooOol0;Goo00<007ooOol0;Goo00<0
+07ooOol0;Woo00<007ooOol0;Goo00<007ooOol0;Goo00<007ooOol07Goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?Ool00`00Oomoo`3o
+Ool?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0Z7oo00<007ooOol02Goo10002Woo
+10001Woo10000Woo00<007ooOol0>Goo000?Ool00`00Oomoo`2WOol00`00Oomoo`0:Ool00`00Oomo
+o`05Ool00`00Oomoo`05Ool00`00Oomoo`05Ool00`00Oomoo`04Ool00`00Oomoo`0hOol000moo`03
+001oogoo0:Moo`03001oogoo00]oo`03001oogoo00Aoo`8000Moo`03001oogoo00Eoo`03001oogoo
+00=oo`03001oogoo03Qoo`003goo00<007ooOol0YWoo00<007ooOol00goo0`0000Aoo`00000000=o
+o`03001oogoo00Aoo`03001oogoo00Eoo`8000Moo`03001oogoo00=oo`03001oogoo03Moo`003goo
+00<007ooOol0YWoo00<007ooOol017oo00D007ooOomoo`00009oo`04001oogoo0005Ool20006Ool2
+0005Ool01000Oomoo`0017oo00<007ooOol0=goo000?Ool00`00Oomoo`2VOol00`00Oomoo`05Ool0
+0`00Ool00004Ool2000>Ool00`00Ool00005Ool20005Ool00`00Oomoo`0gOol000moo`03001oogoo
+0:Ioo`03001oogoo00Ioo`8001Aoo`04001oogoo000;Ool00`00Oomoo`0gOol000moo`03001oogoo
+0:Ioo`03001oogoo00Eoo`04001oogoo000COol01000Oomoo`002goo00<007ooOol0=goo000?Ool0
+0`00Oomoo`2VOol00`00Oomoo`04Ool3000017oo0000000047oo0`0000Aoo`00000000Uoo`03001o
+ogoo03Moo`003goo00<007ooOol0Ygoo00<007ooOol0:Goo00<007ooOol0>7oo000?Ool00`00Oomo
+o`2WOol00`00Oomoo`0YOol00`00Oomoo`0hOol000moo`03001oogoo0:Qoo`03001oogoo02Moo`03
+001oogoo03Uoo`003goo00<007ooOol0ogoo3goo0006Ool50004Ool00`00Oomoo`2mOol3O01>Ool0
+00Qoo`03001oogoo00Aoo`03001oogoo0;aoo`El04eoo`0027oo00<007ooOol017oo0P00^7oo1@0O
+1G`0CGoo0008Ool00`00Oomoo`04Ool00`00Oomoo`2cOol401l5Ool5O00301m:Ool000Qoo`03001o
+ogoo00Aoo`03001oogoo0;5oo`807`Yoo`=l00Aoo`807dQoo`001goo0P001Woo00<007ooOol0[Woo
+0`0O5Goo0P0OAWoo000?Ool00`00Oomoo`2/Ool201lJOol00`0OOomoo`13Ool000moo`03001oogoo
+0:Yoo`807aeoo`807d=oo`003goo00<007ooOol0ZGoo00<07gooOol07goo00<07gooOol0@7oo000?
+Ool00`00Oomoo`2WOol201lSOol00`0OOomoo`0oOol000moo`03001oogoo0:Ioo`0301moogoo02Ao
+o`807cmoo`003goo00<007ooOol0YGoo00<07gooOol09goo00<07gooOol0?7oo000?Ool00`00Oomo
+o`2TOol00`0OOomoo`0YOol00`0OOomoo`0kOol000moo`03001oogoo0:9oo`807beoo`0301moogoo
+03Yoo`003goo00<007ooOol0XGoo00<07gooOol0;Goo00<07gooOol0>Woo000?Ool00`00Oomoo`2P
+Ool00`0OOomoo`0_Ool00`0OOomoo`0iOol000moo`03001oogoo09moo`0301moogoo035oo`0301mo
+ogoo03Qoo`003goo00<007ooOol0WWoo00<07gooOol0<goo00<07gooOol0=goo000?Ool00`00Oomo
+o`2MOol00`0OOomoo`0dOol00`0OOomoo`0gOol000moo`03001oogoo09aoo`0301moogoo03Ioo`03
+01moogoo03Ioo`003goo00<007ooOol0VWoo0P0O>Woo00<07gooOol0=Goo000?Ool00`00Oomoo`2I
+Ool00`0OOomoo`0jOol00`0OOomoo`0eOol000moo`03001oogoo09Qoo`0301moogoo03aoo`0301mo
+ogoo03Aoo`003goo00<007ooOol0Ugoo00<07gooOol0?Woo00<07gooOol0<goo000?Ool00`00Oomo
+o`2FOol00`0OOomoo`0oOol00`0OOomoo`0cOol000moo`03001oogoo09Eoo`0301moogoo045oo`03
+01moogoo039oo`003goo00<007ooOol0U7oo00<07gooOol0@Woo00<07gooOol0<Woo000?Ool00`00
+Oomoo`2COol00`0OOomoo`14Ool00`0OOomoo`0aOol000moo`03001oogoo099oo`0301moogoo04Eo
+o`0301moogoo035oo`003goo00<007ooOol0TWoo00<07gooOol0AWoo00<07gooOol0<7oo000?Ool0
+0`00Oomoo`2AOol00`0OOomoo`18Ool00`0OOomoo`0_Ool000moo`03001oogoo091oo`0301moogoo
+04Uoo`0301moogoo02moo`003goo00<007ooOol0Sgoo00<07gooOol0Bgoo00<07gooOol0;Woo000?
+Ool00`00Oomoo`2>Ool00`0OOomoo`1<Ool00`0OOomoo`0^Ool000moo`03001oogoo08eoo`0301mo
+ogoo04ioo`0301moogoo02eoo`003goo00<007ooOol0>Woo00<007ooOol05goo100037oo00<007oo
+Ool09Goo00<07gooOol0Cgoo00<07gooOol0;Goo000?Ool00`00Oomoo`0iOol00`00Oomoo`0;Ool2
+0004Ool00`00Oomoo`06Ool00`00Oomoo`05Ool20005Ool00`00Oomoo`0SOol00`0OOomoo`1AOol0
+0`0OOomoo`0/Ool000moo`03001oogoo03Uoo`03001oogoo00Yoo`04001oogoo0003Ool20008Ool0
+0`00Oomoo`03Ool01000Oomoo`0017oo00<007ooOol08Woo00<07gooOol0DWoo00<07gooOol0;7oo
+0006Ool40005Ool00`00Oomoo`0/Ool3O009Ool00`00Oomoo`02Ool3000017oo000000000Woo00@0
+07ooOol000Aoo`03001oogoo00Ioo`8000Aoo`04001oogoo0005Ool00`00Oomoo`0QOol00`0OOomo
+o`1COol00`0OOomoo`0[Ool000Ioo`03001oogoo00Ioo`03001oogoo02]oo`El00Qoo`03001oogoo
+00=oo`05001oogooOol00003Ool01000Oomoo`0017oo0P001goo0P0017oo00@007ooOol000Eoo`03
+001oogoo021oo`0301moogoo05Aoo`0301moogoo02]oo`001goo00<007ooOol01Goo0P00;7oo1G`0
+27oo00<007ooOol017oo00<007oo000017oo00@007ooOol000eoo`03001oo`0000=oo`04001oogoo
+0005Ool00`00Oomoo`0OOol00`0OOomoo`1FOol00`0OOomoo`0ZOol000Qoo`03001oogoo00Aoo`03
+001oogoo02]oo`El00Qoo`03001oogoo00Eoo`8000Eoo`8000ioo`04001oogoo0003Ool20006Ool0
+0`00Oomoo`0NOol00`0OOomoo`1GOol00`0OOomoo`0ZOol000Ioo`04001oogoo0005Ool00`00Oomo
+o`0/Ool3O009Ool00`00Oomoo`04Ool01000Oomoo`0057oo00@007ooOol000]oo`03001oogoo01eo
+o`0301moogoo05Qoo`0301moogoo02Yoo`001goo0P001Woo00<007ooOol0;goo00<07gooOol01Woo
+00<007ooOol00goo0`0000Aoo`000000015oo`<00004Ool000000009Ool00`00Oomoo`0LOol00`0O
+Oomoo`1JOol00`0OOomoo`0YOol000moo`03001oogoo02moo`0301moogoo00Moo`03001oogoo02Uo
+o`03001oogoo01aoo`0301moogoo05]oo`0301moogoo02Uoo`003goo00<007ooOol0<7oo00<07goo
+Ool01Woo00<007ooOol0:Goo00<007ooOol06goo00<07gooOol0GGoo00<07gooOol0:7oo000?Ool0
+0`00Oomoo`0`Ool00`0OOomoo`07Ool00`00Oomoo`0WOol00`00Oomoo`0KOol00`0OOomoo`1NOol0
+0`0OOomoo`0XOol000moo`03001oogoo035oo`0301moogoo04ioo`0301moogoo05ioo`0301moogoo
+02Qoo`003goo00<007ooOol0<Goo00<07gooOol0CGoo00<07gooOol0H7oo00<07gooOol09goo000?
+Ool00`00Oomoo`0bOol00`0OOomoo`1;Ool00`0OOomoo`1QOol00`0OOomoo`0WOol000moo`03001o
+ogoo039oo`0301moogoo04Yoo`0301moogoo06=oo`0301moogoo02Ioo`003goo00<007ooOol0<goo
+00<07gooOol0B7oo00<07gooOol0I7oo00<07gooOol09Woo000?Ool00`00Oomoo`0cOol00`0OOomo
+o`17Ool00`0OOomoo`1UOol00`0OOomoo`0VOol000moo`03001oogoo03Aoo`0301moogoo04Eoo`03
+01moogoo06Moo`0301moogoo02Eoo`003goo00<007ooOol0=7oo00<07gooOol0A7oo00<07gooOol0
+J7oo00<07gooOol09Goo000?Ool00`00Oomoo`0eOol00`0OOomoo`12Ool00`0OOomoo`1ZOol00`0O
+Oomoo`0TOol000moo`03001oogoo03Eoo`0301moogoo049oo`0301moogoo06Yoo`0301moogoo02Ao
+o`003goo00<007ooOol0=Woo00<07gooOol0@7oo00<07gooOol0Jgoo00<07gooOol097oo000?Ool0
+0`00Oomoo`0fOol00`0OOomoo`0oOol00`0OOomoo`1]Ool00`0OOomoo`0SOol000moo`03001oogoo
+03Moo`0301moogoo03eoo`0301moogoo06ioo`0301moogoo02=oo`003goo00<007ooOol0>7oo00<0
+7gooOol0>goo00<07gooOol0Kgoo00<07gooOol08goo000?Ool00`00Oomoo`0hOol00`0OOomoo`0j
+Ool00`0OOomoo`1aOol00`0OOomoo`0ROol000moo`03001oogoo03Uoo`0301moogoo03Qoo`0301mo
+ogoo079oo`0301moogoo029oo`003goo00<007ooOol0>Woo00<07gooOol0=Woo00<07gooOol0Lgoo
+00<07gooOol08Woo000?Ool00`00Oomoo`0kOol00`0OOomoo`0cOol201mgOol00`0OOomoo`0QOol0
+00moo`03001oogoo03aoo`0301moogoo035oo`0301moogoo07Moo`0301moogoo025oo`003goo00<0
+07ooOol0?7oo00<07gooOol0<7oo00<07gooOol0N7oo00<07gooOol08Goo000?Ool00`00Oomoo`0m
+Ool00`0OOomoo`0^Ool00`0OOomoo`1jOol00`0OOomoo`0POol000moo`03001oogoo03ioo`0301mo
+ogoo02aoo`0301moogoo07]oo`0301moogoo021oo`003goo00<007ooOol0?goo00<07gooOol0:Woo
+00<07gooOol0O7oo00<07gooOol087oo000?Ool00`00Oomoo`10Ool00`0OOomoo`0XOol00`0OOomo
+o`1mOol00`0OOomoo`0POol000moo`03001oogoo045oo`0301moogoo02Eoo`807h5oo`0301moogoo
+01moo`003goo00<007ooOol0@Woo00<07gooOol08goo00<07gooOol0PGoo00<07gooOol07goo000?
+Ool00`00Oomoo`13Ool00`0OOomoo`0QOol00`0OOomoo`1<Ool00`00Oomoo`0GOol4000<Ool00`00
+Oomoo`09Ool00`0OOomoo`0OOol000moo`03001oogoo04Aoo`807b1oo`0301moogoo04aoo`03001o
+ogoo00]oo`8000Eoo`03001oogoo00Eoo`03001oogoo00Ioo`8000Aoo`03001oogoo00Uoo`0301mo
+ogoo01ioo`003goo00<007ooOol0AWoo00<07gooOol06goo0P0OCgoo00<007ooOol02Woo00@007oo
+Ool000Aoo`8000Moo`03001oogoo00Aoo`04001oogoo0003Ool00`00Oomoo`09Ool00`0OOomoo`0N
+Ool000Moo`8000Ioo`03001oogoo04Moo`0301moogoo019oo`=l00=oo`807e1oo`03001oogoo00=o
+o`<00004Ool000000003Ool00`00Oomoo`04Ool00`00Oomoo`05Ool20007Ool00`00Oomoo`03Ool0
+0`00Oomoo`08Ool3O00NOol000Ioo`04001oogoo0005Ool00`00Oomoo`18Ool201lAOol5O00201l8
+Ool00`00Oomoo`0GOol4000<Ool00`00Oomoo`0MOol00`00Oomoo`04Ool01@00Oomoogoo00001Goo
+00<007ooOol00goo0P001Woo0P0027oo00<007ooOol00Woo00<007ooOol01goo1G`07Goo0008Ool0
+0`00Oomoo`04Ool2001;Ool00`0OOomoo`0>Ool5O009Ool00`00Oomoo`0:Ool50003Ool00`00Oomo
+o`05Ool00`00Oomoo`05Ool50002Ool00`00Oomoo`0LOol00`00Oomoo`05Ool00`00Ool00003Ool0
+1000Oomoo`003Goo00<007oo000017oo00@007ooOol000Aoo`03001oogoo00Moo`El01eoo`002Goo
+00<007ooOol00goo00<007ooOol0Bgoo1@0O2Goo0P0O1G`02Goo00<007ooOol037oo00<007ooOol0
+0goo0P001goo00<007ooOol01Woo00<007ooOol00Woo00<007ooOol077oo00<007ooOol01Woo0P00
+17oo0P003Woo00@007ooOol000Aoo`8000Eoo`03001oogoo00Moo`El01eoo`001Woo00@007ooOol0
+00Eoo`03001oogoo051oo`T07`=oo`=l00Uoo`03001oogoo00=oo`<00004Ool000000003Ool00`00
+Oomoo`04Ool00`00Oomoo`05Ool20007Ool00`00Oomoo`03Ool00`00Oomoo`0KOol00`00Oomoo`05
+Ool01000Oomoo`004goo00@007ooOol000]oo`03001oogoo00Qoo`=l01ioo`001goo0P001Woo00<0
+07ooOol0J7oo00<007ooOol017oo00D007ooOomoo`0000Aoo`03001oogoo00Aoo`8000Ioo`8000Mo
+o`03001oogoo00=oo`03001oogoo01]oo`03001oogoo00Aoo`<00004Ool00000000@Ool3000017oo
+000000002Goo00<007ooOol0:Goo000?Ool00`00Oomoo`1XOol00`00Oomoo`05Ool00`00Ool00005
+Ool00`00Oomoo`0<Ool00`00Ool00006Ool00`00Oomoo`03Ool00`00Oomoo`0LOol00`00Oomoo`0Y
+Ool00`00Oomoo`0ZOol000moo`03001oogoo06Qoo`03001oogoo00Ioo`8000Aoo`8000ioo`04001o
+ogoo0004Ool20005Ool00`00Oomoo`0LOol00`00Oomoo`0YOol00`00Oomoo`0ZOol000moo`03001o
+ogoo06Qoo`03001oogoo00Eoo`04001oogoo000COol01000Oomoo`002goo00<007ooOol07Goo00<0
+07ooOol09goo00<007ooOol0:goo000?Ool00`00Oomoo`1XOol00`00Oomoo`04Ool3000017oo0000
+000047oo0`0000Aoo`00000000Uoo`03001oogoo07Eoo`003goo00<007ooOol0JGoo00<007ooOol0
+:Goo00<007ooOol0MWoo000?Ool00`00Oomoo`1YOol00`00Oomoo`0YOol00`00Oomoo`1fOol000mo
+o`03001oogoo06Yoo`03001oogoo02Moo`03001oogoo07Moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo000?
+Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0ogoo3goo0008
+Ool30004Ool00`00Oomoo`3oOol?Ool000Uoo`03001oogoo00=oo`03001oogoo0?moo`moo`001Woo
+1@0017oo0P00ogoo47oo0006Ool01000Oomoo`001Goo00<007ooOol0ogoo3goo0007Ool00`00Ool0
+0005Ool00`00Oomoo`3oOol?Ool000Qoo`8000Eoo`03001oogoo0?moo`moo`003goo00<007ooOol0
+ogoo3goo000?Ool00`00Oomoo`3oOol?Ool000moo`03001oogoo0?moo`moo`003goo00<007ooOol0
+ogoo3goo0000\
+\>"],
+    ImageRangeCache->{{{0, 287}, {171.75, 0}} -> {0, 0, 0, 0}}]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, p, t, x, y, z];\)\ \), "\n", 
+    \(f[x_, y___, z_] := 
+      Module[{}, Return[\(f[y, z] - f[x, y]\)\/\(z - x\)]]\), "\n", 
+    \(\(p[t_] = 
+        f[x\_0]\  + \ 
+          f[x\_0, x\_1] \((t - x\_0)\)\  + \ \[IndentingNewLine]f[x\_0, x\_1, 
+              x\_2] \((t - x\_0)\) \((t - x\_1)\)\  + \ \[IndentingNewLine]f[
+              x\_0, x\_1, x\_2, 
+              x\_3] \((t - x\_0)\) \((t - x\_1)\) \((t - x\_2)\);\)\), "\n", 
+    \(\(Print["\<p[x] = \>", p[x]];\)\ \), "\n", 
+    \(\(Print[\*"\"\<p[\!\(x\_0\)] = \>\"", 
+        p[x\_0]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<p[\!\(x\_1\)] = \>\"", p[x\_1]];\)\), "\n", 
+    \(\(Print[\*"\"\<p[\!\(x\_2\)] = \>\"", 
+        p[x\_2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<p[\!\(x\_2\)] = \>\"", 
+        Together[p[x\_2]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<p[\!\(x\_3\)] = \>\"", 
+        p[x\_3]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<p[\!\(x\_3\)] = \>\"", 
+        Together[p[x\_3]]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Theorem.  (Error Bounds for Newton Interpolation, Equally Spaced \
+Nodes)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox["  defined on",
+    FontFamily->"Times New Roman"],
+  " ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  StyleBox[",  which contains the equally spaced nodes  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_k = x\_0 + \ kh\)]],
+  ".  Additionally, assume that  ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "and the derivatives of",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  "up to the order  ",
+  Cell[BoxData[
+      \(n + 1\)]],
+  "  are continuous and bounded on the special subintervals  ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_1\)}], "]"}]]],
+  ", ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_2\)}], "]"}]]],
+  ", ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_3\)}], "]"}]]],
+  ", ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_4\)}], "]"}]]],
+  ", and ",
+  Cell[BoxData[
+      RowBox[{"[", 
+        RowBox[{\(x\_0\), 
+          StyleBox[",",
+            FontFamily->"Times New Roman",
+            FontSize->12,
+            FontWeight->"Plain",
+            FontSlant->"Plain",
+            FontColor->GrayLevel[0],
+            FontVariations->{"Underline"->False,
+            "StrikeThrough"->False}], \(x\_5\)}], "]"}]]],
+  ", respectively;  that is, \n\n\t",
+  Cell[BoxData[
+      RowBox[{"|", \(\(f\^\((n + 1)\)\) \((x)\)\), "|", " ", 
+        RowBox[{"\[LessEqual]", "  ", 
+          RowBox[{\(M\_\(n + 1\)\), "   ", 
+            StyleBox["for",
+              FontFamily->"Times New Roman"], "   ", \(x\_0\)}], "<", "x", 
+          "<", \(x\_n\)}]}]]],
+  ",  \n\nfor",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(n = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "3", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "4", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "5"}]]],
+  ".  The error terms corresponding to these three cases have the following \
+useful bounds on their magnitude  \n\n",
+  StyleBox["(i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_1\) \((x)\)\)\(|\)\(\(\[LessEqual]\)\(\ \ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_2\/8\) h\^2\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      RowBox[{"x", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_1\)}], "]"}]}]]],
+  ",  \n\n",
+  StyleBox["(ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_2\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_3\/\(9\ \@3\)\) h\^3\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      RowBox[{"x", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_2\)}], "]"}]}]]],
+  ",  \n\n",
+  StyleBox["(iii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_3\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_4\/24\) h\^4\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      RowBox[{"x", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_3\)}], "]"}]}]]],
+  ",  \n\n",
+  StyleBox["(iv).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_4\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\@\(4750 + 290\ \@145\)\/3000\ M\_5\ h\^5\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      RowBox[{"x", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_4\)}], "]"}]}]]],
+  ",  \n\n",
+  StyleBox["(v).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_5\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(\(10 + 7\ \@7\)\/1215\) \(M\_6\) h\^6\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      RowBox[{"x", "\[Element]", 
+        RowBox[{"[", 
+          RowBox[{\(x\_0\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\_5\)}], "]"}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NewtonPolyProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/NewtonPolyProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NewtonPolyProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Newton Interpolation Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://mathworld.wolfram.com/\
+NewtonsDividedDifferenceInterpolationFormula.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   To construct and evaluate the Newton polynomial of  degree  ",
+  Cell[BoxData[
+      \(\(\(\[LessEqual]\)\(n\)\)\)]],
+  "  that passes through the n+1 points  ",
+  Cell[BoxData[
+      \(\((x\_i, y\_i)\)\  = \ \((x\_i, f \((x\_i)\))\)\)]],
+  ",  for  ",
+  Cell[BoxData[
+      \(i = 0, 1, \[CenterEllipsis], n\)]],
+  "     \n\n\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\  = \ \(\(d\_\(0, 0\) + \(d\_\(1, 1\)\) \((x - 
+                  x\_0)\) + \(d\_\(2, 2\)\) \((x - x\_0)\)\ \((x - x\_1)\)\n
+          \t\t\ \ \ \ \ \ \ \ \(\(\(+d\_\(3, 3\)\) \((x - x\_0)\)\ \((x - 
+                    x\_1)\)\ \((x - x\_2)\)\)\(\ \ \)\(+\)\)\ \  ... \)\n
+          \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+d\_\(n, n\)\) \((x - x\_0)\)\ \((x - 
+                  x\_1)\)\ \((x - x\_2)\)\  ... \) \((x - 
+              x\_\(n - 1\))\)\)]],
+  "  \n\nwhere  \n\t",
+  Cell[BoxData[
+      \(d\_\(i, 0\) = \(y\_i\ \ \ for\ \ \ i = 0\), 1,  ... , n\)]],
+  "  \nand  \n\t",
+  Cell[BoxData[{
+      RowBox[{
+        RowBox[{\(d\_\(i, j\)\), "=", 
+          RowBox[{
+            
+            RowBox[{\(\(d\_\(i, j - 1\)\  - \ 
+                    d\_\(i - 1, j - 1\)\)\/\(x\_i\  - \ x\_\(i - j\)\)\), "   ",
+               
+              StyleBox["for",
+                FontFamily->"Times New Roman"], "  ", "i"}], "=", "1"}]}], 
+        ",", "2", ",", "...", ",", "n"}], "\n", 
+      RowBox[{"\t                                   ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{
+              StyleBox["and",
+                FontFamily->"Times New Roman"], "  ", "j"}], "=", "1"}], ",", 
+          "2", ",", "...", ",", "i"}]}]}]],
+  "  \n\n",
+  StyleBox["Remark 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Newton polynomials are created \"recursively.\" \n\n\t",
+  Cell[BoxData[
+      \(\(P\_n\) \((x)\)\  = \ \(\(P\_\(n - 1\)\) \((x)\)\  + \ \(d\_\(n, 
+                    n\)\) \((x - x\_0)\)\ \((x - x\_1)\)\ \((x - 
+                    x\_2)\)\  ... \) \((x - x\_\(n - 1\))\)\)]],
+  ".\n\n",
+  StyleBox["Remark 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s arrays are lists and the subscripts must start with  1  instead of  0."
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutine (Newton Polynomial).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(NewtonPoly[
+        XY_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[{d, j, i, n, X, 
+          Y}, \[IndentingNewLine]X\  = \ \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]Y\  = \ \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\
+\(\[RightDoubleBracket]\)\); \ \[IndentingNewLine]n\  = \ 
+          Length[XY] - 1; \ \[IndentingNewLine]d\  = \ 
+          Table["\<\>", {n + 1}, {n + 
+                1}\ ]; \ \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(All, 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+          Y\_\(\(\[LeftDoubleBracket]\)\(All\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ j = 1, \ 
+          j \[LessEqual] 
+            n, \ \(j++\), \[IndentingNewLine]\(For[\ i = j, \ 
+              i \[LessEqual] 
+                n, \ \(i++\), \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(i + 1, j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \(d\_\(\(\[LeftDoubleBracket]\)\(i + 1, j\)\(\
+\[RightDoubleBracket]\)\)\  - \ d\_\(\(\[LeftDoubleBracket]\)\(i, j\)\(\
+\[RightDoubleBracket]\)\)\)\/\(X\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ X\_\(\(\[LeftDoubleBracket]\)\(i + 1 - j\)\(\
+\[RightDoubleBracket]\)\)\)\ ];\)\ ]; \ \[IndentingNewLine]For[\ i = 0, \ 
+          i \[LessEqual] 
+            n, \ \(i++\), \[IndentingNewLine]p[i + 1, 
+              x_]\  = \ \[Product]\+\(j = 1\)\%i\((x - 
+                  X\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\)\
+\))\)\ ]; \ \[IndentingNewLine]Dtable = 
+          d; \[IndentingNewLine]Return[\ \ \[Sum]\+\(i = 0\)\%n d\_\(\(\
+\[LeftDoubleBracket]\)\(i + 1, i + 1\)\(\[RightDoubleBracket]\)\)\ p[i + 1, 
+                x]\ ];\ ]\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "\n",
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["   ",
+    FontWeight->"Bold"],
+  "Form the Newton polynomials of degree  n = 1,2, 3, 4, and 5  for the \
+function  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_n]\)\)]],
+  "  using equally spaced nodes selected from the following list  \n",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%5} = {{0, 1}, {1\/5, Cos[1\/5]}, {2\/5, 
+            Cos[2\/5]}, {3\/5, Cos[3\/5]}, {4\/5, Cos[4\/5]}, {1, 
+            Cos[1]}}\)]],
+  "  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Use the nodes  ",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%1}\)]],
+  " to construct the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_1[x]\)]],
+  ",  of degree n = 1, and compare it to the polynomial constructed with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = Table[{\(1.0\/5\) k, f[\(1.0\/5\) k]}, {k, 0, n}];\)\ \), "\n", 
+    \(\(p\_1[x_] = NewtonPoly[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.2].\>", "\<\n\
+\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", p\_1[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is the nested form of the Newton polynomial."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        InterpolatingPolynomial[XY, x]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr1 = 
+        Plot[{f[x], p\_1[x]}, {x, \(-1.5\), 2.5}, 
+          PlotStyle \[Rule] {Magenta, Red}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr1, dots, 
+        PlotRange \[Rule] {{\(-0.5\), 2.1}, {\(-0.5\), 1.05}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<Nodes = \>", XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.2].\>"];\)\ \), "\n\
+", 
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", p\_1[x]];\)\ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Use the nodes  ",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%2}\)]],
+  "  to construct the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2, and compare it to the polynomial constructed with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = Table[{\(1.0\/5\) k, f[\(1.0\/5\) k]}, {k, 0, n}];\)\ \), "\n", 
+    \(\(p\_2[x_] = NewtonPoly[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.4].\>", "\<\n\
+\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        Expand[p\_2[x]]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is the nested form of the Newton polynomial."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        InterpolatingPolynomial[XY, x]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Notice that  ",
+  Cell[BoxData[
+      \(P\_3[x]\)],
+    AspectRatioFixed->False],
+  "  is obtained from  ",
+  Cell[BoxData[
+      \(P\_2[x]\)],
+    AspectRatioFixed->False],
+  "  by adding one more term."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", p\_2[x]\ ];\)\ \ \)}], "Input"],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr2 = 
+        Plot[{f[x], p\_2[x]}, {x, \(-1.5\), 2.5}, 
+          PlotStyle \[Rule] {Magenta, Brown}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr2, dots, 
+        PlotRange \[Rule] {{\(-0.5\), 2.1}, {\(-0.5\), 1.05}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.4].\>", "\<\n\
+\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", p\_2[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Use the nodes  ",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%3}\)]],
+  "  to construct the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ",  of degree n = 3, and compare it to the polynomial constructed with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 3;\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[{\(1.0\/5\) k, f[\(1.0\/5\) k]}, {k, 0, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(p\_3[x_] = NewtonPoly[XY];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.6].\>", "\<\n\
+\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        p\_3[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        Expand[p\_3[x]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is the nested form of the Newton polynomial."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        InterpolatingPolynomial[XY, x]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Notice that  ",
+  Cell[BoxData[
+      \(P\_3[x]\)],
+    AspectRatioFixed->False],
+  "  is obtained from  ",
+  Cell[BoxData[
+      \(P\_2[x]\)],
+    AspectRatioFixed->False],
+  "  by adding one more term."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", p\_3[x]];\)\ \)}], "Input"],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr3 = 
+        Plot[{f[x], p\_3[x]}, {x, \(-1.5\), 2.5}, 
+          PlotStyle \[Rule] {Magenta, Cyan}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr3, dots, 
+        PlotRange \[Rule] {{\(-0.5\), 2.1}, {\(-0.5\), 1.05}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.6].\>", "\<\n\
+\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", p\_3[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (d).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Use the nodes  ",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%4}\)]],
+  "  to construct the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ",  of degree n = 4, and compare it to the polynomial constructed with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 4;\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = Table[{\(1.0\/5\) k, f[\(1.0\/5\) k]}, {k, 0, n}];\)\ \), "\n", 
+    \(\(p\_4[x_] = NewtonPoly[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.8].\>", "\<\n\
+\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        p\_4[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        Expand[p\_4[x]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is the nested form of the Newton polynomial."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        InterpolatingPolynomial[XY, x]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Notice that  ",
+  Cell[BoxData[
+      \(P\_4[x]\)],
+    AspectRatioFixed->False],
+  "  is obtained from  ",
+  Cell[BoxData[
+      \(P\_3[x]\)],
+    AspectRatioFixed->False],
+  "  by adding one more term."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        p\_3[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", p\_4[x]];\)\ \)}], "Input"],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr4 = 
+        Plot[{f[x], p\_4[x]}, {x, \(-1.5\), 2.5}, 
+          PlotStyle \[Rule] {Magenta, DarkGreen}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr4, dots, 
+        PlotRange \[Rule] {{\(-0.5\), 2.1}, {\(-0.5\), 1.05}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.8].\>", "\<\n\
+\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", p\_4[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (e).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Use the nodes  ",
+  Cell[BoxData[
+      \({{x\_k, y\_k}\_\(k = 0\)\%5}\)]],
+  "  to construct the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ",  of degree n = 5, and compare it to the polynomial constructed with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Clear[f, P5, Q5, x];\)\ \), "\n", 
+    \(\(f[x_] = Cos[x];\)\ \), "\n", 
+    \(\(n = 5;\)\ \), "\[IndentingNewLine]", 
+    \(\(XY = 
+        Table[{\(1.0\/5\) k, f[\(1.0\/5\) k]}, {k, 0, 
+            n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(p\_5[x_] = NewtonPoly[XY];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,0.8].\>", "\<\n\
+\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", 
+        p\_5[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", 
+        Expand[p\_5[x]]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "The polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is the nested form of the Newton polynomial."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", 
+        InterpolatingPolynomial[XY, x]\ ];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Notice that  ",
+  Cell[BoxData[
+      \(P\_5[x]\)],
+    AspectRatioFixed->False],
+  "  is obtained from  ",
+  Cell[BoxData[
+      \(P\_4[x]\)],
+    AspectRatioFixed->False],
+  "  by adding one more term."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        p\_3[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        p\_4[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", p\_5[x]];\)\)}], "Input"],
+
+Cell["\<\
+Now graph the function and polynomial, and interpolation nodes.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(gr5 = 
+        Plot[{f[x], p\_5[x]}, {x, \(-1.5\), 2.5}, 
+          PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\n", 
+    \(\(Show[gr5, dots, 
+        PlotRange \[Rule] {{\(-0.5\), 2.1}, {\(-0.5\), 1.05}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), "\n", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\n", 
+    \(\(Print["\<\n\>", "\<Nodes = \>", 
+        XY, "\<\n\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0,1.0].\>", "\<\n\
+\>"];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", p\_5[x]\ ];\)\ \ \)}], "Input",
+  AspectRatioFixed->False]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (f).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Show[gr1, gr2, gr3, gr4, gr5, dots, 
+        PlotRange \[Rule] {{\(-1.5\), 2.5}, {\(-1.2\), 1.2}}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \ \), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        p\_3[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        p\_4[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", p\_5[x]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (g).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Comparison with the Lagrange polynomial.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " \n"
+}], "Text"],
+
+Cell[TextData[{
+  "\tWhen we constructed the Lagrange polynomial of degree n = 5 through the \
+six equally spaced nodes we obtained  \n\n\t\t",
+  Cell[BoxData[{
+      \(P\_5[
+          x] = \ \(-\ 
+            26.0417\)\ \((\(-1\) + x)\)\ \((\(-0.8\) + x)\)\ \((\(-0.6\) + 
+              x)\)\ \((\(-0.4\) + x)\)\ \((\(-0.2\) + x)\)\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ 
+          127.613\)\ \((\(-1\) + x)\)\ \((\(-0.8\) + x)\)\ \((\(-0.6\) + 
+            x)\)\ \((\(-0.4\) + x)\)\ x\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(-\ 
+          239.86\)\ \((\(-1\) + x)\)\ \((\(-0.8\) + x)\)\ \((\(-0.6\) + 
+            x)\)\ \((\(-0.2\) + x)\)\ x\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ 
+          214.931\)\ \((\(-1\) + x)\)\ \((\(-0.8\) + x)\)\ \((\(-0.4\) + 
+            x)\)\ \((\(-0.2\) + x)\)\ x\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(-\ 
+          90.717\)\ \((\(-1\) + x)\)\ \((\(-0.6\) + x)\)\ \((\(-0.4\) + 
+            x)\)\ \((\(-0.2\) + x)\)\ x\), "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ 
+          14.0704\)\ \((\(-0.8\) + x)\)\ \((\(-0.6\) + x)\)\ \((\(-0.4\) + 
+            x)\)\ \((\(-0.2\) + x)\)\ x\)}]],
+  " \n \n which involves 30 multiplications and  possibly 35 additions or \
+subtractions (for this example 30 because the first node was 0)."
+}], "Text"],
+
+Cell[TextData[{
+  "\t The Newton polynomial is\n  \n\t\t",
+  Cell[BoxData[{
+      \(P\_5[x] = 
+        1\  - \ 0.09966711079379187`\ x\  - \ 
+          0.48840202099497687`\ \((\(-0.2`\) + x)\)\ x\  + \ 
+          0.04900763384891306`\ \((\(-0.4`\) + x)\)\ \((\(-0.2`\) + x)\)\ x\),
+     "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ 
+          0.03812245731240869`\)\ \((\(-0.6000000000000001`\) + 
+            x)\)\ \((\(-0.4`\) + x)\)\ \((\(-0.2`\) + x)\)\ x\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(-\ 
+          0.003962046706969001`\)\ \((\(-0.8`\) + 
+            x)\)\ \((\(-0.6000000000000001`\) + x)\)\ \((\(-0.4`\) + 
+            x)\)\ \((\(-0.2`\) + x)\)\ x\)}]],
+  " \nand it involves 15 multiplications and possibly 20 additions or \
+subtractions (for this example 15 because the first node was 0). "
+}], "Text"],
+
+Cell[TextData[{
+  "\t The Newton polynomial is\n  \n\t\t",
+  Cell[BoxData[{
+      \(P\_5[x] = 
+        1\  - \ 0.09966711079379187`\ x\  - \ 
+          0.48840202099497687`\ \((\(-0.2`\) + x)\)\ x\  + \ 
+          0.04900763384891306`\ \((\(-0.4`\) + x)\)\ \((\(-0.2`\) + x)\)\ x\),
+     "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(+\ 
+          0.03812245731240869`\)\ \((\(-0.6000000000000001`\) + 
+            x)\)\ \((\(-0.4`\) + x)\)\ \((\(-0.2`\) + x)\)\ x\), 
+    "\[IndentingNewLine]", 
+      \(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(-\ 
+          0.003962046706969001`\)\ \((\(-0.8`\) + 
+            x)\)\ \((\(-0.6000000000000001`\) + x)\)\ \((\(-0.4`\) + 
+            x)\)\ \((\(-0.2`\) + x)\)\ x\)}]],
+  " \nand it involves 15 multiplications and possibly 20 additions or \
+subtractions (for this example 15 because the first node was 0). "
+}], "Text"],
+
+Cell[TextData[{
+  "\tThe nested Newton polynomial obtained with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " procedure is \n\n\t\t",
+  Cell[BoxData[
+      \(p\_5[x]\  = 
+        1 + \((\(-0.09966711079379187`\) + \((\(-0.48840202099497687`\) + \((\
+\(\(0.04900763384891306`\)\(\[InvisibleSpace]\)\) + \
+\((\(\(0.038122457312408806`\)\(\[InvisibleSpace]\)\) - 
+                                  0.003962046706969931`\ \((\(-0.8`\) + 
+                                        x)\))\)\ \((\(-0.6000000000000001`\) \
++ x)\))\)\ \((\(-0.4`\) + x)\))\)\ \((\(-0.2`\) + x)\))\)\ x\)]],
+  "\n\nand it involves 5 multiplications and possibly 10 additions or \
+subtractions ( for this example 9 because the first node was 0)."
+}], "Text"],
+
+Cell[TextData[{
+  "In general the nth degree Lagrange polynomial requires  ",
+  Cell[BoxData[
+      \(n \((n\  + \ 1)\)\)]],
+  "  multiplications and  ",
+  Cell[BoxData[
+      \(n \((n\  + \ 2)\)\)]],
+  " additions and subtractions. \n\nThe nth degree Newton polynomial requires \
+ ",
+  Cell[BoxData[
+      \(\(n \((n\  + \ 1)\)\)\/2\)]],
+  "  multiplications and  ",
+  Cell[BoxData[
+      \(\(n \((n\  + \ 3)\)\)\/2\)]],
+  " additions and subtractions. \n\nAnd the nth degree ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " ",
+  StyleBox["InterpolatingPolynomial",
+    FontFamily->"Courier New"],
+  " requires ",
+  Cell[BoxData[
+      \(n\)]],
+  " multiplications and  ",
+  Cell[BoxData[
+      \(2  n\)]],
+  " additions and subtractions. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Observation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Consider the Newton polynomial  ",
+  Cell[BoxData[
+      \(P\_5[x]\)],
+    AspectRatioFixed->False],
+  "  and Lagrange polynomial of degree 5 that use six equally spaced nodes in \
+the interval  [0,1].  Are they the same ?  The answer is \"yes\"  even though \
+there were two \"routes\" for constructing the polynomial.  It is a fact that \
+the polynomial of degree n that passes through n+1 points is \"unique.\"  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  StyleBox["Error Analysis.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  Investigate the error for the Newton polynomial approximations in \
+Example 1."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Investigate the error over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_1]\)\  = \ \([0.0, \ 0.2]\)\)]],
+  "  for the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_1[x]\)]],
+  ",  of degree n = 1."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e\_1[x_] = f[x] - p\_1[x];\)\), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e\_1[x]\), {x, 0.1}];\)\), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1};\)\), "\[IndentingNewLine]", 
+    \(\(maxerror1 = \ Max[Abs[{max1}]];\)\), "\[IndentingNewLine]", 
+    \(\(ge1 = 
+        Plot[{max1, e\_1[x]}, {x, 0.0, 0.2}, 
+          PlotRange \[Rule] {{0, 1}, {0, 0.005}}, 
+          PlotStyle \[Rule] {Cyan, Blue}];\)\), "\n", 
+    \(\(Print["\< f[x] = \>", f[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_1\)[x] = \>\"", 
+        p\_1[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0, 0.2].\>"];\)\), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_1\)[x] = \
+f[x]-\!\(p\_1\)[x]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_1\)[x] is \>\"", 
+        extrema\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| \[LessEqual] \>\"", 
+        maxerror1\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use formula(i).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_1\) \((x)\)\)\(|\)\(\(\[LessEqual]\)\(\ \ \)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_2\/8\) h\^2\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_1]\)\  = \ \([0.0, \ 0.2]\)\)]],
+  ",  and find the error bound for this example. "
+}], "Text"],
+
+Cell[BoxData[{\(h = 1\/5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{\(M\_2\), " ", "=", 
+        RowBox[{"Abs", "[", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((2)\),
+                Derivative],
+              MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((2)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], " ", 
+          ",", \({x, 0, 0.2}\), 
+          ",", \(PlotRange \[Rule] {{0, 1}, {\(-1\), 0}}\), 
+          ",", \(PlotStyle \[Rule] Green\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\< \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((2)\),
+Derivative],
+MultilineFunction->None]\)[x]  = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((2)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<|\!\(f\^\((2)\)\)(x)| \
+\[LessEqual]  \!\(M\_2\) = \>\"", 
+        M\_2];\), "\[IndentingNewLine]", \(Print["\<h = \>", 
+        h];\), "\[IndentingNewLine]", \(Print[\*"\"\<The remainder term \!\(R\
+\_2\)(x) has the form\>\""];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<|\!\(R\_2\)(x)| \[LessEqual] \>\"", \
+\*"\"\<\!\(M\_2\/8\)\!\(h\^2\) = \>\"", \(M\_2\/8\) h\^2, "\< = \>", 
+        N[\(M\_2\/8\) h\^2]];\)}], "Input"],
+
+Cell[TextData[{
+  "Thus,  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_2\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\(0.005`\)\)\)\)]],
+  "  is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_1]\)\  = \ \([0.0, \ 0.2]\)\)]],
+  ",  which is a little bit larger than the maximum error  ",
+  StyleBox["0.00497089",
+    FontFamily->"Courier New"],
+  ".  After all, it is an error bound.  "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Investigate the error over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_2]\)\  = \ \([0.0, \ 0.4]\)\)]],
+  "  for the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_2[x]\)]],
+  ",  of degree n = 2."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e\_2[x_] = f[x] - p\_2[x];\)\), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e\_2[x]\), {x, 0.1}];\)\), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[e\_2[x], {x, 0.3}];\)\), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1};\)\), "\[IndentingNewLine]", 
+    \(\(maxerror2\  = \ Max[Abs[{max1, min1}]];\)\), "\[IndentingNewLine]", 
+    \(\(ge2 = 
+        Plot[{max1, min1, e\_2[x]}, {x, 0.0, 0.4}, 
+          PlotRange \[Rule] {{0, 1}, Automatic}, 
+          PlotStyle \[Rule] {Cyan, Cyan, Blue}];\)\), "\n", 
+    \(\(Print["\< f[x] = \>", f[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_2\)[x] = \>\"", 
+        p\_2[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0, 0.4].\>"];\)\), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_2\)[x] = \
+f[x]-\!\(p\_2\)[x]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_2\)[x] are \>\"", 
+        extrema\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_2\)[x]| \[LessEqual] \>\"", 
+        maxerror2\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use formula (ii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_2\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_3\/\(9\ \@3\)\) h\^3\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_2]\)\  = \ \([0.0, \ 0.4]\)\)]],
+  ",  and find the error bound for this example. "
+}], "Text"],
+
+Cell[BoxData[{\(h = 1\/5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{\(M\_3\), " ", "=", 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((3)\),
+              Derivative],
+            MultilineFunction->None], "[", \(2\/5\), "]"}]}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((3)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], " ", 
+          ",", \({x, 0, 0.4}\), ",", \(PlotRange \[Rule] {{0, 1}, {0, 1}}\), 
+          ",", \(PlotStyle \[Rule] Green\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\< \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((3)\),
+Derivative],
+MultilineFunction->None]\)[x]  = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((3)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print[\*"\"\<|\!\(f\^\((3)\)\)(x)| \
+\[LessEqual]  \!\(M\_3\) = \>\"", M\_3, "\< = \>", 
+        N[M\_3]];\), "\[IndentingNewLine]", \(Print["\<h = \>", 
+        h];\), "\[IndentingNewLine]", \(Print[\*"\"\<The remainder term \!\(R\
+\_2\)(x) has the form\>\""];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<|\!\(R\_2\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(M\_3\/\(9\\\ \
+\@3\)\)\!\(h\^3\) = \>\"", \(M\_3\/\(9\ \@3\)\) h\^3, "\< = \>", 
+        N[\(M\_3\/\(9\ \@3\)\) h\^3]];\)}], "Input"],
+
+Cell[TextData[{
+  "Thus,  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_2\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\(0.00019984958645269084`\)\)\)\)]],
+  "  is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_2]\)\  = \ \([0.0, \ 0.4]\)\)]],
+  ",  which is a little bit larger than the maximum error  ",
+  StyleBox["0.000116469",
+    FontFamily->"Courier New"],
+  ".  After all, it is an error bound.  "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Investigate the error over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_3]\)\  = \ \([0.0, \ 0.6]\)\)]],
+  "  for the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_3[x]\)]],
+  ",  of degree n = 3."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e\_3[x_] = f[x] - p\_3[x];\)\), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e\_3[x]\), {x, 0.3}];\)\), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[e\_3[x], {x, 0.1}];\)\), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e\_3[x], {x, 0.5}];\)\), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2};\)\), "\[IndentingNewLine]", 
+    \(\(maxerror3\  = \ 
+        Max[Abs[{min1, max1, min2}]];\)\), "\[IndentingNewLine]", 
+    \(\(ge3 = 
+        Plot[{min1, max1, min2, e\_3[x]}, {x, 0.0, 0.6}, 
+          PlotRange \[Rule] {{0, 1}, Automatic}, 
+          PlotStyle \[Rule] {Cyan, Cyan, Cyan, Blue}];\)\), "\n", 
+    \(\(Print["\< f[x] = \>", f[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_3\)[x] = \>\"", 
+        p\_3[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0, 0.6].\>"];\)\), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_3\)[x] = \
+f[x]-\!\(p\_3\)[x]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_3\)[x] are \>\"", 
+        extrema\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_3\)[x]| \[LessEqual] \>\"", 
+        maxerror3\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use formula (iii).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_3\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(M\_4\/24\) h\^4\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_3]\)\  = \ \([0.0, \ 0.6]\)\)]],
+  ",  and find the error bound for this example.  "
+}], "Text"],
+
+Cell[BoxData[{\(h = 1\/5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{\(M\_4\), " ", "=", 
+        RowBox[{
+          SuperscriptBox["f", 
+            TagBox[\((4)\),
+              Derivative],
+            MultilineFunction->None], "[", "0", "]"}]}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((4)\),
+                Derivative],
+              MultilineFunction->None], "[", "x", "]"}], " ", 
+          ",", \({x, 0, 0.6}\), ",", \(PlotRange \[Rule] {{0, 1}, {0, 1}}\), 
+          ",", \(PlotStyle \[Rule] Green\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\< \!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((4)\),
+Derivative],
+MultilineFunction->None]\)[x]  = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((4)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], "]"}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<|\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((4)\),
+Derivative],
+MultilineFunction->None]\)[x]| \[LessEqual]  \!\(M\_4\) = \>\"", 
+          ",", \(M\_4\), ",", "\"\< = \>\"", ",", \(N[M\_4]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<h = \>", 
+        h];\), "\[IndentingNewLine]", \(Print[\*"\"\<The remainder term \!\(R\
+\_3\)(x) has the form\>\""];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<|\!\(R\_3\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(M\_4\/24\)\!\(h\
+\^4\) = \>\"", \(M\_4\/24\) h\^4, "\< = \>", 
+        N[\(M\_4\/24\) h\^4]];\)}], "Input"],
+
+Cell[TextData[{
+  "Thus,  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_3\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \
+\)\(0.00006666666666666667`\)\)\)\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_3]\)\  = \ \([0.0, \ 0.6]\)\)]],
+  ",  which is a little bit larger than the maximum error  ",
+  StyleBox["0.0000642481",
+    FontFamily->"Courier New"],
+  ".  After all, it is an error bound.  "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (d).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Investigate the error over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_4]\)\  = \ \([0.0, \ 0.8]\)\)]],
+  "  for the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_4[x]\)]],
+  ",  of degree n = 4."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e\_4[x_] = f[x] - p\_4[x];\)\), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e\_4[x]\), {x, 0.3}];\)\), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e\_4[x]\), {x, 0.7}];\)\), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[e\_4[x], {x, 0.1}];\)\), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e\_4[x], {x, 0.5}];\)\), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {min1, max1, min2, max2};\)\), "\[IndentingNewLine]", 
+    \(\(maxerror4\  = \ 
+        Max[Abs[{min1, max1, min2, max2}]];\)\), "\[IndentingNewLine]", 
+    \(\(ge4 = 
+        Plot[{max1, max2, min1, min2, e\_4[x]}, {x, 0.0, 0.8}, 
+          PlotRange \[Rule] {{0, 1}, Automatic}, 
+          PlotStyle \[Rule] {Cyan, Cyan, Cyan, Cyan, Blue}];\)\), "\n", 
+    \(\(Print["\< f[x] = \>", f[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_4\)[x] = \>\"", 
+        p\_4[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0, 0.8].\>"];\)\), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_4\)[x] = \
+f[x]-\!\(p\_4\)[x]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_4\)[x] are \>\"", 
+        extrema\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_4\)[x]| \[LessEqual] \>\"", 
+        maxerror4\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use formula (iv).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_4\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\@\(4750 + 290\ \@145\)\/3000\ M\_5\ h\^5\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_4]\)\  = \ \([0.0, \ 0.8]\)\)]],
+  ",  and find the error bound for this example. "
+}], "Text"],
+
+Cell[BoxData[{\(h = 1\/5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{\(M\_5\), " ", "=", 
+        RowBox[{"Abs", "[", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((5)\),
+                Derivative],
+              MultilineFunction->None], "[", \(4\/5\), "]"}], "]"}]}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{"Abs", "[", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((5)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}], "]"}], " ", 
+          ",", \({x, 0, 0.8}\), ",", \(PlotRange \[Rule] {{0, 1}, {0, 1}}\), 
+          ",", \(PlotStyle \[Rule] Green\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<|\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((5)\),
+Derivative],
+MultilineFunction->None]\)[x]| \[LessEqual]  \!\(M\_5\) = \>\"", 
+          ",", \(M\_5\), ",", "\"\< = \>\"", ",", \(N[M\_5]\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<h = \>", 
+        h];\), "\[IndentingNewLine]", \(Print[\*"\"\<The remainder term \!\(R\
+\_4\)(x) has the form\>\""];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<|\!\(R\_4\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(\@\(4750 + \
+290\\\ \@145\)\/3000\) \!\(M\_5\) \!\(h\^5\) = \>\"", \@\(4750 + 290\ \@145\)\
+\/3000\ M\_5\ h\^5, "\< = \>", 
+        N[\@\(4750 + 290\ \@145\)\/3000\ M\_5\ h\^5]];\)}], "Input"],
+
+Cell[TextData[{
+  "Thus,  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_4\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \ \
+\)\(6.94675\[Times]10\^\(-6\)\)\)\)\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_4]\)\  = \ \([0.0, \ 0.8]\)\)]],
+  ",  which is a little bit larger than the maximum error  ",
+  Cell[BoxData[
+      \(4.23054\[Times]10\^\(-6\)\)]],
+  ".  After all, it is an error bound.  "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (e).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Investigate the error over the interval  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_5]\)\  = \ \([0.0, \ 1.0]\)\)]],
+  "  for the Newton interpolation polynomial  ",
+  Cell[BoxData[
+      \(P\_5[x]\)]],
+  ",  of degree n = 5."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(e5[x_] = f[x] - p\_5[x];\)\), "\[IndentingNewLine]", 
+    \(\(extrema1\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.1}];\)\), "\[IndentingNewLine]", 
+    \(\(max1 = \(-extrema1\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema2\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.5}];\)\), "\[IndentingNewLine]", 
+    \(\(max2 = \(-extrema2\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema3\  = \ 
+        FindMinimum[\(-e5[x]\), {x, 0.9}];\)\), "\[IndentingNewLine]", 
+    \(\(max3 = \(-extrema3\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)\);\)\), "\[IndentingNewLine]", 
+    \(\(extrema4\  = \ 
+        FindMinimum[e5[x], {x, 0.3}];\)\), "\[IndentingNewLine]", 
+    \(\(min1 = 
+        extrema4\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema5\  = \ 
+        FindMinimum[e5[x], {x, 0.7}];\)\), "\[IndentingNewLine]", 
+    \(\(min2 = 
+        extrema5\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\);\
+\)\), "\[IndentingNewLine]", 
+    \(\(extrema\  = \ {max1, min1, max2, min2, 
+          max3};\)\), "\[IndentingNewLine]", 
+    \(\(maxerror5\  = \ 
+        Max[Abs[{max1, min1, max2, min2, 
+              max3}]];\)\), "\[IndentingNewLine]", 
+    \(\(ge5 = 
+        Plot[{max1, max2, max3, min1, min2, e5[x]}, {x, 0.0, 1.0}, 
+          PlotRange \[Rule] {{0, 1}, Automatic}, 
+          PlotStyle \[Rule] {Cyan, Cyan, Cyan, Cyan, Cyan, 
+              Blue}];\)\), "\n", 
+    \(\(Print["\< f[x] = \>", f[x]];\)\), "\n", 
+    \(\(Print[\*"\"\<\!\(p\_5\)[x] = \>\"", 
+        p\_5[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The interval for interpolation is [0.0, 1.0].\>"];\)\), "\n\
+", 
+    \(\(Print[\*"\"\<Graph of the error \!\(e\_5\)[x] = \
+f[x]-\!\(p\_5\)[x]\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Extrema for \!\(e\_5\)[x] are \>\"", 
+        extrema\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_5\)[x]| \[LessEqual] \>\"", 
+        maxerror5\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Use formula (v).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\t",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_5\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \
+\)\)\)\)]],
+  Cell[BoxData[
+      \(\(\(10 + 7\ \@7\)\/1215\) \(M\_6\) h\^6\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_5]\)\  = \ \([0.0, \ 1.0]\)\)]],
+  ",  and find the error bound for this example. "
+}], "Text"],
+
+Cell[BoxData[{\(h = 1\/5;\), "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{\(M\_6\), " ", "=", 
+        RowBox[{"Abs", "[", 
+          RowBox[{
+            SuperscriptBox["f", 
+              TagBox[\((6)\),
+                Derivative],
+              MultilineFunction->None], "[", "0", "]"}], "]"}]}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Plot", "[", 
+        RowBox[{
+          RowBox[{"Abs", "[", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((6)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}], "]"}], " ", 
+          ",", \({x, 0, 1}\), ",", \(PlotRange \[Rule] {{0, 1}, {0, 1}}\), 
+          ",", \(PlotStyle \[Rule] Green\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<|\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((6)\),
+Derivative],
+MultilineFunction->None]\)[x]| = \>\"", ",", 
+            RowBox[{"Abs", "[", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((6)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "x", "]"}], "]"}]}], "]"}], 
+        ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{"Print", "[", 
+        RowBox[{"\"\<|\!\(
+\*SuperscriptBox[\(f\), 
+TagBox[\((6)\),
+Derivative],
+MultilineFunction->None]\)[x]| \[LessEqual]  \!\(M\_6\) = \>\"", 
+          ",", \(M\_6\)}], "]"}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<h = \>", 
+        h];\), "\[IndentingNewLine]", \(Print[\*"\"\<The remainder term \!\(R\
+\_5\)(x) has the form\>\""];\), "\[IndentingNewLine]", \
+\(Print[\*"\"\<|\!\(R\_5\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(\(10 + 7 \@ 7\)\
+\/1215\)\!\(M\_6\) \!\(h\^6\) = \>\"", \(\(10 + 7\ \@7\)\/1215\) \(M\_6\) 
+          h\^6, "\< = \>", 
+        N[\(\(10 + 7\ \@7\)\/1215\) \(M\_6\) h\^6]];\)}], "Input"],
+
+Cell[TextData[{
+  "Thus,  ",
+  Cell[BoxData[
+      \(\(\(|\)\(\(R\_5\) \((x)\)\)\(|\)\(\ \)\(\(\[LessEqual]\)\(\ \ \ \
+\)\(1.5023017179892483`*^-6\)\)\)\)]],
+  "   is valid for  ",
+  Cell[BoxData[
+      \(x \[Element] \([x\_0, x\_5]\)\  = \ \([0.0, \ 1.0]\)\)]],
+  ",  which is a little bit larger than the maximum error  ",
+  Cell[BoxData[
+      \(1.34999`*^-6\)]],
+  ".  After all, it is an error bound.  "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Summary of the maximum error and the error bounds over the intervals  ",
+  Cell[BoxData[
+      \(\([x\_0, x\_k]\)\)]],
+  "  for the Newton polynomials in Example 2.\n",
+  StyleBox["3 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 0.2\)\ {\(|\)\(f[x] - 
+              P\_1[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["3 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 0.4\)\ {\(|\)\(f[x] - 
+              P\_2[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["3 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 0.6\)\ {\(|\)\(f[x] - 
+              P\_3[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["3 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 0.8\)\ {\(|\)\(f[x] - 
+              P\_4[x]\)\(|\)}\)]],
+  ".  \n",
+  StyleBox["3 (e).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find  ",
+  Cell[BoxData[
+      \(max\+\(o\  \[LessEqual] \ x\  \[LessEqual] \ 1.0\)\ {\(|\)\(f[x] - 
+              P\_5[x]\)\(|\)}\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3. ",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(Show[ge1]; Show[ge2]; Show[ge3]; Show[ge4]; 
+    Show[ge5];\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<For \!\(p\_1\)[x] over the interval [0,1] we have  \
+|\!\(e\_1\)[x]| \[LessEqual] \>\"", 
+        maxerror1\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<For \!\(p\_2\)[x] over the interval [0,1] we have  \
+|\!\(e\_2\)[x]| \[LessEqual] \>\"", 
+        maxerror2\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<For \!\(p\_3\)[x] over the interval [0,1] we have  \
+|\!\(e\_3\)[x]| \[LessEqual] \>\"", 
+        maxerror3\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<For \!\(p\_4\)[x] over the interval [0,1] we have  \
+|\!\(e\_4\)[x]| \[LessEqual] \>\"", 
+        maxerror4\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<For \!\(p\_5\)[x] over the interval [0,1] we have  \
+|\!\(e\_5\)[x]| \[LessEqual] \>\"", maxerror5\ ];\)\ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<The remainder term \!\(R\_n\)(x) has the \
+form\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(R\_2\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(M\_2\/8\)\
+\!\(h\^2\) = \>\"", \(M\_2\/8\) 
+          h\^2, \*"\"\<(\!\(1\/5\)\!\(\()\^2\)\)\>\"", "\< = \>", 
+        N[\(M\_2\/8\) \((1\/5)\)\^2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(R\_2\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(M\_3\/\(9\
+\\\ \@3\)\) \!\(h\^3\) = \>\"", 
+        M\_3\/\(9\ \@3\), \*"\"\<(\!\(1\/5\)\!\(\()\^3\)\)\>\"", "\< = \>", 
+        N[\(M\_3\/\(9\ \@3\)\) \((1\/5)\)\^3]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(R\_3\)(x)| \[LessEqual] \>\"", \
+\*"\"\<\!\(M\_4\/24\) \!\(h\^4\) = \>\"", 
+        M\_4\/24, \*"\"\<(\!\(1\/5\)\!\(\()\^4\)\)\>\"", "\< = \>", 
+        N[\(M\_4\/24\) \((1\/5)\)\^4]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(R\_4\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(\@\(4750 \
++ 290\\\ \@145\)\/3000\) \!\(M\_5\) \!\(h\^5\) = \>\"", \@\(4750 + 290\ \@145\
+\)\/3000\ M\_5\ , \*"\"\<(\!\(1\/5\)\!\(\()\^5\)\)\>\"", "\< = \>", 
+        N[\@\(4750 + 290\ \@145\)\/3000\ M\_5\ \((1\/5)\)\^5]];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(R\_5\)(x)| \[LessEqual] \>\"", \*"\"\<\!\(\(10 + \
+7\\\ \@7\)\/1215\)\!\(M\_6\) \!\(h\^6\) = \>\"", \(\(10 + 7\ \@7\)\/1215\) 
+          M\_6, \*"\"\<(\!\(1\/5\)\!\(\()\^6\)\)\>\"", "\< = \>", 
+        N[\(\(10 + 7\ \@7\)\/1215\) \(M\_6\) \((1\/5)\)\^6]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Print["\<The maximum error is less than the error bound.\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_1\)[x]| \[LessEqual] \>\"", 
+        maxerror1\ , "\<   \[LessEqual] \>", 
+        N[\(M\_2\/8\) \((1\/5)\)\^2]];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_2\)[x]| \[LessEqual] \>\"", 
+        maxerror2\ , "\<   \[LessEqual] \>", 
+        N[\(M\_3\/\(9\ \@3\)\) \((1\/5)\)\^3]];\)\ \ \), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_3\)[x]| \[LessEqual] \>\"", 
+        maxerror3\ , "\<  \[LessEqual] \>", 
+        N[\(M\_4\/24\) \((1\/5)\)\^4]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_4\)[x]| \[LessEqual] \>\"", 
+        maxerror4, "\< \[LessEqual] \>", 
+        N[\@\(4750 + 290\ \@145\)\/3000\ M\_5\ \((1\/5)\)\^5]];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|\!\(e\_5\)[x]| \[LessEqual] \>\"", 
+        maxerror5, "\< \[LessEqual] \>", 
+        N[\(\(10 + 7\ \@7\)\/1215\) \(M\_6\) \((1\/5)\)\^6]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Application to number theory",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  ". \n",
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the formula for the sum of the first  n  integers.\n",
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the formula for the sum of the squares of the first  n integers.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the formula for the sum of the first  n  integers."
+}], "Text"],
+
+Cell[BoxData[{
+    \(xy = {{1, 1}, {2, 3}, {3, 6}, {4, 10}, {5, 15}}\ \), "\n", 
+    \(\(P[x_] = NewtonPoly[xy];\)\ \), "\n", 
+    \(\(Print["\<P[x] = \>", P[x]];\)\ \), "\n", 
+    \(\(Print["\<P[x] = \>", Together[P[x]]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Notice that the divided difference table has zeros for the 2nd and higher \
+order differences.  \
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(TableForm[Dtable]\)\(\ \)\)\)], "Input"],
+
+Cell["Thus the formula for the sum of the first n integers is:\t\t", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[n] = \>", Together[P[n]]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare this formula with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s knowledge.\t"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(i = 1\)\%n\)\(i\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the formula for the sum of the squares of the first  n  integers \
+is:"
+}], "Text"],
+
+Cell[BoxData[{
+    \(xy = {{0, 0}, {1, 1}, {2, 5}, {3, 14}, {4, 30}, {5, 55}}\ \), "\n", 
+    \(\(P[x_] = NewtonPoly[xy];\)\ \), "\n", 
+    \(\(Print["\<P[x] = \>", P[x]];\)\ \), "\n", 
+    \(\(Print["\<P[x] = \>", Together[P[x]]\ ];\)\ \)}], "Input"],
+
+Cell["\<\
+Notice that the divided difference table has zeros for the 3rd and higher \
+order differences.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(\(TableForm[Dtable]\)\(\ \)\)\)], "Input"],
+
+Cell["\<\
+Thus the formula for the sum of the squares of the first  n  integers is:\t\t\
+\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[n];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<P[n] = \>", Together[P[n]]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[
+    \(Factor[Together[\ P[n]\ ]\ ]\)], "Input"],
+
+Cell[TextData[{
+  "Compare this formula with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s knowledge.\t"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(\[Sum]\+\(i = 1\)\%n\)\(i\^2\)\(\ \)\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for Newton \
+Polynomials.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    \(\(NewtonPoly[
+          XY_] := \[IndentingNewLine]Module[{d, j, k, n, X, 
+            Y}, \[IndentingNewLine]X\  = \ \(Transpose[XY]\)\_\(\(\
+\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\); \[IndentingNewLine]Y\ \
+ = \ \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\[RightDoubleBracket]\
+\)\); \[IndentingNewLine]n\  = \ Length[XY] - 1; \[IndentingNewLine]d\  = \ 
+            Table["\<\>", {n + 1}, {n + 
+                  1}\ ]; \[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(\
+All, 1\)\(\[RightDoubleBracket]\)\)\  = \ 
+            Y\_\(\(\[LeftDoubleBracket]\)\(All\)\(\[RightDoubleBracket]\)\); \
+\[IndentingNewLine]For[\ j = 1, \ 
+            j \[LessEqual] 
+              n, \ \(j++\), \[IndentingNewLine]\(For[\ k = j, \ 
+                k \[LessEqual] 
+                  n, \ \(k++\), \
+\[IndentingNewLine]d\_\(\(\[LeftDoubleBracket]\)\(k + 1, j + 1\)\(\
+\[RightDoubleBracket]\)\)\  = \ \(d\_\(\(\[LeftDoubleBracket]\)\(k + 1, j\)\(\
+\[RightDoubleBracket]\)\)\  - \ d\_\(\(\[LeftDoubleBracket]\)\(k, j\)\(\
+\[RightDoubleBracket]\)\)\)\/\(X\_\(\(\[LeftDoubleBracket]\)\(k + 1\)\(\
+\[RightDoubleBracket]\)\)\  - \ X\_\(\(\[LeftDoubleBracket]\)\(k + 1 - j\)\(\
+\[RightDoubleBracket]\)\)\)\ ];\)\ ]; \[IndentingNewLine]For[\ k = 0, \ 
+            k \[LessEqual] 
+              n, \ \(k++\), \[IndentingNewLine]p[k + 1, 
+                x_]\  = \ \[Product]\+\(j = 1\)\%k\((x - 
+                    X\_\(\(\[LeftDoubleBracket]\)\(j\)\(\[RightDoubleBracket]\
+\)\))\)\ ]; \[IndentingNewLine]Return[\ \ \[Sum]\+\(k = 0\)\%n d\_\(\(\
+\[LeftDoubleBracket]\)\(k + 1, k + 1\)\(\[RightDoubleBracket]\)\)\ p[k + 1, 
+                  x]\ ];\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \@x\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ", ",
+  Cell[BoxData[
+      \(\([0, 8]\)\)]],
+  ", and ",
+  Cell[BoxData[
+      \(\([0, 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 2.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \[IndentingNewLine]Print["\
+\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 4.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange04/Lagrangedd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange04/Lagrangedd.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 4;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 8.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 8.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 5.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange05/Lagrangeee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange05/Lagrangeee.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5 (c).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \@x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 5;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 10.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.0; \[IndentingNewLine]bb = 10.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[0, 10, 2], Range[0, 4, 1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 6.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange06/Lagrangeff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange06/Lagrangeff.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\@\(1 - x\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1.5\), 0.95]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\@\(1 - x\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 8.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 
+        5, \(n++\), \[IndentingNewLine]aa = \(-1.5\); \[IndentingNewLine]bb = 
+        0.95; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, \(-1.5\),  .9999}, PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 5, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 7.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange07/Lagrangegg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange07/Lagrangegg.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/\(1\  + \ 10  x\^2\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/\(1 + 10  x\^2\);\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-1.0\); \[IndentingNewLine]bb = 
+        1.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, \(-1.5\), 1.5}, 
+          PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], Range[0, 1, 0.5]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 8.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange08/Lagrangehh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange08/Lagrangehh.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Log[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([0.02, 2]\)\)]],
+  ", and ",
+  Cell[BoxData[
+      \(\([0.02, 4]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 1;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.02; \[IndentingNewLine]bb = 2.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-5\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 9.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange09/Lagrangeii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange09/Lagrangeii.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Log[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 2;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-0.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 4.1;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-6.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]aa = 
+        0.02; \[IndentingNewLine]bb = 4.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, 0.001, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-0.5\), b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-0.5\), 4.0, 0.5], Range[\(-6\), 0, 1]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 10.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange10/Lagrangejj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange10/Lagrangejj.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Sin[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Sin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 2, 
+      i \[LessEqual] 6, \(i++\), \[IndentingNewLine]n = 
+        2  i + 4; \[IndentingNewLine]XY = 
+        N[Table[{a + \(\(b - a\)\/n\) k, f[a + \(\(b - a\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", 
+        f[x], "\<\n\>", "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 12.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange12/Lagrangell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange12/Lagrangell.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3\) \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 3  \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.3\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 3, 
+      i \[LessEqual] 6, \(i++\), \[IndentingNewLine]n = 
+        2  i; \[IndentingNewLine]XY = 
+        N[Table[{a + \(\(b - a\)\/n\) k, f[a + \(\(b - a\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\) \[Pi], 3  \[Pi], \[Pi]], 
+              Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 13.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange13/Lagrangemm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange13/Lagrangemm.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 11.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = Tan[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1.45\), 1.45]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 11.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Tan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-\[Pi]\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \[Pi];\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-10\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 10;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.45\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.45;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-1.45\); \[IndentingNewLine]bb \
+= 1.45; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \[IndentingNewLine]graph1 = 
+        Plot[f[x], {x, a, \(-\[Pi]\)\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[f[x], {x, \(-\[Pi]\)\/2, \[Pi]\/2}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph3 = 
+        Plot[f[x], {x, \[Pi]\/2, b}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph4 = 
+        Plot[P[x], {x, \(-\[Pi]\), \[Pi]}, PlotStyle \[Rule] {Blue}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, graph3, graph4, Cdot, Rends, 
+        PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-\[Pi]\), \[Pi], \[Pi]\/2], 
+            Range[\(-6\), 10, 2]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 14.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange14/Lagrangenn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange14/Lagrangenn.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 12.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \[ExponentialE]\^x\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-5\), 5]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 12.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = \[ExponentialE]\^x;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 20.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-5.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 5.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 2, 
+      n \[LessEqual] 5, \(n++\), \[IndentingNewLine]XY = 
+        N[Table[{a + \(\(b - a\)\/n\) k, f[a + \(\(b - a\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-2\), 3, 1], Range[0, 20, 5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]figure = 
+        Show[graph1, Cdot, Rends, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 15.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange15/Lagrangeoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange15/Lagrangeoo.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 13.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = ArcTan[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-2\), 2]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 13.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcTan[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-1.6\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.6;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-2.0\); \[IndentingNewLine]bb = 
+        2.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \ \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+              Range[\(-\[Pi]\)\/4, \[Pi]\/4, \[Pi]\/4]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 18.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange18/Lagrangerr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange18/Lagrangerr.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 14.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = ArcSin[x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-1\), 1]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 14.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = ArcSin[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-1.5\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 1.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-2.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 2.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-1.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 3, 
+      n \[LessEqual] 
+        6, \(n++\), \[IndentingNewLine]aa = \(-1.0\); \[IndentingNewLine]bb = 
+        1.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \ \[IndentingNewLine]graph1 = 
+        Plot[{f[x], P[x]}, {x, \(-0.9999\), 0.9999}, 
+          PlotStyle \[Rule] Magenta, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]graph2 = 
+        Plot[P[x], {x, \(-1.5\), 1.5}, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph1, 
+        graph2, Cdot, Rends, PlotRange \[Rule] {{a, b}, {c, d}}, 
+        Ticks \[Rule] {Range[\(-1.5\), 1.5, 0.5], 
+            Range[\(-\[Pi]\)\/2, \[Pi]\/2, \[Pi]\/4]}, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \[IndentingNewLine]Show[
+        graph, Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        P[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 19.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange19/Lagrangess.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange19/Lagrangess.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 15.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = BesselJ[0, x]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-10\), 10]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 15.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = BesselJ[0, x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-10.2\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 10.2;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.8\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = \ 1.3;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-11\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 11;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[n = 5, 
+      n \[LessEqual] 
+        8, \(n++\), \[IndentingNewLine]aa = \(-10\); \[IndentingNewLine]bb = 
+        10; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-10\), 10, 2], Range[\(-0.5\), 1, 0.5]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Show[graph, Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 20.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange20/Lagrangett.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange20/Lagrangett.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 16.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\)\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-3\), 3]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 16.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \(1\/\@\(2  \[Pi]\)\) \[ExponentialE]\^\(\(-x\^2\)/2\);\)\ \ \
+\), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.15\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 0.5;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 2, 
+      i \[LessEqual] 5, \(i++\), \[IndentingNewLine]n = 
+        2  i; \[IndentingNewLine]aa = \(-3.0\); \[IndentingNewLine]bb = 
+        3.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.4, 0.1]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Show[graph, Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 22.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange22/Lagrangevv.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange22/Lagrangevv.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 17.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the Newton polynomial approximation for  ",
+  Cell[BoxData[
+      \(f[x] = 1\/2\  + 1\/2\ Erf[x\/\@2]\)]],
+  ", on the interval ",
+  Cell[BoxData[
+      \(\([\(-3\), 3]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 17.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 1\/2\  + 1\/2\ Erf[x\/\@2];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(x0 = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(a = \(-3.0\);\)\ \), "\[IndentingNewLine]", 
+    \(\(b = \ 3.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(c = \(-0.25\);\)\ \), "\[IndentingNewLine]", 
+    \(\(d = 1.25;\)\ \), "\[IndentingNewLine]", 
+    \(\(a0 = \(-4. \);\)\ \), "\[IndentingNewLine]", 
+    \(\(b0 = 4.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Cdot = 
+        Graphics[{{Red, PointSize[0.02], 
+              Point[{x0, f[x0]}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Rends = 
+        Graphics[{{Green, Line[{{a0, c}, {a0, d}}]}, {Red, 
+              Line[{{x0, c}, {x0, d}}]}, {Green, 
+              Line[{{b0, c}, {b0, d}}]}}];\)\ \), "\[IndentingNewLine]", 
+    \(For[i = 2, 
+      i \[LessEqual] 5, \(i++\), \[IndentingNewLine]n = 
+        2  i; \[IndentingNewLine]aa = \(-3.0\); \[IndentingNewLine]bb = 
+        3.0; \[IndentingNewLine]XY = 
+        N[Table[{aa + \(\(bb - aa\)\/n\) k, 
+              f[aa + \(\(bb - aa\)\/n\) k]}, {k, 0, 
+              n}]]; \[IndentingNewLine]Cdot = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.011]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]P[x_] = 
+        NewtonPoly[XY]; \[IndentingNewLine]graph = 
+        Plot[{f[x], P[x]}, {x, a, b}, PlotStyle \[Rule] {Magenta, Blue}, 
+          PlotRange \[Rule] {{a, b}, {c, d}}, 
+          Ticks \[Rule] {Range[\(-3\), 3, 1], Range[0, 0.8, 0.25]}, 
+          DisplayFunction \[Rule] Identity]; \[IndentingNewLine]Show[graph, 
+        Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \ \
+\[IndentingNewLine]Show[graph, Cdot, Rends, 
+        DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<f[x] = \>", f[x], "\<\n\>", "\<P[x] = \>", 
+        Chop[Expand[P[x]]]];\ \ \ ]\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 23.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange23/Lagrangeww.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange23/Lagrangeww.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Newton Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomial Approximation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Interpolation/\
+Lagrange/Lagrange.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Newton Interpolation Polynomial",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/np.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Interpolation Polynomial",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/np.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/NewtonPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton Polynomials",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NewtonPolyBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 653},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification->1
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 199, 5, 35, "Text"],
+Cell[1978, 60, 1133, 38, 140, "Text"]
+}, Closed]],
+Cell[3126, 101, 101, 2, 30, "Text"],
+Cell[3230, 105, 1288, 42, 90, "Text"],
+Cell[4521, 149, 4683, 143, 456, "Text"],
+Cell[9207, 294, 620, 21, 33, "Text"],
+Cell[9830, 317, 263, 10, 33, "Text"],
+Cell[10096, 329, 910, 23, 248, "Text"],
+Cell[11009, 354, 1955, 64, 151, "Text"],
+Cell[12967, 420, 317, 12, 33, "Text"],
+Cell[13287, 434, 884, 25, 107, "Text"],
+Cell[14174, 461, 620, 21, 33, "Text"],
+Cell[14797, 484, 25239, 735, 230, "Text"],
+Cell[40039, 1221, 1057, 21, 264, "Input"],
+Cell[41099, 1244, 8063, 257, 382, "Text"],
+Cell[49165, 1503, 620, 21, 33, "Text"],
+Cell[49788, 1526, 776, 24, 33, "Text"],
+Cell[50567, 1552, 599, 19, 33, "Text"],
+Cell[51169, 1573, 2692, 72, 363, "Text"],
+Cell[53864, 1647, 147, 2, 33, "Text"],
+Cell[54014, 1651, 1752, 31, 366, "Input"],
+Cell[55769, 1684, 675, 22, 93, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[56469, 1710, 153, 4, 33, "Text",
+  Evaluatable->False],
+Cell[56625, 1716, 471, 16, 52, "Text",
+  Evaluatable->False],
+Cell[57099, 1734, 554, 10, 164, "Input"],
+Cell[57656, 1746, 253, 8, 33, "Text"],
+Cell[57912, 1756, 128, 2, 30, "Input"],
+Cell[58043, 1760, 87, 2, 33, "Text"],
+Cell[58133, 1764, 862, 17, 170, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[59032, 1786, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[59188, 1792, 472, 16, 33, "Text",
+  Evaluatable->False],
+Cell[59663, 1810, 650, 13, 184, "Input"],
+Cell[60316, 1825, 253, 8, 33, "Text"],
+Cell[60572, 1835, 128, 2, 30, "Input"],
+Cell[60703, 1839, 235, 10, 33, "Text"],
+Cell[60941, 1851, 188, 3, 50, "Input"],
+Cell[61132, 1856, 87, 2, 33, "Text"],
+Cell[61222, 1860, 892, 18, 170, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[62151, 1883, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[62307, 1889, 472, 16, 33, "Text",
+  Evaluatable->False],
+Cell[62782, 1907, 706, 15, 184, "Input"],
+Cell[63491, 1924, 253, 8, 33, "Text"],
+Cell[63747, 1934, 128, 2, 30, "Input"],
+Cell[63878, 1938, 235, 10, 33, "Text"],
+Cell[64116, 1950, 278, 5, 70, "Input"],
+Cell[64397, 1957, 87, 2, 33, "Text"],
+Cell[64487, 1961, 821, 17, 150, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[65345, 1983, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[65501, 1989, 472, 16, 33, "Text",
+  Evaluatable->False],
+Cell[65976, 2007, 665, 13, 184, "Input"],
+Cell[66644, 2022, 253, 8, 33, "Text"],
+Cell[66900, 2032, 128, 2, 30, "Input"],
+Cell[67031, 2036, 235, 10, 33, "Text"],
+Cell[67269, 2048, 372, 7, 90, "Input"],
+Cell[67644, 2057, 87, 2, 33, "Text"],
+Cell[67734, 2061, 826, 17, 150, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[68597, 2083, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[68753, 2089, 472, 16, 33, "Text",
+  Evaluatable->False],
+Cell[69228, 2107, 747, 16, 204, "Input"],
+Cell[69978, 2125, 253, 8, 33, "Text"],
+Cell[70234, 2135, 128, 2, 30, "Input"],
+Cell[70365, 2139, 235, 10, 33, "Text"],
+Cell[70603, 2151, 464, 9, 110, "Input"],
+Cell[71070, 2162, 87, 2, 33, "Text"],
+Cell[71160, 2166, 821, 17, 150, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[72018, 2188, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[72174, 2194, 730, 14, 150, "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[72941, 2213, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[73097, 2219, 149, 5, 52, "Text"],
+Cell[73249, 2226, 1432, 26, 202, "Text"],
+Cell[74684, 2254, 897, 18, 126, "Text"],
+Cell[75584, 2274, 897, 18, 126, "Text"],
+Cell[76484, 2294, 820, 18, 109, "Text"],
+Cell[77307, 2314, 763, 27, 112, "Text"],
+Cell[78073, 2343, 535, 12, 52, "Text"]
+}, Closed]],
+Cell[78623, 2358, 327, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[78975, 2373, 153, 4, 33, "Text",
+  Evaluatable->False],
+Cell[79131, 2379, 301, 10, 33, "Text",
+  Evaluatable->False],
+Cell[79435, 2391, 1131, 22, 250, "Input"],
+Cell[80569, 2415, 418, 13, 36, "Text"],
+Cell[80990, 2430, 1619, 42, 200, "Input"],
+Cell[82612, 2474, 415, 12, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[83064, 2491, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[83220, 2497, 301, 10, 33, "Text",
+  Evaluatable->False],
+Cell[83524, 2509, 1375, 27, 290, "Input"],
+Cell[84902, 2538, 437, 14, 43, "Text"],
+Cell[85342, 2554, 1611, 40, 220, "Input"],
+Cell[86956, 2596, 433, 12, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[87426, 2613, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[87582, 2619, 301, 10, 33, "Text",
+  Evaluatable->False],
+Cell[87886, 2631, 1626, 33, 330, "Input"],
+Cell[89515, 2666, 431, 14, 36, "Text"],
+Cell[89949, 2682, 1744, 47, 199, "Input"],
+Cell[91696, 2731, 433, 12, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[92166, 2748, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[92322, 2754, 301, 10, 33, "Text",
+  Evaluatable->False],
+Cell[92626, 2766, 1869, 37, 370, "Input"],
+Cell[94498, 2805, 453, 14, 53, "Text"],
+Cell[94954, 2821, 1508, 36, 204, "Input"],
+Cell[96465, 2859, 435, 12, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[96937, 2876, 153, 4, 30, "Text",
+  Evaluatable->False],
+Cell[97093, 2882, 301, 10, 33, "Text",
+  Evaluatable->False],
+Cell[97397, 2894, 2139, 44, 410, "Input"],
+Cell[99539, 2940, 450, 14, 42, "Text"],
+Cell[99992, 2956, 1929, 51, 206, "Input"],
+Cell[101924, 3009, 420, 12, 33, "Text"]
+}, Closed]],
+Cell[102359, 3024, 1482, 50, 125, "Text"],
+
+Cell[CellGroupData[{
+Cell[103866, 3078, 102, 2, 33, "Text"],
+Cell[103971, 3082, 915, 16, 130, "Input"],
+Cell[104889, 3100, 1492, 23, 230, "Input"],
+Cell[106384, 3125, 1023, 19, 230, "Input"]
+}, Closed]],
+Cell[107422, 3147, 582, 19, 68, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[108029, 3170, 101, 2, 33, "Text"],
+Cell[108133, 3174, 169, 5, 33, "Text"],
+Cell[108305, 3181, 242, 4, 90, "Input"],
+Cell[108550, 3187, 120, 3, 33, "Text"],
+Cell[108673, 3192, 64, 1, 30, "Input"],
+Cell[108740, 3195, 76, 0, 33, "Text"],
+Cell[108819, 3197, 127, 2, 50, "Input"],
+Cell[108949, 3201, 131, 5, 33, "Text"],
+Cell[109083, 3208, 72, 1, 49, "Input"],
+Cell[109158, 3211, 189, 6, 33, "Text"],
+Cell[109350, 3219, 251, 4, 90, "Input"],
+Cell[109604, 3225, 118, 3, 33, "Text"],
+Cell[109725, 3230, 64, 1, 30, "Input"],
+Cell[109792, 3233, 103, 3, 33, "Text"],
+Cell[109898, 3238, 127, 2, 50, "Input"],
+Cell[110028, 3242, 61, 1, 30, "Input"],
+Cell[110092, 3245, 131, 5, 33, "Text"],
+Cell[110226, 3252, 75, 1, 49, "Input"]
+}, Closed]],
+Cell[110316, 3256, 164, 4, 32, "Text"],
+Cell[110483, 3262, 1692, 28, 345, "Input"],
+Cell[112178, 3292, 378, 17, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[112581, 3313, 105, 2, 33, "Text"],
+Cell[112689, 3317, 1652, 30, 408, "Input"],
+Cell[114344, 3349, 803, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[115184, 3380, 105, 2, 30, "Text"],
+Cell[115292, 3384, 1663, 31, 408, "Input"],
+Cell[116958, 3417, 803, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[117798, 3448, 105, 2, 30, "Text"],
+Cell[117906, 3452, 1667, 31, 408, "Input"],
+Cell[119576, 3485, 803, 26, 33, "Text"]
+}, Closed]],
+Cell[120394, 3514, 298, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[120717, 3529, 101, 2, 33, "Text"],
+Cell[120821, 3533, 1839, 33, 446, "Input"],
+Cell[122663, 3568, 803, 26, 33, "Text"]
+}, Closed]],
+Cell[123481, 3597, 302, 11, 34, "Text"],
+
+Cell[CellGroupData[{
+Cell[123808, 3612, 101, 2, 33, "Text"],
+Cell[123912, 3616, 1722, 32, 419, "Input"],
+Cell[125637, 3650, 803, 26, 33, "Text"]
+}, Closed]],
+Cell[126455, 3679, 338, 14, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[126818, 3697, 105, 2, 33, "Text"],
+Cell[126926, 3701, 1835, 32, 426, "Input"],
+Cell[128764, 3735, 803, 26, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[129604, 3766, 105, 2, 30, "Text"],
+Cell[129712, 3770, 1835, 32, 426, "Input"],
+Cell[131550, 3804, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[132369, 3833, 287, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[132681, 3848, 101, 2, 33, "Text"],
+Cell[132785, 3852, 1787, 34, 426, "Input"],
+Cell[134575, 3888, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[135394, 3917, 288, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[135707, 3932, 102, 2, 33, "Text"],
+Cell[135812, 3936, 1764, 33, 426, "Input"],
+Cell[137579, 3971, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[138398, 4000, 292, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[138715, 4015, 102, 2, 33, "Text"],
+Cell[138820, 4019, 2187, 39, 512, "Input"],
+Cell[141010, 4060, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[141829, 4089, 298, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[142152, 4104, 102, 2, 33, "Text"],
+Cell[142257, 4108, 1617, 29, 386, "Input"],
+Cell[143877, 4139, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[144696, 4168, 289, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[145010, 4183, 102, 2, 33, "Text"],
+Cell[145115, 4187, 1740, 33, 439, "Input"],
+Cell[146858, 4222, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[147677, 4251, 289, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[147991, 4266, 102, 2, 33, "Text"],
+Cell[148096, 4270, 2002, 37, 458, "Input"],
+Cell[150101, 4309, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[150920, 4338, 295, 11, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[151240, 4353, 102, 2, 33, "Text"],
+Cell[151345, 4357, 1896, 36, 466, "Input"],
+Cell[153244, 4395, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[154063, 4424, 334, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[154422, 4439, 102, 2, 33, "Text"],
+Cell[154527, 4443, 1975, 38, 506, "Input"],
+Cell[156505, 4483, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[157324, 4512, 306, 11, 40, "Text"],
+
+Cell[CellGroupData[{
+Cell[157655, 4527, 102, 2, 33, "Text"],
+Cell[157760, 4531, 1937, 36, 506, "Input"],
+Cell[159700, 4569, 804, 26, 33, "Text"]
+}, Closed]],
+Cell[160519, 4598, 802, 24, 30, "Text"],
+Cell[161324, 4624, 725, 20, 33, "Text"],
+Cell[162052, 4646, 158, 3, 35, "Text"],
+Cell[162213, 4651, 556, 16, 33, "Text"],
+Cell[162772, 4669, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

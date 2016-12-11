@@ -1,0 +1,3521 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[    112741,       3347]*)
+(*NotebookOutlinePosition[    113435,       3371]*)
+(*  CellTagsIndexPosition[    113391,       3367]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Power Method for Eigenvectors",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Power Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["We now describe the power method for computing the dominant \
+eigenpair.  Its extension to the inverse power method is practical for \
+finding any eigenvalue provided that a good initial approximation is known.  \
+Some schemes for finding eigenvalues use other methods that converge fast, \
+but have limited precision.  The inverse power method is then invoked to \
+refine the numerical values and gain full precision.  To discuss the \
+situation, we will need the following definitions.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["If ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  StyleBox[" is an ",
+    FontFamily->"Times New Roman"],
+  StyleBox[ButtonBox["eigenvalue",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Eigenvector.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" of ",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["that is larger in absolute value than any  other eigenvalue, it \
+is called the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["dominant eigenvalue",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[". An eigenvector  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "1"]]],
+  " ",
+  StyleBox[" corresponding to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  StyleBox[" is called a ",
+    FontFamily->"Times New Roman"],
+  StyleBox["dominant eigenvector",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  An eigenvector  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is said to ",
+    FontFamily->"Times New Roman"],
+  StyleBox["be ",
+    FontFamily->"Times New Roman"],
+  StyleBox["normalized",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" if",
+    FontFamily->"Times New Roman"],
+  StyleBox[" the coordinate of largest magnitude is equal to unity (i.e., the \
+largest coordinate in the vector  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is the number 1). \n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["Remark.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  It is easy to normalize an eigenvector  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        RowBox[{"[", 
+          RowBox[{\(v\_1\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(v\_2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(v\_n\)}], "]"}], "T"]]],
+  "  ",
+  StyleBox[" by forming a new vector  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], "=", 
+        SuperscriptBox[
+          RowBox[{\(1\/c\), "[", 
+            RowBox[{\(v\_1\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(v\_2\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], "...", 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(v\_n\)}], "]"}], "T"]}]]],
+  StyleBox["  where  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c = v\_j\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(v\_j = \ 
+        max\+\(1 \[LessEqual] i \[LessEqual] n\){\(|\)\(v\_i\)\(|\)}\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Power Method)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Assume that the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n\[Times]n",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["matrix  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["has  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["distinct eigenvalues  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\[Lambda]\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\[Lambda]\_3\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\[Lambda]\_n\)}]]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["and that they are ordered in decreasing magnitude; that is,  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"|", \(\[Lambda]\_1\), "|", 
+        RowBox[{">", 
+          RowBox[{
+            StyleBox["|",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Lambda]\_2\), "|", 
+            RowBox[{"\[GreaterEqual]", 
+              RowBox[{
+                StyleBox["|",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_3\), 
+                "|", \(\(\(\[GreaterEqual]\)\(...\)\)\(\[GreaterEqual]\)\), 
+                StyleBox["|",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_n\), 
+                "|"}]}]}]}]}]]],
+  ".  ",
+  StyleBox["If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["X",
+          FontWeight->"Bold"], "0"]]],
+  StyleBox["  is chosen appropriately, then the sequences ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"], " ", "=", " ", 
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{\(x\_1\%\((k)\)\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\%\((k)\)\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\%\((k)\)\)}], ")"}], 
+            "T"]}], "}"}]]],
+  "  and  ",
+  Cell[BoxData[
+      \({c\_k}\)]],
+  "  ",
+  StyleBox["generated recursively by  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["Y",
+            FontWeight->"Bold"], "k"], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"]}]}]]],
+  StyleBox["  \n\tand",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], \(k + 1\)], " ", "=", " ", 
+        RowBox[{\(1\/c\_\(k + 1\)\), 
+          SubscriptBox[
+            StyleBox["Y",
+              FontWeight->"Bold"], "k"]}]}]]],
+  StyleBox["  \n\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["where  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\_\(k + 1\)\  = \ \ x\_j\%\((k)\)\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_j\%\((k)\) = \ 
+        max\+\(1 \[LessEqual] i \[LessEqual] n\){\(|\)\(x\_i\%\((k)\)\)\(|\)}\
+\)]],
+  StyleBox[",  will converge to the dominant eigenvector  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "1"]]],
+  StyleBox["  and eigenvalue  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  StyleBox[",  respectively. That is,\n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"]}], " ", "=", " ", 
+        SubscriptBox[
+          StyleBox["V",
+            FontWeight->"Bold"], "1"]}]]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(lim\+\(k \[Rule] \[Infinity]\)\ c\_k\  = \ \[Lambda]\_1\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["X",
+          FontWeight->"Bold"], "0"]]],
+  StyleBox[" is an eigenvector and ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], "0"], "\[NotEqual]", 
+        StyleBox["V",
+          FontWeight->"Bold"]}]]],
+  StyleBox[", then some other starting vector must be chosen.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PowerMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowerMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Speed of Convergence",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["In the iteration in the theorem uses the equation \n\t\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], "k"], " ", "=", 
+        RowBox[{\(\((\[Lambda]\_1)\)\^k\/\(\(\(c\_1\) c\_2 ... \) c\_k\)\), 
+          RowBox[{"(", " ", 
+            RowBox[{
+              RowBox[{
+                RowBox[{
+                  RowBox[{\(b\_1\), 
+                    SubscriptBox[
+                      StyleBox["V",
+                        FontWeight->"Bold"], "1"]}], "+", 
+                  
+                  RowBox[{\(b\_2\), \(\((\[Lambda]\_2\/\[Lambda]\_1)\)\^\(k - 
+                          1\)\), 
+                    SubscriptBox[
+                      StyleBox["V",
+                        FontWeight->"Bold"], "2"]}], "+"}], "..."}], "+", 
+              
+              RowBox[{\(b\_n\), \(\((\[Lambda]\_n\/\[Lambda]\_1)\)\^\(k - 
+                      1\)\), 
+                SubscriptBox[
+                  StyleBox["V",
+                    FontWeight->"Bold"], "n"]}]}], ")"}]}]}]]],
+  ",  \n\t",
+  StyleBox["\nand the coefficient of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "j"]]],
+  " that is used to form ",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["X",
+          FontWeight->"Bold"], "k"]]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["goes to zero in proportion to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\((\[Lambda]\_j\/\[Lambda]\_1)\)\^k\)]],
+  ".  Hence,",
+  StyleBox[" the speed of convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        SubscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], "k"], "}"}]]],
+  StyleBox[" to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "1"]]],
+  StyleBox[" is governed by the terms  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\((\[Lambda]\_2\/\[Lambda]\_1)\)\^k\)]],
+  StyleBox[".  Consequently, the rate of convergence is linear.  Similarly, \
+the convergence of the sequence of constants ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({c\_k}\)]],
+  StyleBox[" to ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  StyleBox[" is linear.  The Aitken ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[CapitalDelta]\^2\)]],
+  StyleBox[" method can be used for any linearly convergent sequence ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\)]],
+  StyleBox[" to form a new sequence,\n\t\n\t",
+    FontFamily->"Times New Roman"],
+  "\t ",
+  Cell[BoxData[
+      \(\(p\_k\)\&\[And]\  = \ \(p\_k\  - \ \
+\((\[CapitalDelta]p\_k)\)\^2\/\(\(\[CapitalDelta]\^2\) p\_k\)\  = \ 
+          p\_k\  - \ \((p\_\(k + 1\) - p\_k)\)\^2\/\(p\_\(k + 2\) - 2  p\_\(k \
++ 1\) + p\_k\)\)\)]],
+  ",",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["that converges faster. The  Aitken ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[CapitalDelta]\^2\)]],
+  StyleBox[" can be adapted to speed up the convergence of the power method.  \
+",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Shifted-Inverse Power Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\t",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["We will now discuss the shifted inverse power method.  It \
+requires a good starting approximation for an eigenvalue, and then iteration \
+is used to obtain a precise solution.  Other procedures such as the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["QM",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["and Givens\[CloseCurlyQuote] method are used first to obtain the \
+starting approximations.  Cases involving complex eigenvalues, multiple \
+eigenvalues, or the presence of two eigenvalues with the same magnitude or \
+approximately the same\nmagnitude will cause computational difficulties and \
+require more advanced methods.  Our illustrations will focus on the case \
+where the eigenvalues are distinct.  The shifted inverse power method is \
+based on the following three results (the proofs are left as exercises).",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Shifting Eigenvalues)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Suppose that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  is an eigenpair of  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[".  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Alpha]\)]],
+  "  ",
+  StyleBox["is any constant, then  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda] - \[Alpha]\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  is an eigenpair of the matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "-", 
+        StyleBox[
+          RowBox[{"\[Alpha]", 
+            StyleBox["I",
+              FontWeight->"Bold"]}]]}]]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Inverse Eigenvalues)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["   ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Suppose that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  is an eigenpair of  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[".   If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda] \[NotEqual] 0\)]],
+  ",  then  ",
+  Cell[BoxData[
+      \(1\/\[Lambda]\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox["is an eigenpair of the matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Shifted-Inverse Eigenvalues)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Suppose that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  is an eigenpair of  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox[".   If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Alpha] \[NotEqual] \[Lambda]\)]],
+  ",  ",
+  StyleBox[" then",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(1\/\(\[Lambda] - \[Alpha]\)\)]],
+  ",",
+  StyleBox["V",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox["is an eigenpair of the matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "-", 
+            StyleBox[
+              RowBox[{"\[Alpha]", 
+                StyleBox["I",
+                  FontWeight->"Bold"]}]]}], ")"}], \(-1\)]]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Shifted-Inverse Power Method)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["Assume that the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n\[Times]n",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["matrix  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["has distinct eigenvalues  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(\[Lambda]\_1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\[Lambda]\_2\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\[Lambda]\_n\)}]]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["and consider the eigenvalue ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_j\)]],
+  StyleBox[". Then a constant  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Alpha]\)]],
+  "  ",
+  StyleBox["can be chosen so that   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Mu]\_1\  = \ 1\/\(\[Lambda]\_j - \[Alpha]\)\)]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["is the dominant eigenvalue of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "-", 
+            StyleBox[
+              RowBox[{"\[Alpha]", 
+                StyleBox["I",
+                  FontWeight->"Bold"]}]]}], ")"}], \(-1\)]]],
+  StyleBox[".  Furthermore, if   ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["X",
+          FontWeight->"Bold"], "0"]]],
+  StyleBox["  is chosen appropriately, then the  sequences ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"{", 
+        RowBox[{
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"], " ", "=", " ", 
+          SuperscriptBox[
+            RowBox[{"(", 
+              RowBox[{\(x\_1\%\((k)\)\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_2\%\((k)\)\), 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], "...", 
+                StyleBox[",",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(x\_n\%\((k)\)\)}], ")"}], 
+            "T"]}], "}"}]]],
+  "  and  ",
+  Cell[BoxData[
+      \({c\_k}\)]],
+  "  ",
+  StyleBox["generated recursively by  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["Y",
+            FontWeight->"Bold"], "k"], " ", "=", " ", 
+        RowBox[{
+          StyleBox[
+            SuperscriptBox[
+              RowBox[{"(", 
+                RowBox[{
+                  StyleBox["A",
+                    FontWeight->"Bold"], 
+                  StyleBox["-",
+                    FontWeight->"Plain"], 
+                  StyleBox[
+                    RowBox[{
+                      StyleBox["\[Alpha]",
+                        FontWeight->"Plain"], 
+                      StyleBox["I",
+                        FontWeight->"Bold"]}]]}], ")"}], \(-1\)],
+            FontWeight->"Bold"], " ", 
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"]}]}]]],
+  StyleBox["  \n\tand",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["X",
+            FontWeight->"Bold"], \(k + 1\)], " ", "=", " ", 
+        RowBox[{\(1\/c\_\(k + 1\)\), 
+          SubscriptBox[
+            StyleBox["Y",
+              FontWeight->"Bold"], "k"]}]}]]],
+  StyleBox["  \n\n",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["where  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\_\(k + 1\)\  = \ \ x\_j\%\((k)\)\)]],
+  StyleBox["  and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x\_j\%\((k)\) = \ 
+        max\+\(1 \[LessEqual] i \[LessEqual] n\){\(|\)\(x\_i\%\((k)\)\)\(|\)}\
+\)]],
+  StyleBox[",  will converge to the dominant eigenpair  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Mu]\_1\)]],
+  StyleBox[",",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "j"]]],
+  StyleBox["  of the matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        RowBox[{"(", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "-", 
+            StyleBox[
+              RowBox[{"\[Alpha]", 
+                StyleBox["I",
+                  FontWeight->"Bold"]}]]}], ")"}], \(-1\)]]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["Finally, the corresponding eigenvalue for the matrix  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontSlant->"Italic"],
+  StyleBox["is given by the calculation  \n\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\_j\  = \ 1\/\[Mu]\_1 + \[Alpha]\)]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  StyleBox["  For practical implementations of this Theorem, a linear system \
+solver is used to compute  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["Y",
+          FontWeight->"Bold"], "k"]]],
+  " ",
+  StyleBox["in each step by solving the linear system ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{
+              StyleBox["(",
+                FontWeight->"Bold"], 
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], 
+                StyleBox["-",
+                  FontWeight->"Plain"], 
+                StyleBox[
+                  RowBox[{
+                    StyleBox["\[Alpha]",
+                      FontWeight->"Plain"], 
+                    StyleBox["I",
+                      FontWeight->"Bold"]}]]}], 
+              StyleBox[")",
+                FontWeight->"Bold"]}], 
+            SubscriptBox[
+              StyleBox["Y",
+                FontWeight->"Bold"], "k"]}], "  ", "=", " ", 
+          SubscriptBox[
+            StyleBox["X",
+              FontWeight->"Bold"], "k"]}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PowerMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowerMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/PowerMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowerMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Power Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To compute the dominant value  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1\)]],
+  "  and its associated eigenvector  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "1"]]],
+  "  for the",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n\[Times]n",
+    FontFamily->"Courier New"],
+  " matrix  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ".  It is assumed that the n eigenvalues have the dominance property  ",
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"|", \(\[Lambda]\_1\), "|", 
+        RowBox[{">", 
+          RowBox[{
+            StyleBox["|",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(\[Lambda]\_2\), "|", 
+            RowBox[{"\[GreaterEqual]", 
+              RowBox[{
+                StyleBox["|",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_3\), 
+                "|", \(\(\(\[GreaterEqual]\)\(...\)\)\(\[GreaterEqual]\)\), 
+                StyleBox["|",
+                  FontFamily->"Times New Roman",
+                  FontSize->12,
+                  FontWeight->"Plain",
+                  FontSlant->"Plain",
+                  FontColor->GrayLevel[0],
+                  FontVariations->{"Underline"->False,
+                  "StrikeThrough"->False}], \(\[Lambda]\_n\), 
+                "|"}]}]}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(PowerMeth[A0_, V0_, \[Epsilon]_, 
+          m_] := \[IndentingNewLine]Module[{A\  = \ N[A0], c1, count, 
+            err, \[Lambda], \[Lambda]0, X\ , X0\  = N[V0], 
+            Y}, \[IndentingNewLine]maxsize[W_] := 
+            Module[{w\  = \ Sort[W], msize}, \[IndentingNewLine]If[\ 
+                Abs[w\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\
+\)\)] \[GreaterEqual] 
+                  Abs[w\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)], \[IndentingNewLine]msize\  = \ 
+                  w\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\
+\), \[IndentingNewLine]msize\  = \ 
+                  w\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)]; \ \[IndentingNewLine]Return[msize];\ ]; \ \[IndentingNewLine]norm[
+              V_] := \@\(V . V\); \ \[IndentingNewLine]\[Lambda]0\  = \ 
+            0; \ \[IndentingNewLine]count\  = \ 
+            0; \ \[IndentingNewLine]While[\ 
+            count \[LessEqual] m, \[IndentingNewLine]count = 
+              count + 1; \ \[IndentingNewLine]Y = \ 
+              A . X0; \ \[IndentingNewLine]\[Lambda]\  = \ 
+              maxsize[Y]; \ \[IndentingNewLine]X\  = 
+              1\/\[Lambda]\ Y; \ \[IndentingNewLine]Print[
+              NumberForm[\[Lambda], 6], "\< , \>", 
+              PaddedForm[X, {6, 6}]]; \ \[IndentingNewLine]err\  = \ 
+              Max[{\ Abs[\[Lambda] - \[Lambda]0], \ 
+                  norm[X - X0]}]; \ \[IndentingNewLine]If[\ 
+              err < \[Epsilon], \ 
+              Return[{\[Lambda], X}]\ ]; \ \ \[IndentingNewLine]X0\  = \ 
+              X; \ \[IndentingNewLine]\[Lambda]0\  = \ \[Lambda];\ \ ]; \ \
+\[IndentingNewLine]Return[{\[Lambda], X}];\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the power method to find the dominant eigenvalue and eigenvector for \
+the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"0", "11", \(-5\)},
+              {\(-2\), "17", \(-7\)},
+              {\(-4\), "26", \(-10\)}
+              }], ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "For illustration purposes we will set the maximum number of iterations to \
+be 50 and ",
+  Cell[BoxData[
+      \(\[Epsilon] = 0.000001\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"0", "11", \(-5\)},
+                {\(-2\), "17", \(-7\)},
+                {\(-4\), "26", \(-10\)}
+                }], ")"}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(X0 = {1, 1, 1};\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<A = \>", MatrixForm[A], \*"\"\<,   \!\(X\_0\) = \>\"", 
+          MatrixForm[X0]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\({\[Lambda], X} = PowerMeth[A, X0, 0.000001, 50];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<\>"];\), \
+"\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The `dominant` eigenpair is\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\[Lambda] = \>", \[Lambda], \
+"\<,  X = \>", MatrixForm[X]];\)}], "Input"],
+
+Cell[TextData[{
+  "That is ",
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  " close to the dominant eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda] = 4\)]],
+  "  and corresponding eigenvector  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], " ", "=", 
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(2\/5\)},
+              {\(3\/5\)},
+              {"1"}
+              }], "\[NoBreak]", ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell["Now check our work.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue  is  \[Lambda] = \>", \[Lambda]];\)\ \), "\n\
+", 
+    \(\(Print["\<The eigenvector is  X = \>", MatrixForm[X]];\)\ \), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Observe that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " returns unit length eigenvectors."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[N[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Lambda] = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\n", 
+    \(\(V = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Our eigenvector is  \!\(X\&\[RightVector]\)  = \>\"", 
+        MatrixForm[X]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<An eigenvector is \!\(X\&\[RightVector]\/\
+\[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]\) = \>\"", 
+        MatrixForm[X\/norm[X]]];\)\ \), "\n", 
+    \(\(Print["\<Mathematica finds\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue    \[Lambda] = \>", \[Lambda]];\)\ \), "\n", 
+    \(\(Print["\<An eigenvector    V = \>", MatrixForm[V]];\)\ \), "\n", 
+    \(\(Print["\<A V = \>", MatrixForm[A], MatrixForm[V], "\< = \>", 
+        MatrixForm[A . V]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] V = \>", \[Lambda]\ MatrixForm[V], "\< = \>", 
+        MatrixForm[\[Lambda]\ V]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The numerical eigenvector found by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", 
+        InterpretationBox[
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-0.3244428422615247`\)},
+                  {\(-0.4866642633922876`\)},
+                  {\(-0.8111071056538129`\)}
+                  }], "\[NoBreak]", ")"}],
+            
+            MatrixForm[ {-.3244428422615247, -.48666426339228758, \
+-.81110710565381294}]],
+          MatrixForm[ {2, 3, 5}]]}]]],
+  " which is a multiple of the the eigenvector ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"0.400000028610235`"},
+                {"0.60000001907349`"},
+                {"1.`"}
+                }], "\[NoBreak]", ")"}]}],
+        MatrixForm[ {.40000002861023498, .60000001907348999, 1.0}]]]],
+  "  found by the power method, i.e. \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          StyleBox["V",
+            FontWeight->"Bold"], " ", "=", 
+          RowBox[{
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-0.324443\)},
+                    {\(-0.486664\)},
+                    {\(-0.811107\)}
+                    }], "\[NoBreak]", ")"}],
+              
+              MatrixForm[ {-.3244428422615247, -.48666426339228758, \
+-.81110710565381294}]], " ", "=", " ", 
+            RowBox[{
+              RowBox[{\(-0.811107\), 
+                InterpretationBox[
+                  RowBox[{"(", "\[NoBreak]", GridBox[{
+                        {"0.4"},
+                        {"0.6"},
+                        {"1.0"}
+                        }], "\[NoBreak]", ")"}],
+                  
+                  MatrixForm[ {.40000002861023498, .60000001907348999, 
+                    1.0}]]}], " ", "=", 
+              RowBox[{\(-0.811107\), 
+                StyleBox["X",
+                  FontWeight->"Bold"]}]}]}]}]}]]],
+  " "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Use rational arithmetic.  This time ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " does not return a unit length eigenvector."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Lambda] = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 3\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\n", 
+    \(\(V = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(2, 3\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Our eigenvector is  \!\(X\&\[RightVector]\)  = \>\"", 
+        MatrixForm[X]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica finds\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue    \[Lambda] = \>", \[Lambda]];\)\ \), "\n", 
+    \(\(Print["\<An eigenvector    V = \>", MatrixForm[V]];\)\ \), "\n", 
+    \(\(Print["\<A V = \>", MatrixForm[A], MatrixForm[V], "\< = \>", 
+        MatrixForm[A . V]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] V = \>", \[Lambda]\ MatrixForm[V], "\< = \>", 
+        MatrixForm[\[Lambda]\ V]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Notice that this time the eigenvector found is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"2"},
+                {"3"},
+                {"5"}
+                }], "\[NoBreak]", ")"}],
+          MatrixForm[ {2, 3, 5}]]}]]],
+  ",  which is a multiple of the eigenvector  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", 
+          RowBox[{
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(2\/5\)},
+                  {\(3\/5\)},
+                  {"1"}
+                  }], "\[NoBreak]", ")"}], "=", " ", 
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"0.400000028610235`"},
+                  {"0.60000001907349`"},
+                  {"1.`"}
+                  }], "\[NoBreak]", ")"}]}]}],
+        MatrixForm[ {.40000002861023498, .60000001907348999, 1.0}]]]],
+  "  that was found with the power method.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The accuracy of the eigenvalue and eigenvector we computed with the \
+power method was limited by the number of iterations. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the power method to find the dominant eigenvalue and eigenvector for \
+the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"87", "270", \(-12\), \(-49\), \(-276\), "40"},
+                {\(-14\), \(-45\), "6", "10", "46", \(-4\)},
+                {\(-50\), \(-156\), "4", "25", "162", \(-25\)},
+                {"94", "294", \(-5\), \(-47\), \(-306\), "49"},
+                {"1", "1", "3", "1", "0", "2"},
+                {"16", "48", "1", \(-6\), \(-48\), "8"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  "For illustration purposes we will set the maximum number of iterations to \
+be 50 and ",
+  Cell[BoxData[
+      \(\[Epsilon] = 0.000002\)]],
+  ". "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"87", "270", \(-12\), \(-49\), \(-276\), "40"},
+                {\(-14\), \(-45\), "6", "10", "46", \(-4\)},
+                {\(-50\), \(-156\), "4", "25", "162", \(-25\)},
+                {"94", "294", \(-5\), \(-47\), \(-306\), "49"},
+                {"1", "1", "3", "1", "0", "2"},
+                {"16", "48", "1", \(-6\), \(-48\), "8"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{\(X0 = {1, 1, 1, 1, 1, 1};\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<A = \>", MatrixForm[A], \*"\"\<,   \!\(X\_0\) = \>\"", 
+          MatrixForm[X0]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\({\[Lambda], X} = PowerMeth[A, X0, 0.000002, 50];\), 
+      "  "}], "\[IndentingNewLine]", \(Print["\<\>"];\), \
+"\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<The `dominant` eigenpair is\>"];\), 
+      " "}], "\[IndentingNewLine]", \(Print["\<\[Lambda] = \>", \[Lambda] \
+"\<,  X = \>", MatrixForm[X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[X, 10\^\(-5\)]]];\)}], "Input"],
+
+Cell[TextData[{
+  "That is  ",
+  Cell[BoxData[
+      \(2  \[Epsilon]\)]],
+  "  close to the dominant eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda] = 4\)]],
+  "  and corresponding eigenvector  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(1\/3\)},
+                  {"0"},
+                  {\(-\(2\/3\)\)},
+                  {"1"},
+                  {"0"},
+                  {\(1\/3\)}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {
+              Rational[ 1, 3], 0, 
+              Rational[ -2, 3], 1, 0, 
+              Rational[ 1, 3]}]], "=", 
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"0.3333333333333333`"},
+                  {"0.`"},
+                  {\(-0.6666666666666666`\)},
+                  {"1.`"},
+                  {"0.`"},
+                  {"0.3333333333333333`"}
+                  }], "\[NoBreak]", ")"}],
+            
+            MatrixForm[ {.33333333333333331, 0.0, -.66666666666666663, 1.0, 
+              0.0, .33333333333333331}]]}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell["Now check our work.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue  is  \[Lambda] = \>", \[Lambda]];\)\ \), "\n\
+", 
+    \(\(Print["\<The eigenvector is  X = \>", 
+        MatrixForm[X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[X, 10\^\(-5\)]]];\)\), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[A . X, 10\^\(-4\)]]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[\[Lambda]\ X, 10\^\(-4\)]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Observe that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " returns unit length eigenvectors."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[N[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Lambda] = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\n", 
+    \(\(V = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Our eigenvector is  \!\(X\&\[RightVector]\)  = \>\"", 
+        MatrixForm[X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[X, 10\^\(-5\)]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<An eigenvector is \!\(X\&\[RightVector]\/\
+\[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]\) = \>\"", 
+        MatrixForm[X\/norm[X]], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[X\/norm[X], 10\^\(-5\)]]];\)\), "\n", 
+    \(\(Print["\<Mathematica finds\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue    \[Lambda] = \>", \[Lambda]];\)\ \), "\n", 
+    \(\(Print["\<An eigenvector    V = \>", 
+        MatrixForm[V], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[V, 10\^\(-5\)]]];\)\ \), "\n", 
+    \(\(Print["\<A V = \>", MatrixForm[A], MatrixForm[V], "\< = \>", 
+        MatrixForm[A . V], "\< = \>", MatrixForm[Chop[A . V]]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] V = \>", \[Lambda]\ MatrixForm[V], "\< = \>", 
+        MatrixForm[\[Lambda]\ V], "\< = \>", 
+        MatrixForm[Chop[\[Lambda]\ V]]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The numerical eigenvector found by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"0.2581988897471772`"},
+                {"0"},
+                {\(-0.5163977794943144`\)},
+                {"0.7745966692414806`"},
+                {"0"},
+                {"0.258198889747169`"}
+                }], "\[NoBreak]", ")"}],
+          
+          MatrixForm[ {.2581988897471772, 
+            0, -.51639777949431442, .77459666924148063, 
+            0, .25819888974716898}]]}]]],
+  " which is a multiple of the the eigenvector  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], "=", 
+        InterpretationBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"0.3333333333333333`"},
+                {"0.`"},
+                {\(-0.6666666666666666`\)},
+                {"1.`"},
+                {"0.`"},
+                {"0.3333333333333333`"}
+                }], "\[NoBreak]", ")"}],
+          
+          MatrixForm[ {.33333333333333331, 0.0, -.66666666666666663, 1.0, 
+            0.0, .33333333333333331}]]}]]],
+  "  found by the power method, i.e. \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          StyleBox["V",
+            FontWeight->"Bold"], " ", "=", 
+          RowBox[{
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {"0.2581988897471772`"},
+                    {"0"},
+                    {\(-0.5163977794943144`\)},
+                    {"0.7745966692414806`"},
+                    {"0"},
+                    {"0.258198889747169`"}
+                    }], "\[NoBreak]", ")"}],
+              
+              MatrixForm[ {-.3244428422615247, -.48666426339228758, \
+-.81110710565381294}]], " ", "=", 
+            RowBox[{
+              RowBox[{"0.7745966692414806`", 
+                InterpretationBox[
+                  RowBox[{"(", "\[NoBreak]", GridBox[{
+                        {"0.3333333333333333`"},
+                        {"0.`"},
+                        {\(-0.6666666666666666`\)},
+                        {"1.`"},
+                        {"0.`"},
+                        {"0.3333333333333333`"}
+                        }], "\[NoBreak]", ")"}],
+                  
+                  MatrixForm[ {.33333333333333331, 0.0, -.66666666666666663, 
+                    1.0, 0.0, .33333333333333331}]]}], " ", "=", 
+              RowBox[{"0.7745966692414806`", 
+                StyleBox["X",
+                  FontWeight->"Bold"]}]}]}]}]}]]],
+  " "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Use rational arithmetic.  This time ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " does not return a unit length eigenvector."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[A];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Lambda] = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 6\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\n", 
+    \(\(V = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(2, 6\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Our eigenvector is  \!\(X\&\[RightVector]\)  = \>\"", 
+        MatrixForm[X], "\< \[TildeTilde] \>", 
+        MatrixForm[Chop[X, 10\^\(-5\)]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Mathematica finds\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue    \[Lambda] = \>", \[Lambda]];\)\ \), "\n", 
+    \(\(Print["\<An  eigenvector   V = \>", MatrixForm[V]];\)\ \), "\n", 
+    \(\(Print["\<A V = \>", MatrixForm[A], MatrixForm[V], "\< = \>", 
+        MatrixForm[A . V]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] V = \>", \[Lambda]\ MatrixForm[V], "\< = \>", 
+        MatrixForm[\[Lambda]\ V]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  Notice that this time the eigenvector found is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", 
+        InterpretationBox[
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1"},
+                  {"0"},
+                  {\(-2\)},
+                  {"3"},
+                  {"0"},
+                  {"1"}
+                  }], "\[NoBreak]", ")"}],
+            MatrixForm[ {1, 0, -2, 3, 0, 1}]],
+          MatrixForm[ {2, 3, 5}]]}]]],
+  ",  which is a multiple of the vector  ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", 
+          RowBox[{
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(1\/3\)},
+                    {"0"},
+                    {\(-\(2\/3\)\)},
+                    {"1"},
+                    {"0"},
+                    {\(1\/3\)}
+                    }], "\[NoBreak]", ")"}],
+              MatrixForm[ {
+                Rational[ 1, 3], 0, 
+                Rational[ -2, 3], 1, 0, 
+                Rational[ 1, 3]}]], "=", " ", 
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {"0.3333333333333333`"},
+                    {"0.`"},
+                    {\(-0.6666666666666666`\)},
+                    {"1.`"},
+                    {"0.`"},
+                    {"0.3333333333333333`"}
+                    }], "\[NoBreak]", ")"}],
+              
+              MatrixForm[ {.33333333333333331, 0.0, -.66666666666666663, 1.0, 
+                0.0, .33333333333333331}]]}]}],
+        MatrixForm[ {.40000002861023498, .60000001907348999, 1.0}]]]],
+  "  that was found with the power method.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The accuracy of the eigenvalue and eigenvector we computed with the \
+power method was limited by the number of iterations. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Shifted Inverse ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Power Method",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "   \n",
+  "\n\tIf a good approximation to an eigenvalue is known, then the shifted \
+inverse power method can be used and convergence is faster.  Other methods \
+such as the QM method or Givens method are used to obtain approximate \
+starting values.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Program ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(Shifted Inverse ",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Power Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To compute the dominant eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda]\_j\)]],
+  "  and its associated eigenvector  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["V",
+          FontWeight->"Bold"], "j"]]],
+  "  for the  n by n  matrix  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ".  It is assumed that the n eigenvalues are  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 < \[Lambda]\_2 < \[CenterEllipsis] < \[Lambda]\_n\)]],
+  "  and  ",
+  StyleBox["\[Alpha]",
+    FontFamily->"Symbol"],
+  "  is a real number such that  ",
+  Cell[BoxData[
+      \(\(\(\[VerticalSeparator]\)\(\[Lambda]\_j - \[Alpha]\)\(\
+\[VerticalSeparator]\)\(\(<\)\(\(\[VerticalSeparator]\)\(\(\[Lambda]\_i - \
+\[Alpha]\)\(\[VerticalSeparator]\)\)\)\)\)\)]],
+  "  for each  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(j - 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(j + 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(InvPowerMeth[A0_, \[Alpha]_, X0_, \[Epsilon]_, 
+          max1_] := \[IndentingNewLine]Module[{A, X\  = \ N[X0], Y, c1, 
+            count\  = \ 0, \[CapitalDelta]\[Lambda], \[CapitalDelta]V, 
+            err\  = \ 1, \[Lambda]\  = \ 0, n\  = \ Length[A0], state, done, 
+            iterating}, \[IndentingNewLine]maxsize[W_] := 
+            Module[{w\  = \ Sort[W], msize}, \[IndentingNewLine]If[\ 
+                Abs[w\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\
+\)\)] \[GreaterEqual] 
+                  Abs[w\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)], \[IndentingNewLine]msize\  = \ 
+                  w\_\(\(\[LeftDoubleBracket]\)\(-1\)\(\[RightDoubleBracket]\)\
+\), \[IndentingNewLine]msize\  = \ 
+                  w\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\
+\)]; \ \[IndentingNewLine]Return[msize];\ ]; \ \[IndentingNewLine]norm[
+              V_] := \@\(V . V\); \ \[IndentingNewLine]A\  = \ 
+            A0\  - \ \[Alpha]\ \ IdentityMatrix[
+                  n]; \ \[IndentingNewLine]lud = 
+            LUDecomposition[A]; \ \[IndentingNewLine]state\  = \ 
+            iterating; \[IndentingNewLine]While[\ 
+            And[\ count \[LessEqual] max1, \ 
+              state \[Equal] iterating\ ], \[IndentingNewLine]Y = 
+              LUBackSubstitution[lud, X]; \ \[IndentingNewLine]c1\  = \ 
+              maxsize[Y]; \ \[IndentingNewLine]\[CapitalDelta]\[Lambda]\  = \ 
+              Abs[\[Lambda] - c1]; \ \[IndentingNewLine]Y\  = \ 
+              Y\/c1; \ \[IndentingNewLine]\[CapitalDelta]V\  = \ 
+              norm[X - Y]; \ \[IndentingNewLine]err\  = \ 
+              Max[{\[CapitalDelta]\[Lambda], \[CapitalDelta]V}]; \ \
+\[IndentingNewLine]X\  = \ Y; \ \[IndentingNewLine]If[\ err > \[Epsilon], \ 
+              state = iterating, \ 
+              state\  = \ done]; \ \[IndentingNewLine]Print[
+              NumberForm[\ \[Alpha] + 1\/c1, 12], "\<,  \>", 
+              PaddedForm[
+                X, {12, 12}]]; \ \ \[IndentingNewLine]\[Lambda]\  = \ 
+              c1; \ \[IndentingNewLine]count\  = \ 
+              count + 1;\ ]; \ \[IndentingNewLine]\[Lambda]\  = \ \[Alpha] + 
+              1\/c1; \ \[IndentingNewLine]Return[{X, \[Lambda]}];\ ];\)\(\ \)\
+\)\)], "Input",
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the dominant eigenvalue and eigenvector for the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"0", "11", \(-5\)},
+              {\(-2\), "17", \(-7\)},
+              {\(-4\), "26", \(-10\)}
+              }], ")"}]}]],
+    AspectRatioFixed->True],
+  ".  \nUse the shift  ",
+  Cell[BoxData[
+      \(\[Alpha] = 4.2\)]],
+  " in the shifted inverse power method. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[BoxData[{\(Clear[\[Alpha], A, X];\), "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"0", "11", \(-5\)},
+                {\(-2\), "17", \(-7\)},
+                {\(-4\), "26", \(-10\)}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(X0 = {1, 1, 1};\), " "}], "\n", 
+    RowBox[{\(\[Alpha] = 4.2;\), " "}], "\n", 
+    RowBox[{\(Print["\<A = \>", MatrixForm[A], \*"\"\<,   \!\(X\_0\) = \>\"", 
+          MatrixForm[X0]];\), " "}], "\n", 
+    RowBox[{\(Print["\<The `shift` is  \[Alpha] = \>", \[Alpha]];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\({X, \[Lambda]} = 
+          InvPowerMeth[A, \[Alpha], X0, 0.0000001, 50];\), " "}]}], "Input",
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<The eigenvalue  is  \[Lambda] = \>", \[Lambda]];\)\), "\n", 
+    \(\(Print["\<The eigenvector is  X = \>", MatrixForm[X]];\)\), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X]];\)\), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "That is ",
+  Cell[BoxData[
+      \(\[Epsilon]\)]],
+  " close to the dominant eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda] = 4\)]],
+  "  and corresponding eigenvector  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["X",
+          FontWeight->"Bold"], " ", "=", 
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(2\/5\)},
+              {\(3\/5\)},
+              {"1"}
+              }], "\[NoBreak]", ")"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell["Now check our work.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue  is  \[Lambda] = \>", \[Lambda]];\)\ \), "\n\
+", 
+    \(\(Print["\<The eigenvector is  X = \>", MatrixForm[X]];\)\ \), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s Eigensystem procedure.  Observe that ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " returns unit length eigenvectors."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(sol = Eigensystem[N[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(\[Lambda] = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\n", 
+    \(\(V = 
+        sol\_\(\(\[LeftDoubleBracket]\)\(2, 1\)\(\[RightDoubleBracket]\)\);\)\
+\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Our eigenvector is  \!\(X\&\[RightVector]\)  = \>\"", 
+        MatrixForm[X]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<An eigenvector is \!\(X\&\[RightVector]\/\
+\[LeftDoubleBracketingBar]X\[RightDoubleBracketingBar]\) = \>\"", 
+        MatrixForm[X\/norm[X]]];\)\ \), "\n", 
+    \(\(Print["\<Mathematica finds\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue    \[Lambda] = \>", \[Lambda]];\)\ \), "\n", 
+    \(\(Print["\<An eigenvector    V = \>", MatrixForm[V]];\)\ \), "\n", 
+    \(\(Print["\<A V = \>", MatrixForm[A], MatrixForm[V], "\< = \>", 
+        MatrixForm[A . V]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] V = \>", \[Lambda]\ MatrixForm[V], "\< = \>", 
+        MatrixForm[\[Lambda]\ V]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Notice.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  The numerical eigenvector found by ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " is ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["V",
+          FontWeight->"Bold"], " ", "=", 
+        InterpretationBox[
+          InterpretationBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(-0.3244428422615247`\)},
+                  {\(-0.4866642633922876`\)},
+                  {\(-0.8111071056538129`\)}
+                  }], "\[NoBreak]", ")"}],
+            
+            MatrixForm[ {-.3244428422615247, -.48666426339228758, \
+-.81110710565381294}]],
+          MatrixForm[ {2, 3, 5}]]}]]],
+  " which is a multiple of the the eigenvector ",
+  Cell[BoxData[
+      InterpretationBox[
+        RowBox[{
+          StyleBox["X",
+            FontWeight->"Bold"], " ", "=", " ", 
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"0.400000028610235`"},
+                {"0.60000001907349`"},
+                {"1.`"}
+                }], "\[NoBreak]", ")"}]}],
+        MatrixForm[ {.40000002861023498, .60000001907348999, 1.0}]]]],
+  "  found by the power method, i.e. \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{" ", 
+        RowBox[{
+          StyleBox["V",
+            FontWeight->"Bold"], " ", "=", 
+          RowBox[{
+            InterpretationBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(-0.324443\)},
+                    {\(-0.486664\)},
+                    {\(-0.811107\)}
+                    }], "\[NoBreak]", ")"}],
+              
+              MatrixForm[ {-.3244428422615247, -.48666426339228758, \
+-.81110710565381294}]], " ", "=", " ", 
+            RowBox[{
+              RowBox[{\(-0.811107\), 
+                InterpretationBox[
+                  RowBox[{"(", "\[NoBreak]", GridBox[{
+                        {"0.4"},
+                        {"0.6"},
+                        {"1.0"}
+                        }], "\[NoBreak]", ")"}],
+                  
+                  MatrixForm[ {.40000002861023498, .60000001907348999, 
+                    1.0}]]}], " ", "=", 
+              RowBox[{\(-0.811107\), 
+                StyleBox["X",
+                  FontWeight->"Bold"]}]}]}]}]}]]],
+  " "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Application to Markov Chains",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tIn the study of ",
+  ButtonBox["Markov chains",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MarkovChain.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " the elements of the transition matrix are the probabilities of moving \
+from any state to any other state.  A Markov process can be described by a \
+square matrix whose entries are all positive and the column sums are all \
+equal to 1.  For example, a 3\[Times]3 transition matrix looks like \n\n\t\t\
+",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], " ", "=", " ", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(p\_\(1, 1\)\), \(p\_\(1, 2\)\), \(p\_\(1, 3\)\)},
+                {\(p\_\(2, 1\)\), \(p\_\(2, 2\)\), \(p\_\(2, 3\)\)},
+                {\(p\_\(3, 1\)\), \(p\_\(3, 2\)\), \(p\_\(3, 3\)\)}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  " \n\nwhere   ",
+  Cell[BoxData[
+      \(p\_\(1, 1\) + p\_\(2, 1\) + p\_\(3, 1\)\  = \ 1\)]],
+  ",  ",
+  Cell[BoxData[
+      \(p\_\(1, 2\) + p\_\(2, 2\) + p\_\(3, 2\)\  = \ 1\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(p\_\(1, 3\) + p\_\(2, 3\) + p\_\(3, 3\)\  = \ 1\)]],
+  ".  The initial state vector is  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "0"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {\(y\_0\)},
+                {\(z\_0\)}
+                }], ")"}], "=", " ", 
+          RowBox[{
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {"0"},
+                  {"0"}
+                  }], ")"}], " ", "+", " ", 
+            RowBox[{"(", GridBox[{
+                  {"0"},
+                  {\(y\_0\)},
+                  {"0"}
+                  }], ")"}], "+", " ", 
+            RowBox[{"(", GridBox[{
+                  {"0"},
+                  {"0"},
+                  {\(z\_0\)}
+                  }], ")"}]}]}]}]]],
+  ". \n"
+}], "Text"],
+
+Cell[TextData[{
+  "The computation  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(p\_\(1, 1\)\), \(p\_\(1, 2\)\), \(p\_\(1, 3\)\)},
+                {\(p\_\(2, 1\)\), \(p\_\(2, 2\)\), \(p\_\(2, 3\)\)},
+                {\(p\_\(3, 1\)\), \(p\_\(3, 2\)\), \(p\_\(3, 3\)\)}
+                }], "\[NoBreak]", ")"}], ".", 
+          RowBox[{"(", GridBox[{
+                {\(x\_0\)},
+                {"0"},
+                {"0"}
+                }], ")"}]}], " ", "=", " ", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(\(\ \)\(\(p\_\(1, 1\)\) x\_0\)\)},
+                  {\(\(p\_\(2, 1\)\) x\_0\)},
+                  {\(\(p\_\(3, 1\)\) x\_0\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]], " ", "=", " ", 
+          RowBox[{\(x\_0\), " ", 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(\(\ \)\(p\_\(1, 1\)\)\)},
+                    {\(p\_\(2, 1\)\)},
+                    {\(p\_\(3, 1\)\)}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}]}]}]]],
+  "  shows how the  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  " is redistributed in the next state.   Similarly we see that \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {\(p\_\(1, 1\)\), \(p\_\(1, 2\)\), \(p\_\(1, 3\)\)},
+                {\(p\_\(2, 1\)\), \(p\_\(2, 2\)\), \(p\_\(2, 3\)\)},
+                {\(p\_\(3, 1\)\), \(p\_\(3, 2\)\), \(p\_\(3, 3\)\)}
+                }], "\[NoBreak]", ")"}], ".", 
+          RowBox[{"(", GridBox[{
+                {"0"},
+                {\(y\_0\)},
+                {"0"}
+                }], ")"}]}], " ", "=", " ", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(\(p\_\(1, 2\)\) y\_0\)},
+                  {\(\(p\_\(2, 2\)\) y\_0\)},
+                  {\(\(p\_\(3, 2\)\) y\_0\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]], " ", "=", " ", 
+          RowBox[{\(y\_0\), 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(p\_\(1, 2\)\)},
+                    {\(p\_\(2, 2\)\)},
+                    {\(p\_\(3, 2\)\)}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}]}]}]]],
+  " shows how the  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  " is redistributed in the next state.\nand\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+              {\(p\_\(1, 1\)\), \(p\_\(1, 2\)\), \(p\_\(1, 3\)\)},
+              {\(p\_\(2, 1\)\), \(p\_\(2, 2\)\), \(p\_\(2, 3\)\)},
+              {\(p\_\(3, 1\)\), \(p\_\(3, 2\)\), \(p\_\(3, 3\)\)}
+              }], "\[NoBreak]", ")"}], " ", "=", " ", 
+        RowBox[{
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(\(\ \)\(\(p\_\(1, 3\)\) z\_0\)\)},
+                  {\(\(\ \)\(\(p\_\(2, 3\)\) z\_0\)\)},
+                  {\(\(p\_\(3, 3\)\) z\_0\)}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]], " ", "=", " ", 
+          RowBox[{\(z\_0\), 
+            TagBox[
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {\(\(\ \)\(p\_\(1, 3\)\)\)},
+                    {\(\(\ \)\(p\_\(2, 3\)\)\)},
+                    {\(p\_\(3, 3\)\)}
+                    }], "\[NoBreak]", ")"}],
+              Function[ BoxForm`e$, 
+                MatrixForm[ BoxForm`e$]]]}]}]}]]],
+  "shows how the  ",
+  Cell[BoxData[
+      \(x\_0\)]],
+  " is redistributed in the next state.\n\t\nTherefore, the distribution for \
+the next state is \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "1"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(p\_\(1, 1\)\), \(p\_\(1, 2\)\), \(p\_\(1, 3\)\)},
+                  {\(p\_\(2, 1\)\), \(p\_\(2, 2\)\), \(p\_\(2, 3\)\)},
+                  {\(p\_\(3, 1\)\), \(p\_\(3, 2\)\), \(p\_\(3, 3\)\)}
+                  }], "\[NoBreak]", ")"}], ".", 
+            RowBox[{"(", GridBox[{
+                  {\(x\_0\)},
+                  {\(y\_0\)},
+                  {\(z\_0\)}
+                  }], ")"}]}], " ", "=", " ", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], " ", 
+            SubscriptBox[
+              StyleBox["P",
+                FontWeight->"Bold"], "0"]}]}]}]]],
+  " \n\nA recursive sequence is generated using the general rule \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], \(k + 1\)], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}]}]]],
+  "     for  k = 0, 1, 2, ... .\n\nWe desire to know the limiting \
+distribution  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}]}]]],
+  ".  Since we will also have  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], \(k + 1\)]}], " ", "=", " ", 
+        StyleBox["P",
+          FontWeight->"Bold"]}]]],
+  "  we obtain the relation\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{
+          RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+            SubscriptBox[
+              StyleBox["P",
+                FontWeight->"Bold"], \(k + 1\)]}], " ", "=", " ", 
+          RowBox[{
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], " ", 
+              RowBox[{"(", 
+                RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), 
+                  SubscriptBox[
+                    StyleBox["P",
+                      FontWeight->"Bold"], "k"]}], ")"}]}], " ", "=", " ", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], " ", 
+              StyleBox["P",
+                FontWeight->"Bold"]}]}]}]}]]],
+  "\n\nFrom which it follows that \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["P",
+          FontWeight->"Bold"], "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["P",
+            FontWeight->"Bold"]}]}]]],
+  " \n\nTherefore the limiting distribution  ",
+  StyleBox["P",
+    FontWeight->"Bold"],
+  "  is the eigenvector corresponding to the dominant eigenvalue  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  ".  The following subroutine reminds us of the iteration used in the power \
+method.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Markov Process).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[
+    \(Markov[P0_, n_] := 
+      Module[{}, \[IndentingNewLine]T = \(z = \(y = \(x = 
+                Table[0, {i, 0, n}]\)\)\); \[IndentingNewLine]P = 
+          Transpose[{x, y, 
+              z}]; \[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\) = 
+          P0; \[IndentingNewLine]Print["\<P\>"\_0, "\< = \>", 
+          MatrixForm[
+            P\_\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)]]; \
+\[IndentingNewLine]For[i = 1, 
+          i \[LessEqual] 
+            n, \(i++\), \[IndentingNewLine]T\_\(\(\[LeftDoubleBracket]\)\(i + \
+1\)\(\[RightDoubleBracket]\)\) = 
+            i; \[IndentingNewLine]P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\
+\[RightDoubleBracket]\)\) = 
+            A . P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\);\
+ \[IndentingNewLine]Print["\<P\>"\_i, "\< = \>", 
+            MatrixForm[
+              P\_\(\(\[LeftDoubleBracket]\)\(i + 1\)\(\[RightDoubleBracket]\)\
+\)]];\ ]; \[IndentingNewLine]Return[
+          P\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)];\ \
+]\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  L",
+  StyleBox["et  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "0"], " ", "=", " ", 
+        SuperscriptBox[
+          RowBox[{"(", 
+            RowBox[{\(x\^\((0)\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(y\^\((0)\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(z\^\((0)\)\)}], ")"}], "T"]}]]],
+  StyleBox["  record the number of people in a certain city who use brands ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[", ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[", and ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[", respectively.  \nEach month people decide to keep using the \
+same brand or switch brands.  \nThe probability that a user of brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.3 and 0.3, respectively. \nThe probability that a user of \
+brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.3 and 0.2, respectively. \nThe probability that a user of \
+brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.1 and 0.3, respectively. \nThe transition matrix for this \
+process is ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], \(k + 1\)], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}]}]]],
+  " or\n",
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", GridBox[{
+              {\(x\^\((k + 1)\)\)},
+              {\(y\^\((k + 1)\)\)},
+              {\(z\^\((k + 1)\)\)}
+              }], ")"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"0.4", "0.3", "0.1"},
+                {"0.3", "0.5", "0.3"},
+                {"0.3", "0.2", "0.6"}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\^\((k)\)\)},
+                {\(y\^\((k)\)\)},
+                {\(z\^\((k)\)\)}
+                }], ")"}]}]}]]],
+  "\n\nAssume that the initial distribution ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "0"], " ", "=", 
+        " ", \(\((2000, 6000, 4000)\)\^T\)}]]],
+  ". \n",
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the first few terms in the sequence ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "k"], "}"}]]],
+  ".  \n",
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is the dominant eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n",
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that a corresponding eigenvector is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((3000, 4500, 4500)\)\^T\)}]]],
+  ". \n",
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Conclude that the limiting distribution is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}], " ", "=", " ", 
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["4 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Enter the matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " and vector ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["P",
+          FontWeight->"Bold"], "0"]]],
+  " and use the subroutine Markov to find the first few terms in the sequence \
+",
+  Cell[BoxData[
+      RowBox[{"{", 
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "k"], "}"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"0.4", "0.3", "0.1"},
+              {"0.3", "0.5", "0.3"},
+              {"0.3", "0.2", "0.6"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(P0 = {2000, 6000, 
+          4000};\), "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]];\), "\[IndentingNewLine]", \(Z = 
+        Markov[P0, 11];\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is an eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalues are  \>", Eigenvalues[A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is an eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  and a corresponding eigenvector is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((3000, 4500, 4500)\)\^T\)}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = 1;\)\), "\[IndentingNewLine]", 
+    \(\(X = {3000, 4500, 4500};\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue is  \[Lambda] = \>", \[Lambda]];\)\ \), "\n", \
+
+    \(\(Print["\<An eigenvector is  X = \>", MatrixForm[X]];\)\ \), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["4 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The iteration in part (a) appears to be converging to  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((3000, 4500, 4500)\)\^T\)}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can graph the situation, this is just for fun ! "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(pts1 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts2 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[pts1, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[pts2, PlotStyle \[Rule] {Blue, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        ListPlot[pts3, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        ListPlot[pts2, PlotJoined \[Rule] True, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr6 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr2, gr3, gr4, gr5, gr6, PlotRange \[Rule] All, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_0\) = \>\"", 
+        MatrixForm[
+          P0], \*"\"\<,  \!\(lim\+\(k \[Rule] \[Infinity]\)\) \!\(P\_k\) = P \
+= \>\"", MatrixForm[X]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(pts1 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts2 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[pts1, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[pts2, PlotStyle \[Rule] {Blue, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        ListPlot[pts3, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        ListPlot[pts2, PlotJoined \[Rule] True, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr6 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr2, gr3, gr4, gr5, gr6, PlotRange \[Rule] {{0, 4}, All}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_0\) = \>\"", 
+        MatrixForm[
+          P0], \*"\"\<,  \!\(lim\+\(k \[Rule] \[Infinity]\)\) \!\(P\_k\) = P \
+= \>\"", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  L",
+  StyleBox["et  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(P\_0\),
+          FontWeight->"Bold"], " ", "=", " ", 
+        SuperscriptBox[
+          RowBox[{"(", 
+            RowBox[{\(x\^\((0)\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(y\^\((0)\)\), 
+              StyleBox[",",
+                FontFamily->"Times New Roman",
+                FontSize->12,
+                FontWeight->"Plain",
+                FontSlant->"Plain",
+                FontColor->GrayLevel[0],
+                FontVariations->{"Underline"->False,
+                "StrikeThrough"->False}], \(z\^\((0)\)\)}], ")"}], "T"]}]]],
+  StyleBox["  record the number of people in a certain city who use brands ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[", ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[", and ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[", respectively.  \nEach month people decide to keep using the \
+same brand or switch brands.  \nThe probability that a user of brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.4 and 0.2, respectively. \nThe probability that a user of \
+brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.3 and 0.2, respectively. \nThe probability that a user of \
+brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Z",
+    FontFamily->"Courier New"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSlant->"Italic"],
+  StyleBox["will switch to brand ",
+    FontFamily->"Times New Roman"],
+  StyleBox["X",
+    FontFamily->"Courier New"],
+  StyleBox[" or ",
+    FontFamily->"Times New Roman"],
+  StyleBox["Y",
+    FontFamily->"Courier New"],
+  StyleBox[" is 0.1 and 0.3, respectively. \nThe transition matrix for this \
+process is  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], \(k + 1\)], " ", "=", " ", 
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}]}]]],
+  " or\n",
+  StyleBox["\n\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"(", GridBox[{
+              {\(x\^\((k + 1)\)\)},
+              {\(y\^\((k + 1)\)\)},
+              {\(z\^\((k + 1)\)\)}
+              }], ")"}], " ", "=", " ", 
+        RowBox[{
+          RowBox[{"(", GridBox[{
+                {"0.4", "0.3", "0.1"},
+                {"0.4", "0.5", "0.3"},
+                {"0.2", "0.2", "0.6"}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(x\^\((k)\)\)},
+                {\(y\^\((k)\)\)},
+                {\(z\^\((k)\)\)}
+                }], ")"}]}]}]]],
+  "\n\nAssume that the initial distribution ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "0"], " ", "=", 
+        " ", \(\((3400, 2400, 5000)\)\^T\)}]]],
+  ". \n",
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the first few terms in the sequence ",
+  Cell[BoxData[
+      RowBox[{"{", 
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "k"], "}"}]]],
+  ".  \n",
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is the dominant eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  \n",
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that a corresponding eigenvector is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((2800, 4400, 3600)\)\^T\)}]]],
+  ". \n",
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Conclude that the limiting distribution is  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(lim\+\(k \[Rule] \[Infinity]\)\), " ", 
+          SubscriptBox[
+            StyleBox["P",
+              FontWeight->"Bold"], "k"]}], " ", "=", " ", 
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Enter the matrix ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  " and vector ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["P",
+          FontWeight->"Bold"], "0"]]],
+  " and use the subroutine Markov to find the first few terms in the sequence \
+",
+  Cell[BoxData[
+      RowBox[{"{", 
+        SubscriptBox[
+          StyleBox["P",
+            FontWeight->"Bold"], "k"], "}"}]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"0.4", "0.3", "0.1"},
+              {"0.4", "0.5", "0.3"},
+              {"0.2", "0.2", "0.6"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(P0 = {3400, 2400, 
+          5000};\), "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]];\), "\[IndentingNewLine]", \(Z = 
+        Markov[P0, 12];\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is an eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalues are  \>", Eigenvalues[A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (c).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Verify that  ",
+  Cell[BoxData[
+      \(\[Lambda]\_1 = 1\)]],
+  " is an eigenvector of  ",
+  StyleBox["A",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  and a corresponding eigenvector is  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((3000, 4500, 4500)\)\^T\)}]]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\[Lambda] = 1;\)\), "\[IndentingNewLine]", 
+    \(\(X = {2800, 4400, 3600};\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The eigenvalue is  \[Lambda] = \>", \[Lambda]];\)\ \), "\n", \
+
+    \(\(Print["\<An eigenvector is  X = \>", MatrixForm[X]];\)\ \), "\n", 
+    \(\(Print["\<A X = \>", MatrixForm[A], MatrixForm[X], "\< = \>", 
+        MatrixForm[A . X]];\)\ \), "\n", 
+    \(\(Print["\<\[Lambda] X = \>", \[Lambda]\ \ MatrixForm[X], "\< = \>", 
+        MatrixForm[\[Lambda]\ X]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["5 (d).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The iteration in part (a) appears to be converging to  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[
+          SubscriptBox["V", 
+            StyleBox["1",
+              FontWeight->"Plain"]],
+          FontWeight->"Bold"], " ", "=", 
+        " ", \(\((3000, 4500, 4500)\)\^T\)}]]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can graph the situation, this is just for fun ! "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(pts1 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts2 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[pts1, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[pts2, PlotStyle \[Rule] {Blue, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        ListPlot[pts3, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        ListPlot[pts2, PlotJoined \[Rule] True, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr6 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr2, gr3, gr4, gr5, gr6, PlotRange \[Rule] All, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_0\) = \>\"", 
+        MatrixForm[
+          P0], \*"\"\<,  \!\(lim\+\(k \[Rule] \[Infinity]\)\) \!\(P\_k\) = P \
+= \>\"", MatrixForm[X]];\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\), "\[IndentingNewLine]", 
+    \(\(pts1 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(1\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts2 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(pts3 = 
+        Transpose[{T, \(Transpose[P]\)\_\(\(\[LeftDoubleBracket]\)\(3\)\(\
+\[RightDoubleBracket]\)\)}];\)\), "\[IndentingNewLine]", 
+    \(\(gr1 = 
+        ListPlot[pts1, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr2 = 
+        ListPlot[pts2, PlotStyle \[Rule] {Blue, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr3 = 
+        ListPlot[pts3, PlotStyle \[Rule] {Green, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr4 = 
+        ListPlot[pts1, PlotJoined \[Rule] True, PlotStyle \[Rule] Red, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr5 = 
+        ListPlot[pts2, PlotJoined \[Rule] True, PlotStyle \[Rule] Blue, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(gr6 = 
+        ListPlot[pts3, PlotJoined \[Rule] True, PlotStyle \[Rule] Green, 
+          DisplayFunction \[Rule] Identity];\)\), "\[IndentingNewLine]", 
+    \(\(Show[gr1, gr2, gr3, gr4, gr5, gr6, PlotRange \[Rule] {{0, 4}, All}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(P\_0\) = \>\"", 
+        MatrixForm[
+          P0], \*"\"\<,  \!\(lim\+\(k \[Rule] \[Infinity]\)\) \!\(P\_k\) = P \
+= \>\"", MatrixForm[X]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/PowerMethodBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Power Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/PowerMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 186, 4, 35, "Text"],
+Cell[1965, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3444, 111, 766, 16, 106, "Text"],
+Cell[4213, 129, 1633, 56, 53, "Text"],
+Cell[5849, 187, 3773, 112, 75, "Text"],
+Cell[9625, 301, 7259, 217, 214, "Text"],
+Cell[16887, 520, 659, 22, 33, "Text"],
+Cell[17549, 544, 610, 21, 33, "Text"],
+Cell[18162, 567, 3726, 113, 287, "Text"],
+Cell[21891, 682, 1221, 26, 148, "Text"],
+Cell[23115, 710, 1220, 46, 34, "Text"],
+Cell[24338, 758, 1062, 41, 36, "Text"],
+Cell[25403, 801, 1342, 50, 36, "Text"],
+Cell[26748, 853, 7118, 222, 265, "Text"],
+Cell[33869, 1077, 1364, 43, 33, "Text"],
+Cell[35236, 1122, 610, 21, 33, "Text"],
+Cell[35849, 1145, 596, 20, 33, "Text"],
+Cell[36448, 1167, 2190, 63, 52, "Text"],
+Cell[38641, 1232, 1771, 30, 450, "Input"],
+Cell[40415, 1264, 523, 18, 57, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[40963, 1286, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[41116, 1292, 225, 8, 33, "Text",
+  Evaluatable->False],
+Cell[41344, 1302, 893, 18, 200, "Input"],
+Cell[42240, 1322, 515, 20, 75, "Text",
+  Evaluatable->False],
+Cell[42758, 1344, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[42844, 1348, 484, 8, 110, "Input"],
+Cell[43331, 1358, 283, 10, 33, "Text",
+  Evaluatable->False],
+Cell[43617, 1370, 1153, 20, 255, "Input"],
+Cell[44773, 1392, 2333, 68, 119, "Text",
+  Evaluatable->False],
+Cell[47109, 1462, 315, 10, 33, "Text",
+  Evaluatable->False],
+Cell[47427, 1474, 972, 17, 212, "Input"],
+Cell[48402, 1493, 1231, 37, 75, "Text",
+  Evaluatable->False],
+Cell[49636, 1532, 287, 8, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[49938, 1543, 890, 24, 102, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[50853, 1571, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[51006, 1577, 225, 8, 33, "Text",
+  Evaluatable->False],
+Cell[51234, 1587, 1299, 24, 255, "Input"],
+Cell[52536, 1613, 1273, 41, 131, "Text",
+  Evaluatable->False],
+Cell[53812, 1656, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[53898, 1660, 701, 12, 113, "Input"],
+Cell[54602, 1674, 283, 10, 33, "Text",
+  Evaluatable->False],
+Cell[54888, 1686, 1450, 25, 256, "Input"],
+Cell[56341, 1713, 2841, 81, 215, "Text",
+  Evaluatable->False],
+Cell[59185, 1796, 315, 10, 33, "Text",
+  Evaluatable->False],
+Cell[59503, 1808, 1035, 18, 212, "Input"],
+Cell[60541, 1828, 1952, 57, 131, "Text",
+  Evaluatable->False],
+Cell[62496, 1887, 287, 8, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[62798, 1898, 495, 13, 87, "Text"],
+Cell[63296, 1913, 2828, 85, 52, "Text"],
+Cell[66127, 2000, 2301, 38, 558, "Input"],
+Cell[68431, 2040, 630, 21, 76, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[69086, 2065, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[69239, 2071, 762, 17, 183, "Input"],
+Cell[70004, 2090, 403, 6, 90, "Input"],
+Cell[70410, 2098, 515, 20, 75, "Text",
+  Evaluatable->False],
+Cell[70928, 2120, 83, 2, 33, "Text",
+  Evaluatable->False],
+Cell[71014, 2124, 484, 8, 110, "Input"],
+Cell[71501, 2134, 283, 10, 33, "Text",
+  Evaluatable->False],
+Cell[71787, 2146, 1153, 20, 255, "Input"],
+Cell[72943, 2168, 2333, 68, 119, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[75291, 2239, 2203, 64, 232, "Text"],
+Cell[77497, 2305, 7239, 198, 555, "Text"],
+Cell[84739, 2505, 373, 12, 33, "Text"],
+Cell[85115, 2519, 1100, 22, 210, "Input"],
+Cell[86218, 2543, 5671, 186, 313, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[91914, 2733, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[92067, 2739, 540, 21, 34, "Text"],
+Cell[92610, 2762, 437, 11, 120, "Input"],
+Cell[93050, 2775, 283, 12, 34, "Text"],
+Cell[93336, 2789, 161, 2, 50, "Input"],
+Cell[93500, 2793, 557, 21, 34, "Text"],
+Cell[94060, 2816, 595, 10, 150, "Input"],
+Cell[94658, 2828, 408, 14, 33, "Text"],
+Cell[95069, 2844, 261, 9, 71, "Text"],
+Cell[95333, 2855, 1814, 35, 261, "Input"],
+Cell[97150, 2892, 1824, 35, 261, "Input"]
+}, Closed]],
+Cell[98989, 2930, 5645, 185, 310, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[104659, 3119, 150, 4, 33, "Text",
+  Evaluatable->False],
+Cell[104812, 3125, 540, 21, 34, "Text"],
+Cell[105355, 3148, 437, 11, 120, "Input"],
+Cell[105795, 3161, 283, 12, 34, "Text"],
+Cell[106081, 3175, 161, 2, 50, "Input"],
+Cell[106245, 3179, 557, 21, 34, "Text"],
+Cell[106805, 3202, 595, 10, 150, "Input"],
+Cell[107403, 3214, 408, 14, 33, "Text"],
+Cell[107814, 3230, 261, 9, 71, "Text"],
+Cell[108078, 3241, 1814, 35, 261, "Input"],
+Cell[109895, 3278, 1824, 35, 261, "Input"]
+}, Closed]],
+Cell[111734, 3316, 158, 3, 32, "Text"],
+Cell[111895, 3321, 546, 16, 33, "Text"],
+Cell[112444, 3339, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

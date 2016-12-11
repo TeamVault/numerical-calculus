@@ -1,0 +1,1303 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     41650,       1146]*)
+(*NotebookOutlinePosition[     42538,       1175]*)
+(*  CellTagsIndexPosition[     42494,       1171]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Adaptive Simpson's Rule",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell["\<\
+\tThe adaptive Simpson's rule for quadrature uses the two \
+subroutines \"Simpson\" and \"Adapt.\"  The program is \"recursive\".  There \
+is no brake available if something goes wrong, i.e. if a pathological \"bad\" \
+function is thrown it's way it may proceed on a slippery path of infinite \
+recursion. \
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/AdaptiveQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/AdaptiveQuadProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuad.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuad.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/AdaptiveQuadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/AdaptiveQuadProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Mathematica Subroutines (Adaptive Simpson's Rule).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[BoxData[
+    \(\(\(Simpson[a_, b_] := 
+        Module[{}, \[IndentingNewLine]Return[\(\(b - a\)\/6\) \((f[a] + 
+                  4  f[\(a + b\)\/2] + f[b])\)]\ ];\)\(\ \)\)\)], "Input",
+  AspectRatioFixed->False],
+
+Cell[BoxData[
+    \(\(\(Adapt[a_, b_, tol_] := 
+        Module[{c}, \[IndentingNewLine]c = \(a + b\)\/2; \ \
+\[IndentingNewLine]Sab = Simpson[a, b]; \ \[IndentingNewLine]Sac = 
+            Simpson[a, c]; \ \[IndentingNewLine]Scb = 
+            Simpson[c, b]; \ \[IndentingNewLine]If[\ 
+            Abs[Sab - Sac - Scb] < tol, \[IndentingNewLine]Return[\ 
+              Sac + Scb\ ], \[IndentingNewLine]Return[
+              Adapt[a, c, tol\/2] + 
+                Adapt[c, b, tol\/2]]\ \ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0.0\%1.25 Cos[x\^2] \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, 0.00001\ and\ 0.0000001\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input",
+  AspectRatioFixed->False],
+
+Cell[TextData[{
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " Plot the function over the interval  [0, 1.25]."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        PlotStyle \[Rule] Magenta, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol1 = 0.001;\)\ \), "\[IndentingNewLine]", 
+    \(val1 = Adapt[0.0, 1.25, tol1]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol2 = 0.00001;\)\ \), "\[IndentingNewLine]", 
+    \(val2 = Adapt[0.0, 1.25, tol2]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol3 = 0.0000001;\)\ \), "\[IndentingNewLine]", 
+    \(val3 = Adapt[0.0, 1.25, tol3]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x\^2];\)\ \), "\[IndentingNewLine]", 
+    \(\(F[
+          x_] = \[Integral]f[
+              x] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(val4 = \[Integral]\_0\%\(5/4\)Cos[
+              x\^2] \[DifferentialD]x;\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[x] = \>", F[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<F[0] = \>", F[0]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<F[\!\(5\/4\)] = \>\"", 
+        F[5\/4]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x = \>\"", val4\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_0\%\(5/4\)\)Cos[\!\(x\^2\)]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", 
+        NumberForm[N[val4], 10]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4\)\(=\)\(N[val4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"TableForm", "[", GridBox[{
+            {"tol", "tol1", "produces", \(NumberForm[val1, 12]\)},
+            {"tol", "tol2", "produces", \(NumberForm[val2, 12]\)},
+            {"tol", "tol3", "produces", \(NumberForm[val3, 12]\)},
+            {"true", "value", "is", \(NumberForm[val4, 12]\)}
+            }], "]"}], " "}]], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 1.25}, PlotRange \[Rule] {{0, 1.25}, {0, 1}}, 
+        Ticks \[Rule] {Range[0, 1.25, 0.25], 
+            Range[0, 1, 0.25]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[val3, 12]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\ \((14  x - 
+              11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                x\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, 0.00001\ and\ 0.0000001\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[\(-0.5\), 2, 2]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol1 = 0.001;\)\ \), "\[IndentingNewLine]", 
+    \(val1 = Adapt[0.0, 2.0, tol1]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol2 = 0.00001;\)\ \), "\[IndentingNewLine]", 
+    \(val2 = Adapt[0.0, 2.0, tol2]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol3 = 0.0000001;\)\ \), "\[IndentingNewLine]", 
+    \(val3 = Adapt[0.0, 2.0, tol3]\ \)}], "Input"],
+
+Cell[BoxData[
+    \(val4 = \[Integral]\_0\%2\((14  x - 
+              11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                x\)\) \(\(\[DifferentialD]x\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4\)\(=\)\(N[val4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"TableForm", "[", GridBox[{
+            {"tol", "tol1", "produces", \(NumberForm[val1, 12]\)},
+            {"tol", "tol2", "produces", \(NumberForm[val2, 12]\)},
+            {"tol", "tol3", "produces", \(NumberForm[val3, 12]\)},
+            {"true", "value", "is", \(NumberForm[val4, 12]\)}
+            }], "]"}], " "}]], "Input"],
+
+Cell["Did the adapt subroutine behave as expected ?", "Text"],
+
+Cell["The following graph illustrates the example. ", "Text"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, 
+        PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[\(-0.5\), 2, 2]}, \[IndentingNewLine]PlotStyle \[Rule] 
+          Magenta, Fills \[Rule] Cyan];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[val3, 12]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2 x\^10\ \(\[ExponentialE]\^\(4  x\^3 - \ 
+                3  x\^4\)\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, 0.00001\ and\ 0.0000001\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        x\^10\ \[ExponentialE]\^\(4  x\^3 - \ 3  x\^4\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 20, 5]}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol1 = 0.001;\)\ \), "\[IndentingNewLine]", 
+    \(val1 = Adapt[0.0, 4.0, tol1]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol2 = 0.00001;\)\ \), "\[IndentingNewLine]", 
+    \(val2 = Adapt[0.0, 4.0, tol2]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol3 = 0.0000001;\)\ \), "\[IndentingNewLine]", 
+    \(val3 = Adapt[0.0, 4.0, tol3]\ \)}], "Input"],
+
+Cell[TextData[{
+  "Compare our answers with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s."
+}], "Text"],
+
+Cell[BoxData[
+    \(\[Integral]\_0\%2 x\^10\ \(\[ExponentialE]\^\(4  x\^3 - \ 
+              3  x\^4\)\) \[DifferentialD]x\)], "Input"],
+
+Cell[TextData[{
+  "Unfortunately, this integrand does not have a known anti-derivative.  So \
+we must resort to ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in NIntegrate procedure.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(val4\)\(=\)\(NIntegrate[f[x], {x, 0, 2}, 
+        PrecisionGoal \[Rule] 12]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"TableForm", "[", GridBox[{
+            {"tol", "tol1", "produces", \(NumberForm[val1, 12]\)},
+            {"tol", "tol2", "produces", \(NumberForm[val2, 12]\)},
+            {"tol", "tol3", "produces", \(NumberForm[val3, 12]\)},
+            {"true", "value", "is", \(NumberForm[val4, 12]\)}
+            }], "]"}], " "}]], "Input"],
+
+Cell["\<\
+Look at the following graph with aspect ratio 1.
+You can change the aspect ratio to be 20 but do NOT print it out!
+In fact, you might not even want to look at this graph with aspect ration 20, \
+so don't be shocked if you do.\
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(ratio = 1;\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 20}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], 
+            Range[0, 20, 5]}, \[IndentingNewLine]PlotStyle \[Rule] Magenta, 
+        Fills \[Rule] Cyan, 
+        AspectRatio \[Rule] ratio];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[val3, 12]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " It is usually difficult to find the numerical value of such an integral, \
+because the function is so \"flat\" in the interval [0, 0.8] and so steep on \
+[1.2, 1.7]. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  "Execute the following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " subroutine, which is the \"long version\" of the subroutine we have been \
+using previously. "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Adapt[a_, b_, tol_] := 
+        Module[{c}, \[IndentingNewLine]c = \(a + b\)\/2; \[IndentingNewLine]X \
+= Append[X, c]; \ \[IndentingNewLine]Sab = 
+            Simpson[a, b]; \ \[IndentingNewLine]Sac = 
+            Simpson[a, c]; \ \[IndentingNewLine]Scb = 
+            Simpson[c, b]; \ \[IndentingNewLine]If[
+            Abs[Sab - Sac - Scb] < 
+              tol, \[IndentingNewLine]Print["\<\[Integral]\>"\_a\^b, 
+              f[x], "\<\[DifferentialD]x = \>", 
+              Sab]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\_a\^c, 
+              f[x], "\<\[DifferentialD]x = \>", 
+              Sac]; \ \[IndentingNewLine]Print["\<\[Integral]\>"\_c\^b, 
+              f[x], "\<\[DifferentialD]x = \>", 
+              Scb]; \ \[IndentingNewLine]Print["\<Is the agreement within tol \
+= \>", tol]; \ \[IndentingNewLine]Print["\<----------------\>"]; \ \
+\[IndentingNewLine]Return[Sac + Scb], \[IndentingNewLine]Return[
+              Adapt[a, c, tol\/2] + 
+                Adapt[c, b, tol\/2]]\ \ ];\ ];\)\(\ \)\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\ \((14  x - 
+              11  x\^2)\) \(\[ExponentialE]\^\(\(-2\) 
+                x\)\) \[DifferentialD]x\)]],
+  "  that we investigated in example 2.  \nThe long solution is obtained if \
+you add a print statement to investigate the in between computations.  \nThis \
+subroutine is pedagogical and is intended to help us understand what's \
+happening in a recursive program. \nYou would probably not want to always \
+print out the in between steps, so you might want to re-execute the first \
+version for some of your work. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["Now investigate the \"recursive path\" the subroutine takes.", "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_] = \((14  x - 
+              11  x\^2)\) \[ExponentialE]\^\(\(-2\) x\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(a = 0.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(X = {a, b};\)\ \), "\n", 
+    \(\(val\  = Adapt[a, b, 0.002];\)\), "\[IndentingNewLine]", 
+    \(\(X = Sort[X];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\[Integral]\>"\_a\^b, f[x], "\<\[DifferentialD]x = \>", 
+        val];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<The abscissas {\!\(x\_k\)} for the intervals [\!\(x\_\(k \
+- 1\)\),\!\(x\_k\)] where Simpson Rule\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\[Integral]\_\(x\_\(k - 1\)\)\%\(x\_k\)\)f[x]\
+\[DifferentialD]x\>\"", "\< \[TildeTilde] \>", \*"\"\<\!\(\(x\_k - x\_\(k - 1\
+\)\)\/6\)(f[\!\(x\_\(k - 1\)\)]+4f[\!\(\(x\_\(k - 1\) + \
+x\_k\)\/2\)]+f[\!\(x\_k\)])\>\""];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<was applied were\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", X];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Now plot the intervals  ",
+  Cell[BoxData[
+      \(\([x\_\(k\  - \ 1\), x\_k]\)\)]],
+  "  where Simpson Rule was applied in the form  \n\n",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_\(x\_\(k\  - \ 1\)\)\%\(x\_k\)f[
+              x] \[DifferentialD]x\), " ", 
+        StyleBox["\[TildeTilde]",
+          FontSize->14], 
+        " ", \(\(\(x\_k\  - \ x\_\(k\  - \ 1\)\)\/6\) \((f[
+                x\_\(k\  - \ 1\)] + 
+              4  f[\(x\_\(k\  - \ 1\)\  + \ x\_k\)\/2] + f[x\_k])\)\)}]]],
+  "  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(X = Sort[X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Y = f[X];\)\ \), "\[IndentingNewLine]", 
+    \(\(pts\  = \ Transpose[{X, Y}];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(dots = 
+        ListPlot[pts, PlotStyle \[Rule] {Magenta, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(gr = 
+        FilledPlot[f[x], {x, 0, 2}, 
+          PlotRange \[Rule] {{0, 2}, {\(-0.5\), 2}}, 
+          Ticks \[Rule] {Range[0, 4, 1], 
+              Range[\(-1\), 1, 1]}, \[IndentingNewLine]PlotStyle \[Rule] 
+            Magenta, Fills \[Rule] Cyan, 
+          DisplayFunction \[Rule] Identity];\)\ \), "\[IndentingNewLine]", 
+    \(\(Show[gr, dots, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<{\!\(x\_k\)} = \>\"", X];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        val];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral  ",
+  Cell[BoxData[
+      \(\[Integral]\_0\%2\((2 + Cos[2 \@ x])\) \[DifferentialD]x\)]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, 0.00001\ and\ 0.0000001\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_]\ \  = \ 2 + Cos[2 \@ x];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] Magenta, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol1 = 0.001;\)\ \), "\[IndentingNewLine]", 
+    \(val1 = Adapt[0.0, 2.0, tol1]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol2 = 0.00001;\)\ \), "\[IndentingNewLine]", 
+    \(val2 = Adapt[0.0, 2.0, tol2]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol3 = 0.0000001;\)\ \), "\[IndentingNewLine]", 
+    \(val3 = Adapt[0.0, 2.0, tol3]\ \)}], "Input"],
+
+Cell[BoxData[
+    \(val4 = \[Integral]\_0\%2\((2 + 
+              Cos[2 \@ x])\) \(\(\[DifferentialD]x\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4\)\(=\)\(N[val4]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"TableForm", "[", GridBox[{
+            {"tol", "tol1", "produces", \(NumberForm[val1, 12]\)},
+            {"tol", "tol2", "produces", \(NumberForm[val2, 12]\)},
+            {"tol", "tol3", "produces", \(NumberForm[val3, 12]\)},
+            {"true", "value", "is", \(NumberForm[val4, 12]\)}
+            }], "]"}], " "}]], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2}, {0, 3}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[val3, 12]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use the adaptive Simpson's rule to compute a numerical approximation to \
+the integral ",
+  Cell[BoxData[
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], ")"}], \(\[DifferentialD]x\)}]}]]],
+  ".  \nUse the tolerances ",
+  Cell[BoxData[
+      \(0.001, 0.00001\ and\ 0.0000001\)]],
+  ".  Compare with the analytic or \"true value\" of the integral. "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{\(f[x_]\), "  ", "=", " ", 
+          RowBox[{
+            RowBox[{"3", 
+              StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox[\(Sin[x\^2]\),
+                FontSize->12]}], 
+            StyleBox["+",
+              FontSize->12], 
+            StyleBox[" ",
+              FontSize->12], 
+            StyleBox["1",
+              FontSize->12]}]}], ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\n", 
+    RowBox[{\(Plot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+          PlotStyle \[Rule] Magenta, AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\),
+       " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]\ ];\), " "}]}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol1 = 0.001;\)\ \), "\[IndentingNewLine]", 
+    \(val1 = Adapt[0.0, 3.0, tol1]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol2 = 0.00001;\)\ \), "\[IndentingNewLine]", 
+    \(val2 = Adapt[0.0, 3.0, tol2]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(tol3 = 0.0000001;\)\ \), "\[IndentingNewLine]", 
+    \(val3 = Adapt[0.0, 3.0, tol3]\ \)}], "Input"],
+
+Cell[BoxData[
+    RowBox[{"val4", "=", 
+      RowBox[{\(\[Integral]\_0\%3\), 
+        RowBox[{
+          RowBox[{"(", 
+            RowBox[{
+              RowBox[{"3", 
+                StyleBox[\(\[ExponentialE]\^\(-x\)\),
+                  FontSize->12], 
+                StyleBox[" ",
+                  FontSize->12], 
+                StyleBox[\(Sin[x\^2]\),
+                  FontSize->12]}], 
+              StyleBox["+",
+                FontSize->12], 
+              StyleBox[" ",
+                FontSize->12], 
+              StyleBox["1",
+                FontSize->12]}], 
+            ")"}], \(\(\[DifferentialD]x\)\(\ \)\)}]}]}]], "Input"],
+
+Cell[BoxData[
+    \(\(\(val4\)\(=\)\(N[Re[val4]]\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"TableForm", "[", GridBox[{
+            {"tol", "tol1", "produces", \(NumberForm[val1, 12]\)},
+            {"tol", "tol2", "produces", \(NumberForm[val2, 12]\)},
+            {"tol", "tol3", "produces", \(NumberForm[val3, 12]\)},
+            {"true", "value", "is", \(NumberForm[val4, 12]\)}
+            }], "]"}], " "}]], "Input"],
+
+Cell[BoxData[{
+    \(\(a = 0;\)\ \), "\[IndentingNewLine]", 
+    \(\(b = 2;\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`FilledPlot`\>"];\)\ \), "\n", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(FilledPlot[f[x], {x, 0, 3}, PlotRange \[Rule] {{0, 3}, {0, 2}}, 
+        PlotStyle \[Rule] {{Thickness[0.01], Magenta}}, Fills \[Rule] Cyan, 
+        AxesLabel \[Rule] {"\<x\>", "\<y\>"}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for  \>", a, "\< \[LessEqual] x \[LessEqual] \>", 
+        b];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The numerical value of the integral is  \>", 
+        NumberForm[val3, 12]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Various Scenarios",
+    FontFamily->"New Century Schlbk",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[" and Animations for the Adaptive Simpson's Rule.",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "   Let  ",
+  Cell[BoxData[
+      \(f[x] = 1 + \[ExponentialE]\^\(-x\)\ Sin[8\ x\^\(2/3\)]\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, 2]\)\)]],
+  ".  Use the adaptive Simpson's rule to approximate the value of the \
+integral.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Call the adaptive subroutine with the command  ",
+  StyleBox["Adapt[0,2,0.001]",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell["\<\
+Tracing the steps of adaptive quadrature will reveal that the \
+following sequence of nodes is used. \
+\>", "Text"],
+
+Cell[TextData[StyleBox["{{0.,1.,2.},\n\n{0.,0.5,1.,1.5,2.},\n\n\
+{0.,0.25,0.5,0.75,1.,1.5,2.},\n\n{0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.},\n\n\
+{0.,0.25,0.5,0.625,0.75,0.875,1.,1.25,1.5,1.75,2.},\n\n\
+{0.,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1.,1.25,1.5,1.75,2.},\n\n\
+{0.,0.125,0.25,0.375,0.5,0.625,0.75,0.875,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\
+\n{0.,0.0625,0.125,0.1875,0.25,0.375,0.5,0.625,0.75,0.875,1.,1.125,1.25,1.375,\
+1.5,1.75,2.},\n\n\
+{0.,0.0625,0.125,0.1875,0.25,0.3125,0.375,0.4375,0.5,0.625,0.75,0.875,1.,1.\
+125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.0625,0.125,0.1875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,\
+0.875,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.0625,0.125,0.1875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,\
+0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.03125,0.0625,0.09375,0.125,0.1875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.\
+625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.03125,0.0625,0.09375,0.125,0.15625,0.1875,0.21875,0.25,0.3125,0.375,0.\
+4375,0.5,0.5625,0.625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,\
+1.75,2.},\n\n\
+{0.,0.015625,0.03125,0.046875,0.0625,0.09375,0.125,0.15625,0.1875,0.21875,0.\
+25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.\
+125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.0078125,0.015625,0.0234375,0.03125,0.046875,0.0625,0.09375,0.125,0.\
+15625,0.1875,0.21875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,0.\
+8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.00390625,0.0078125,0.0117188,0.015625,0.0234375,0.03125,0.046875,0.0625,\
+0.09375,0.125,0.15625,0.1875,0.21875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.\
+625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.00195313,0.00390625,0.00585938,0.0078125,0.0117188,0.015625,0.0234375,0.\
+03125,0.046875,0.0625,0.09375,0.125,0.15625,0.1875,0.21875,0.25,0.3125,0.375,\
+0.4375,0.5,0.5625,0.625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.\
+5,1.75,2.},\n\n\
+{0.,0.000976563,0.00195313,0.00292969,0.00390625,0.00585938,0.0078125,0.\
+0117188,0.015625,0.0234375,0.03125,0.046875,0.0625,0.09375,0.125,0.15625,0.\
+1875,0.21875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,0.8125,0.\
+875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.000488281,0.000976563,0.00146484,0.00195313,0.00292969,0.00390625,0.\
+00585938,0.0078125,0.0117188,0.015625,0.0234375,0.03125,0.046875,0.0625,0.\
+09375,0.125,0.15625,0.1875,0.21875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,\
+0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,2.},\n\n\
+{0.,0.000244141,0.000488281,0.000732422,0.000976563,0.00146484,0.00195313,0.\
+00292969,0.00390625,0.00585938,0.0078125,0.0117188,0.015625,0.0234375,0.03125,\
+0.046875,0.0625,0.09375,0.125,0.15625,0.1875,0.21875,0.25,0.3125,0.375,0.4375,\
+0.5,0.5625,0.625,0.6875,0.75,0.8125,0.875,0.9375,1.,1.125,1.25,1.375,1.5,1.75,\
+2.}}",
+  FontSize->12]], "SmallText"],
+
+Cell["\<\
+The corresponding computed numerical approximations for the \
+integral are summarized in the following table. \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = 
+        1 + \[ExponentialE]\^\(-x\)\ Sin[
+              8\ x\^\(2/3\)];\)\ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "\t",
+  Cell[BoxData[
+      StyleBox[
+        TagBox[GridBox[{
+              {"\<\"m sample points\"\>", "\"\<Adapt[0,2,0.001]\>\""},
+              {"3", 
+                TagBox[
+                  InterpretationBox["\<\" 2.491261\"\>",
+                    2.4912610172534464,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"5", 
+                TagBox[
+                  InterpretationBox["\<\" 1.611786\"\>",
+                    1.6117863286474448,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"7", 
+                TagBox[
+                  InterpretationBox["\<\" 1.909633\"\>",
+                    1.9096331948045906,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"9", 
+                TagBox[
+                  InterpretationBox["\<\" 1.941436\"\>",
+                    1.9414360776747088,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"11", 
+                TagBox[
+                  InterpretationBox["\<\" 1.935128\"\>",
+                    1.9351282761173481,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"13", 
+                TagBox[
+                  InterpretationBox["\<\" 2.001744\"\>",
+                    2.0017436287433394,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"15", 
+                TagBox[
+                  InterpretationBox["\<\" 2.003302\"\>",
+                    2.0033021057952487,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"17", 
+                TagBox[
+                  InterpretationBox["\<\" 2.012445\"\>",
+                    2.0124446277237209,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"19", 
+                TagBox[
+                  InterpretationBox["\<\" 2.013092\"\>",
+                    2.0130921441852729,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"21", 
+                TagBox[
+                  InterpretationBox["\<\" 2.012906\"\>",
+                    2.0129061833562854,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"23", 
+                TagBox[
+                  InterpretationBox["\<\" 2.012774\"\>",
+                    2.0127736933284721,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"25", 
+                TagBox[
+                  InterpretationBox["\<\" 2.015124\"\>",
+                    2.0151243461913158,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"27", 
+                TagBox[
+                  InterpretationBox["\<\" 2.015195\"\>",
+                    2.0151952619389188,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"29", 
+                TagBox[
+                  InterpretationBox["\<\" 2.015920\"\>",
+                    2.0159203113557642,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"31", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016148\"\>",
+                    2.0161477588773948,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"33", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016219\"\>",
+                    2.0162192537075971,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"35", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016242\"\>",
+                    2.0162417480136479,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"37", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016249\"\>",
+                    2.0162488291651544,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"39", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016251\"\>",
+                    2.0162510589324603,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]},
+              {"41", 
+                TagBox[
+                  InterpretationBox["\<\" 2.016252\"\>",
+                    2.0162517611614916,
+                    AutoDelete->True],
+                  (PaddedForm[ #, {7, 6}]&)]}
+              },
+            RowSpacings->2,
+            ColumnSpacings->1,
+            RowAlignments->Baseline,
+            ColumnAlignments->{Left}],
+          Function[ BoxForm`e$, 
+            TableForm[ 
+            BoxForm`e$, TableHeadings -> {None, {"m sample points", 
+              "Adapt[a,b,0.001]"}}, TableSpacing -> {2, 1}]]],
+        FontWeight->"Bold"]], "Print"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[f[x], {x, 0, 2}, PlotRange \[Rule] {{0, 2.01}, {0, 2.01}}, 
+        Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 2, 0.5]}, 
+        Axes \[Rule] True, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Animation 1.  (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  " ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuadaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuadaa.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  " ",
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0.250004]],
+  "  Internet hyperlink. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuad.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Quadrature/\
+AdaptQuad/AdaptQuad.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/AdaptiveQuadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Adaptive Simpson's Rule",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/AdaptiveQuadBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PrintingMargins"->{{54, 54}, {54, 54}},
+"PrintCellBrackets"->False,
+"PrintRegistrationMarks"->False,
+"PrintMultipleHorizontalPages"->False}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 180, 4, 35, "Text"],
+Cell[1959, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3438, 111, 330, 6, 49, "Text"],
+Cell[3771, 119, 634, 21, 33, "Text"],
+Cell[4408, 142, 750, 24, 33, "Text"],
+Cell[5161, 168, 620, 20, 33, "Text"],
+Cell[5784, 190, 154, 2, 33, "Text"],
+Cell[5941, 194, 218, 4, 64, "Input"],
+Cell[6162, 200, 516, 9, 199, "Input"],
+Cell[6681, 211, 494, 14, 53, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[7200, 229, 101, 2, 33, "Text"],
+Cell[7304, 233, 155, 3, 51, "Input"],
+Cell[7462, 238, 160, 5, 33, "Text"],
+Cell[7625, 245, 363, 6, 70, "Input"],
+Cell[7991, 253, 119, 2, 50, "Input"],
+Cell[8113, 257, 121, 2, 50, "Input"],
+Cell[8237, 261, 123, 2, 50, "Input"],
+Cell[8363, 265, 1007, 18, 299, "Input"],
+Cell[9373, 285, 67, 1, 30, "Input"],
+Cell[9443, 288, 371, 7, 73, "Input"],
+Cell[9817, 297, 703, 11, 150, "Input"]
+}, Closed]],
+Cell[10535, 311, 521, 14, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[11081, 329, 101, 2, 33, "Text"],
+Cell[11185, 333, 199, 5, 51, "Input"],
+Cell[11387, 340, 351, 5, 70, "Input"],
+Cell[11741, 347, 118, 2, 50, "Input"],
+Cell[11862, 351, 120, 2, 50, "Input"],
+Cell[11985, 355, 122, 2, 50, "Input"],
+Cell[12110, 359, 177, 3, 42, "Input"],
+Cell[12290, 364, 67, 1, 30, "Input"],
+Cell[12360, 367, 371, 7, 73, "Input"],
+Cell[12734, 376, 61, 0, 33, "Text"],
+Cell[12798, 378, 61, 0, 33, "Text"],
+Cell[12862, 380, 807, 14, 190, "Input"]
+}, Closed]],
+Cell[13684, 397, 500, 13, 58, "Text"],
+
+Cell[CellGroupData[{
+Cell[14209, 414, 101, 2, 33, "Text"],
+Cell[14313, 418, 177, 4, 53, "Input"],
+Cell[14493, 424, 335, 5, 70, "Input"],
+Cell[14831, 431, 118, 2, 50, "Input"],
+Cell[14952, 435, 120, 2, 50, "Input"],
+Cell[15075, 439, 122, 2, 50, "Input"],
+Cell[15200, 443, 118, 5, 33, "Text"],
+Cell[15321, 450, 135, 2, 42, "Input"],
+Cell[15459, 454, 218, 6, 33, "Text"],
+Cell[15680, 462, 122, 2, 30, "Input"],
+Cell[15805, 466, 371, 7, 73, "Input"],
+Cell[16179, 475, 249, 5, 71, "Text"],
+Cell[16431, 482, 663, 11, 150, "Input"],
+Cell[17097, 495, 280, 7, 33, "Text"]
+}, Closed]],
+Cell[17392, 505, 206, 6, 30, "Text"],
+Cell[17601, 513, 1053, 18, 322, "Input"],
+Cell[18657, 533, 778, 16, 91, "Text"],
+
+Cell[CellGroupData[{
+Cell[19460, 553, 101, 2, 33, "Text"],
+Cell[19564, 557, 76, 0, 33, "Text"],
+Cell[19643, 559, 1182, 21, 288, "Input"],
+Cell[20828, 582, 532, 14, 75, "Text"],
+Cell[21363, 598, 1033, 20, 210, "Input"]
+}, Closed]],
+Cell[22411, 621, 452, 12, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[22888, 637, 101, 2, 33, "Text"],
+Cell[22992, 641, 357, 6, 93, "Input"],
+Cell[23352, 649, 118, 2, 50, "Input"],
+Cell[23473, 653, 120, 2, 50, "Input"],
+Cell[23596, 657, 122, 2, 50, "Input"],
+Cell[23721, 661, 125, 2, 42, "Input"],
+Cell[23849, 665, 67, 1, 30, "Input"],
+Cell[23919, 668, 371, 7, 73, "Input"],
+Cell[24293, 677, 738, 12, 170, "Input"]
+}, Closed]],
+Cell[25046, 692, 954, 28, 50, "Text"],
+
+Cell[CellGroupData[{
+Cell[26025, 724, 101, 2, 33, "Text"],
+Cell[26129, 728, 873, 22, 91, "Input"],
+Cell[27005, 752, 118, 2, 50, "Input"],
+Cell[27126, 756, 120, 2, 50, "Input"],
+Cell[27249, 760, 122, 2, 50, "Input"],
+Cell[27374, 764, 645, 19, 42, "Input"],
+Cell[28022, 785, 71, 1, 30, "Input"],
+Cell[28096, 788, 371, 7, 73, "Input"],
+Cell[28470, 797, 738, 12, 170, "Input"]
+}, Closed]],
+Cell[29223, 812, 313, 10, 32, "Text"],
+Cell[29539, 824, 348, 12, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[29912, 840, 101, 2, 33, "Text"],
+Cell[30016, 844, 173, 6, 34, "Text"],
+Cell[30192, 852, 125, 3, 33, "Text"],
+Cell[30320, 857, 2976, 44, 867, "SmallText"],
+Cell[33299, 903, 134, 3, 33, "Text"],
+Cell[33436, 908, 191, 4, 51, "Input"],
+Cell[33630, 914, 5118, 136, 465, "Text"],
+Cell[38751, 1052, 299, 5, 50, "Input"],
+Cell[39053, 1059, 791, 26, 33, "Text"]
+}, Closed]],
+Cell[39859, 1088, 750, 24, 30, "Text"],
+Cell[40612, 1114, 158, 3, 35, "Text"],
+Cell[40773, 1119, 577, 17, 33, "Text"],
+Cell[41353, 1138, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

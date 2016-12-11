@@ -1,0 +1,1771 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     52343,       1653]*)
+(*NotebookOutlinePosition[     53009,       1676]*)
+(*  CellTagsIndexPosition[     52965,       1672]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Halley's Method",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\nDefinition (Order of a Root)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  StyleBox["f(x)",
+    FontFamily->"Courier New"],
+  StyleBox["  and its derivatives  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(f' \((x)\)\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\(f\^\((m)\)\) \((x)\)\)}]]],
+  "  ",
+  StyleBox["are defined and continuous on an interval about  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x = p\)]],
+  StyleBox[".  We say that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(f \((x)\) = 0\)]],
+  StyleBox["  has a root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox["  at  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(x = p\)]],
+  StyleBox["  if and only if  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(f \((p)\) = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(f' \((p)\) = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(f'' \((p)\) = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\(f\^\((m - 1)\)\) \((p)\) = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], \(\(f\^\((m)\)\) \((p)\) \[NotEqual] 
+          0\)}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["A root of order  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m = 1\)]],
+  StyleBox["  is often called a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["simple root",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/SimpleRoot.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[", and if  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m > 1\)]],
+  StyleBox["  it is called a ",
+    FontFamily->"Times New Roman"],
+  ButtonBox["multiple root",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/MultipleRoot.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[".  A root of order  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(m = 2\)]],
+  StyleBox[".  is sometimes called a ",
+    FontFamily->"Times New Roman"],
+  StyleBox["double root",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[", and so on.  The next result will illuminate these concepts.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (Order of Convergence)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(p\_n\)]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["converges to  p,  and set  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(E\_n\  = \ p\  - \ p\_n\ \ for\ \ n \[GreaterEqual] 0\)]],
+  StyleBox[".    If two positive constants  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(A \[NotEqual] 0\ \ and\ \ R > 0\)]],
+  StyleBox["  exist, and  \n\n\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(lim\+\(n\  \[Rule] \ \[Infinity]\)\ \(\(|\)\(p\  - \ p\_\(n + 1\)\
+\)\(|\)\)\/\(\(|\)\(p\  - \ p\_n\)\( | \^R\)\) = \ \(lim\+\(n\  \[Rule] \ \
+\[Infinity]\)\ \(\(|\)\(E\_\(n + 1\)\)\(|\)\)\/\(\(|\)\(E\_n\)\( | \^R\)\)\  \
+= \ A\)\)\(,\)\)\)]],
+  "\n",
+  StyleBox["\nthen the sequence is said to converge to  p  with ",
+    FontFamily->"Times New Roman"],
+  StyleBox["order of convergence R",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  The number  A  is called the ",
+    FontFamily->"Times New Roman"],
+  StyleBox["asymptotic error constant",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".  The cases  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 1, 2, 3\)]],
+  StyleBox["  are given special  consideration.\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(i)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["   If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 1\)]],
+  StyleBox[", the convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox["  is called ",
+    FontFamily->"Times New Roman"],
+  StyleBox["linear",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 2\)]],
+  StyleBox[", the convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["is called ",
+    FontFamily->"Times New Roman"],
+  StyleBox["quadratic",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".\n\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["(ii)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  If  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 3\)]],
+  StyleBox[", the convergence of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox["  ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["is called ",
+    FontFamily->"Times New Roman"],
+  StyleBox["cubic",
+    FontFamily->"Times New Roman",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[".",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Newton-Raphson Iteration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/NewtonsMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^2\),
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      \(p \[Element] \([a, b]\)\)]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If   ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(p\_\(k + 1\)\), " ", "=", " ", 
+        RowBox[{\(g \((p\_k)\)\), " ", "=", "  ", 
+          RowBox[{\(p\_k\), " ", "-", 
+            StyleBox[
+              FractionBox[
+                StyleBox[\(f \((p\_k)\)\),
+                  FontSize->12], 
+                StyleBox[\(f' \((p\_k)\)\),
+                  FontSize->12]],
+              FontSize->12]}]}]}]]],
+  "    for    ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  "  \n\nwill converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for any initial approximation  ",
+  Cell[BoxData[
+      \(p\_0 \[Element] \([p - \[Delta], p + \[Delta]]\)\)]],
+  ".  \n\nFurthermore, if  ",
+  Cell[BoxData[
+      \(p\)]],
+  " is a simple root, then  ",
+  Cell[BoxData[
+      \({p\_\(k + 1\)}\)]],
+  "  will have order of convergence",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 2\)]],
+  StyleBox[",  i.e.  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(lim\+\(n\  \[Rule] \ \[Infinity]\)\ \(\(|\)\(p\  - \ p\_\(n + \
+1\)\)\(|\)\)\/\(\(|\)\(p\  - \ p\_n\)\( | \^2\)\) = \ \(lim\+\(n\  \[Rule] \ \
+\[Infinity]\)\ \(\(|\)\(E\_\(n + 1\)\)\(|\)\)\/\(\(|\)\(E\_n\)\( | \^2\)\)\  \
+= \ A\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/Newton'sMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (Convergence Rate for Newton-Raphson Iteration)",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["  Assume that Newton-Raphson iteration produces a sequence  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  StyleBox[" ",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times New Roman",
+    FontSize->6],
+  StyleBox["that converges to the root  p  of the function",
+    FontFamily->"Times New Roman"],
+  "  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  ".  ",
+  StyleBox["\n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["If  p  is a simple root, then convergence is quadratic and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \)\(\(\(\(|\)\(f'' \((p)\
+\)\)\(|\)\)\/\(2 | f' \((p)\) | \)\) \((\(|\)\(E\_k\)\(|\))\)\^2\)\)\)\)]],
+  "  for  k  ",
+  StyleBox["sufficiently large. \n",
+    FontFamily->"Times New Roman"],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontSize->9],
+  StyleBox["If  p  is a multiple root of order  ",
+    FontFamily->"Times New Roman"],
+  "m",
+  StyleBox[",  then convergence is linear and  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 
+              1\)\)\(|\)\(\ \)\(\(\[TildeTilde]\)\(\ \)\(\(m - 
+                1\)\/m\)\)\(|\)\(E\_k\)\(|\)\)\)]],
+  "  ",
+  StyleBox["for  k  sufficiently large.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Halley's Method",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\n\n\t",
+    FontFamily->"New Century Schlbk",
+    FontSize->6],
+  "The Newton-Raphson iteration function is \n\n(1)\t\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(g \((x)\)\),
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        RowBox[{
+          StyleBox["x",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox[\(\(f \((x)\)\)\/\(f' \((x)\)\)\),
+            FontFamily->"Courier"]}]}]]],
+  ". \n\t\t",
+  StyleBox["\n\t",
+    FontFamily->"New Century Schlbk",
+    FontSize->6],
+  StyleBox["It is possible to speed up convergence significantly when the \
+root is simple.  A popular method i",
+    FontFamily->"New Century Schlbk"],
+  "s attributed to ",
+  StyleBox[ButtonBox["Edmond Halley",
+    ButtonData:>{
+      URL[ 
+      "http://www-groups.dcs.st-and.ac.uk/~history/Mathematicians/Halley.\
+html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontColor->RGBColor[1, 0, 1]],
+  " (1656-1742) and ",
+  StyleBox["uses the iteration function:  \n\t\n(2)\t\t",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(g \((x)\)\),
+          FontFamily->"Courier"], 
+        StyleBox[" ",
+          FontFamily->"Courier"], 
+        StyleBox["=",
+          FontFamily->"Courier"], 
+        StyleBox[" ",
+          FontFamily->"Courier"], 
+        RowBox[{
+          StyleBox["x",
+            FontFamily->"Courier"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          SuperscriptBox[
+            RowBox[{
+              StyleBox[\(\(f \((x)\)\)\/\(f' \((x)\)\)\),
+                FontFamily->"Courier"], " ", 
+              "[", \(1 - \(f \((x)\) f'' \((x)\)\)\/\(2 \((f' \((x)\))\)\^2\)\
+\), "]"}], \(-1\)]}]}]]],
+  StyleBox[" ,\n\nThe term in brackets shows where Newton-Raphson iteration \
+function is changed. ",
+    FontFamily->"New Century Schlbk"],
+  " "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Halley's Iteration",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HalleysMethod.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  Assume that ",
+  Cell[BoxData[
+      RowBox[{"f", "\[Element]", 
+        RowBox[{
+          StyleBox[\(C\^3\),
+            FontWeight->"Bold"], "[", \(a, b\), "]"}]}]]],
+  " and there exists a number ",
+  Cell[BoxData[
+      \(p \[Element] \([a, b]\)\)]],
+  ", where ",
+  Cell[BoxData[
+      \(f \((p)\) = 0\)]],
+  ".  If   ",
+  Cell[BoxData[
+      \(f' \((p)\) \[NotEqual] 0\)]],
+  ", then there exists a ",
+  Cell[BoxData[
+      \(\[Delta] > 0\)]],
+  " such that the sequence ",
+  Cell[BoxData[
+      \({p\_k}\_\(k = 0\)\%\[Infinity]\)]],
+  " defined by the iteration  \n\n\t\t",
+  Cell[BoxData[
+      \(p\_\(k + 1\)\  = \ \ p\_k - 
+          f[p\_k]\/\(f'\)[p\_k]\ \((1 - \(f[p\_k]\ \(f''\)[p\_k]\)\/\(2 \
+\((\(f'\)[p\_k])\)\^2\))\)\^\(-1\)\)]],
+  "    for    ",
+  Cell[BoxData[
+      RowBox[{\(k = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "..."}]]],
+  "  \n\nwill converge to ",
+  Cell[BoxData[
+      \(p\)]],
+  " for any initial approximation  ",
+  Cell[BoxData[
+      \(p\_0 \[Element] \([p - \[Delta], p + \[Delta]]\)\)]],
+  ".  \n\nFurthermore, if  ",
+  Cell[BoxData[
+      \(p\)]],
+  " is a simple root, then  ",
+  Cell[BoxData[
+      \({p\_\(k + 1\)}\)]],
+  "  will have order of convergence",
+  StyleBox["  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(R = 3\)]],
+  StyleBox[",  i.e.  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(lim\+\(n\  \[Rule] \ \[Infinity]\)\ \(\(|\)\(p\  - \ p\_\(n + \
+1\)\)\(|\)\)\/\(\(|\)\(p\  - \ p\_n\)\( | \^3\)\) = \ \(lim\+\(n\  \[Rule] \ \
+\[Infinity]\)\ \(\(|\)\(E\_\(n + 1\)\)\(|\)\)\/\(\(|\)\(E\_n\)\( | \^3\)\)\  \
+= \ A\)\)]],
+  ". "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Halley'sMethodProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/Halley'sMethodProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Square Roots",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tThe function",
+    FontFamily->"New Century Schlbk"],
+  " ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(f \((x)\)\),
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        RowBox[{
+          StyleBox[\(x\^2\),
+            FontWeight->"Plain"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox["a",
+            FontFamily->"Courier",
+            FontWeight->"Plain"]}]}]],
+    FontWeight->"Bold"],
+  "  ",
+  StyleBox["where  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      StyleBox[\(a > 0\),
+        FontFamily->"Courier",
+        FontWeight->"Plain"]],
+    FontWeight->"Bold"],
+  StyleBox["  can be used with (1) and (2) to produce iteration formulas for \
+finding  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(\@a\)]],
+  StyleBox[".  If it is used in (1), the result is the familiar \
+Newton-Raphson formula for finding square roots: \n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["\n",
+    FontFamily->"New Century Schlbk",
+    FontSize->6],
+  StyleBox["(3)\t\t\t",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(g \((x)\)\  = \ x - \(x\^2 - a\)\/\(2\ x\)\)]],
+  StyleBox[".\n\nWhen it is used in (2) the resulting Halley formula is: \n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["\n",
+    FontFamily->"New Century Schlbk",
+    FontSize->6],
+  StyleBox["\t\t\t",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(g \((x)\)\  = \ 
+        x - \((\(x\^2 - a\)\/\(2\ x\)\ )\) \((1 - \(\((x\^2 - a)\) 2\)\/\(2\ \
+\((2  x)\)\^2\))\)\^\(-1\)\)]],
+  "  \n",
+  StyleBox["(4)",
+    FontFamily->"New Century Schlbk"],
+  "\t\t\tor\n\t\t\t",
+  Cell[BoxData[
+      \(g \((x)\)\  = \ \(x\^3 + 3\ a\ x\)\/\(3\ x\^2 + a\)\)]],
+  "  ",
+  StyleBox["\n\nThis latter formula is a third-order method for computing  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(\@a\)]],
+  StyleBox[".  Because of the rapid convergence of the sequences generated by \
+(3) and (4), the iteration usually converges to machine accuracy in a few \
+iterations.  Multiple precision arithmetic is needed to demonstrate the \
+distinction between second and third order convergence.  The software ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["Mathematica",
+    FontFamily->"New Century Schlbk",
+    FontSlant->"Italic"],
+  StyleBox[" has extended precision arithmetic which is useful for exploring \
+these ideas.",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Halley'sMethodProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Halley'sMethodProg.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider",
+  StyleBox[" the function  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(f \((x)\)\),
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        RowBox[{
+          StyleBox[\(x\^2\),
+            FontWeight->"Plain"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Plain"], 
+          StyleBox["2",
+            FontFamily->"Courier",
+            FontWeight->"Plain"]}]}]],
+    FontWeight->"Bold"],
+  StyleBox[", which has a root at  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(x = \@2\)]],
+  StyleBox[".   \n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["1 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use the Newton-Raphson formula to find the root.    ",
+    FontFamily->"New Century Schlbk"],
+  "  Use the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = 2\)]],
+  StyleBox["\n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["1 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use Halley's formula to find the root.    ",
+    FontFamily->"New Century Schlbk"],
+  "  Use the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = 2\)]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(a = 2;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        StyleBox[\(f[x_]\),
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        RowBox[{\(x\^2\), 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["a",
+            FontFamily->"Courier",
+            FontWeight->"Bold"]}]}], 
+      StyleBox[";",
+        FontFamily->"Courier",
+        FontWeight->"Bold"]}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Form the Newton-Raphson iteration function  ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["g(x)",
+    FontFamily->"Courier New"],
+  StyleBox[". ",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(\(g[x_]\  = \ x\  - \ f[x]\/\(f'\)[x];\)\(\ \)\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<g[x] = x - \!\(f[x]\/\(f'\)[x]\)\>\""];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<g[x] = \>", g[x]];\), " "}], "\[IndentingNewLine]", 
+    StyleBox[\(\(g[x_]\  = \ Together[g[x]];\)\(\ \)\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<g[x] = \>", g[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We start the iteration with  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0 = 2\)]],
+  StyleBox["  and carry ",
+    FontFamily->"New Century Schlbk"],
+  "100",
+  StyleBox[" digits in the computations, by telling Mathematica the precision \
+of ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0\)]],
+  StyleBox[" by issuing the command ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["p[0] = N[2,",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox["100",
+    FontWeight->"Bold"],
+  StyleBox["]",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox[".  Next, a short program is written to compute the first seven \
+terms in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{\(p[0] = N[2, 100];\), "\[IndentingNewLine]", \(n = 
+        7;\), "\[IndentingNewLine]", 
+    StyleBox[\(Print["\<\n\>", \ N[p[0], 100]];\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\n", 
+    StyleBox[\(For[k = 1, 
+        k \[LessEqual] n, \(k++\), \n\ \ \ \ p[k]\  = \ 
+          g[p[k - 1]]; \n\ \ \ \ Print["\<\n\>", \ 
+          NumberForm[N[p[k], 100], 100]];\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Since the root is known to be exactly   ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p = \@2\)]],
+  StyleBox["  we can have Mathematica list the error  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p - p\_k\)]],
+  StyleBox["  at each step in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(For[k = 0, 
+        k \[LessEqual] 
+          n - 1, \(k++\), \n\ \ \ \ \(Print["\<\n\>", 
+            ScientificForm[\ \@a\  - \ p[k], 20]];\)\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]], "Input"],
+
+Cell[TextData[StyleBox["Looking at the error, we see that the number of \
+accurate digits is doubling at each step in the computations, hence \
+convergence is proceeding quadratically. ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Verify the convergence rate.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  At the simple root  ",
+  Cell[BoxData[
+      \(p = \@2\)]],
+  "  we can explore the ratio ",
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Pk = Table[0, {i, 0, n - 1}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 0, 
+        i \[LessEqual] 
+          n - 1, \(i++\); \
+\[IndentingNewLine]Pk\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = p[i - 1]];\)\), "\[IndentingNewLine]", 
+    \(\(Nk = n - 1;\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = \@2 - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Ek\^2, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Abs[Qk], "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 17]\)}], "Input"],
+
+Cell["\<\
+Therefore, the Newton-Raphson iteration is converging quadratically. \
+\>", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[StyleBox["Now we will investigate Halley's iteration for \
+finding square roots.  ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(a = 2;\), " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        StyleBox[\(f[x_]\),
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        RowBox[{\(x\^2\), 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["-",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["a",
+            FontFamily->"Courier",
+            FontWeight->"Bold"]}]}], 
+      StyleBox[";",
+        FontFamily->"Courier",
+        FontWeight->"Bold"]}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Form the Halley iteration function  ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["h(x)",
+    FontFamily->"Courier New"],
+  StyleBox[". ",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(h[
+            x_]\  = \ \ x - \(f[x]\/\(f'\)[
+                    x]\) \((1 - \(f[x] \(f''\)[x]\)\/\(2 \
+\((\(f'\)[x])\)\^2\))\)\^\(-1\);\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", \(Print["\<f[x] = \>", 
+        f[x]];\), "\[IndentingNewLine]", \(Print[\*"\"\<h[x] = x - \!\(f[x]\/\
+\(f'\)[x]\)(1-\!\(\(f[x] \(f''\)[x]\)\/\(2 \
+\((\(f'\)[x])\)\^2\)\)\!\(\()\^\(-1\)\)\)\>\""];\), "\[IndentingNewLine]", \
+\(Print["\<h[x] = \>", h[x]];\), "\[IndentingNewLine]", \(h[x_] = 
+        Together[h[x]];\), "\[IndentingNewLine]", \(Print["\<h[x] = \>", 
+        h[x]];\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We start the iteration with  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0 = 2\)]],
+  StyleBox["  and carry ",
+    FontFamily->"New Century Schlbk"],
+  "100",
+  StyleBox[" digits in the computations, by telling Mathematica the precision \
+of ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0\)]],
+  StyleBox[" by issuing the command ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["p[0] = N[2,",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox["100",
+    FontWeight->"Bold"],
+  StyleBox["]",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox[".  Next, a short program is written to compute the first five \
+terms in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{\(p[0] = N[2, 100];\), "\[IndentingNewLine]", \(n = 
+        5;\), "\[IndentingNewLine]", 
+    StyleBox[\(Print["\<\n\>", \ N[p[0], 100]];\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\n", 
+    StyleBox[\(For[k = 1, 
+        k \[LessEqual] n, \(k++\), \n\ \ \ \ p[k]\  = \ 
+          h[p[k - 1]]; \n\ \ \ \ Print["\<\n\>", \ 
+          NumberForm[N[p[k], 100], 100]];\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Since the root is known to be exactly   ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p = \@2\)]],
+  StyleBox["  we can have Mathematica list the error  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p - p\_k\)]],
+  StyleBox["  at each step in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(For[k = 0, 
+        k \[LessEqual] 
+          n - 1, \(k++\), \n\ \ \ \ \(Print["\<\n\>", 
+            ScientificForm[\ \@a\  - \ p[k], 20]];\)\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]], "Input"],
+
+Cell[TextData[StyleBox["Looking at the error, we see that the number of \
+accurate digits is tripling at each step in the computations, hence \
+convergence is proceeding cubically.  \nWe can conclude that Halley's method \
+is faster than Newton's method.  ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Verify the convergence rate.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  At the simple root  ",
+  Cell[BoxData[
+      \(p = \@2\)]],
+  "  we can explore the ratio ",
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^3\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Pk = Table[0, {i, 0, n - 1}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 0, 
+        i \[LessEqual] 
+          n - 1, \(i++\); \
+\[IndentingNewLine]Pk\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = p[i - 1]];\)\), "\[IndentingNewLine]", 
+    \(\(Nk = n - 1;\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = \@2 - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Ek\^3, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Abs[Qk], "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^3\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 17]\)}], "Input"],
+
+Cell["Therefore, the Halley iteration is converging cubically. ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider",
+  StyleBox[" the function  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox[\(f \((x)\)\),
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Plain"], 
+        StyleBox[\(x\^3 - 3\ x + 2\),
+          FontWeight->"Plain"]}]],
+    FontWeight->"Bold"],
+  StyleBox[", which has a root at  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(x = \(-2\)\)]],
+  StyleBox[".   \n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use the Newton-Raphson formula to find the root.  ",
+    FontFamily->"New Century Schlbk"],
+  "  Use the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = \(-2.2\)\)]],
+  StyleBox["\n",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox["Use Halley's formula to find the root.  ",
+    FontFamily->"New Century Schlbk"],
+  "  Use the starting value  ",
+  Cell[BoxData[
+      \(p\_0 = \(-2.2\)\)]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (a).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{
+          StyleBox[\(f[x_]\),
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox[" ",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], 
+          StyleBox["=",
+            FontFamily->"Courier",
+            FontWeight->"Bold"], \(x\^3 - 3\ x + 2\)}], ";"}], 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Form the Newton-Raphson iteration function  ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["g(x)",
+    FontFamily->"Courier New"],
+  StyleBox[". ",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(\(g[x_]\  = \ x\  - \ f[x]\/\(f'\)[x];\)\(\ \)\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<g[x] = x - \!\(f[x]\/\(f'\)[x]\)\>\""];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<g[x] = \>", g[x]];\), " "}], "\[IndentingNewLine]", 
+    StyleBox[\(\(g[x_]\  = \ Together[g[x]];\)\(\ \)\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<g[x] = \>", g[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We start the iteration with  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0 = \(-2.2\)\)]],
+  StyleBox["  and carry ",
+    FontFamily->"New Century Schlbk"],
+  "100",
+  StyleBox[" digits in the computations, by telling Mathematica the precision \
+of ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0\)]],
+  StyleBox[" by issuing the command ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["p[0] = N[",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      StyleBox[\(\(-11\)\/5\),
+        FontWeight->"Bold"]]],
+  StyleBox[",",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox["100",
+    FontWeight->"Bold"],
+  StyleBox["]",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox[".  Next, a short program is written to compute the first seven \
+terms in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{\(p[0] = N[\(-11\)/5, 100];\), "\[IndentingNewLine]", \(n = 
+        7;\), "\[IndentingNewLine]", 
+    StyleBox[\(Print["\<\n\>", \ N[p[0], 100]];\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\n", 
+    StyleBox[\(For[k = 1, 
+        k \[LessEqual] n, \(k++\), \n\ \ \ \ p[k]\  = \ 
+          g[p[k - 1]]; \n\ \ \ \ Print["\<\n\>", \ 
+          NumberForm[N[p[k], 100], 100]];\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Since the root is known to be exactly   ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  StyleBox["  we can have Mathematica list the error  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p - p\_k\)]],
+  StyleBox["  at each step in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(For[k = 0, 
+        k \[LessEqual] 
+          n - 1, \(k++\), \n\ \ \ \ \(Print["\<\n\>", 
+            ScientificForm[\ \(-2\)\  - \ p[k], 20]];\)\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]], "Input"],
+
+Cell[TextData[StyleBox["Looking at the error, we see that the number of \
+accurate digits is doubling at each step in the computations, hence \
+convergence is proceeding quadratically. ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Verify the convergence rate.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  At the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "  we can explore the ratio ",
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Pk = Table[0, {i, 0, n - 1}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 0, 
+        i \[LessEqual] 
+          n - 1, \(i++\); \
+\[IndentingNewLine]Pk\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = p[i - 1]];\)\), "\[IndentingNewLine]", 
+    \(\(Nk = n - 1;\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = \(-2\) - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Ek\^2, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Abs[Qk], "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^2\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 17]\)}], "Input"],
+
+Cell["\<\
+Therefore, the Newton-Raphson iteration is converging quadratically. \
+\>", "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2 (b).",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[StyleBox["Now we will investigate Halley's iteration for \
+finding square roots.  ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        StyleBox[\(f[x_]\),
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox[" ",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], 
+        StyleBox["=",
+          FontFamily->"Courier",
+          FontWeight->"Bold"], \(x\^3 - 3\ x + 2\)}], 
+      StyleBox[";",
+        FontFamily->"Courier",
+        FontWeight->"Bold"]}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f[x] = \>", f[x]];\), " "}]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Form the Halley iteration function  ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["h(x)",
+    FontFamily->"Courier New"],
+  StyleBox[". ",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{
+    StyleBox[\(h[
+            x_]\  = \ \ x - \(f[x]\/\(f'\)[
+                    x]\) \((1 - \(f[x] \(f''\)[x]\)\/\(2 \
+\((\(f'\)[x])\)\^2\))\)\^\(-1\);\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\[IndentingNewLine]", \(Print["\<f[x] = \>", 
+        f[x]];\), "\[IndentingNewLine]", \(Print[\*"\"\<h[x] = x - \!\(f[x]\/\
+\(f'\)[x]\)(1-\!\(\(f[x] \(f''\)[x]\)\/\(2 \
+\((\(f'\)[x])\)\^2\)\)\!\(\()\^\(-1\)\)\)\>\""];\), "\[IndentingNewLine]", \
+\(Print["\<h[x] = \>", h[x]];\), "\[IndentingNewLine]", \(h[x_] = 
+        Together[h[x]];\), "\[IndentingNewLine]", \(Print["\<h[x] = \>", 
+        h[x]];\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We start the iteration with  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0 = \(-2.2\)\)]],
+  StyleBox["  and carry ",
+    FontFamily->"New Century Schlbk"],
+  "100",
+  StyleBox[" digits in the computations, by telling Mathematica the precision \
+of ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p\_0\)]],
+  StyleBox[" by issuing the command ",
+    FontFamily->"New Century Schlbk"],
+  StyleBox["p[0] = N[",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  Cell[BoxData[
+      StyleBox[\(\(-11\)\/5\),
+        FontWeight->"Bold"]]],
+  StyleBox[",",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox["100",
+    FontWeight->"Bold"],
+  StyleBox["]",
+    FontFamily->"Courier",
+    FontWeight->"Bold"],
+  StyleBox[".  Next, a short program is written to compute the first five \
+terms in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[{\(p[0] = N[\(-11\)\/5, 100];\), "\[IndentingNewLine]", \(n = 
+        5;\), "\[IndentingNewLine]", 
+    StyleBox[\(Print["\<\n\>", \ N[p[0], 100]];\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"], "\n", 
+    StyleBox[\(For[k = 1, 
+        k \[LessEqual] n, \(k++\), \n\ \ \ \ p[k]\  = \ 
+          h[p[k - 1]]; \n\ \ \ \ Print["\<\n\>", \ 
+          NumberForm[N[p[k], 100], 100]];\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Since the root is known to be exactly   ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  StyleBox["  we can have Mathematica list the error  ",
+    FontFamily->"New Century Schlbk"],
+  Cell[BoxData[
+      \(p - p\_k\)]],
+  StyleBox["  at each step in the iteration:",
+    FontFamily->"New Century Schlbk"]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(For[k = 0, 
+        k \[LessEqual] 
+          n - 1, \(k++\), \n\ \ \ \ \(Print["\<\n\>", 
+            ScientificForm[\ \(-2\)\  - \ p[k], 20]];\)\ ]\),
+      FontFamily->"Courier",
+      FontWeight->"Bold"]], "Input"],
+
+Cell[TextData[StyleBox["Looking at the error, we see that the number of \
+accurate digits is tripling at each step in the computations, hence \
+convergence is proceeding cubically.  \nWe can conclude that Halley's method \
+is faster than Newton's method.  ",
+  FontFamily->"New Century Schlbk"]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Verify the convergence rate.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  At the simple root  ",
+  Cell[BoxData[
+      \(p = \(-2\)\)]],
+  "  we can explore the ratio ",
+  Cell[BoxData[
+      \(\(\(|\)\(E\_\(k + 1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^3\)]],
+  StyleBox[". ",
+    FontFamily->"Times New Roman"],
+  " "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Pk = Table[0, {i, 0, n - 1}];\)\), "\[IndentingNewLine]", 
+    \(\(For[i = 0, 
+        i \[LessEqual] 
+          n - 1, \(i++\); \
+\[IndentingNewLine]Pk\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\) = p[i - 1]];\)\), "\[IndentingNewLine]", 
+    \(\(Nk = n - 1;\)\), "\[IndentingNewLine]", 
+    \(\(Vk = Table[i - 1, {i, 1, Nk + 1}];\)\), "\[IndentingNewLine]", 
+    \(\(Ek = \@2 - Pk;\)\), "\[IndentingNewLine]", 
+    \(\(Qk = 
+        Take[Abs[Ek], \(-Nk\)]/\ 
+          Take[Ek\^3, Nk];\)\), "\[IndentingNewLine]", 
+    \(\(Qk = Append[Abs[Qk], "\< \>"];\)\), "\[IndentingNewLine]", 
+    \(\(Tvals = Transpose[{Vk, Pk, Ek, Qk}];\)\), "\[IndentingNewLine]", 
+    \(NumberForm[
+      TableForm[Tvals, 
+        TableHeadings \[Rule] {None, {"\<k\>", \*"\"\<\!\(p\_k\)\>\"", \
+\*"\"\<\!\(E\_k\)=p-\!\(p\_k\)\>\"", \*"\"\<\!\(\(\(|\)\(E\_\(k + \
+1\)\)\(|\)\)\/\((\(|\)\(E\_k\)\(|\))\)\^3\)\>\""}}, 
+        TableSpacing \[Rule] {3, 1}], 17]\)}], "Input"],
+
+Cell["Therefore, the Halley iteration is converging cubically. ", "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Newton'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Newton-Raphson Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Newton'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  ",
+  "Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/Halley'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Halley's Method",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/Halley'sMethodBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 168, 4, 35, "Text"],
+Cell[1947, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3426, 111, 3096, 94, 125, "Text"],
+Cell[6525, 207, 1044, 32, 52, "Text"],
+Cell[7572, 241, 3422, 109, 228, "Text"],
+Cell[10997, 352, 2770, 90, 177, "Text"],
+Cell[13770, 444, 641, 22, 33, "Text"],
+Cell[14414, 468, 1651, 49, 130, "Text"],
+Cell[16068, 519, 2810, 88, 244, "Text"],
+Cell[18881, 609, 2536, 83, 177, "Text"],
+Cell[21420, 694, 629, 22, 33, "Text"],
+Cell[22052, 718, 3037, 91, 319, "Text"],
+Cell[25092, 811, 642, 21, 33, "Text"],
+Cell[25737, 834, 1728, 60, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[27490, 898, 105, 2, 33, "Text"],
+Cell[27598, 902, 843, 26, 70, "Input"],
+Cell[28444, 930, 231, 7, 33, "Text"],
+Cell[28678, 939, 618, 11, 161, "Input"],
+Cell[29299, 952, 790, 26, 53, "Text"],
+Cell[30092, 980, 469, 10, 130, "Input"],
+Cell[30564, 992, 377, 11, 33, "Text"],
+Cell[30944, 1005, 244, 6, 54, "Input"],
+Cell[31191, 1013, 233, 3, 33, "Text"],
+Cell[31427, 1018, 375, 13, 39, "Text"],
+Cell[31805, 1033, 990, 20, 228, "Input"],
+Cell[32798, 1055, 93, 2, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[32928, 1062, 105, 2, 30, "Text"],
+Cell[33036, 1066, 144, 2, 33, "Text"],
+Cell[33183, 1070, 843, 26, 70, "Input"],
+Cell[34029, 1098, 223, 7, 33, "Text"],
+Cell[34255, 1107, 645, 12, 162, "Input"],
+Cell[34903, 1121, 789, 26, 53, "Text"],
+Cell[35695, 1149, 469, 10, 130, "Input"],
+Cell[36167, 1161, 377, 11, 33, "Text"],
+Cell[36547, 1174, 244, 6, 54, "Input"],
+Cell[36794, 1182, 304, 4, 52, "Text"],
+Cell[37101, 1188, 375, 13, 39, "Text"],
+Cell[37479, 1203, 990, 20, 228, "Input"],
+Cell[38472, 1225, 73, 0, 33, "Text"]
+}, Closed]],
+Cell[38560, 1228, 1447, 50, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[40032, 1282, 105, 2, 33, "Text"],
+Cell[40140, 1286, 474, 14, 50, "Input"],
+Cell[40617, 1302, 231, 7, 33, "Text"],
+Cell[40851, 1311, 618, 11, 161, "Input"],
+Cell[41472, 1324, 941, 32, 55, "Text"],
+Cell[42416, 1358, 477, 10, 130, "Input"],
+Cell[42896, 1370, 380, 11, 33, "Text"],
+Cell[43279, 1383, 247, 6, 50, "Input"],
+Cell[43529, 1391, 233, 3, 33, "Text"],
+Cell[43765, 1396, 378, 13, 39, "Text"],
+Cell[44146, 1411, 993, 20, 226, "Input"],
+Cell[45142, 1433, 93, 2, 33, "Text"]
+}, Closed]],
+
+Cell[CellGroupData[{
+Cell[45272, 1440, 105, 2, 30, "Text"],
+Cell[45380, 1444, 144, 2, 33, "Text"],
+Cell[45527, 1448, 501, 15, 50, "Input"],
+Cell[46031, 1465, 223, 7, 33, "Text"],
+Cell[46257, 1474, 645, 12, 162, "Input"],
+Cell[46905, 1488, 940, 32, 55, "Text"],
+Cell[47848, 1522, 478, 10, 143, "Input"],
+Cell[48329, 1534, 380, 11, 33, "Text"],
+Cell[48712, 1547, 247, 6, 50, "Input"],
+Cell[48962, 1555, 304, 4, 52, "Text"],
+Cell[49269, 1561, 378, 13, 39, "Text"],
+Cell[49650, 1576, 990, 20, 228, "Input"],
+Cell[50643, 1598, 73, 0, 33, "Text"]
+}, Closed]],
+Cell[50731, 1601, 158, 3, 32, "Text"],
+Cell[50892, 1606, 583, 18, 33, "Text"],
+Cell[51478, 1626, 565, 17, 33, "Text"],
+Cell[52046, 1645, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

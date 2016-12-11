@@ -1,0 +1,2091 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     57726,       1853]*)
+(*NotebookOutlinePosition[     58705,       1883]*)
+(*  CellTagsIndexPosition[     58661,       1879]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Matrix Inverse",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background\n\nTheorem (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Inverse Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Gauss-JordanElimination.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[") ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  " Assume that ",
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  " is an ",
+  Cell[BoxData[
+      \(n\[Times]n\)]],
+  " nonsingular matrix. Form the augmented matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "|", 
+            StyleBox[
+              SubscriptBox["I", 
+                StyleBox[\(n, n\),
+                  FontWeight->"Plain"]],
+              FontWeight->"Bold"]}], "]"}]}]]],
+  " of dimension  ",
+  Cell[BoxData[
+      \(n\[Times]2  n\)]],
+  ".  Use Gauss-Jordan elimination to reduce the matrix ",
+  Cell[BoxData[
+      StyleBox["M",
+        FontWeight->"Bold"]]],
+  " so that the identity ",
+  Cell[BoxData[
+      StyleBox[
+        SubscriptBox["I", 
+          StyleBox[\(n, n\),
+            FontWeight->"Plain"]],
+        FontWeight->"Bold"]]],
+  " is in the first ",
+  Cell[BoxData[
+      \(n\)]],
+  " columns.  Then the inverse ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  " is located in columns ",
+  Cell[BoxData[
+      \(n, n + 1,  ... , 2  n\)]],
+  ".  The augmented matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "|", 
+            StyleBox[
+              SubscriptBox["I", 
+                StyleBox[\(n, n\),
+                  FontWeight->"Plain"]],
+              FontWeight->"Bold"]}], "]"}]}]]],
+  " looks like:\n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {\(a\_\(1, 1\)\), \(a\_\(1, 2\)\), \(a\_\(1, 3\)\), 
+                "...", \(a\_\(1, n\)\), "1", "0", "0", "...", "0"},
+              {\(a\_\(2, 1\)\), \(a\_\(2, 2\)\), \(a\_\(2, 3\)\), 
+                "...", \(a\_\(2, n\)\), "0", "1", "0", "...", "0"},
+              {\(a\_\(3, 1\)\), \(a\_\(3, 2\)\), \(a\_\(3, 3\)\), 
+                "...", \(a\_\(3, n\)\), "0", "0", "1", "...", "0"},
+              {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                "\[VerticalEllipsis]", " ", "\[VerticalEllipsis]", " ", " ", 
+                "\[VerticalEllipsis]", " ", " "},
+              {\(a\_\(n, 1\)\), \(a\_\(n, 2\)\), \(a\_\(n, 3\)\), 
+                "...", \(a\_\(n, n\)\), "0", "0", "0", "...", "1"}
+              }], ")"}]}]]]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/InverseMatrixProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/InverseMatrixProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell["\<\
+We can use the previously developed Gauss-Jordan subroutine to find \
+the inverse of a matrix.\
+\>", "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/InverseMatrixProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/InverseMatrixProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Algorithm  (Complete Gauss-Jordan Elimination).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Construct the solution to the linear system  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{
+          StyleBox["A",
+            FontWeight->"Bold"], " ", 
+          StyleBox["X",
+            FontWeight->"Bold"]}], " ", "=", " ", 
+        StyleBox["B",
+          FontWeight->"Bold"]}]]],
+  "  by using Gauss-Jordan elimination.  Provision is made for row \
+interchanges if they are needed.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Complete Gauss-Jordan Elimination",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"],
+
+Cell[BoxData[
+    StyleBox[\(\(GaussJordan[A0_, 
+          n_]\)\(:=\)\(\[IndentingNewLine]\)\(Module[\ {A = A0, i, k, 
+            p}, \ \[IndentingNewLine]Print[\ 
+            MatrixForm[A]\ ]; \ \[IndentingNewLine]For[\ p = 1, \ 
+            p \[LessEqual] n, \ \(p++\), \ \[IndentingNewLine]For[\ 
+              k = p + 1, \ 
+              k \[LessEqual] 
+                n, \ \(k++\), \ \[IndentingNewLine]\(If[\ 
+                  Abs[A\_\(\(\[LeftDoubleBracket]\)\(k, p\)\(\
+\[RightDoubleBracket]\)\)] > 
+                    Abs[A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\
+\[RightDoubleBracket]\)\)], \ \
+\[IndentingNewLine]\(A\_\(\(\[LeftDoubleBracket]\)\({p, k}\)\(\
+\[RightDoubleBracket]\)\)\  = \ 
+                      A\_\(\(\[LeftDoubleBracket]\)\({k, p}\)\(\
+\[RightDoubleBracket]\)\);\)\ \ \ ];\)\ ]; \ \[IndentingNewLine]A\_\(\(\
+\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\  = \ 
+              A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\[RightDoubleBracket]\)\)\/\
+A\_\(\(\[LeftDoubleBracket]\)\(p, p\)\(\[RightDoubleBracket]\)\); \ \
+\[IndentingNewLine]For[\ i = 1, \ 
+              i \[LessEqual] 
+                n, \ \(i++\), \ \[IndentingNewLine]\(If[\ 
+                  i \[NotEqual] 
+                    p, \ \[IndentingNewLine]A\_\(\(\[LeftDoubleBracket]\)\(i\)\
+\(\[RightDoubleBracket]\)\)\  = \ 
+                    A\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)\  - \ \(A\_\(\(\[LeftDoubleBracket]\)\(i, 
+                            p\)\(\[RightDoubleBracket]\)\)\) 
+                        A\_\(\(\[LeftDoubleBracket]\)\(p\)\(\
+\[RightDoubleBracket]\)\)\ \ ];\)\ ]; \ \[IndentingNewLine]Print[
+              MatrixForm[A]];\ ]; \ \[IndentingNewLine]Return[
+            A];\ \ ]\)\(\ \)\),
+      Background->None]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Gauss-Jordan elimination to find the inverse of the matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", " ", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"4", "8", "4", "0"},
+                {"1", "4", "7", "2"},
+                {"1", "5", "4", \(-3\)},
+                {"1", "3", "0", \(-2\)}
+                }], "\[NoBreak]", ")"}],
+          (MatrixForm[ #]&)]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  and the augmented matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "|", 
+            StyleBox[
+              SubscriptBox["I", 
+                StyleBox[\(4, 4\),
+                  FontWeight->"Plain"]],
+              FontWeight->"Bold"]}], "]"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"4", "8", "4", "0"},
+                  {"1", "4", "7", "2"},
+                  {"1", "5", "4", \(-3\)},
+                  {"1", "3", "0", \(-2\)}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], ",", 
+            StyleBox[\(I\_\(4\[Times]4\)\),
+              FontWeight->"Bold"]}], "]"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"M", " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"4", "8", "4", "0", "1", "0", "0", "0"},
+              {"1", "4", "7", "2", "0", "1", "0", "0"},
+              {"1", "5", "4", \(-3\), "0", "0", "1", "0"},
+              {"1", "3", "0", \(-2\), "0", "0", "0", "1"}
+              }], ")"}]}], ";"}]], "Input"],
+
+Cell["Not perform Gauss-Jordan elimination.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M, 4];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Get the inverse of  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  out of  this augmented matrix, and store it in the matrix  ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {\(49\/48\), \(-\(5\/4\)\), \(7\/6\), \(-3\)},
+                  {\(-\(23\/48\)\), \(3\/4\), \(-\(5\/6\)\), "2"},
+                  {\(3\/16\), \(-\(1\/4\)\), \(1\/2\), \(-1\)},
+                  {\(-\(5\/24\)\), \(1\/2\), \(-\(2\/3\)\), "1"}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}]], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< B = \>", MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If decimals are required in the solution then decimal need to be used \
+when entering the matrix."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Enter the matrix  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  and the augmented matrix ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], "|", 
+            StyleBox[
+              SubscriptBox["I", 
+                StyleBox[\(4, 4\),
+                  FontWeight->"Plain"]],
+              FontWeight->"Bold"]}], "]"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", " ", "=", " ", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"4.0", "8.0", "4.0", "0.0"},
+                  {"1.0", "4.0", "7.0", "2.0"},
+                  {"1.0", "5.0", "4.0", \(-3.0\)},
+                  {"1.0", "3.0", "0.0", \(-2.0\)}
+                  }], "\[NoBreak]", ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], " ", "=", " ", 
+        RowBox[{"[", 
+          RowBox[{
+            StyleBox["A",
+              FontWeight->"Bold"], ",", 
+            StyleBox[\(I\_\(4\[Times]4\)\),
+              FontWeight->"Bold"]}], "]"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{"M", " ", "=", " ", 
+        RowBox[{"(", GridBox[{
+              {"4.0", "8.0", "4.0", "0.0", "1", "0", "0", "0"},
+              {"1.0", "4.0", "7.0", "2.0", "0", "1", "0", "0"},
+              {"1.0", "5.0", "4.0", \(-3.0\), "0", "0", "1", "0"},
+              {"1.0", "3.0", "0.0", \(-2.0\), "0", "0", "0", "1"}
+              }], ")"}]}], ";"}]], "Input"],
+
+Cell["Then perform Gauss-Jordan elimination.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    \(\(\(GaussJordan[M, 4];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Get the inverse of  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  out of  this augmented matrix, and store it in the matrix  ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ". \n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  What if you thought that the inverse only had 6 decimal places of \
+accuracy.\n\nThen you would use the following matrix. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1.02083", \(-1.25\), "1.16667", \(-3. \)},
+                  {\(-0.479167\), "0.75", \(-0.833333\), "2."},
+                  {"0.1875", \(-0.25\), "0.5", \(-1. \)},
+                  {\(-0.208333\), "0.5", \(-0.666667\), "1.`"}
+                  }], ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< B = \>", MatrixForm[B]];\)\)}], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "This should not be too surprising if only 6 decimal places were available.\
+\n\nHowever, ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " carries out its internal computations in about 17 decimal places,  so \
+there are really more digits that usually are not printed."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[TextData[{
+  "Get the inverse of  ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "  out of  this augmented matrix, and store it in the matrix  ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"B", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1.0208333333333335", \(-1.25\), 
+                    "1.1666666666666667", \(-3. \)},
+                  {\(-0.47916666666666674\), "0.75", \(-0.8333333333333333\), 
+                    "2."},
+                  {"0.18750000000000003", \(-0.25\), "0.5", \(-1. \)},
+                  {\(-0.20833333333333337\), "0.5", \(-0.6666666666666666\), 
+                    "1."}
+                  }], ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}]], "Input"],
+
+Cell["Verify the solution.", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A]];\)\)}], "Input"],
+
+Cell["Chop the values that are close to zero. ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[Chop[A . B]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[Chop[B . A]]];\)\)}], "Input"],
+
+Cell["This is a lot closer to the \"true identity matrix.\" ", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Hilbert Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HilbertMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The elements of the Hilbert matrix  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["H",
+          FontWeight->"Bold"], "n"]]],
+  " of order n are  ",
+  Cell[BoxData[
+      \(h\_\(i, j\)\  = \ 1\/\(i + j - 1\)\)]],
+  "  for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  "  and  ",
+  Cell[BoxData[
+      RowBox[{\(j = 1\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "...", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  \n\n\t\t\t",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["H",
+            FontWeight->"Bold"], "n"], " ", "=", " ", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1", \(1\/2\), 
+                  "\[CenterEllipsis]", \(1\/\(n - 1\)\), \(1\/n\)},
+                {\(1\/2\), \(1\/3\), 
+                  "\[CenterEllipsis]", \(1\/n\), \(1\/\(n + 1\)\)},
+                {"\[VerticalEllipsis]", "\[VerticalEllipsis]", 
+                  "\[DescendingEllipsis]", "\[VerticalEllipsis]", 
+                  "\[VerticalEllipsis]"},
+                {\(1\/\(n - 1\)\), \(1\/n\), 
+                  "\[CenterEllipsis]", \(1\/\(2  n - 3\)\), \(1\/\(2  n - 
+                        2\)\)},
+                {\(1\/n\), \(1\/\(n + 1\)\), 
+                  "\[CenterEllipsis]", \(1\/\(2  n - 2\)\), \(1\/\(2  n - 
+                        1\)\)}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Some Hilbert Matrices.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "\tFor example, we can generate the first ten Hilbert matrices using the \
+following ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " commands."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          10, \(i++\), \[IndentingNewLine]Print["\<\t\t\>", "\<H\>"\_i, "\<= \
+\>", MatrixForm[HilbertMatrix[i, i]]]\ ];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the inverse of the 5\[Times]5 Hilbert matrix  ",
+  Cell[BoxData[
+      RowBox[{
+        SubscriptBox[
+          StyleBox["H",
+            FontWeight->"Bold"], "5"], 
+        TagBox[
+          RowBox[{" ", 
+            RowBox[{"=", " ", 
+              RowBox[{"(", "\[NoBreak]", GridBox[{
+                    {"1", \(1\/2\), \(1\/3\), \(1\/4\), \(1\/5\)},
+                    {\(1\/2\), \(1\/3\), \(1\/4\), \(1\/5\), \(1\/6\)},
+                    {\(1\/3\), \(1\/4\), \(1\/5\), \(1\/6\), \(1\/7\)},
+                    {\(1\/4\), \(1\/5\), \(1\/6\), \(1\/7\), \(1\/8\)},
+                    {\(1\/5\), \(1\/6\), \(1\/7\), \(1\/8\), \(1\/9\)}
+                    }], "\[NoBreak]", ")"}]}]}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Enter the matrix using the Table command and the formula for ",
+  Cell[BoxData[
+      \(h\_\(i, j\)\  = \ 1\/\(i + j - 1\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A = Table[1\/\(i + j - 1\), {i, 5}, {j, 5}];\)\ \), "\n", 
+    \(\(Print[\*"\"\<\!\(H\_5\)= \>\"", MatrixForm[A]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["I",
+    FontWeight->"Bold"],
+  "] and store it in the variable ",
+  StyleBox["AI.",
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\), "\n", 
+    \(\(AI = 
+        Transpose[
+          Join[Transpose[A], Transpose[IdentityMatrix[n]]]];\)\), "\n", 
+    \(MatrixForm[AI]\)}], "Input"],
+
+Cell[TextData[{
+  "Construct the inverse matrix using Gauss-Jordan elimination.\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  All the computations are printed too !"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(M = GaussJordan[AI, 5];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Extract the inverse matrix ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ". from the augmented matrix ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["I",
+    FontWeight->"Bold"],
+  ",",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\({1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print[\*"\"\<   \!\(H\_5\) = \>\"", 
+        MatrixForm[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<(\!\(H\_5\)\!\(\()\^\(-1\)\)\) = \>\"", 
+        MatrixForm[B]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Verify that ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " is the inverse of ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B]];\)\), "\n", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< B = \>", MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If a numerical answer is required, then we can convert the \"exact\" \
+matrix to a decimal approximation."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<M = \>", MatrixForm[AI]];\)\), "\[IndentingNewLine]", 
+    \(\(AI = N[AI];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<M = \>", MatrixForm[AI]];\)\)}], "Input"],
+
+Cell[BoxData[
+    \(\(\(M = GaussJordan[AI, 5];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Extract the inverse matrix ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ". from the augmented matrix ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["I",
+    FontWeight->"Bold"],
+  ",",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\({1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print[\*"\"\<   \!\(H\_5\) = \>\"", 
+        MatrixForm[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<(\!\(H\_5\)\!\(\()\^\(-1\)\)\) = \>\"", 
+        MatrixForm[B]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Verify that ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " is the inverse of ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B]];\)\), "\n", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A]];\)\)}], "Input"],
+
+Cell["\<\
+Notice that the final computation contains entries that are \"close \
+to zero.\"  We can chop them off.\
+\>", "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[Chop[A . B]]];\)\), "\n", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[Chop[B . A]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  We can compare our result with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in procedure.  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< B = \>", MatrixForm[B]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  What we do not see is that the numerical calculations were carried out \
+using multiple precision arithmetic and there are about 17 decimal places \
+used in ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s calculations."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print["\<A = \>", 
+        NumberForm[MatrixForm[N[A]], 17]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        NumberForm[MatrixForm[Inverse[A]], 17]\ ];\)\), "\n", 
+    \(\(Print["\< B = \>", NumberForm[MatrixForm[B], 17]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  " \n\n\tEven for the case of the 5\[Times]5 Hilbert matrix we should \
+observe that we are encountering propagation of round off error in the \
+calculations.  "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) - B= \>\"", 
+        NumberForm[MatrixForm[Inverse[A] - \ B], 17]\ ];\)\)], "Input"],
+
+Cell[TextData[{
+  "It is easy to determine that the error is getting as large as  ",
+  Cell[BoxData[
+      \(2.2497260943055153`*^-8\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(Max[Abs[Inverse[A] - \ B]]\)], "Input"],
+
+Cell["The next example will illustrate how bad things really are. ", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Hilbert matrices are known to be ill-conditioned. Consider the matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " given by \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        TagBox[
+          RowBox[{"(", "\[NoBreak]", GridBox[{
+                {"1.", "0.5", "0.333333", "0.25", "0.2"},
+                {"0.5", "0.333333", "0.25", "0.2", "0.166667"},
+                {"0.333333", "0.25", "0.2", "0.166667", "0.142857"},
+                {"0.25", "0.2", "0.166667", "0.142857", "0.125"},
+                {"0.2", "0.166667", "0.142857", "0.125", "0.111111"}
+                }], "\[NoBreak]", ")"}],
+          Function[ BoxForm`e$, 
+            MatrixForm[ BoxForm`e$]]]}]]],
+  "  \n\t\nFind the inverse of the 5\[Times]5 matrix ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  " that approximates the inverse of the  5\[Times]5 Hilbert matrix ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["H",
+          FontWeight->"Bold"], "5"]]],
+  ".\n\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  " The entries in the matrix for this exercise must be typed in by hand in \
+order to make sure that only six decimal places are stored in the computer."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1.", "0.5", "0.333333", "0.25", "0.2"},
+                  {"0.5", "0.333333", "0.25", "0.2", "0.166667"},
+                  {"0.333333", "0.25", "0.2", "0.166667", "0.142857"},
+                  {"0.25", "0.2", "0.166667", "0.142857", "0.125"},
+                  {"0.2", "0.166667", "0.142857", "0.125", "0.111111"}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], " "}]], "Input"],
+
+Cell[TextData[{
+  "Form the augmented matrix [",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  ", ",
+  StyleBox["I",
+    FontWeight->"Bold"],
+  "] and store it in the variable ",
+  StyleBox["AI.",
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(n = 5;\)\ \), "\n", 
+    \(\(AI = 
+        Transpose[
+          Join[Transpose[A], Transpose[IdentityMatrix[n]]]];\)\ \), "\n", 
+    \(MatrixForm[AI]\ \)}], "Input"],
+
+Cell[TextData[{
+  "Construct the inverse matrix using Gauss-Jordan elimination.\n",
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  All the computations are printed too !"
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(M = GaussJordan[AI, 5];\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "Extract the inverse matrix ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  ". from the augmented matrix ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  " = [",
+  StyleBox["I",
+    FontWeight->"Bold"],
+  ",",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  "]."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(B = 
+        M\_\(\(\[LeftDoubleBracket]\)\({1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}\)\(\
+\[RightDoubleBracket]\)\);\)\ \), "\n", 
+    \(\(Print["\<A = \>", MatrixForm[A]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<B = \>", MatrixForm[B]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Verify that ",
+  StyleBox["B",
+    FontWeight->"Bold"],
+  " is the inverse of ",
+  StyleBox["A",
+    FontWeight->"Bold"],
+  "."
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[MatrixForm[A], MatrixForm[B], "\< = \>", 
+        MatrixForm[A . B], "\< = \>", MatrixForm[Chop[A . B]]];\)\), "\n", 
+    \(\(Print["\<\t\t\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[MatrixForm[B], MatrixForm[A], "\< = \>", 
+        MatrixForm[B . A], "\< = \>", MatrixForm[Chop[B . A]]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Remark.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  This is not a error, there is a problem with the matrix, it is \
+ill-conditioned.  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s built in subroutine gets the same answer as our subroutines. "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\< B = \>", MatrixForm[B]];\)\)}], "Input"],
+
+Cell["\<\
+Everything might appear to be working nicely, but compare the \
+inverse of the Hilbert matrix using exact arithmetic with the inverse of the \
+chopped Hilbert matrix\
+\>", "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"B1", "=", 
+          TagBox[
+            RowBox[{"(", GridBox[{
+                  {"25", \(-300\), "1050", \(-1400\), "630"},
+                  {\(-300\), "4800", \(-18900\), "26880", \(-12600\)},
+                  {"1050", \(-18900\), "79380", \(-117600\), "56700"},
+                  {\(-1400\), "26880", \(-117600\), "179200", \(-88200\)},
+                  {"630", \(-12600\), "56700", \(-88200\), "44100"}
+                  }], ")"}],
+            (MatrixForm[ #]&)]}], ";"}], " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"B2", "=", 
+          TagBox[
+            RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"26.9314", \(-336.018\), "1205.11", \(-1634.03\), 
+                    "744.411"},
+                  {\(-336.018\), "5471.18", \(-21789. \), 
+                    "31237.2", \(-14729.5\)},
+                  {"1205.11", \(-21789. \), "91810.7", \(-136344. \), 
+                    "65859.1"},
+                  {\(-1634.03\), "31237.2", \(-136344. \), 
+                    "207459.", \(-102007. \)},
+                  {"744.411", \(-14729.5\), "65859.1", \(-102007. \), 
+                    "50845.2"}
+                  }], "\[NoBreak]", ")"}],
+            Function[ BoxForm`e$, 
+              MatrixForm[ BoxForm`e$]]]}], ";"}], " "}], "\n", 
+    RowBox[{\(Print[\*"\"\<(\!\(H\_5\)\!\(\()\^\(-1\)\)\) = \>\"", 
+          MatrixForm[B1]];\), " "}], "\n", 
+    RowBox[{\(Print[\*"\"\<   \!\(A\^\(-1\)\) = \>\"", MatrixForm[B2]];\), 
+      " "}]}], "Input"],
+
+Cell["\<\
+Observe the difference between the computed inverse matrices when \
+the Hilbert matrix is chopped.\
+\>", "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<(\!\(H\_5\)\!\(\()\^\(-1\)\)\) - B = \>\"", 
+        MatrixForm[B1 - B2]];\)\)], "Input"],
+
+Cell[TextData[{
+  "What do you conclude regarding the propagation of error ?\n\nThe elements \
+of  ",
+  Cell[BoxData[
+      \(A\)]],
+  " and  ",
+  Cell[BoxData[
+      \(H\_5\)]],
+  " satisfy the relation ",
+  Cell[BoxData[
+      \(\(\(|\)\(h\_\(i, j\) - 
+          a\_\(i, j\)\)\(|\)\(\(\[LessEqual]\)\(5\[Times]10\^\(-7\)\)\)\)\)]],\
+
+  ", which is easy to verify by the following calculation."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(MatrixForm[HilbertMatrix[5, 5] - A]\)}], "Input"],
+
+Cell[TextData[{
+  "But the elements of  ",
+  Cell[BoxData[
+      \(B\)]],
+  " and  ",
+  Cell[BoxData[
+      \(\((H\_5\()\^\(-1\)\)\)\)]],
+  "  differ my much more, and the largest difference is  ",
+  StyleBox["28259",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(Max[Abs[B1 - B2]]\)], "Input"],
+
+Cell[TextData[{
+  "So that the error is magnified by at least a factor of  ",
+  Cell[BoxData[
+      \(5.6518`*^10\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(Max[Abs[B1 - B2]]/\((5\[Times]10\^\(-7\))\)\)], "Input"],
+
+Cell["Would you have suspected that this could happen? ", "Text"],
+
+Cell[TextData[{
+  StyleBox["Warning.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The Hilbert matrix is a classic example of an ",
+  ButtonBox["ill-conditioned matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Ill-ConditionedMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " which has a large ",
+  ButtonBox["condition number",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/ConditionNumber.html"], None},
+    ButtonStyle->"Hyperlink"],
+  ".  Calculations involving the Hilbert matrix and its inverse sometimes \
+cannot be trusted.  Unless exact arithmetic is carried available. "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(C1 = MatrixConditionNumber[N[B1]];\)\), "\[IndentingNewLine]", 
+    \(\(C2 = MatrixConditionNumber[N[B2]];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(H\_5\) = \>\"", 
+        MatrixForm[B1]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<A = \>", MatrixForm[B2]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<Condition number for \!\(H\_5\) is \>\"", 
+        C1];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<Condition number for A  is \>", C2];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["The Inverse Hilbert Matrix",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe formula for the elements of the ",
+  ButtonBox["inverse Hilbert matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/HilbertMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+  "  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["H",
+          FontWeight->"Bold"], "n"]]],
+  " of order  ",
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  "  is known to be \n\n\t\t",
+  Cell[BoxData[
+      \(\((H\^\(-1\))\)\_\(i, j\)\  = \ \(\((\(-1\))\)\^\(i + j\)\/\(i + j - 
+                1\)\) \(\(\((n + i - 1)\)!\) \(\((n + j - \
+1)\)!\)\)\/\(\(\((\(\((i - 1)\)!\) \(\((j - 1)\)!\))\)\^2\) \(\((n - i)\)!\) \
+\(\((n - j)\)!\)\)\)]],
+  "\n\nwhich can be expressed using binomial coefficients \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{\(\((H\^\(-1\))\)\_\(i, j\)\), " ", "=", " ", 
+        RowBox[{\(\((\(-1\))\)\^\(i + j\)\), \((i + j - 1)\), 
+          RowBox[{"(", GridBox[{
+                {\(n + i - 1\)},
+                {\(n - j\)}
+                }], ")"}], 
+          RowBox[{"(", GridBox[{
+                {\(n + j - 1\)},
+                {\(n - i\)}
+                }], ")"}], 
+          SuperscriptBox[
+            RowBox[{"(", GridBox[{
+                  {\(i + j - 2\)},
+                  {\(i - 1\)}
+                  }], ")"}], "2"]}]}]]],
+  " . \n\nWhen exact computations are needed these formulas should be used \
+instead of using a subroutine or built in procedure for computing the inverse \
+of  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["H",
+          FontWeight->"Bold"], "n"]]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Verification.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell["\<\
+Let us verify that the formulas are correct using the 5\[Times]5 \
+Hilbert matrix.  \
+\>", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[i, j, n];\)\), "\[IndentingNewLine]", 
+    \(\(h[i_, j_, n_] = \ 1\/\(i + j - 1\);\)\), "\n", 
+    \(\(v[i_, j_, 
+          n_] = \ \(\((\(-1\))\)\^\(i + j\)\/\(i + j - 
+                1\)\) \(\(\((n + i - 1)\)!\) \(\((n + j - \
+1)\)!\)\)\/\(\(\((\(\((i - 1)\)!\) \(\((j - 1)\)!\))\)\^2\) \(\((n - i)\)!\) \
+\(\((n - j)\)!\)\);\)\), "\n", 
+    \(\(w[i_, j_, n_] = \(\((\(-1\))\)\^\(i + j\)\) \((i + j - 1)\) 
+          Binomial[n + i - 1, n - j] 
+          Binomial[n + j - 1, 
+            n - i] \((Binomial[i + j - 2, i - 1])\)\^2;\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(m = 5;\)\), "\[IndentingNewLine]", 
+    \(\(H = 
+        Table[h[i, j, m], {i, 1, m}, {j, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(V = 
+        Table[v[i, j, m], {i, 1, m}, {j, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(W = 
+        Table[w[i, j, m], {i, 1, m}, {j, 1, m}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<    H = \>", MatrixForm[H]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<(\>", "\<H\>"\_m, \*"\"\<\!\(\()\^\(-1\)\)\) = \>\"", 
+        MatrixForm[
+          Inverse[HilbertMatrix[m, m]]]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<    V = \>", MatrixForm[V]];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<    W = \>", MatrixForm[W]];\)\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Application to Continuous Least Squares Approximation",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tThe continuous least squares approximation to a function  ",
+  Cell[BoxData[
+      \(f \((x)\)\)]],
+  " on the interval ",
+  StyleBox["[0,1]",
+    FontFamily->"Courier New"],
+  " for the set of functions  ",
+  Cell[BoxData[
+      \({\(u\_i\) \((x)\)}\_\(i = 1\)\%n\)]],
+  "  can solved by using the normal equations\n\n(1)\t\t",
+  Cell[BoxData[
+      \(\[Sum]\+\(j = 1\)\%n\( c\_i\) \[LeftAngleBracket]u\_i, 
+              u\_j\[RightAngleBracket]\  = \ \[LeftAngleBracket]f, 
+          u\_i\[RightAngleBracket]\)]],
+  "   for   ",
+  Cell[BoxData[
+      \(1 \[LessEqual] i \[LessEqual] n\)]],
+  ". \n\nWhere the inner product is ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]f, g\[RightAngleBracket]\  = \ \[Integral]\_0\%1\ 
+          f \((x)\) g \((x)\) \[DifferentialD]x\)]],
+  ".  Solve the linear system (1) for the coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = 1\)\%n\)]],
+  " and construct the approximation function \n\t\t\n\t\t",
+  Cell[BoxData[
+      \(F[x] = \ \[Sum]\+\(i = 1\)\%n\( c\_i\) \(u\_i\) \((x)\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Definition (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[ButtonBox["Gram Matrix",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/GramMatrix.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The Gram matrix ",
+  StyleBox["G",
+    FontWeight->"Bold"],
+  " is a matrix of inner products where the elements are  ",
+  Cell[BoxData[
+      \(G\_\(i, j\) = \[LeftAngleBracket]u\_i, u\_j\[RightAngleBracket]\)]],
+  ".  \n\n\tThe case when the set of functions is  ",
+  Cell[BoxData[
+      RowBox[{\({\(u\_i\) \((x)\)}\_\(i = 1\)\%n\), " ", "=", 
+        RowBox[{"{", 
+          RowBox[{"1", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "x", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\^2\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], "...", 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\^\(n - 2\)\), 
+            StyleBox[",",
+              FontFamily->"Times New Roman",
+              FontSize->12,
+              FontWeight->"Plain",
+              FontSlant->"Plain",
+              FontColor->GrayLevel[0],
+              FontVariations->{"Underline"->False,
+              "StrikeThrough"->False}], \(x\^\(n - 1\)\)}], "}"}]}]]],
+  "  will produce the Hilbert matrix.  Since we require the computation to be \
+as exact as possible and an exact formula is known for the inverse of the \
+Hilbert matrix, this is an example where an inverse matrix comes in handy. "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Find the continuous least squares polynomial of degree ",
+  StyleBox["n=4",
+    FontFamily->"Courier New"],
+  " that approximates the function  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([0, 1]\)\)]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "The set of functions is ",
+  Cell[BoxData[
+      \({\(u\_i\) \((x)\)}\_\(i = 1\)\%5\  = {1, x, x\^2, x\^3, x\^4}\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(u[i_, x_] = x\^\(i - 1\);\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(u\_i\)(x) = \>\"", u[i, x]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The inner product ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]u\_i, 
+          u\_j\[RightAngleBracket]\  = \ \[Integral]\_0\%1\ \ \(u\_i\) \
+\((x)\) \(u\_j\) \((x)\) \[DifferentialD]x\)]]
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(val = \[Integral]\_0\%1\( 
+                x\^\(i - 1\)\) \(x\^\(j - 
+                  1\)\) \[DifferentialD]x;\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftAngleBracket]\!\(u\_i\),\!\(u\_j\)\
+\[RightAngleBracket] = \!\(\[Integral]\_0\%1\)  \!\(u\_i\)(x)\!\(u\_j\)(x)\
+\[DifferentialD]x = \>\"", val];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Since  ",
+  StyleBox["i",
+    FontFamily->"Courier New"],
+  "  and  ",
+  StyleBox["j",
+    FontFamily->"Courier New"],
+  "  are positive integers, this can be simplified with the command"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(val = 
+        Simplify[val, 
+          And[{i, j} \[Element] Integers, 
+            i + j > 1]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\[LeftAngleBracket]\!\(u\_i\),\!\(u\_j\)\
+\[RightAngleBracket] = \!\(\[Integral]\_0\%1\)  \!\(u\_i\)(x)\!\(u\_j\)(x)\
+\[DifferentialD]x = \>\"", val];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Therefore, the Gram matrix ",
+  StyleBox["G",
+    FontWeight->"Bold"],
+  " is the 5\[Times]5 Hilbert matrix."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<LinearAlgebra`MatrixManipulation`\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(G = HilbertMatrix[5, 5];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<G = \>", MatrixForm[G]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "The inverse  ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["G",
+          FontWeight->"Bold"], \(-1\)]]],
+  " is the matrix  ",
+  StyleBox["M",
+    FontWeight->"Bold"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(M = Inverse[G];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(G\^\(-1\)\) = \>\"", MatrixForm[M]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Enter the function  ",
+  Cell[BoxData[
+      \(f[x] = Cos[x]\)]],
+  ",  and the set of functions  ",
+  Cell[BoxData[
+      \({\(u\_i\) \((x)\)}\_\(i = 1\)\%5\  = {1, x, x\^2, x\^3, x\^4}\)]],
+  ", and compute ",
+  Cell[BoxData[
+      \(\[LeftAngleBracket]f, u\_i\[RightAngleBracket]\)]],
+  "  for   ",
+  Cell[BoxData[
+      \(1 \[LessEqual] i \[LessEqual] n\)]],
+  ", and write down the linear system ",
+  StyleBox["GC",
+    FontWeight->"Bold"],
+  " = ",
+  StyleBox["Y",
+    FontWeight->"Bold"],
+  " to be solved."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(f[x_] = Cos[x];\)\), "\n", 
+    \(\(F = {1, x, x\^2, x\^3, x\^4};\)\), "\n", 
+    \(\(Y = 
+        N[\[Integral]\_0\%1\ 
+            f[x] F \[DifferentialD]x];\)\), "\[IndentingNewLine]", 
+    \(\(Clear[c];\)\), "\[IndentingNewLine]", 
+    \(\(vars = {\*"\"\<\!\(c\_1\)\>\"", \*"\"\<\!\(c\_2\)\>\"", \
+\*"\"\<\!\(c\_3\)\>\"", \*"\"\<\!\(c\_4\)\>\"", \*"\"\<\!\(c\_5\)\>\""};\)\), \
+"\[IndentingNewLine]", 
+    \(\(Print["\<Solve the system\>"];\)\), "\[IndentingNewLine]", 
+    \(Print[MatrixForm[G], MatrixForm[vars], "\<   \>", 
+      MatrixForm[Y]]\)}], "Input"],
+
+Cell[TextData[{
+  "Solve the linear system for the coefficients ",
+  Cell[BoxData[
+      StyleBox[\({c\_i}\),
+        FontWeight->"Bold"]]],
+  " using  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["M",
+          FontWeight->"Bold"], "=", 
+        SuperscriptBox[
+          StyleBox["G",
+            FontWeight->"Bold"], \(-1\)]}]]],
+  " and the computation  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["C",
+          FontWeight->"Bold"], "=", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox[
+              StyleBox["G",
+                FontWeight->"Bold"], \(-1\)], 
+            StyleBox["Y",
+              FontWeight->"Bold"]}], " ", "=", " ", 
+          StyleBox["MY",
+            FontWeight->"Bold"]}]}]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(c = M . Y;\)\), "\[IndentingNewLine]", 
+    \(Print[MatrixForm[vars], "\< = \>", MatrixForm[c]]\)}], "Input"],
+
+Cell[TextData[{
+  "Construct the polynomial  ",
+  StyleBox["p[x]",
+    FontFamily->"Courier New"],
+  ".  The coefficients are stored in the array  ",
+  StyleBox["c",
+    FontFamily->"Courier New",
+    FontWeight->"Bold"],
+  "  and the elements are ",
+  Cell[BoxData[
+      \(c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(p[
+          x_] = \ \[Sum]\+\(i = 1\)\%5\( 
+                c\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+\) x\^\(i - 1\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]];\)\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\nWe can graph the polynomial, this is just for fun !"
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, \(-2.0\), 2.5}, 
+        PlotRange \[Rule] {{\(-2.0\), 2.5}, {\(-0.8\), 1.0}}, 
+        PlotStyle \[Rule] {Magenta, Blue}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Continuous least squares polynomial\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x], p[x]}, {x, 0, 1}, PlotRange \[Rule] {{0, 1}, {0, 1}}, 
+        PlotStyle \[Rule] {Magenta, Blue}];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<f[x] = \>", f[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Continuous least squares polynomial\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<p[x] = \>", p[x]];\)\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Plot[{f[x] - p[x]}, {x, 0, 1}, PlotRange \[Rule] All, 
+        PlotStyle \[Rule] Red];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The error\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<e[x] = f[x]-p[x] = \>", f[x] - p[x]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Matrix Inversion",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/mi.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Matrix Inversion",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/mi.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "   Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/InverseMatrixBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Inverse Matrix",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/InverseMatrixBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["The Hilbert Matrix",
+    ButtonData:>{
+      URL[ "http://ecs.fullerton.edu/~mathews/n2003/HilbertMatrixBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["The Hilbert Matrix",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/HilbertMatrixBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "   Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+SpellingDictionaries->{"CorrectWords"->{
+  "Mathews", "Bartlett", "Sudbury", "Tele.", "mkt", "jbpub", "com", "mathews",
+     "edu", "westmont", "Raphson", "solset", "Steffensen's", "Steffensen", 
+    "Aitken's", "Aitken", "eqn"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 171, 4, 35, "Text"],
+Cell[1950, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3429, 111, 2954, 92, 185, "Text"],
+Cell[6386, 205, 626, 21, 33, "Text"],
+Cell[7015, 228, 118, 3, 33, "Text"],
+Cell[7136, 233, 612, 20, 33, "Text"],
+Cell[7751, 255, 563, 16, 52, "Text"],
+Cell[8317, 273, 349, 10, 33, "Text"],
+Cell[8669, 285, 1773, 33, 295, "Input"],
+Cell[10445, 320, 629, 20, 73, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[11099, 344, 101, 2, 33, "Text"],
+Cell[11203, 348, 558, 21, 33, "Text",
+  Evaluatable->False],
+Cell[11764, 371, 411, 11, 73, "Input"],
+Cell[12178, 384, 416, 15, 33, "Text",
+  Evaluatable->False],
+Cell[12597, 401, 365, 8, 73, "Input"],
+Cell[12965, 411, 101, 2, 33, "Text",
+  Evaluatable->False],
+Cell[13069, 415, 67, 1, 30, "Input"],
+Cell[13139, 418, 256, 10, 33, "Text",
+  Evaluatable->False],
+Cell[13398, 430, 497, 11, 109, "Input"],
+Cell[13898, 443, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[13985, 447, 227, 4, 50, "Input"],
+Cell[14215, 453, 168, 7, 33, "Text",
+  Evaluatable->False],
+Cell[14386, 462, 275, 10, 33, "Text",
+  Evaluatable->False],
+Cell[14664, 474, 182, 3, 51, "Input"],
+Cell[14849, 479, 259, 8, 33, "Text",
+  Evaluatable->False],
+Cell[15111, 489, 558, 21, 33, "Text",
+  Evaluatable->False],
+Cell[15672, 512, 443, 11, 73, "Input"],
+Cell[16118, 525, 416, 15, 33, "Text",
+  Evaluatable->False],
+Cell[16537, 542, 397, 8, 73, "Input"],
+Cell[16937, 552, 102, 2, 33, "Text",
+  Evaluatable->False],
+Cell[17042, 556, 67, 1, 30, "Input"],
+Cell[17112, 559, 472, 15, 109, "Text",
+  Evaluatable->False],
+Cell[17587, 576, 470, 11, 73, "Input"],
+Cell[18060, 589, 275, 10, 33, "Text",
+  Evaluatable->False],
+Cell[18338, 601, 182, 3, 51, "Input"],
+Cell[18523, 606, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[18610, 610, 227, 4, 50, "Input"],
+Cell[18840, 616, 358, 9, 71, "Text",
+  Evaluatable->False],
+Cell[19201, 627, 256, 10, 33, "Text",
+  Evaluatable->False],
+Cell[19460, 639, 609, 14, 73, "Input"],
+Cell[20072, 655, 84, 2, 33, "Text",
+  Evaluatable->False],
+Cell[20159, 659, 227, 4, 50, "Input"],
+Cell[20389, 665, 104, 2, 33, "Text",
+  Evaluatable->False],
+Cell[20496, 669, 239, 4, 50, "Input"],
+Cell[20738, 675, 118, 2, 33, "Text",
+  Evaluatable->False]
+}, Closed]],
+Cell[20871, 680, 3401, 99, 169, "Text"],
+
+Cell[CellGroupData[{
+Cell[24297, 783, 112, 2, 33, "Text"],
+Cell[24412, 787, 184, 6, 33, "Text"],
+Cell[24599, 795, 282, 6, 70, "Input"]
+}, Closed]],
+Cell[24896, 804, 944, 25, 130, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[25865, 833, 101, 2, 33, "Text"],
+Cell[25969, 837, 166, 5, 38, "Text"],
+Cell[26138, 844, 155, 2, 65, "Input"],
+Cell[26296, 848, 229, 10, 33, "Text"],
+Cell[26528, 860, 182, 5, 70, "Input"],
+Cell[26713, 867, 221, 6, 52, "Text"],
+Cell[26937, 875, 72, 1, 30, "Input"],
+Cell[27012, 878, 330, 16, 33, "Text",
+  Evaluatable->False],
+Cell[27345, 896, 350, 7, 71, "Input"],
+Cell[27698, 905, 206, 10, 33, "Text",
+  Evaluatable->False],
+Cell[27907, 917, 210, 4, 50, "Input"],
+Cell[28120, 923, 275, 10, 33, "Text",
+  Evaluatable->False],
+Cell[28398, 935, 182, 3, 51, "Input"],
+Cell[28583, 940, 267, 8, 33, "Text",
+  Evaluatable->False],
+Cell[28853, 950, 194, 3, 70, "Input"],
+Cell[29050, 955, 72, 1, 30, "Input"],
+Cell[29125, 958, 330, 16, 33, "Text",
+  Evaluatable->False],
+Cell[29458, 976, 350, 7, 71, "Input"],
+Cell[29811, 985, 206, 10, 33, "Text",
+  Evaluatable->False],
+Cell[30020, 997, 210, 4, 50, "Input"],
+Cell[30233, 1003, 175, 5, 33, "Text",
+  Evaluatable->False],
+Cell[30411, 1010, 222, 4, 50, "Input"],
+Cell[30636, 1016, 275, 10, 33, "Text",
+  Evaluatable->False],
+Cell[30914, 1028, 182, 3, 51, "Input"],
+Cell[31099, 1033, 394, 12, 33, "Text",
+  Evaluatable->False],
+Cell[31496, 1047, 300, 5, 71, "Input"],
+Cell[31799, 1054, 271, 7, 71, "Text"],
+Cell[32073, 1063, 135, 2, 31, "Input"],
+Cell[32211, 1067, 156, 5, 33, "Text"],
+Cell[32370, 1074, 59, 1, 30, "Input"],
+Cell[32432, 1077, 76, 0, 33, "Text"]
+}, Closed]],
+Cell[32523, 1080, 1408, 38, 200, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[33956, 1122, 101, 2, 33, "Text"],
+Cell[34060, 1126, 616, 13, 89, "Input"],
+Cell[34679, 1141, 229, 10, 33, "Text"],
+Cell[34911, 1153, 188, 5, 70, "Input"],
+Cell[35102, 1160, 221, 6, 52, "Text"],
+Cell[35326, 1168, 72, 1, 30, "Input"],
+Cell[35401, 1171, 330, 16, 33, "Text",
+  Evaluatable->False],
+Cell[35734, 1189, 279, 5, 70, "Input"],
+Cell[36016, 1196, 206, 10, 33, "Text",
+  Evaluatable->False],
+Cell[36225, 1208, 338, 5, 70, "Input"],
+Cell[36566, 1215, 368, 11, 33, "Text",
+  Evaluatable->False],
+Cell[36937, 1228, 182, 3, 51, "Input"],
+Cell[37122, 1233, 189, 4, 33, "Text"],
+Cell[37314, 1239, 1550, 34, 231, "Input"],
+Cell[38867, 1275, 122, 3, 33, "Text"],
+Cell[38992, 1280, 124, 2, 31, "Input"],
+Cell[39119, 1284, 407, 14, 71, "Text"],
+Cell[39529, 1300, 157, 3, 50, "Input"],
+Cell[39689, 1305, 267, 11, 33, "Text"],
+Cell[39959, 1318, 50, 1, 30, "Input"],
+Cell[40012, 1321, 137, 5, 33, "Text"],
+Cell[40152, 1328, 76, 1, 31, "Input"],
+Cell[40231, 1331, 65, 0, 33, "Text"],
+Cell[40299, 1333, 650, 16, 52, "Text"],
+Cell[40952, 1351, 593, 10, 150, "Input"]
+}, Closed]],
+Cell[41560, 1364, 1679, 48, 236, "Text"],
+
+Cell[CellGroupData[{
+Cell[43264, 1416, 103, 2, 33, "Text"],
+Cell[43370, 1420, 108, 3, 33, "Text"],
+Cell[43481, 1425, 579, 11, 126, "Input"],
+Cell[44063, 1438, 706, 13, 171, "Input"]
+}, Closed]],
+Cell[44784, 1454, 1201, 32, 183, "Text"],
+Cell[45988, 1488, 2596, 67, 90, "Text"],
+Cell[48587, 1557, 429, 16, 33, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[49041, 1577, 101, 2, 33, "Text"],
+Cell[49145, 1581, 156, 5, 33, "Text"],
+Cell[49304, 1588, 147, 2, 50, "Input"],
+Cell[49454, 1592, 221, 6, 34, "Text"],
+Cell[49678, 1600, 352, 6, 76, "Input"],
+Cell[50033, 1608, 218, 8, 33, "Text"],
+Cell[50254, 1618, 339, 7, 63, "Input"],
+Cell[50596, 1627, 140, 5, 33, "Text"],
+Cell[50739, 1634, 221, 4, 70, "Input"],
+Cell[50963, 1640, 217, 10, 33, "Text"],
+Cell[51183, 1652, 145, 2, 51, "Input"],
+Cell[51331, 1656, 545, 20, 33, "Text"],
+Cell[51879, 1678, 588, 12, 165, "Input"],
+Cell[52470, 1692, 756, 28, 33, "Text"],
+Cell[53229, 1722, 132, 2, 50, "Input"],
+Cell[53364, 1726, 360, 12, 34, "Text"],
+Cell[53727, 1740, 246, 5, 73, "Input"],
+Cell[53976, 1747, 173, 5, 71, "Text"],
+Cell[54152, 1754, 478, 8, 110, "Input"],
+Cell[54633, 1764, 442, 7, 110, "Input"],
+Cell[55078, 1773, 342, 5, 90, "Input"]
+}, Closed]],
+Cell[55435, 1781, 696, 20, 30, "Text"],
+Cell[56134, 1803, 158, 3, 35, "Text"],
+Cell[56295, 1808, 569, 17, 33, "Text"],
+Cell[56867, 1827, 559, 16, 33, "Text"],
+Cell[57429, 1845, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

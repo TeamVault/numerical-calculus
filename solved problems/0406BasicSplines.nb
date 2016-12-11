@@ -1,0 +1,1156 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     34204,       1042]*)
+(*NotebookOutlinePosition[     34870,       1065]*)
+(*  CellTagsIndexPosition[     34826,       1061]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for B-Splines",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Cubic spline construction using the B-spline function.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tUnder special circumstances a basis set of splines ",
+  Cell[BoxData[
+      \({b\_i[x]}\_\(i = \(-1\)\)\%\(i = n + 1\)\)]],
+  " can be used to form a cubic ",
+  ButtonBox["B-spline",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/B-Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " function.  This concept makes the construction of a spline very easy, it \
+is just at linear combination:   \n\n\t\t",
+  Cell[BoxData[
+      \(s[x]\  = \ \[Sum]\+\(i = \(-1\)\)\%\(n + 1\)\ \(c\_i\) b\_i[x]\)]],
+  "\n\nAll we need to do is solve for the  ",
+  Cell[BoxData[
+      \(n + 3\)]],
+  " coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = \(-1\)\)\%\(i = n + 1\)\)]],
+  ".  And to make things even more appealing, the linear system to be solved \
+has a tri-diagonal \"appearance\":   \n\n\t\t",
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {"1", "4", "1", " ", " ", " ", " "},
+            {" ", "1", "4", "1", " ", " ", " "},
+            {" ", " ", "\[DescendingEllipsis]", "\[DescendingEllipsis]", 
+              "\[DescendingEllipsis]", " ", " "},
+            {" ", " ", " ", "1", "4", "1", " "},
+            {" ", " ", " ", " ", "1", "4", "1"}
+            }], ")"}]]],
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {\(c\_\(-1\)\)},
+            {\(c\_0\)},
+            {"\[VerticalEllipsis]"},
+            {\(c\_n\)},
+            {\(c\_\(n + 1\)\)}
+            }], ")"}]]],
+  " = ",
+  Cell[BoxData[
+      RowBox[{"(", GridBox[{
+            {\(y\_0\)},
+            {\(y\_1\)},
+            {"\[VerticalEllipsis]"},
+            {\(y\_\(n - 1\)\)},
+            {\(y\_n\)}
+            }], ")"}]]],
+  ".  \n\nCaution must prevail when solving this underdetermined system of  \
+",
+  Cell[BoxData[
+      \(n + 1\)]],
+  "  equations in  ",
+  Cell[BoxData[
+      \(n + 3\)]],
+  " unknowns.  Two end conditions must be supplied for constructing the \
+coefficients ",
+  Cell[BoxData[
+      \(c\_\(-1\)\)]],
+  " and ",
+  Cell[BoxData[
+      \(c\_\(n + 1\)\)]],
+  ".  These end conditions are specially crafted to form either a natural \
+cubic spline or a clamped cubic spline.  \n\n\tHow can such an elegant \
+construction possible ?  It's simple, you must have a uniform grid of points  \
+",
+  Cell[BoxData[
+      \(n + 1\)]],
+  " on the interval  ",
+  Cell[BoxData[
+      \(\([a, b]\)\)]],
+  ".  The uniform spacing is ",
+  Cell[BoxData[
+      \(h = \(b\  - \ a\)\/n\)]],
+  " and the interpolation nodes to be used are ",
+  Cell[BoxData[
+      \(x\_i = a + \ i\ h\)]],
+  " for  ",
+  Cell[BoxData[
+      RowBox[{\(i = 0\), 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "1", ",", "2", 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox["...",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[" ",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], 
+        StyleBox[",",
+          FontFamily->"Times New Roman",
+          FontSize->12,
+          FontWeight->"Plain",
+          FontSlant->"Plain",
+          FontColor->GrayLevel[0],
+          FontVariations->{"Underline"->False,
+          "StrikeThrough"->False}], "n"}]]],
+  ".  The equally spaced abscissa's are \n\n\t\t",
+  Cell[BoxData[
+      \(a = \(\(x\_0 < x\_1 <  ... \) < x\_\(n - 1\) < x\_n = b\)\)]],
+  "  \n\nThe corresponding ordinates are  ",
+  Cell[BoxData[
+      \(y\_i\)]],
+  "  and the data points are  ",
+  Cell[BoxData[
+      \({\((x\_i, y\_i)\)}\_\(i = 0\)\%\(i = n\)\)]],
+  ".  They are often times referred to as the knots because this is where we \
+join the piecewise cubics, like pieces of string \"knotted\" together to form \
+a larger piece of string.  If this is your situation, then the B-spline \
+construction is for you.  \n\n",
+  StyleBox["Caveat.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  " If you have unequally spaced points, then this is construction does not \
+apply and construction of the cubic spline require a more cumbersome \
+algorithm because each piecewise cubic will need to be individually crafted \
+in order to meet all the conditions for a cubic spline.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["The basic B-spline function.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n\tConstruction of cubic ",
+  ButtonBox["B-spline",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/B-Spline.html"], None},
+    ButtonStyle->"Hyperlink"],
+  " interpolation can be accomplished by first considering the following \
+basic function. \n\nThe function ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  " is a piecewise continuous on the interval ",
+  Cell[BoxData[
+      \(\([\(-2\), 2]\)\)]],
+  " , it is zero elsewhere.  In advanced courses this simple concept is \
+glamorized by saying that ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  " is a function with \"compact support.\"  That is, it is supported (or \
+non-zero) only on a small set.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(S\_0[x_] = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S\_1[x_] = \((2 + x)\)\^3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S\_2[x_] = 
+        1 + 3 \((1 + x)\) + 3 \((1 + x)\)\^2 - 
+          3 \((1 + x)\)\^3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S\_3[x_] = 
+        1 + 3 \((1 - x)\) + 3 \((1 - x)\)\^2 - 
+          3 \((1 - x)\)\^3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S\_4[x_] = \((2 - x)\)\^3;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(S\_5[x_] = 0;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \ \ \ x \[LessEqual] \(-2\)\ \ \ \ \ \ \ ] = 
+        S\_0[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \(-2\) \[LessEqual] x \[LessEqual] \(-1\)\ ] = 
+        S\_1[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \ \(-1\) \[LessEqual] x \[LessEqual] 0\ \ ] = 
+        S\_2[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \ \ 0 \[LessEqual] x \[LessEqual] 1\ \ \ ] = 
+        S\_3[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \ \ 1 \[LessEqual] x \[LessEqual] 2\ \ \ ] = 
+        S\_4[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(B[\ x_\  /; \ \ \ \ \ \ \ \ \ 2 \[LessEqual] x\ \ \ ] = 
+        S\_5[x];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  "The graph of the function ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  " ."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \), "\n", 
+    \(\(Plot[\ B[x], {x, \(-3\), 3}, 
+        PlotStyle \[Rule] Magenta];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The B-spline function B[x].\>"];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(?B\)\)}], "Input"],
+
+Cell[TextData[{
+  "Verify that  ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  " is a cubic spline. \n\nEach part of  ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  " is piecewise cubic.\nAre the functions  ",
+  Cell[BoxData[
+      \(\(B'\)[x]\)]],
+  ",  ",
+  Cell[BoxData[
+      \(\(B''\)[x]\)]],
+  "  and   ",
+  Cell[BoxData[
+      \(\(B''\)[x]\)]],
+  " continuous for all  ",
+  Cell[BoxData[
+      \(x\)]],
+  " ?\nSince  ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  "  is composed of the piecewise functions ",
+  Cell[BoxData[
+      \(S\_0[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_1[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_2[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_3[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_4[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_5[x]\)]],
+  ", all that is necessary is to see if they join up properly at the nodes  \
+",
+  Cell[BoxData[
+      \(x = \(-2\), \(-1\), 0, 1, 2\)]],
+  ".  However, this will take 15 computations to verify.  This is where ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " comes in handy.  Follow the link below if you are interested in the \
+proof.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/B-SplinesProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/B-SplinesProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "The above proof that  ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  "  is a cubic spline used the formulas ",
+  Cell[BoxData[
+      \(S\_0[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_1[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_2[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_3[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_4[x]\)]],
+  ",",
+  Cell[BoxData[
+      \(S\_5[x]\)]],
+  ".\nIt is the analytic way to do things and illustrates \"precise \
+mathematical\" reasoning."
+}], "Text"],
+
+Cell[TextData[{
+  "If you trust graphs, then just look at the graphs of  ",
+  Cell[BoxData[
+      \(B[x]\)]],
+  ",  ",
+  Cell[BoxData[
+      \(\(B'\)[x]\)]],
+  ",  and  ",
+  Cell[BoxData[
+      \(\(B''\)[x]\)]],
+  " and try to determine if they are continuous.  \nHowever, there might be \
+problems lurking about.  If you seek the mathematical truth you should look \
+at the next cell link.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["A careful look at the derivatives.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox["  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/B-SplinesProof.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/B-SplinesProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  "Let's translate the B-spline over to the node ",
+  Cell[BoxData[
+      \(X\_i\)]],
+  " and use the uniform step size ",
+  Cell[BoxData[
+      \(h\)]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(X = 0; \ Remove[X]; 
+    Clear[b, h, i, n, X];\ \ \), "\[IndentingNewLine]", 
+    \(\(b\_i_[x_] = B[\(x - X\_i\)\/h];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(b\_i\)[x] = \>\"", b\_i[x]];\)\)}], "Input"],
+
+Cell["Now form the linear combination for the spline. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[c, s];\)\ \), "\[IndentingNewLine]", 
+    \(\(s[
+          x_] = \[Sum]\+\(i = \(-1\)\)\%\(n + 1\)\ \(c\_i\) 
+            b\_i[x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<For n = 6 we have\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", \[Sum]\+\(i = \(-1\)\)\%\(6 + 1\)\ \(c\_i\) 
+            b\_i[x]];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "At each of the nodes ",
+  Cell[BoxData[
+      \(X\_i\)]],
+  " for  ",
+  Cell[BoxData[
+      \(i = 0, 1,  ... , n\)]],
+  " computation will reveal that "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Print[\*"\"\<B[\!\(\(X\_i - X\_\(i + 1\)\)\/h\)] = \>\"", 
+        B[\(X\_i - X\_\(i + 1\)\)\/h]];\)\(\ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(s[X\_i]\  \[Equal] \ \(c\_\(i - 1\)\) b\_\(i - 1\)[X\_i] + \ \(c\_i\) 
+          b\_i[X\_i] + \(\(c\_\(i + 1\)\) \(b\_\(i + 1\)[
+            X\_i]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(s[X\_i]\  \[Equal] \ \(c\_\(i - 1\)\) 
+          B[\(X\_i - X\_\(i - 1\)\)\/h] + \ \(c\_i\) 
+          B[\(X\_i - X\_i\)\/h]\  + \(\(c\_\(i + 
+                1\)\) \(B[\(X\_i - X\_\(i + 1\)\)\/h]\)\(\ \ \ \)\)\)], \
+"Input"],
+
+Cell[BoxData[
+    \(s[X\_i]\  \[Equal] \ \(c\_\(i - 1\)\) B[1] + \ \(c\_i\) 
+          B[0] + \(\(c\_\(i + 1\)\) \(B[\(-1\)]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(s[X\_i]\  \[Equal] \ \(\(c\_\(i - 1\)\)\(+\)\(\ \)\(4 
+           c\_i\)\(+\)\(c\_\(i + 1\)\)\(\ \ \ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "If the B-spline is to go through the points  ",
+  Cell[BoxData[
+      \(\((X\_i, Y\_i)\)\)]],
+  " for  ",
+  Cell[BoxData[
+      \(i = 0, 1,  ... , n\)]],
+  ", then the following equations must hold true \n\n\t",
+  Cell[BoxData[
+      \(c\_\(i - 1\)\  + \ 4\ c\_i\  + \ c\_\(i + 1\)\  \[Equal] \ Y\_i\)]],
+  "   for   ",
+  Cell[BoxData[
+      \(i = 0, 1,  ... , n\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  "For the natural cubic spline, we want the second derivatives to be zero at \
+the left endpoint  ",
+  Cell[BoxData[
+      \(X\_0\)]],
+  ".  \n\nTherefore we must have   ",
+  Cell[BoxData[
+      \(\(s''\)[X\_0] = 0\)]],
+  ".  \n\nComputation will reveal that \n\n\t",
+  Cell[BoxData[
+      \(\(s''\)[
+          X\_0]\  = \ \(6\ \((c\_\(-1\)\  - \ 2\ c\_0\  + \ \
+c\_1)\)\)\/h\^2\)]]
+}], "Text"],
+
+Cell[TextData[{
+  "To construct the natural cubic spline, we must have \n\n\t",
+  Cell[BoxData[
+      \(c\_\(-1\)\  - \ 2\ c\_0\  + \ c\_1\  \[Equal] \ 0\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  "We can solve this equation for the spline coefficient ",
+  Cell[BoxData[
+      \(c\_\(-1\)\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Solve[c\_\(-1\) - 2\ c\_0 + c\_1 \[Equal] 0, 
+      c\_\(-1\)]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "For the natural cubic spline, we want the second derivatives to be zero at \
+the right endpoint  ",
+  Cell[BoxData[
+      \(X\_n\)]],
+  ".   \n\nTherefore we must have   ",
+  Cell[BoxData[
+      \(\(s''\)[X\_n] = 0\)]],
+  ".  \n\nComputation will reveal that \n\n\t",
+  Cell[BoxData[
+      \(\(s''\)[
+          X\_n]\  = \ \(6\ \((c\_\(n - 1\)\  - \ 2\ c\_n\  + \ c\_\(n + \
+1\))\)\)\/h\^2\)]]
+}], "Text"],
+
+Cell[TextData[{
+  "To construct the natural cubic spline, we must have \n\n\t",
+  Cell[BoxData[
+      \(c\_\(n - 1\)\  - \ 2\ c\_n\  + \ c\_\(n + 1\)\  \[Equal] \ 0\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  "We can solve this equation for the spline coefficient ",
+  Cell[BoxData[
+      \(c\_\(n + 1\)\)]]
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Solve[c\_\(n - 1\) - 2\ c\_n + c\_\(n + 1\) \[Equal] 0, 
+      c\_\(n + 1\)]\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The above construction shows how to calculate all the coefficients ",
+  Cell[BoxData[
+      \({c\_i}\_\(i = \(-1\)\)\%\(i = n + 1\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(\(Solve[c\_\(-1\) - 2\ c\_0 + c\_1 \[Equal] 0, c\_\(-1\)]\)\(\ \ \)\)\
+\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\)\), "\
+\[IndentingNewLine]", 
+    \(\(\(Solve[c\_\(n - 1\) - 2\ c\_n + c\_\(n + 1\) \[Equal] 0, c\_\(n + \
+1\)]\)\(\ \ \)\)\_\(\(\[LeftDoubleBracket]\)\(1, 1\)\(\[RightDoubleBracket]\)\
+\)\)}], "Input"],
+
+Cell[BoxData[{
+    \(\(n = 6;\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = 
+        Table[c\_\(i - 1\)\  + \ 4\ c\_i\  + \ c\_\(i + 1\)\  \[Equal] \ 
+            Y\_i, {i, 0, n}];\)\), "\[IndentingNewLine]", 
+    \(TableForm[eqns]\)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  ",
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/B-SplinesProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/B-SplinesProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Method I.  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["B-spline construction using equations.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\n",
+  StyleBox["Illustration using 7 knots.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "\n\nThe following example uses  n = 6.  There are  n+3 = 9  equations to \
+solve and  n+1 = 7  data points or knots.  First set up the 9 equations to be \
+solved.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(Y = 0; \ Remove[Y]; Clear[c, Y];\ \ \), "\[IndentingNewLine]", 
+    \(\(n = 6;\)\ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = 
+        Table[c\_\(i - 1\)\  + \ 4\ c\_i\  + \ c\_\(i + 1\)\  \[Equal] \ 
+            Y\_i, {i, 0, n}];\)\ \), "\[IndentingNewLine]", 
+    \(\(eqns = 
+        Prepend[eqns, 
+          c\_\(-1\)\  \[Equal] \ 
+            2\ c\_0 - c\_1];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(eqns = 
+        Append[eqns, 
+          c\_\(1 + n\) \[Equal] \ \(-c\_\(\(-1\) + n\)\) + 
+              2\ c\_n];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(coeff = 
+        Table[c\_i, {i, \(-1\), n + 1}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Solve the \>", n + 3, "\< equations\>", "\<\n\>", 
+        TableForm[eqns]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<For the \>", n + 3, "\< coefficients\>", "\<\n\n\>", \ 
+        coeff, "\<\n\>"];\)\ \ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Construct the natural cubic spline for the 7 points  ",
+  Cell[BoxData[
+      \(\((0, 1)\), \((1, 0)\), \((2, 0)\), \((3, 1)\), \((4, 2)\), \((5, 
+        2)\), \((6, 1)\)\)]],
+  "  \nThis requires that the spline has the second derivative endpoint \
+constraints   ",
+  Cell[BoxData[
+      RowBox[{\(S'' \((0)\)\), "=", 
+        RowBox[{
+          RowBox[{"0", "  ", 
+            StyleBox["and",
+              FontFamily->"Times New Roman"], "  ", \(S''\), \((6)\)}], " ", 
+          "=", " ", "0"}]}]]],
+  ".  "
+}], "Text",
+  Evaluatable->False,
+  AspectRatioFixed->True],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "The B-spline construction requires the two nodes  ",
+  Cell[BoxData[
+      \(X\_\(-1\)\)]],
+  " and  ",
+  Cell[BoxData[
+      \(X\_\(n + 1\)\)]],
+  " that are out of the range of the abscissas  ",
+  Cell[BoxData[
+      \({X\_i}\_\(i = 0\)\%\(i = n\)\)]],
+  "  of the given data points.\nThus we will construct the  ",
+  Cell[BoxData[
+      \(X\_i\)]],
+  " in the following special way, with a formula for calculating the equal \
+spacing nodes."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[i];\)\ \), "\[IndentingNewLine]", 
+    \(\(h = 1;\)\ \), "\[IndentingNewLine]", 
+    \(\(X\_i_ = 0 + i\ h;\)\ \)}], "Input"],
+
+Cell["Now start with the list structure for the data points", "Text"],
+
+Cell[BoxData[
+    \(\(\(XY = {{0. , 1. }, {1. , 0. }, {2. , 0. }, {3. , 1. }, {4. , 
+            2. }, {5. , 2. }, {6. , 1. }};\)\(\ \ \)\)\)], "Input"],
+
+Cell[TextData[{
+  "The ordinates are obtained by taking the second element in the transpose \
+of  ",
+  Cell[BoxData[
+      StyleBox["XY",
+        FontWeight->"Bold"]]],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(Transpose[XY]\)\(\ \ \)\)\)], "Input"],
+
+Cell[BoxData[
+    \(\(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2\)\(\
+\[RightDoubleBracket]\)\)\)], "Input"],
+
+Cell[TextData[{
+  "The list structure or vector form of ",
+  Cell[BoxData[
+      StyleBox["Y",
+        FontWeight->"Bold"]]],
+  " is different from the subscript notation used in describing the points.\n\
+To use the subscript notation we use the following formula for locating \
+ordinates."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Y\_i_\  := \ \(Transpose[XY]\)\_\(\(\[LeftDoubleBracket]\)\(2, i + \
+1\)\(\[RightDoubleBracket]\)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(For[i = 1, 
+        i \[LessEqual] 
+          6, \(i++\), \[IndentingNewLine]Print["\<(\>", "\<X\>"\_i, "\<,\>", \
+"\<Y\>"\_i, "\<) = \>", {X\_i, Y\_i}]];\)\)}], "Input"],
+
+Cell["Solve the system of equations for the coefficients. ", "Text"],
+
+Cell[BoxData[{
+    \(\(Print["\<Solve the equations\>", "\<\n\>", 
+        TableForm[eqns]\ ];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<for the coefficients\>", "\<\n\n\>", \ 
+        coeff, "\<\n\>"];\)\ \ \ \), "\[IndentingNewLine]", 
+    \(\(solset = \ \(Solve[eqns, \
+coeff]\)\_\(\(\(\[LeftDoubleBracket]\)\(1\)\(\[RightDoubleBracket]\)\)\(\ \
+\)\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The coefficients for the B-spline are\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print[TableForm[solset]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Now form the spline.  It is assumed that the cell defining the ",
+  StyleBox["basic B-spline function B[x]",
+    FontWeight->"Bold"],
+  " has been evaluated as well as the functions for  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["X",
+          FontWeight->"Bold"], "i"]]],
+  "  and  ",
+  Cell[BoxData[
+      SubscriptBox[
+        StyleBox["Y",
+          FontWeight->"Bold"], "i"]]],
+  ". \nSince the index on the summation ",
+  Cell[BoxData[
+      \(\[Sum]\+\(i = \(-1\)\)\%\(n + 1\)\ \(c\_i\) b\_i[x]\)]],
+  " ranges from  i = -1  to  i = n+1 = 7  there are  9  terms in the sum \
+forming the B-spline.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[b, i];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(b\_i_[x_] = B[\(x - X\_i\)\/h]\ ;\)\ \), "\[IndentingNewLine]", 
+    \(\(s[
+          x_] = \[Sum]\+\(i = \(-1\)\)\%\(n + 1\)\ \(c\_i\) 
+            b\_i[x];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(s[x_] = ReplaceAll[s[x], solset]\ ;\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<s[x] = \>", s[x]];\)\ \)}], "Input"],
+
+Cell["Let's look at the graph.", "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(gr = 
+        Plot[s[x], {x, 0, 6}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[gr, dots, AxesLabel \[Rule] {"\<x\>", "\<y    \>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Data points = \>", XY];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = s[x] = \>", "\<\n\>", s[x]\ ];\)\ \ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  The construction in Example 1 used the basic functions ",
+  Cell[BoxData[
+      \({b\_i[x]}\_\(i = \(-1\)\)\%\(i = 7\)\)]],
+  " which have support that is slightly wider than the interval containing \
+the abscissas.\nThis can be verified by graphing  ",
+  Cell[BoxData[
+      \(s[x]\)]],
+  " on a larger interval.  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  "Graphs of the  basic functions ",
+  Cell[BoxData[
+      \({b\_i[x]}\_\(i = \(-1\)\)\%\(i = 7\)\)]],
+  " used to form the B-spline."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(For[i = \(-1\), 
+        i \[LessEqual] n + 1, \(i++\), \[IndentingNewLine]fun = 
+          ReplaceAll[b\_i[x], solset]; \ \ \[IndentingNewLine]gr = 
+          Plot[fun, {x, \(-4\), 10}, PlotStyle \[Rule] {Blue}, 
+            DisplayFunction \[Rule] Identity]; \ \ \[IndentingNewLine]Show[
+          gr, AxesLabel \[Rule] {"\<x\>", "\<y    \>"}, 
+          PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<b\>"\_i, "\<[x] = \>", 
+          fun];];\)\ \ \ \)}], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(funs = 
+        ReplaceAll[Table[b\_i[x], {i, \(-1\), n + 1}], 
+          solset];\)\), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Plot[Evaluate[funs]\ , {x, \(-4\), 10}, 
+          PlotStyle \[Rule] {Violet, Red, Cyan, Magenta, Blue, Green, Orange, 
+              Brown, Pink}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\
+\[IndentingNewLine]", 
+    \(\(For[i = \(-1\), 
+        i \[LessEqual] 
+          n + 1, \(i++\), \[IndentingNewLine]\(Print["\<b\>"\_i, "\<[x] = \
+\>", funs\_\(\(\[LeftDoubleBracket]\)\(i + 2\)\(\[RightDoubleBracket]\)\)];\)\
+\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Graphs of the  terms ",
+  Cell[BoxData[
+      \({\(c\_i\) b\_i[x]}\_\(i = \(-1\)\)\%\(i = 7\)\)]],
+  " ."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(funs = 
+        ReplaceAll[Table[\(c\_i\) b\_i[x], {i, \(-1\), n + 1}], 
+          solset];\)\), "\[IndentingNewLine]", 
+    \(\(gr = 
+        Plot[Evaluate[funs]\ , {x, \(-4\), 10}, PlotRange \[Rule] All, 
+          PlotStyle \[Rule] {Violet, Red, Cyan, Magenta, Blue, Green, Orange, 
+              Brown, Pink}, 
+          DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(For[i = \(-1\), 
+        i \[LessEqual] 
+          n + 1, \(i++\), \[IndentingNewLine]\(Print["\<c\>"\_i, "\<b\>"\_i, \
+"\<[x] = \>", 
+            funs\_\(\(\[LeftDoubleBracket]\)\(i + \
+2\)\(\[RightDoubleBracket]\)\)];\)\ ];\)\)}], "Input"],
+
+Cell[TextData[{
+  "Graphs of the sum  ",
+  Cell[BoxData[
+      \(s[x] = \[Sum]\+\(i = \(-1\)\)\%7\ \(c\_i\) b\_i[x]\)]],
+  " .  The next loop finds the partial sums of ",
+  Cell[BoxData[
+      \(\(\(\ \)\(\(c\_i\) b\_i[x]\)\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(\(For[i = \(-1\), 
+        i \[LessEqual] n + 1, \(i++\), \[IndentingNewLine]fun = 
+          ReplaceAll[\[Sum]\+\(j = \(-1\)\)\%i\ \(c\_j\) b\_j[x], 
+            solset]; \ \ \[IndentingNewLine]morefun = 
+          Take[funs, i - 7]; \[IndentingNewLine]gr1 = 
+          Plot[Evaluate[fun], {x, \(-4\), 10}, 
+            PlotStyle \[Rule] {Magenta, Thickness[0.01]}, 
+            DisplayFunction \[Rule] Identity]; \ \ \[IndentingNewLine]gr2 = 
+          Plot[Evaluate[morefun], {x, \(-4\), 10}, 
+            PlotStyle \[Rule] 
+              Take[{Violet, Red, Cyan, Magenta, Blue, Green, Orange, Brown, 
+                  Pink}, i - 7], 
+            DisplayFunction \[Rule] Identity]; \ \ \[IndentingNewLine]Show[
+          gr1, gr2, PlotRange \[Rule] {{0, 6}, {\(-0.2\), 2.2}}, 
+          AxesLabel \[Rule] {"\<x\>", "\<y    \>"}, PlotRange \[Rule] All, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print[\*"\"\<\!\(\[Sum]\+\(j = \(-1\)\)\)\>\""\&i, \*"\"\<\
+\!\(c\_j\)\!\(b\_j\)[x] = \>\"", 
+          fun]; \[IndentingNewLine]Print["\<and\>", "\<\n\>", 
+          morefun];];\)\(\ \ \ \)\)\)], "Input"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(gr = 
+        Plot[s[x], {x, 0, 6}, PlotRange \[Rule] {{0, 6}, {\(-0.2\), 2.2}}, 
+          PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(Show[gr, dots, AxesLabel \[Rule] {"\<x\>", "\<y    \>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Data points = \>", XY];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = s[x] = \>", "\<\n\>", s[x]\ ];\)\ \ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["We are done.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "\n\n\n\n",
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  This construction used the basic functions ",
+  Cell[BoxData[
+      \({b\_i[x]}\_\(i = \(-1\)\)\%\(i = 7\)\)]],
+  " which have support that is slightly wider than the interval of abscissas.\
+\nThis can be verified by graphing  ",
+  Cell[BoxData[
+      \(s[x]\)]],
+  " on a larger interval.  Try it.  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \ \ \), "\n", 
+    \(\(dots = 
+        ListPlot[XY, PlotStyle \[Rule] {Red, PointSize[0.02]}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(grL = 
+        Plot[s[x], {x, \(-4\), 0}, PlotStyle \[Rule] {Cyan}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\n", 
+    \(\(gr = 
+        Plot[s[x], {x, 0, 6}, PlotStyle \[Rule] {Magenta}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(grR = 
+        Plot[s[x], {x, 6, 10}, PlotStyle \[Rule] {Cyan}, 
+          DisplayFunction \[Rule] Identity];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Show[grL, gr, grR, dots, AxesLabel \[Rule] {"\<x\>", "\<y    \>"}, 
+        DisplayFunction \[Rule] $DisplayFunction];\)\ \ \), "\n", 
+    \(\(Print["\<Can the B-spline be used for extrapolation ?\>"];\)\), "\
+\[IndentingNewLine]", 
+    \(\(Print["\<Data points = \>", XY];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<y = s[x] = \>", "\<\n\>", 
+        s[x]\ ];\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<Would you trust extrapolation of a B-spline ?\>"];\
+\)\)}], "Input"],
+
+Cell[TextData[{
+  "This might come as a surprise.  However we mentioned that this \
+construction was \"the B-spline concept makes the construction of a spline \
+very easy.\"  We also mentioned that each ",
+  Cell[BoxData[
+      \(b\_i[x]\)]],
+  "was zero outside of its interval where it had local compact support.  You \
+just have to make sure that you do not use a B-spline for extrapolation, only \
+interpolation. "
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/n2003/B-SplinesBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["B-Splines",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/B-SplinesBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 162, 4, 35, "Text"],
+Cell[1941, 59, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3420, 111, 5026, 142, 528, "Text"],
+Cell[8449, 255, 787, 22, 128, "Text"],
+Cell[9239, 279, 1203, 22, 250, "Input"],
+Cell[10445, 303, 100, 5, 33, "Text"],
+Cell[10548, 310, 288, 6, 90, "Input"],
+Cell[10839, 318, 1109, 49, 128, "Text"],
+Cell[11951, 369, 593, 20, 33, "Text"],
+Cell[12547, 391, 487, 24, 52, "Text"],
+Cell[13037, 417, 405, 13, 52, "Text"],
+Cell[13445, 432, 696, 23, 33, "Text"],
+Cell[14144, 457, 189, 8, 33, "Text"],
+Cell[14336, 467, 239, 4, 84, "Input"],
+Cell[14578, 473, 64, 0, 33, "Text"],
+Cell[14645, 475, 440, 8, 158, "Input"],
+Cell[15088, 485, 183, 8, 33, "Text"],
+Cell[15274, 495, 145, 2, 42, "Input"],
+Cell[15422, 499, 191, 3, 30, "Input"],
+Cell[15616, 504, 245, 5, 42, "Input"],
+Cell[15864, 511, 149, 2, 30, "Input"],
+Cell[16016, 515, 140, 2, 30, "Input"],
+Cell[16159, 519, 406, 14, 71, "Text"],
+Cell[16568, 535, 411, 13, 150, "Text"],
+Cell[16982, 550, 176, 5, 71, "Text"],
+Cell[17161, 557, 125, 4, 33, "Text"],
+Cell[17289, 563, 111, 2, 30, "Input"],
+Cell[17403, 567, 424, 13, 150, "Text"],
+Cell[17830, 582, 187, 5, 71, "Text"],
+Cell[18020, 589, 128, 4, 33, "Text"],
+Cell[18151, 595, 125, 2, 30, "Input"],
+Cell[18279, 599, 174, 5, 33, "Text"],
+Cell[18456, 606, 359, 6, 52, "Input"],
+Cell[18818, 614, 245, 5, 70, "Input"],
+Cell[19066, 621, 585, 20, 33, "Text"],
+Cell[19654, 643, 518, 14, 109, "Text"],
+Cell[20175, 659, 914, 19, 170, "Input"],
+Cell[21092, 680, 677, 20, 52, "Text",
+  Evaluatable->False],
+
+Cell[CellGroupData[{
+Cell[21794, 704, 101, 2, 33, "Text"],
+Cell[21898, 708, 475, 15, 52, "Text"],
+Cell[22376, 725, 153, 3, 71, "Input"],
+Cell[22532, 730, 69, 0, 33, "Text"],
+Cell[22604, 732, 152, 2, 30, "Input"],
+Cell[22759, 736, 186, 7, 33, "Text"],
+Cell[22948, 745, 62, 1, 30, "Input"],
+Cell[23013, 748, 112, 2, 31, "Input"],
+Cell[23128, 752, 302, 8, 52, "Text"],
+Cell[23433, 762, 333, 6, 71, "Input"],
+Cell[23769, 770, 68, 0, 33, "Text"],
+Cell[23840, 772, 534, 10, 111, "Input"],
+Cell[24377, 784, 651, 19, 52, "Text"],
+Cell[25031, 805, 394, 7, 149, "Input"],
+Cell[25428, 814, 40, 0, 33, "Text"],
+Cell[25471, 816, 626, 11, 130, "Input"]
+}, Closed]],
+Cell[26112, 830, 433, 12, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[26570, 846, 101, 2, 33, "Text"],
+Cell[26674, 850, 162, 5, 33, "Text"],
+Cell[26839, 857, 609, 11, 130, "Input"],
+Cell[27451, 870, 675, 15, 110, "Input"],
+Cell[28129, 887, 136, 5, 33, "Text"],
+Cell[28268, 894, 713, 15, 110, "Input"],
+Cell[28984, 911, 249, 8, 33, "Text"],
+Cell[29236, 921, 1160, 20, 228, "Input"],
+Cell[30399, 943, 682, 12, 130, "Input"],
+Cell[31084, 957, 514, 16, 128, "Text"],
+Cell[31601, 975, 1158, 22, 210, "Input"],
+Cell[32762, 999, 430, 9, 52, "Text"]
+}, Closed]],
+Cell[33207, 1011, 158, 3, 32, "Text"],
+Cell[33368, 1016, 536, 16, 33, "Text"],
+Cell[33907, 1034, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

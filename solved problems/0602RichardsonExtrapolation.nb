@@ -1,0 +1,1742 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     57218,       1608]*)
+(*NotebookOutlinePosition[     57884,       1631]*)
+(*  CellTagsIndexPosition[     57840,       1627]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for Numerical Differentiation, Part II: \
+Richardson's Extrapolation",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Background.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" \n",
+    FontColor->RGBColor[0, 0, 1]],
+  "\n\tNumerical differentiation formulas can be derived by first \
+constructing the Lagrange interpolating polynomial  ",
+  Cell[BoxData[
+      \(\(P\_3\) \((x)\)\)]],
+  " through three points, differentiating the Lagrange polynomial, and \
+finally evaluating  ",
+  Cell[BoxData[
+      \(P\_3' \((x)\)\)]],
+  "  at the desired point.  The truncation error is be investigated, but \
+round off error from computer arithmetic using computer numbers will be \
+studied in another lab."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Three point rule for ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(\(f'\)[x]\),
+        FontColor->RGBColor[0, 0, 1]]],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The central difference formula for  the first derivative, based on three \
+points is  \n\n\t",
+  Cell[BoxData[
+      \(\(f'\)[x]\  \[TildeTilde] \ 
+          D\_three[x, h]\  = \ \(f[x + h] - f[x - h]\)\/\(2\ h\)\)]],
+  ",  \n\nand the remainder term is \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(R\_three[x, h]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{" ", 
+              RowBox[{"-", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((3)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}]}], 
+            "6"], \(h\^2\)}]}]]],
+  ". \n\nTogether they make the equation  ",
+  Cell[BoxData[
+      \(\(f'\)[x]\  = \ \ D\_three[x, h]\  + \ R\_three[x, h]\)]],
+  ",  and the truncation error bound is  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(EB\_three[h]\), " ", "=", " ", 
+        RowBox[{"\[VerticalSeparator]", 
+          RowBox[{
+            FractionBox[
+              RowBox[{" ", 
+                RowBox[{"-", 
+                  RowBox[{
+                    SuperscriptBox["f", 
+                      TagBox[\((3)\),
+                        Derivative],
+                      MultilineFunction->None], "[", "c", "]"}]}]}], 
+              "6"], \(h\^2\)}], 
+          "\[VerticalSeparator]", \(\(\[LessSlantEqual]\)\(\(\(\(\ \)\(M\_3\)\
+\)\/6\) h\^2\)\)}]}]]],
+  "  \n\nwhere  ",
+  Cell[BoxData[
+      RowBox[{\(M\_3\), "=", 
+        RowBox[{\(max\_\(a \[LessEqual] x \[LessEqual] b\)\), " ", 
+          RowBox[{"\[VerticalSeparator]", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((3)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}], 
+            "\[VerticalSeparator]"}]}]}]]],
+  ".  This gives rise to the ",
+  StyleBox["Big \"O\" notation",
+    FontColor->RGBColor[0, 0, 1]],
+  " for the error term for  ",
+  Cell[BoxData[
+      \(\(f'\)[x]\)]],
+  ": \n\n\t",
+  Cell[BoxData[
+      \(\(f'\)[x]\  = \ \(f[x + h] - f[x - h]\)\/\(2\ h\)\  + \ 
+          O \((h\^2)\)\)]],
+  ".   "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Five point rule for ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(\(f'\)[x]\),
+        FontColor->RGBColor[0, 0, 1]]],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The central difference formula for  the first derivative, based on five \
+points is  \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(f'\)[x]\), 
+          StyleBox["\[TildeTilde]",
+            FontSize->14], \(D\_five[x, h]\)}], 
+        "=", \(\(f[x - 2  h] - 8  f[x - h] + 8  f[x + h] - \ 
+              f[x + 2  h]\)\/\(12  h\)\)}]]],
+  ",  \n\nand the remainder term is \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(R\_five[x, h]\), " ", "=", " ", 
+        RowBox[{
+          FractionBox[
+            RowBox[{" ", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((5)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "c", "]"}]}], 
+            "30"], \(h\^4\)}]}]]],
+  ". \n\nTogether they make the equation  ",
+  Cell[BoxData[
+      \(\(f'\)[x]\  = \ D\_five[x, h]\  + \ R\_five[x, h]\)]],
+  ",  and the truncation error bound is  \n\n\t",
+  Cell[BoxData[
+      RowBox[{\(EB\_five[h]\), " ", "=", " ", 
+        RowBox[{"\[VerticalSeparator]", 
+          RowBox[{
+            FractionBox[
+              RowBox[{" ", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((5)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}], 
+              "30"], \(h\^4\)}], 
+          "\[VerticalSeparator]", \(\(\[LessSlantEqual]\)\(\(\(\(\ \)\(M\_5\)\
+\)\/30\) h\^4\)\)}]}]]],
+  "  \n\nwhere  ",
+  Cell[BoxData[
+      RowBox[{\(M\_5\), "=", 
+        RowBox[{\(max\_\(a \[LessEqual] x \[LessEqual] b\)\), " ", 
+          RowBox[{"\[VerticalSeparator]", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((5)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}], 
+            "\[VerticalSeparator]"}]}]}]]],
+  ".  This gives rise to the ",
+  StyleBox["Big \"O\" notation",
+    FontColor->RGBColor[0, 0, 1]],
+  " for the error term for  ",
+  Cell[BoxData[
+      \(\(f'\)[x]\)]],
+  ": \n\n\t",
+  Cell[BoxData[
+      \(\(f'\)[
+          x] = \(f[x - 2  h] - 8  f[x - h] + 8  f[x + h] - f[x + 2  \
+h]\)\/\(12  h\)\  + \ O \((h\^4)\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Theorem  (Richardson's Extrapolation for ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  Cell[BoxData[
+      StyleBox[\(\(f'\)[x]\),
+        FontColor->RGBColor[0, 0, 1]]],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  The central difference formula for  the first derivative, based on five \
+points is a linear combination of  ",
+  Cell[BoxData[
+      \(D\_three[x, y]\)]],
+  " and ",
+  Cell[BoxData[
+      \(\(\(\ \)\(D\_three[x, 2  h]\)\)\)]],
+  ". \n\n\t",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(f'\)[x]\), 
+          StyleBox["\[TildeTilde]",
+            FontSize->14], \(D\_five[x, h]\)}], 
+        "=", \(\(4  D\_three[x, y] - \ D\_three[x, 2  h]\)\/3\)}]]],
+  ",  \n\nwhere  ",
+  Cell[BoxData[
+      \(D\_three[x, h] = \(f[x + h]\  - \ \ f[x - h]\)\/\(2\ h\)\)]],
+  "  and  ",
+  Cell[BoxData[
+      \(D\_three[x, 
+          2  h] = \(f[x + 2  h]\  - \ \ f[x - 2  h]\)\/\(4\ h\)\)]],
+  "."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RichardsonExtrapProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Animations (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/a2001/Animations/Derivative/"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/a2001/Animations/Animations6.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to animations."
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://ecs.fullerton.edu/~mathews/n2003/RichardsonExtrapProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Richardson's Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RichardsonExtrapProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Richardson's Extrapolation.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  "  \n\n\tRichardson's extrapolation relates the five point rule and the \
+three point rule,  ",
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{\(\(f'\)[x]\), 
+          StyleBox["\[TildeTilde]",
+            FontSize->14], \(D\_three[x, h]\)}], 
+        "=", \(\(f[x + h]\  - \ \ f[x - h]\)\/\(2\ h\)\)}]]],
+  ",  that was studied previously.  \n\n\t",
+  Cell[BoxData[
+      \(D\_five[x, 
+          h]\  = \ \(4  D\_three[x, y] - \ D\_three[x, 2  h]\)\/3\)]],
+  ".  \n\nEnter the three point formula for numerical differentiation."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, h, x];\)\ \), "\n", 
+    \(\(D\_three[x_, 
+          h_]\  = \ \(f[x + h] - f[x - h]\)\/\(\(2  h\)\(\ \)\);\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f'[x] \[TildeTilde] \!\(D\_three\)[x,h] = \>\"", 
+        D\_three[x, h]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Project III.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\tInvestigate the numerical differentiation formulae  ",
+  Cell[BoxData[
+      RowBox[{\(\(f'\)[x]\), 
+        StyleBox["\[TildeTilde]",
+          
+          FontSize->
+            14], \(\(f[x - 2  h] - 8  f[x - h] + 8  f[x + h] - 
+              f[x + 2  h]\)\/\(12  h\)\)}]]],
+  "  and error bound  ",
+  Cell[BoxData[
+      RowBox[{\(EB\_five[h]\), " ", "=", 
+        RowBox[{"\[VerticalSeparator]", 
+          RowBox[{
+            FractionBox[
+              RowBox[{" ", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((5)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "c", "]"}]}], 
+              "30"], \(h\^4\)}], "\[VerticalSeparator]", 
+          RowBox[{"\[LessSlantEqual]", 
+            RowBox[{
+              FractionBox[
+                RowBox[{" ", 
+                  SuperscriptBox[\(M\_5\), 
+                    TagBox["",
+                      Derivative],
+                    MultilineFunction->None]}], "30"], \(h\^4\)}]}]}]}]]],
+  "  where  ",
+  Cell[BoxData[
+      RowBox[{\(M\_5\), "=", 
+        RowBox[{\(max\_\(a \[LessEqual] x \[LessEqual] b\)\), 
+          RowBox[{"\[VerticalSeparator]", " ", 
+            RowBox[{
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((5)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "x", "]"}], 
+              "\[VerticalSeparator]"}]}]}]}]]],
+  ".   \nThe truncation error is be investigated, but round off error from \
+computer arithmetic using computer numbers will be studied in another lab.\n\n\
+Enter the five point formula for numerical differentiation."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, h, x];\)\ \), "\n", 
+    \(\(D\_five[x_, 
+          h_]\  = \(\(\ \)\(f[x - 2  h] - 8  f[x - h] + 8  f[x + h] - f[x + 2 \
+ h]\)\)\/\(\(12  h\)\(\ \)\);\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<f'[x] \[TildeTilde] \!\(D\_five\)[x,h] = \>\"", 
+        D\_five[x, h]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Consider the function  ",
+  Cell[BoxData[
+      \(f[x]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x]\)]],
+  ".   Find the formula for the third derivative ",
+  Cell[BoxData[
+      \(\(f\^\((5)\)\)[x]\)]],
+  ", it will be used in our explorations for the remainder term and the \
+truncation error bound.  Graph  ",
+  Cell[BoxData[
+      \(\(f\^\((5)\)\)[x]\)]],
+  ".  Find the bound  ",
+  Cell[BoxData[
+      \(M\_5 = 
+        max\_\(0 \[LessEqual] x \[LessEqual] \
+\[Pi]\)\(\(\[VerticalSeparator]\)\(\(f\^\((5)\)\)[
+              x]\)\(\[VerticalSeparator]\)\)\)]],
+  ".  Look at it's graph and estimate the value  ",
+  Cell[BoxData[
+      \(M\_5\)]],
+  ", be sure to take the absolute value if necessary."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{\(f[x_]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<  f[x] = \>", f[x]\ ];\), " "}], "\[IndentingNewLine]",
+   
+    RowBox[{\(Print["\< f'[x] = \>", \(f'\)[x]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<f''[x] = \>", \(f''\)[x]\ ];\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(f\^\((3)\)\)[x] = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((3)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], " ", "]"}], 
+        ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\!\(f\^\((4)\)\)[x] = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((4)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], " ", "]"}], 
+        ";"}], " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<\\n\>\"", ",", "\"\<\!\(f\^\((5)\)\)[x] = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((5)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], " ", "]"}], 
+        ";"}], " "}]}], "Input"],
+
+Cell[BoxData[{
+    RowBox[{\(Needs["\<Graphics`Colors`\>"];\), " "}], "\[IndentingNewLine]", 
+  
+    RowBox[{
+      RowBox[{
+        RowBox[{"extrema", "=", 
+          RowBox[{"{", " ", 
+            RowBox[{
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((5)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}], ",", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((5)\),
+                    Derivative],
+                  MultilineFunction->None], "[", \(\[Pi]\/2\), "]"}]}], " ", 
+            "}"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(M\_5\  = \ Max[\ Abs\ [\ extrema\ ]\ ];\), " "}], "\n", 
+    RowBox[{\(EB\_five[h_]\  = \ \(\(M\_5\) h\^4\)\/30;\), 
+      " "}], "\[IndentingNewLine]", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Plot", "[", 
+          RowBox[{
+            RowBox[{"{", 
+              RowBox[{
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((5)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "x", "]"}], ",", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((5)\),
+                      Derivative],
+                    MultilineFunction->None], "[", "0", "]"}], ",", 
+                RowBox[{
+                  SuperscriptBox["f", 
+                    TagBox[\((5)\),
+                      Derivative],
+                    MultilineFunction->None], "[", \(\[Pi]\/2\), "]"}]}], 
+              "}"}], ",", \({x, 0, \[Pi]}\), 
+            ",", \(PlotRange \[Rule] {\(-4\), 1}\), 
+            ",", \(PlotStyle \[Rule] {Orange, Blue, Cyan}\), 
+            ",", \(Ticks \[Rule] {Range[0, 2  \[Pi], \[Pi]\/4], 
+                Range[\(-4\), 1, 1]}\)}], "]"}], ";"}], " "}], "\n", 
+    RowBox[{
+      RowBox[{
+        RowBox[{"Print", "[", 
+          RowBox[{"\"\<y = \!\(f\^\((5)\)\)[x] = \>\"", ",", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((5)\),
+                  Derivative],
+                MultilineFunction->None], "[", "x", "]"}]}], " ", "]"}], 
+        ";"}], " "}], "\n", \(Print[\*"\"\<The minimum occurs at x = 0, and \
+the maximum occurs at x = \!\(\[Pi]\/2\).\>\""];\), "\[IndentingNewLine]", 
+    RowBox[{\(Print[\*"\"\<Extrema of \!\(f\^\((5)\)\)[x]: \>\"", 
+          extrema\ ];\), " "}], "\n", 
+    RowBox[{\(Print[\*"\"\<          |\!\(f\^\((5)\)\)[c]| \[LessEqual] \
+\>\"", M\_5\ ];\), " "}], "\n", 
+    RowBox[{\(Print["\<\n\>", "\<The absolute value of the remainder \
+term:\>"];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<|R[x,h]| = \[VerticalSeparator]\>", \
+\*"\"\<\!\(f\^\((5)\)\)[c]\>\""\/30, \*"\"\<\!\(h\^4\)\[VerticalSeparator] \
+\[LessEqual] \>\"", EB\_five[h]\ ];\), " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Print["\<\>"];\), " "}], "\n", 
+    RowBox[{\(Print["\<The error bound is:\>"];\), " "}], "\n", 
+    RowBox[{\(Print[\*"\"\<\!\(EB\_five\)[h] \[LessEqual] \>\"", 
+          EB\_five[h]\ ];\), " "}]}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compute numerical approximations for the derivatives ",
+  Cell[BoxData[
+      \(\(f'\)[0], \(f'\)[1], \(f'\)[2], \(f'\)[3]\)]],
+  ", using step sizes ",
+  Cell[BoxData[
+      RowBox[{\(h = 0.1\), ",", " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman"], " ", "0.01"}]}]]],
+  ".  \n",
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the numerical approximation ",
+  Cell[BoxData[
+      \(D\_five[x, 0.01]\)]],
+  " over the interval ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ".  Compare it with the graph of ",
+  Cell[BoxData[
+      \(\(f'\)[x]\)]],
+  " over the interval ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Compute numerical approximations for the derivatives ",
+  Cell[BoxData[
+      \(\(f'\)[0], \(f'\)[1], \(f'\)[2], \(f'\)[3]\)]],
+  ",  using step sizes ",
+  Cell[BoxData[
+      RowBox[{\(h = 0.1\), ",", " ", 
+        RowBox[{
+          StyleBox["and",
+            FontFamily->"Times New Roman"], "  ", "0.01"}]}]]],
+  " .  "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"vals", "=", 
+        RowBox[{"(", GridBox[{
+              {"\"\<f'[x]\>\"", "\"\<  \>\"", "\"\<\!\(D\_five\)[x,0.1]\>\"", 
+                "\"\<  \>\"", "\"\<\!\(D\_five\)[x,0.01]\>\"", 
+                "\"\<  \>\"", \(\(f'\)[x]\)},
+              {\(x \[Equal] 0\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[0, 0.1], 8]\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[0, 0.01], 8]\), 
+                "\"\<  \>\"", \(NumberForm[\(f'\)[0.0], 8]\)},
+              {\(x \[Equal] 1\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[1, 0.1], 8]\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[1, 0.01], 8]\), 
+                "\"\<  \>\"", \(NumberForm[\(f'\)[1.0], 8]\)},
+              {\(x \[Equal] 2\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[2, 0.1], 8]\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[2, 0.01], 8]\), 
+                "\"\<  \>\"", \(NumberForm[\(f'\)[2.0], 8]\)},
+              {\(x \[Equal] 3\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[3, 0.1], 8]\), 
+                "\"\<  \>\"", \(NumberForm[D\_five[3, 0.01], 8]\), 
+                "\"\<  \>\"", \(NumberForm[\(f'\)[3.0], 8]\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", \(TableForm[
+      vals]\)}], "Input"],
+
+Cell["Where are the best approximations in this table.  ", "Text"],
+
+Cell[TextData[{
+  StyleBox["2 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Plot the numerical approximation  ",
+  Cell[BoxData[
+      \(D\_five[x, 0.01]\)]],
+  " over the interval  ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ".  Compare it with the graph of  ",
+  Cell[BoxData[
+      \(\(f'\)[x]\)]],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[\ D\_five[x, 0.01], {x, 0, \[Pi]}, 
+        PlotRange \[Rule] {\(-0.25\), 1}, 
+        PlotStyle \[Rule] Magenta];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(D\_five\)[x,0.01] = \>\"", \
+\*"\"\<\!\(1\/0.12\)(\>\"", 
+        f[x - 0.02] - 8  f[x - 0.01] + 8  f[x + 0.01] - 
+          f[x + 0.02], "\<)\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(D\_five\)[x,0.01] = \>\"", 
+        D\_five[x, 0.01]];\)\ \), "\n", 
+    \(\(Plot[\ \(f'\)[x], {x, 0, \[Pi]}, PlotRange \[Rule] {\(-0.25\), 1}, 
+        PlotStyle \[Rule] Red];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\< f'[x] = \>", \ \(f'\)[x]];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Plot the absolute error  ",
+  Cell[BoxData[
+      RowBox[{"\[VerticalSeparator]", 
+        RowBox[{
+          RowBox[{
+            SuperscriptBox["f", "\[Prime]",
+              MultilineFunction->None], "[", "x", "]"}], 
+          "-", \(D\_five[x, 0.01]\)}], "\[VerticalSeparator]"}]]],
+  "  over the interval  ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ", and estimate the maximum absolute error over the interval.\nCompute the \
+error bound  ",
+  Cell[BoxData[
+      \(EB\_five[0.01]\)]],
+  "  and observe that  ",
+  Cell[BoxData[
+      \(\(\(\[VerticalSeparator]\)\(\(f'\)[x] - 
+          D\_five[x, 
+            0.01]\)\(\[VerticalSeparator]\)\(\(\[LessSlantEqual]\)\(\ \
+\)\(EB\_five[0.01]\)\)\)\)]],
+  "  over  ",
+  Cell[BoxData[
+      \(\([0, \[Pi]]\)\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{Abs[\(f'\)[x] - D\_five[x, 0.01]], EB\_five[0.01]}, {x, 
+          0, \[Pi]}, PlotRange \[Rule] {0, 1.5*10\^\(-9\)}, 
+        PlotStyle \[Rule] {Green, Brown}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<The error bound gives the following estimate.\>"];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|f'[x] - \!\(D\_five\)[x,0.01]| \[LessEqual] \>\"", 
+        EB\_five[0.01]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  StyleBox["Aside.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 1, 0]],
+  "  If you really looked at that error bound closely, then you discover a \
+curious fact."
+}], "Text"],
+
+Cell[BoxData[{
+    \(Abs[\(f'\)[0] - D\_five[0, 0.01]]\ \), "\[IndentingNewLine]", 
+    \(EB\_five[0.01]\ \)}], "Input"],
+
+Cell[TextData[{
+  "How can the error bound be smaller than the error at x=0 ?  Because we \
+really need to use the interval  ",
+  Cell[BoxData[
+      \(\(-0.02\) \[LessEqual]  \[LessEqual] \[Pi] + 0.02\)]],
+  " when we found  ",
+  Cell[BoxData[
+      \(M\_5\)]],
+  ".  Being extra careful we find  ",
+  Cell[BoxData[
+      RowBox[{\(M\_5\), "=", 
+        RowBox[{
+          RowBox[{"|", 
+            RowBox[{
+              SuperscriptBox["f", 
+                TagBox[\((5)\),
+                  Derivative],
+                MultilineFunction->None], "[", \(-0.02\), "]"}], "|"}], "=", 
+          "4.1616"}]}]]],
+  ", then we would have the error bound"
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{\(Eb\_five[h_]\), "=", 
+        FractionBox[
+          RowBox[{
+            RowBox[{"Abs", "[", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((5)\),
+                    Derivative],
+                  MultilineFunction->None], "[", \(-0.02\), "]"}], 
+              "]"}], \(h\^4\)}], "30"]}], " "}], "\[IndentingNewLine]", 
+    RowBox[{\(Eb\_five[0.01]\), " "}]}], "Input"],
+
+Cell["Now we have \"fixed it.\"", "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 4.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Investigate the behavior of  ",
+  Cell[BoxData[
+      \(EB\_five[h]\)]],
+  ".  If the step size is reduced by a factor of  ",
+  Cell[BoxData[
+      \(1\/2\)]],
+  "  then the error bound is reduced by  ",
+  Cell[BoxData[
+      \(1\/16\)]],
+  ".  This is the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^4)\)}]]],
+  "  behavior."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 4.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Print[\*"\"\<\!\(EB\_five\)[h] = \>\"", 
+        EB\_five[h]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(EB\_five\)[\!\(h\/2\)] = \>\"", 
+        EB\_five[h\/2]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<Does\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(EB\_five\)[\!\(h\/2\)] = \
+\!\(1\/16\)\!\(EB\_five\)[h] ?\>\""\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[
+        EB\_five[h\/2]\  \[Equal] \ \(1\/16\) EB\_five[h]\ ];\)\ \)}], "Input"],
+
+Cell[TextData[{
+  "Investigate the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^4)\)}]]],
+  "  behavior in the following table of values."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"vals", "=", 
+        RowBox[{"(", GridBox[{
+              {"\"\<Step h\>\"", "\"\<  \>\"", "\"\<\!\(EB\_five\)[h]\>\""},
+              {\(h \[Equal] 0.08\), 
+                "\"\<  \>\"", \(NumberForm[EB\_five[0.08], 8]\)},
+              {\(h \[Equal] 0.04\), 
+                "\"\<  \>\"", \(NumberForm[EB\_five[0.04], 8]\)},
+              {\(h \[Equal] 0.02\), 
+                "\"\<  \>\"", \(NumberForm[EB\_five[0.02], 8]\)},
+              {\(h \[Equal] 0.01\), 
+                "\"\<  \>\"", \(NumberForm[EB\_five[0.01], 8]\)}
+              }], ")"}]}], ";"}], "\[IndentingNewLine]", \(TableForm[
+      vals]\)}], "Input"],
+
+Cell[TextData[{
+  "Investigate the  ",
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["O",
+          FontWeight->"Bold"], \((h\^4)\)}]]],
+  "  behavior in the following graphs."
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(Plot[{Abs[\(f'\)[x] - D\_five[x, 0.02]], 
+          Abs[\(f'\)[0] - D\_five[0, 0.02]], 
+          Abs[\(f'\)[x] - D\_five[x, 0.01]], 
+          Abs[\(f'\)[0] - D\_five[0, 0.01]]}, \ {x, 0, \[Pi]}, 
+        PlotRange \[Rule] {0, 2.2\ 10\^\(-8\)}, 
+        PlotStyle \[Rule] {Cyan, Magenta, Green, 
+            Red}];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|f'[x] - \!\(D\_five\)[x,0.02]| \[LessEqual] \>\"", 
+        Abs[\(f'\)[0] - D\_five[0, 0.02]]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<|f'[x] - \!\(D\_five\)[x,0.01]| \[LessEqual] \>\"", 
+        Abs[\(f'\)[0] - D\_five[0, 0.01]]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 5.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Compare the error bounds for the three point and five point formulas.",
+  StyleBox["\n",
+    FontWeight->"Bold"],
+  StyleBox["5 (a).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Which is smaller ",
+  Cell[BoxData[
+      RowBox[{\(EB\_three[0.01]\), "  ", 
+        StyleBox["or",
+          FontFamily->"Times New Roman"], "  ", \(EB\_five[0.01]\)}]]],
+  "?  Can you justify it?  \n",
+  StyleBox["5 (b).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Which is smaller ",
+  Cell[BoxData[
+      RowBox[{\(EB\_three[0.01]\), "  ", 
+        StyleBox["or",
+          FontFamily->"Times New Roman"], "  ", \(EB\_five[0.1]\)}]]],
+  "?   Can you justify it?  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 5.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"extrema", "=", 
+          RowBox[{"{", " ", 
+            RowBox[{
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((3)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "0", "]"}], ",", 
+              RowBox[{
+                SuperscriptBox["f", 
+                  TagBox[\((3)\),
+                    Derivative],
+                  MultilineFunction->None], "[", "\[Pi]", "]"}]}], " ", 
+            "}"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(M\_3\  = \ Max[Abs[extrema]];\), " "}], "\n", 
+    RowBox[{\(EB\_three[h_]\  = \ \(\(M\_3\) h\^2\)\/6;\), " "}]}], "Input"],
+
+Cell[BoxData[{
+    \(EB\_three[0.01]\ \), "\n", 
+    \(EB\_five[0.01]\ \)}], "Input"],
+
+Cell[BoxData[{
+    \(EB\_three[0.01]\ \), "\n", 
+    \(EB\_five[0.1]\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Project IV.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  \n\n\tInvestigate Richardson's extrapolation for numerical \
+differentiation. \n\n",
+  StyleBox["Example 6.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "In general, show that  ",
+  Cell[BoxData[
+      \(D\_five[x, h] = \(4\ D\_three[x, h] - D\_three[x, 2  h]\)\/3\)]],
+  ".  "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 6.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(Clear[f, h, x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[x, h] - D\_three[x, 2  h]\)\/3\) = \
+\>\"", \(4\ D\_three[x, h] - D\_three[x, 2  h]\)\/3];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[x, h] - D\_three[x, 2  h]\)\/3\) = \
+\>\"", Together[\(4\ \ D\_three[x, h] - D\_three[x, 2  h]\)\/3]\ ];\)\ \), "\
+\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<                 \!\(D\_five\)[x,h] = \>\"", 
+        D\_five[x, h]\ ];\)\ \), "\n", 
+    \(\)}], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 7.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Consider the function  ",
+  Cell[BoxData[
+      \(f[x]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x]\)]],
+  ".   Find the approximations  ",
+  Cell[BoxData[
+      \(D\_three[1.0, \ 0.02]\)]],
+  ", ",
+  Cell[BoxData[
+      \(D\_three[1.0, \ 0.01]\)]],
+  "  and then use the extrapolation formula  ",
+  Cell[BoxData[
+      \(\(4\ D\_three[1.0, 0.01] - D\_three[1.0, 0.02]\)\/3\)]],
+  ".  \nCompute  ",
+  Cell[BoxData[
+      \(D\_five[1.0, \ 0.01]\)]],
+  "  directly.  Finally, compare these numerical approximations for the \
+derivative with  ",
+  Cell[BoxData[
+      RowBox[{\(f'\), "[", 
+        StyleBox[
+          RowBox[{
+            StyleBox["1.",
+              StyleBoxAutoDelete->True,
+              PrintPrecision->2], "0"}]], "]"}]]]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 7.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[
+            x];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", "\<f[x] = \>", 
+        f[x]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\n\>", \*"\"\<\!\(D\_three\)[1.0, 0.02] = \>\"", 
+        D\_three[1.0, \ 0.02]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(D\_three\)[1.0, 0.01] = \>\"", 
+        D\_three[1.0, \ 0.01]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[1.0, 0.01] - D\_three[1.0, \
+0.02]\)\/3\) = (4(\>\"", D\_three[1.0, 0.01], "\<) - (\>", 
+        D\_three[1.0, 0.02]\ , "\<))/3\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[1.0, 0.01] - D\_three[1.0, \
+0.02]\)\/3\) = ((\>\"", 4\ D\_three[1.0, 0.01], "\<) - (\>", 
+        D\_three[1.0, 0.02]\ , "\<))/3\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[1.0, 0.01] - D\_three[1.0, \
+0.02]\)\/3\) = (\>\"", 
+        4\ D\_three[1.0, 0.01]\  - \ 
+          D\_three[1.0, 0.02]\ , "\<)/3\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(\(4  D\_three[1.0, 0.01] - D\_three[1.0, \
+0.02]\)\/3\) = \>\"", \(4\ D\_three[1.0, 0.01] - D\_three[1.0, 0.02]\)\/3\ ];\
+\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(D\_five\)[1.0, 0.01] = \>\"", 
+        D\_five[1.0, \ 0.01]\ ];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<\>"];\)\ \), "\[IndentingNewLine]", 
+    \(\(Print["\<        f'[1.0] = \>", \(f'\)[1.0]\ ];\)\ \)}], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Various Scenarios and Animations for Richardson's \
+Extrapolation and higher derivatives.",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Example 8.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Given  ",
+  Cell[BoxData[
+      \(f[x]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", find numerical approximations to the derivative  ",
+  Cell[BoxData[
+      \(\(f'\)[1.0]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", using five points and the central difference formula."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 8.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[
+            x];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(H = {0.5, 0.2, 0.1, 0.05, 0.02, 
+          0.01};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(For[i = 1, 
+        i \[LessEqual] Length[H], \(i++\), \[IndentingNewLine]q[x_] = 
+          Fit[{{X - 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X - 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X - 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X - 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}, {X, 
+                f[X]}, {X + 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X + 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X + 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X + 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}}, {1, x, x\^2, x\^3, x\^4}, 
+            x]; \ \[IndentingNewLine]d1 = \(\(\ \)\(f[X - 2  H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] - 8  f[X - H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] + 8  f[X + H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] - f[X + 2  H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\)\)\/\(\(12\) \( \
+H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\)\(\ \)\); \ \
+\[IndentingNewLine]g[x_] = 
+          f[X] + d1\ \((x - X)\); \ \[IndentingNewLine]dots = 
+          Graphics[{{Magenta, PointSize[0.02], Point[{X, f[X]}]}, {Blue, 
+                PointSize[0.02], 
+                Point[{X - 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X - 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}}]; \ \[IndentingNewLine]gr = 
+          Plot[{f[x], g[x]}, {x, 0, 2.1}, 
+            PlotRange \[Rule] {{0, 2.1}, {0, 0.5}}, 
+            PlotStyle \[Rule] {Magenta, Blue, Cyan}, 
+            DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]Show[gr, 
+          dots, PlotRange \[Rule] {{0, 2.1}, {0, 0.45}}, 
+          Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 0.5, 0.1]}, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<  f[x] = \>", 
+          f[x], "\<\n\>", "\< f'[x] = \>", \(f'\)[x], "\<\n\>", "\<f'[\>", 
+          X, "\<] = \>", NumberForm[\(f'\)[X], 9], "\<\n\>", "\<     h = \>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]; \
+\[IndentingNewLine]Print["\<f'[\>", X, "\<] \[TildeTilde] (f[\>", X, "\<-\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<] - 8f[\>", X, "\<-\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
++ 8f[\>", X, "\<+\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
+- f[\>", X, "\<+\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<])/(\>", 
+          12  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), \
+"\<) = \>", NumberForm[d1, 9]];\ ];\)\ \)}], "Input",
+  CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+  AspectRatioFixed->False,
+  ImageRegion->{{0, 1}, {0, 1}},
+  AnimationDisplayTime->1.06363,
+  AnimationCycleOffset->1,
+  AnimationCycleRepetitions->Infinity]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 9.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Given  ",
+  Cell[BoxData[
+      \(f[x]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", find numerical approximations to the derivative  ",
+  Cell[BoxData[
+      \(\(f''\)[1.0]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", using five points and the central difference formula."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 9.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[
+            x];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(H = {0.5, 0.2, 0.1, 0.05, 0.02, 
+          0.01};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(For[i = 1, 
+        i \[LessEqual] Length[H], \(i++\), \[IndentingNewLine]q[x_] = 
+          Fit[{{X - 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X - 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X - 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X - 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}, {X, 
+                f[X]}, {X + 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X + 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X + 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X + 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}}, {1, x, x\^2, x\^3, x\^4}, 
+            x]; \ \[IndentingNewLine]d2 = \(\(\ \)\(\(-f[X - 2  H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\) + 16  f[X - H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] - 30  f[X] + 16  f[X \
++ H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] - f[X + 2  H\
+\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\)\)\/\(12 \
+\((H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ )\)\^2\); \ \
+\[IndentingNewLine]g[x_] = 
+          f[X] + \(f'\)[
+                X]\ \((x - 
+                  X)\) + \(\(\(d2\)\(\ \)\)\/2\) \((x - X)\)\^2; \ \
+\[IndentingNewLine]dots = 
+          Graphics[{{Magenta, PointSize[0.02], Point[{X, f[X]}]}, {Blue, 
+                PointSize[0.02], 
+                Point[{X - 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X - 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}}]; \ \[IndentingNewLine]gr = 
+          Plot[{f[x]}, {x, 0, 2.1}, PlotRange \[Rule] {{0, 2.1}, {0, 0.5}}, 
+            PlotStyle \[Rule] {Magenta}, 
+            DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]gr2 = 
+          Plot[{g[x]}, {x, 0, 2.0}, PlotRange \[Rule] {{0, 2.1}, {0, 0.5}}, 
+            PlotStyle \[Rule] {Cyan}, 
+            DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]Show[gr, 
+          gr2, dots, PlotRange \[Rule] {{0, 2.1}, {0, 0.45}}, 
+          Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 0.5, 0.1]}, 
+          DisplayFunction \[Rule] $DisplayFunction]; \ 
+        Print["\<   f[x] = \>", 
+          f[x], "\<\n\>", "\<  f'[x] = \>", \(f'\)[
+            x], "\<\n\>", "\< f''[x] = \>", \(f''\)[x], "\<\n\>", "\<f''[\>", 
+          X, "\<] = \>", 
+          NumberForm[\(f''\)[X], 9], "\<\n\>", "\<      h = \>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]; \
+\[IndentingNewLine]Print["\<f''[\>", X, "\<] \[TildeTilde] (-f[\>", 
+          X, "\<-\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<] + 16f[\>", X, "\<-\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
+- 30f[\>", X, "\<] + 16f[\>", X, "\<+\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
+- f[\>", X, "\<+\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<])/(\>", 
+          12 \((H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\
+\ )\)\^2, "\<) = \>", NumberForm[d2, 9]];\ ];\)\ \)}], "Input",
+  CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+  AspectRatioFixed->False,
+  ImageRegion->{{0, 1}, {0, 1}},
+  AnimationDisplayTime->1.06363,
+  AnimationCycleOffset->1,
+  AnimationCycleRepetitions->Infinity]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 10.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  StyleBox["  ",
+    FontWeight->"Bold"],
+  "Given  ",
+  Cell[BoxData[
+      \(f[x]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[x]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", find numerical approximations to the derivative  ",
+  Cell[BoxData[
+      \(\(f'''\)[1.0]\)],
+    CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+    AspectRatioFixed->False,
+    ImageRegion->{{0, 1}, {0, 1}},
+    AnimationDisplayTime->1.06363,
+    AnimationCycleOffset->1,
+    AnimationCycleRepetitions->Infinity],
+  ", using five points and the central difference formula."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 10.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    \(\(f[
+          x_]\  = \ \[ExponentialE]\^\(-x\)\ \ Sin[
+            x];\)\ \), "\[IndentingNewLine]", 
+    \(\(X\  = \ 1.0;\)\ \), "\[IndentingNewLine]", 
+    \(\(H = {0.5, 0.2, 0.1, 0.05, 0.02, 
+          0.01};\)\ \ \), "\[IndentingNewLine]", 
+    \(\(Needs["\<Graphics`Colors`\>"];\)\ \), "\n", 
+    \(\(For[i = 1, 
+        i \[LessEqual] Length[H], \(i++\), \[IndentingNewLine]q[x_] = 
+          Fit[{{X - 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X - 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X - 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X - 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}, {X, 
+                f[X]}, {X + 
+                  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\
+\), f[X + 
+                    H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\)]}, {X + 2 
+                     H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\
+\)\), f[X + 2 
+                       H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}}, {1, x, x\^2, x\^3, x\^4}, 
+            x]; \ \[IndentingNewLine]d3 = \(\(\ \)\(\(-f[X - 2  H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\) + 2  f[X - H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] - 2  f[X + H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)] + f[X + 2  H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]\)\)\/\(2 \((H\_\(\(\
+\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ )\)\^3\); \ \
+\[IndentingNewLine]g[x_] = 
+          f[X] + \(f'\)[
+                X]\ \((x - 
+                  X)\) + \(\(f''\)[
+                    X]\/2\) \((x - X)\)\^2 + \(\(\(d3\)\(\ \)\)\/2\) \((x - \
+X)\)\^3; \ \[IndentingNewLine]dots = 
+          Graphics[{{Magenta, PointSize[0.02], Point[{X, f[X]}]}, {Blue, 
+                PointSize[0.02], 
+                Point[{X - 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X - 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X - H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}, {Blue, PointSize[0.02], 
+                Point[{X + 
+                      2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\), 
+                    f[X + 2 
+                           H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\
+\[RightDoubleBracket]\)\)]}]}}]; \ \[IndentingNewLine]gr = 
+          Plot[{f[x]}, {x, 0, 2.1}, PlotRange \[Rule] {{0, 2.1}, {0, 0.5}}, 
+            PlotStyle \[Rule] {Magenta}, 
+            DisplayFunction \[Rule] Identity]; \ \[IndentingNewLine]gr2 = 
+          Plot[{g[x]}, {x, 0.198, 1.8}, 
+            PlotRange \[Rule] {{0, 2.1}, {0, 0.5}}, PlotStyle \[Rule] {Cyan}, 
+            DisplayFunction \[Rule] 
+              Identity]; \ \[IndentingNewLine]figure\  = \ 
+          Show[gr, gr2, dots, PlotRange \[Rule] {{0, 2.1}, {0, 0.45}}, 
+            Ticks \[Rule] {Range[0, 2, 0.5], Range[0, 0.5, 0.1]}, 
+            DisplayFunction \[Rule] $DisplayFunction]; \ \
+\[IndentingNewLine]Print["\<    f[x] = \>", 
+          f[x], "\<\n\>", "\<   f'[x] = \>", \(f'\)[
+            x], "\<\n\>", "\<  f''[x] = \>", \(f''\)[
+            x], "\<\n\>", "\< f'''[x] = \>", \(f'''\)[
+            x], "\<\n\>", "\<f'''[\>", X, "\<] = \>", 
+          NumberForm[\(f'''\)[X], 9], "\<\n\>", "\<       h = \>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)]; 
+        Print["\<f'''[\>", X, "\<] \[TildeTilde] (-f[\>", X, "\<-\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<] + 2f[\>", X, "\<-\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
+- 2f[\>", X, "\<+\>", 
+          H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\<] \
++ f[\>", X, "\<+\>", 
+          2  H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\), "\
+\<])/(\>", 
+          2 \((H\_\(\(\[LeftDoubleBracket]\)\(i\)\(\[RightDoubleBracket]\)\)\ \
+)\)\^3, "\<) = \>", NumberForm[d3, 9]];\ ];\)\)}], "Input",
+  CellMargins->{{23, Inherited}, {Inherited, Inherited}},
+  AspectRatioFixed->False,
+  ImageRegion->{{0, 1}, {0, 1}},
+  AnimationDisplayTime->1.06363,
+  AnimationCycleOffset->1,
+  AnimationCycleRepetitions->Infinity]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Old Lab Project (",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical/df.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical/df.htm"], None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  StyleBox[").",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  Internet hyperlinks to an old lab project.  "
+}], "Text"],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/NumericalDiffBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Numerical Differentiation",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/n2003/NumericalDiffBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Richardson Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://www.ecs.fullerton.edu/~mathews/n2003/RichardsonExtrapBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Richardson Extrapolation",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/RichardsonExtrapBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{1016, 651},
+WindowMargins->{{0, Automatic}, {Automatic, 0}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 217, 5, 35, "Text"],
+Cell[1996, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3475, 112, 647, 17, 106, "Text"],
+Cell[4125, 131, 2419, 70, 317, "Text"],
+Cell[6547, 203, 649, 22, 33, "Text"],
+Cell[7199, 227, 2497, 73, 317, "Text"],
+Cell[9699, 302, 649, 22, 33, "Text"],
+Cell[10351, 326, 1024, 33, 135, "Text"],
+Cell[11378, 361, 649, 22, 33, "Text"],
+Cell[12030, 385, 755, 24, 33, "Text"],
+Cell[12788, 411, 621, 21, 33, "Text"],
+Cell[13412, 434, 661, 17, 154, "Text"],
+Cell[14076, 453, 288, 6, 85, "Input"],
+Cell[14367, 461, 1821, 48, 153, "Text"],
+Cell[16191, 511, 328, 6, 85, "Input"],
+Cell[16522, 519, 857, 26, 52, "Text"],
+
+Cell[CellGroupData[{
+Cell[17404, 549, 101, 2, 33, "Text"],
+Cell[17508, 553, 1459, 38, 153, "Input"],
+Cell[18970, 593, 3085, 71, 363, "Input"]
+}, Closed]],
+Cell[22070, 667, 834, 30, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[22929, 701, 101, 2, 33, "Text"],
+Cell[23033, 705, 436, 14, 33, "Text"],
+Cell[23472, 721, 1298, 24, 116, "Input"],
+Cell[24773, 747, 66, 0, 33, "Text"],
+Cell[24842, 749, 421, 17, 33, "Text"],
+Cell[25266, 768, 673, 12, 124, "Input"]
+}, Closed]],
+Cell[25954, 783, 935, 31, 49, "Text"],
+
+Cell[CellGroupData[{
+Cell[26914, 818, 101, 2, 33, "Text"],
+Cell[27018, 822, 440, 7, 71, "Input"],
+Cell[27461, 831, 199, 6, 33, "Text"],
+Cell[27663, 839, 120, 2, 50, "Input"],
+Cell[27786, 843, 663, 20, 52, "Text"],
+Cell[28452, 865, 456, 12, 66, "Input"],
+Cell[28911, 879, 41, 0, 33, "Text"]
+}, Closed]],
+Cell[28967, 882, 533, 21, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[29525, 907, 101, 2, 33, "Text"],
+Cell[29629, 911, 510, 9, 151, "Input"],
+Cell[30142, 922, 199, 7, 33, "Text"],
+Cell[30344, 931, 670, 14, 116, "Input"],
+Cell[31017, 947, 190, 7, 33, "Text"],
+Cell[31210, 956, 658, 11, 92, "Input"]
+}, Closed]],
+Cell[31883, 970, 927, 31, 68, "Text"],
+
+Cell[CellGroupData[{
+Cell[32835, 1005, 101, 2, 33, "Text"],
+Cell[32939, 1009, 699, 18, 87, "Input"],
+Cell[33641, 1029, 85, 2, 50, "Input"],
+Cell[33729, 1033, 84, 2, 50, "Input"]
+}, Closed]],
+Cell[33828, 1038, 469, 15, 109, "Text"],
+
+Cell[CellGroupData[{
+Cell[34322, 1057, 101, 2, 33, "Text"],
+Cell[34426, 1061, 537, 10, 138, "Input"]
+}, Closed]],
+Cell[34978, 1074, 852, 28, 71, "Text"],
+
+Cell[CellGroupData[{
+Cell[35855, 1106, 101, 2, 33, "Text"],
+Cell[35959, 1110, 1615, 28, 326, "Input"]
+}, Closed]],
+Cell[37589, 1141, 195, 4, 32, "Text"],
+Cell[37787, 1147, 856, 25, 33, "Text"],
+
+Cell[CellGroupData[{
+Cell[38668, 1176, 101, 2, 33, "Text"],
+Cell[38772, 1180, 4410, 87, 334, "Input"]
+}, Closed]],
+Cell[43197, 1270, 857, 25, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[44079, 1299, 101, 2, 33, "Text"],
+Cell[44183, 1303, 4776, 95, 389, "Input"]
+}, Closed]],
+Cell[48974, 1401, 859, 25, 30, "Text"],
+
+Cell[CellGroupData[{
+Cell[49858, 1430, 102, 2, 33, "Text"],
+Cell[49963, 1434, 4883, 97, 389, "Input"]
+}, Closed]],
+Cell[54861, 1534, 713, 20, 30, "Text"],
+Cell[55577, 1556, 158, 3, 35, "Text"],
+Cell[55738, 1561, 583, 17, 33, "Text"],
+Cell[56324, 1580, 594, 18, 33, "Text"],
+Cell[56921, 1600, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

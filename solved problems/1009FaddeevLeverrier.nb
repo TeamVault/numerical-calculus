@@ -1,0 +1,1043 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.2'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     31753,        954]*)
+(*NotebookOutlinePosition[     32520,        979]*)
+(*  CellTagsIndexPosition[     32476,        975]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Module for the Faddeev-Leverrier Method for \
+Eigenvalues",
+  FontFamily->"New Century Schlbk",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0, 0, 1]]], "Text"],
+
+Cell[TextData[{
+  StyleBox["Numerical Methods using ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["Mathematica",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontSlant->"Italic",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox[" ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox["Complementary software supplements for  ",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0.996109, 0]],
+  StyleBox[" \n",
+    FontSize->14],
+  StyleBox[ButtonBox["Numerical Methods textbooks",
+    ButtonData:>{
+      URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14],
+  StyleBox["\n",
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0.250004, 0.250004]],
+  StyleBox[ButtonBox["John H. Mathews and Kurtis Fink, 2004",
+    ButtonData:>{
+      URL[ "http://www.ecs.fullerton.edu/~mathews/numerical.html"], None},
+    ButtonStyle->"Hyperlink"],
+    FontSize->14,
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["  ",
+    FontSize->14,
+    FontColor->RGBColor[0.500008, 0, 0.996109]]
+}], "Text"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Faddeev-Leverrier Method",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0, 0, 1]],
+  StyleBox["\n\n\tLet",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["be an",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox[" \[Times] ",
+    FontFamily->"Times-Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  StyleBox["matrix.  The determination of",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  ButtonBox["eigenvalues",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Eigenvalue.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  StyleBox["and",
+    FontFamily->"Times New Roman"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  ButtonBox["eigenvectors",
+    ButtonData:>{
+      URL[ "http://mathworld.wolfram.com/Eigenvector.html"], None},
+    ButtonStyle->"Hyperlink"],
+  StyleBox[" ",
+    FontFamily->"Times-Roman"],
+  StyleBox["requires the solution of \n\n(1)",
+    FontFamily->"Times New Roman"],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["AX",
+          FontWeight->"Bold"], " ", "=", " ", 
+        StyleBox[
+          RowBox[{"\[Lambda]", 
+            StyleBox["X",
+              FontWeight->"Bold"]}]]}]]],
+  StyleBox["\n",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold"],
+  StyleBox["\nwhere",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  StyleBox["  ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["is the eigenvalue corresponding to the eigenvector",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox["X",
+        FontWeight->"Bold"]]],
+  StyleBox[".  The values",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  StyleBox["  ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["must satisfy the equation \n\n(2)",
+    FontFamily->"Times New Roman"],
+  StyleBox["\t\t",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"det", 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], "-", 
+              StyleBox[
+                RowBox[{"\[Lambda]", 
+                  StyleBox["I",
+                    FontWeight->"Bold"]}]]}], ")"}]}], " ", "=", " ", 
+        "0"}]]],
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Hence",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      \(\[Lambda]\)]],
+  StyleBox["  ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["is a root of an ",
+    FontFamily->"Times New Roman"],
+  StyleBox["n",
+    FontFamily->"Courier New"],
+  StyleBox["th",
+    FontFamily->"Times New Roman",
+    FontVariations->{"CompatibilityType"->"Superscript"}],
+  StyleBox[" degree polynomial ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{\(P \((\[Lambda])\)\), " ", "=", " ", 
+        RowBox[{"det", 
+          RowBox[{"(", 
+            RowBox[{
+              StyleBox["A",
+                FontWeight->"Bold"], "-", 
+              StyleBox[
+                RowBox[{"\[Lambda]", 
+                  StyleBox["I",
+                    FontWeight->"Bold"]}]]}], ")"}]}]}]]],
+  ", which we write in the form ",
+  StyleBox["\n  ",
+    FontFamily->"RMTMI",
+    FontSlant->"Italic"],
+  StyleBox["\n(3)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(P \((\[Lambda])\)\  = \ \(\[Lambda]\^n\  + \ \(c\_1\) \[Lambda]\^\(n \
+- 1\) + \(c\_2\) \[Lambda]\^\(n - 2\)\  +  ... \) + \ \(c\_\(n - 
+                  2\)\) \[Lambda]\^2 + \(c\_\(n - 1\)\) \[Lambda]\  + 
+          c\_n\)]],
+  ".  \n",
+  StyleBox["\nThe Faddeev-Leverrier algorithm is an efficient method for \
+finding the coefficients ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(c\_k\)]],
+  "  ",
+  StyleBox["of the polynomial  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(P \((\[Lambda])\)\)]],
+  StyleBox[".  As an additional benefit, the inverse matrix  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  StyleBox["  is obtained at no extra computational expense.",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["\tRecall that the trace of the matrix",
+    FontFamily->"Times New Roman"],
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  StyleBox[",  written  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{"Tr", "[", 
+        StyleBox["A",
+          FontWeight->"Bold"], "]"}]]],
+  StyleBox[",  is \n\n(4)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        RowBox[{"Tr", "[", 
+          StyleBox["A",
+            FontWeight->"Bold"], "]"}], " ", "=", 
+        " ", \(\(a\_\(1, 1\) + a\_\(2, 2\) +  ... \) + a\_\(n, n\)\)}]]],
+  StyleBox[".  \n\nThe algorithm generates a sequence of matrices ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      SubsuperscriptBox[
+        RowBox[{"{", 
+          SubscriptBox[
+            StyleBox["B",
+              FontWeight->"Bold"], "k"], "}"}], \(k = 1\), "n"]]],
+  StyleBox["  and uses their traces to compute the coefficients of  ",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(P \((\[Lambda])\)\)]],
+  StyleBox[", \n\n(5)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[GridBox[{
+          {
+            RowBox[{
+              SubscriptBox[
+                StyleBox["B",
+                  FontWeight->"Bold"], "1"], " ", "=", " ", 
+              StyleBox["A",
+                FontWeight->"Bold"], 
+              StyleBox[
+                RowBox[{
+                  StyleBox["                            ",
+                    FontWeight->"Plain"], 
+                  StyleBox[" ",
+                    FontWeight->"Bold"]}]]}], 
+            RowBox[{"  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox["  ",
+                FontFamily->"Times New Roman"]}], 
+            RowBox[{\(p\_1\), " ", "=", " ", 
+              RowBox[{"Tr", "[", 
+                SubscriptBox[
+                  StyleBox["B",
+                    FontWeight->"Bold"], "1"], "]"}], "     "}]},
+          {
+            RowBox[{
+              SubscriptBox[
+                StyleBox["B",
+                  FontWeight->"Bold"], "2"], " ", "=", " ", 
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], 
+                RowBox[{"(", 
+                  RowBox[{
+                    SubscriptBox[
+                      StyleBox["B",
+                        FontWeight->"Bold"], "1"], "-", 
+                    RowBox[{\(p\_1\), 
+                      StyleBox["I",
+                        FontWeight->"Bold"]}]}], ")"}], "       "}]}], 
+            RowBox[{"  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox["  ",
+                FontFamily->"Times New Roman"]}], 
+            RowBox[{\(p\_2\), " ", "=", " ", 
+              RowBox[{\(1\/2\), 
+                RowBox[{"Tr", "[", 
+                  SubscriptBox[
+                    StyleBox["B",
+                      FontWeight->"Bold"], "2"], "]"}]}]}]},
+          {"\[VerticalEllipsis]", 
+            StyleBox[
+              RowBox[{"  ", 
+                StyleBox["  ",
+                  FontFamily->"Times New Roman"]}]], 
+            StyleBox[\(\(\[VerticalEllipsis]\)\(\ \)\),
+              FontFamily->"Times New Roman"]},
+          {
+            RowBox[{
+              SubscriptBox[
+                StyleBox["B",
+                  FontWeight->"Bold"], "k"], " ", "=", " ", 
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], 
+                RowBox[{"(", 
+                  RowBox[{
+                    SubscriptBox[
+                      StyleBox["B",
+                        FontWeight->"Bold"], \(k - 1\)], "-", 
+                    RowBox[{\(p\_\(k - 1\)\), 
+                      StyleBox["I",
+                        FontWeight->"Bold"]}]}], ")"}]}]}], 
+            RowBox[{"  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox["  ",
+                FontFamily->"Times New Roman"]}], 
+            RowBox[{\(p\_k\), " ", "=", " ", 
+              RowBox[{\(1\/k\), 
+                RowBox[{"Tr", "[", 
+                  SubscriptBox[
+                    StyleBox["B",
+                      FontWeight->"Bold"], "k"], "]"}]}]}]},
+          {"\[VerticalEllipsis]", 
+            StyleBox[
+              RowBox[{"  ", 
+                StyleBox["  ",
+                  FontFamily->"Times New Roman"]}]], "\[VerticalEllipsis]"},
+          {
+            RowBox[{
+              SubscriptBox[
+                StyleBox["B",
+                  FontWeight->"Bold"], "n"], " ", "=", " ", 
+              RowBox[{
+                StyleBox["A",
+                  FontWeight->"Bold"], 
+                RowBox[{"(", 
+                  RowBox[{
+                    SubscriptBox[
+                      StyleBox["B",
+                        FontWeight->"Bold"], \(n - 1\)], "-", 
+                    RowBox[{\(p\_\(n - 1\)\), 
+                      StyleBox["I",
+                        FontWeight->"Bold"]}]}], ")"}]}]}], 
+            RowBox[{"  ", 
+              StyleBox["and",
+                FontFamily->"Times New Roman"], 
+              StyleBox["  ",
+                FontFamily->"Times New Roman"]}], 
+            RowBox[{\(p\_n\), " ", "=", " ", 
+              RowBox[{\(1\/n\), 
+                RowBox[{"Tr", "[", 
+                  SubscriptBox[
+                    StyleBox["B",
+                      FontWeight->"Bold"], "n"], "]"}]}]}]}
+          }]]],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Then the characteristic polynomial is given by\n\n(6)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      \(P \((\[Lambda])\)\  = \ \(\[Lambda]\^n\  - \ \(p\_1\) \[Lambda]\^\(n \
+- 1\) - \(p\_2\) \[Lambda]\^\(n - 2\)\  -  ... \) - \(p\_\(n - 
+                  1\)\) \[Lambda]\  - p\_n\)]],
+  ".  ",
+  StyleBox["\n\nIn addition, the inverse matrix is given by\n\n(7)\t\t",
+    FontFamily->"Times New Roman"],
+  Cell[BoxData[
+      RowBox[{
+        SuperscriptBox[
+          StyleBox["A",
+            FontWeight->"Bold"], \(-1\)], " ", "=", " ", 
+        RowBox[{\(1\/p\_n\), 
+          RowBox[{"(", 
+            RowBox[{
+              SubscriptBox[
+                StyleBox["B",
+                  FontWeight->"Bold"], \(n - 1\)], "-", 
+              RowBox[{\(p\_\(n - 1\)\), 
+                StyleBox["I",
+                  FontWeight->"Bold"]}]}], ")"}]}]}]]],
+  ".  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["For a proof for equations (6) and (7) see ",
+    FontFamily->"Times New Roman"],
+  "Vera Nikolaevna ",
+  StyleBox["Faddeeva, \"Computational Methods of Linear Algebra,\" ",
+    FontFamily->"Times New Roman"],
+  "(Translated From The Russian By Curtis D. Benster)",
+  StyleBox[", ",
+    FontFamily->"Times New Roman"],
+  "Dover Publications Inc. N.Y., Date Published: 1959 ISBN: 0486604241",
+  StyleBox[".  ",
+    FontFamily->"Times New Roman"]
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Proof  ",
+    FontFamily->"New Century Schlbk",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 1]],
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/n2003/FaddeevLeverrierProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FaddeevLeverrierProof.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Computer Programs  ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ 
+      "http://mathews.ecs.fullerton.edu/n2003/FaddeevLeverrierProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FaddeevLeverrierProg.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  "
+}], "Text"],
+
+Cell[TextData[{
+  StyleBox["Mathematica Subroutine ",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["(",
+    FontFamily->"Times New Roman",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  StyleBox["Faddeev-Leverrier Method).",
+    FontWeight->"Bold",
+    FontColor->RGBColor[0.500008, 0, 0.996109]],
+  "  To construct the ",
+  StyleBox["characteristic polynomial ",
+    FontFamily->"Times New Roman"],
+  " and inverse of the matrix",
+  StyleBox["  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      StyleBox["A",
+        FontWeight->"Bold"]]],
+  ".   "
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Faddeev[
+          A0_] := \[IndentingNewLine]Module[{A = A0, i, k, 
+            n = Length[A]}, \[IndentingNewLine]B\_1\  = \ 
+            A; \[IndentingNewLine]p\_1\  = \ 
+            Tr[B\_1]; \[IndentingNewLine]Print[\*"\"\<\!\(B\_1\) = \>\"", 
+            MatrixForm[
+              B\_1]\ ]; \[IndentingNewLine]Print[\*"\"\<\!\(p\_1\) = Tr[\!\(B\
+\_1\)] = \>\"", p\_1]; \[IndentingNewLine]For[k = 2, 
+            k \[LessEqual] n, \(k++\), \[IndentingNewLine]B\_k\  = \ 
+              A . \((B\_\(k - 1\) - \(p\_\(k - 1\)\) 
+                      IdentityMatrix[
+                        n])\); \[IndentingNewLine]p\_k\  = \ \(1\/k\) 
+                Tr[B\_k]; \ \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<B\>"\_k, "\< = \>", MatrixForm[A], "\<(\>", 
+              MatrixForm[B\_\(k - 1\)], "\< - (\>", p\_\(k - 1\), "\<)\>", 
+              MatrixForm[IdentityMatrix[n]], "\<) = \>", 
+              MatrixForm[
+                B\_k]\ ]; \[IndentingNewLine]Print["\<p\>"\_k, "\< = \>", 
+              1\/k, "\<Tr[\>", "\<B\>"\_k, "\<] = \>", 1\/k, "\<(\>", 
+              Tr[B\_k], "\<) = \>", 
+              p\_k];]; \ \[IndentingNewLine]A1 = \(1\/p\_n\) \((B\_\(n - 1\) \
+- \(p\_\(n - 1\)\) 
+                    IdentityMatrix[
+                      n])\); \[IndentingNewLine]P[\[Lambda]_] = \[Lambda]\^n \
+- \[Sum]\+\(i = 1\)\%n\( 
+                      p\_i\) \[Lambda]\^\(n - i\); \[IndentingNewLine]Print["\
+\<\>"]; \[IndentingNewLine]Print["\<P[\[Lambda]] = \>", "\<\[Lambda]\>"\^n, "\
+\< - \>", \*"\"\<\!\(\[Sum]\+\(i = 1\)\)\>\""\&n, \*"\"\< \!\(p\_i\)\!\(\
+\[Lambda]\^\(n - i\)\)\>\""]; \[IndentingNewLine]Print["\<\>"]; \
+\[IndentingNewLine]Print["\<P[\[Lambda]] = \>", 
+            P[\[Lambda]]]; \[IndentingNewLine]Return[
+            P[\[Lambda]]];];\)\)], "Input"],
+
+Cell[TextData[{
+  StyleBox["Example 1.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Faddeev's method to find the ",
+  StyleBox["characteristic polynomial and inverse of the matrix  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"2", \(-1\), "1"},
+              {\(-1\), "2", "1"},
+              {"1", \(-1\), "2"}
+              }], ")"}]}]]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 1.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"2", \(-1\), "1"},
+              {\(-1\), "2", "1"},
+              {"1", \(-1\), "2"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", \(Faddeev[A];\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this result with the method of determinants for finding the \
+",
+  StyleBox["characteristic polynomial",
+    FontFamily->"Times-Roman"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"2", \(-1\), "1"},
+              {\(-1\), "2", "1"},
+              {"1", \(-1\), "2"}
+              }], ")"}]}], ";"}], "\n", 
+    RowBox[{\(I\_3 = IdentityMatrix[3];\), 
+      " "}], "\n", \(M = A - \[Lambda]\ I\_3\ ;\), "\n", \(Q[\[Lambda]_] = 
+        Det[M];\), "\[IndentingNewLine]", \(solset = 
+        Solve[Q[\[Lambda]]\  \[Equal] \ 
+            0, \[Lambda]];\), "\[IndentingNewLine]", \(Print["\<  A  = \>", 
+        MatrixForm[\ A\ ]\ ];\), "\n", \(Print["\<  M  = \>", 
+        MatrixForm[\ 
+          M\ ]\ ];\), "\n", \(Print["\<Q[\[Lambda]] = Det[M] = \>", \ 
+        Q[\[Lambda]]];\), "\[IndentingNewLine]", \(Print["\<Solve \
+Q[\[Lambda]] = 0  get\>"];\), "\[IndentingNewLine]", \(Print[
+        TableForm[solset]];\)}], "Input"],
+
+Cell[TextData[{
+  "The polynomials are different only in the fact that  ",
+  Cell[BoxData[
+      \(P[\[Lambda]]\  = \ \(-\ Q[\[Lambda]]\)\)]],
+  ".  \n\nNow we compute the inverse matrix  ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A1 = \(1\/p\_3\) \((B\_\(3 - 1\) - \(p\_\(3 - 1\)\) 
+                IdentityMatrix[3])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The inverse matrix is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \!\(1\/p\_3\)(\!\(B\_\(3 - 1\)\) - \
+\!\(p\_\(3 - 1\)\) I)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_3, "\<(\>", 
+        MatrixForm[B\_\(3 - 1\)], "\< - (\>", p\_\(3 - 1\)\ , "\<)\>", 
+        MatrixForm[IdentityMatrix[3]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_3, "\<(\>", 
+        MatrixForm[B\_\(3 - 1\)], "\< - (\>", 
+        MatrixForm[\(p\_\(3 - 1\)\) 
+            IdentityMatrix[3]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_3, 
+        MatrixForm[
+          B\_\(3 - 1\)\ \  - \ \ \(p\_\(3 - 1\)\) 
+              IdentityMatrix[3]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", MatrixForm[A1]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["Inverse",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 2.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Faddeev's method to find the ",
+  StyleBox["characteristic polynomial and inverse of the matrix  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"8", \(-1\), "3", \(-1\)},
+              {\(-1\), "6", "2", "0"},
+              {"3", "2", "9", "1"},
+              {\(-1\), "0", "1", "7"}
+              }], ")"}]}]]],
+  StyleBox[".  ",
+    FontFamily->"Times-Roman"]
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 2.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"8", \(-1\), "3", \(-1\)},
+                {\(-1\), "6", "2", "0"},
+                {"3", "2", "9", "1"},
+                {\(-1\), "0", "1", "7"}
+                }], ")"}]}], ";"}], 
+      " "}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", \(Faddeev[A];\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this result with the method of determinants for finding the \
+",
+  StyleBox["characteristic polynomial",
+    FontFamily->"Times-Roman"],
+  ". "
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{
+        RowBox[{"A", "=", 
+          RowBox[{"(", GridBox[{
+                {"8", \(-1\), "3", \(-1\)},
+                {\(-1\), "6", "2", "0"},
+                {"3", "2", "9", "1"},
+                {\(-1\), "0", "1", "7"}
+                }], ")"}]}], ";"}], " "}], "\n", 
+    RowBox[{\(I\_4 = IdentityMatrix[4];\), 
+      " "}], "\n", \(M = A - \[Lambda]\ I\_4\ ;\), "\n", \(Q[\[Lambda]_] = 
+        Det[M];\), "\[IndentingNewLine]", \(solset = 
+        Solve[Q[\[Lambda]]\  \[Equal] \ 
+            0, \[Lambda]];\), "\[IndentingNewLine]", \(Print["\<  A  = \>", 
+        MatrixForm[\ A\ ]\ ];\), "\n", \(Print["\<  M  = \>", 
+        MatrixForm[\ 
+          M\ ]\ ];\), "\n", \(Print["\<Q[\[Lambda]] = Det[M] = \>", \ 
+        Q[\[Lambda]]];\), "\[IndentingNewLine]", \(Print["\<Solve \
+Q[\[Lambda]] = 0  get\>"];\), "\[IndentingNewLine]", \(Print[
+        TableForm[solset]];\)}], "Input"],
+
+Cell[TextData[{
+  "The polynomials are the same because the degree is even.  \n",
+  "\nNow we compute the inverse matrix  ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A1 = \(1\/p\_4\) \((B\_\(4 - 1\) - \(p\_\(4 - 1\)\) 
+                IdentityMatrix[4])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The inverse matrix is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \!\(1\/p\_4\)(\!\(B\_\(4 - 1\)\) - \
+\!\(p\_\(4 - 1\)\) I)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_4, "\<(\>", 
+        MatrixForm[B\_\(4 - 1\)], "\< - (\>", p\_\(4 - 1\)\ , "\<)\>", 
+        MatrixForm[IdentityMatrix[4]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_4, "\<(\>", 
+        MatrixForm[B\_\(4 - 1\)], "\< - (\>", 
+        MatrixForm[\(p\_\(4 - 1\)\) 
+            IdentityMatrix[4]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_4, 
+        MatrixForm[
+          B\_\(4 - 1\)\ \  - \ \ \(p\_\(4 - 1\)\) 
+              IdentityMatrix[4]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", MatrixForm[A1]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["Inverse",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[{
+  StyleBox["Example 3.",
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  Use Faddeev's method to find the ",
+  StyleBox["characteristic polynomial and inverse of the matrix  ",
+    FontFamily->"Times-Roman"],
+  Cell[BoxData[
+      RowBox[{
+        StyleBox["A",
+          FontWeight->"Bold"], "=", 
+        RowBox[{"(", GridBox[{
+              {"2", "1", "0", "0", "0"},
+              {"1", "2", "1", "0", "0"},
+              {"0", "1", "2", "1", "0"},
+              {"0", "0", "1", "2", "1"},
+              {"0", "0", "0", "1", "2"}
+              }], ")"}]}]]],
+  ". "
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Solution 3.",
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1]]], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"2", "1", "0", "0", "0"},
+              {"1", "2", "1", "0", "0"},
+              {"0", "1", "2", "1", "0"},
+              {"0", "0", "1", "2", "1"},
+              {"0", "0", "0", "1", "2"}
+              }], ")"}]}], 
+      ";"}], "\[IndentingNewLine]", \(Print["\<A = \>", 
+        MatrixForm[A]\ ];\), "\[IndentingNewLine]", \(Faddeev[A];\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this result with the method of determinants for finding the \
+",
+  StyleBox["characteristic polynomial",
+    FontFamily->"Times-Roman"],
+  "."
+}], "Text"],
+
+Cell[BoxData[{
+    RowBox[{
+      RowBox[{"A", "=", 
+        RowBox[{"(", GridBox[{
+              {"2", "1", "0", "0", "0"},
+              {"1", "2", "1", "0", "0"},
+              {"0", "1", "2", "1", "0"},
+              {"0", "0", "1", "2", "1"},
+              {"0", "0", "0", "1", "2"}
+              }], ")"}]}], ";"}], "\n", 
+    RowBox[{\(I\_5 = IdentityMatrix[5];\), 
+      " "}], "\n", \(M = A - \[Lambda]\ I\_5\ ;\), "\n", \(Q[\[Lambda]_] = 
+        Det[M];\), "\[IndentingNewLine]", \(solset = 
+        Solve[Q[\[Lambda]]\  \[Equal] \ 
+            0, \[Lambda]];\), "\[IndentingNewLine]", \(Print["\<  A  = \>", 
+        MatrixForm[\ A\ ]\ ];\), "\n", \(Print["\<  M  = \>", 
+        MatrixForm[\ 
+          M\ ]\ ];\), "\n", \(Print["\<Q[\[Lambda]] = Det[M] = \>", \ 
+        Q[\[Lambda]]];\), "\[IndentingNewLine]", \(Print["\<Solve \
+Q[\[Lambda]] = 0  get\>"];\), "\[IndentingNewLine]", \(Print[
+        TableForm[solset]];\)}], "Input"],
+
+Cell[TextData[{
+  "The polynomials are different only in the fact that  ",
+  Cell[BoxData[
+      \(P[\[Lambda]]\  = \ \(-\ Q[\[Lambda]]\)\)]],
+  ".  \n\nNow we compute the inverse matrix  ",
+  Cell[BoxData[
+      SuperscriptBox[
+        StyleBox["A",
+          FontWeight->"Bold"], \(-1\)]]],
+  ".  "
+}], "Text"],
+
+Cell[BoxData[{
+    \(\(A1 = \(1\/p\_5\) \((B\_\(5 - 1\) - \(p\_\(5 - 1\)\) 
+                IdentityMatrix[5])\);\)\), "\[IndentingNewLine]", 
+    \(\(Print["\<The inverse matrix is\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \!\(1\/p\_5\)(\!\(B\_\(5 - 1\)\) - \
+\!\(p\_\(5 - 1\)\) I)\>\""];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_5, "\<(\>", 
+        MatrixForm[B\_\(5 - 1\)], "\< - (\>", p\_\(5 - 1\)\ , "\<)\>", 
+        MatrixForm[IdentityMatrix[5]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_5, "\<(\>", 
+        MatrixForm[B\_\(5 - 1\)], "\< - (\>", 
+        MatrixForm[\(p\_\(5 - 1\)\) 
+            IdentityMatrix[5]], "\<)\>"];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 1\/p\_5, 
+        MatrixForm[
+          B\_\(5 - 1\)\ \  - \ \ \(p\_\(5 - 1\)\) 
+              IdentityMatrix[5]]\ ];\)\), "\[IndentingNewLine]", 
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", MatrixForm[A1]];\)\)}], "Input"],
+
+Cell[TextData[{
+  "We can compare this with ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "'s subroutine ",
+  StyleBox["Inverse",
+    FontFamily->"Courier New"],
+  "."
+}], "Text"],
+
+Cell[BoxData[
+    \(\(Print[\*"\"\<\!\(A\^\(-1\)\) = \>\"", 
+        MatrixForm[Inverse[A]]];\)\)], "Input"]
+}, Closed]],
+
+Cell[TextData[StyleBox["Research Experience for Undergraduates",
+  FontSize->14,
+  FontWeight->"Bold",
+  FontColor->RGBColor[0.500008, 0, 0.996109]]], "Text"],
+
+Cell[TextData[{
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ "http://mathews.ecs.fullerton.edu/n2003/FaddeevLeverrierBib.html"],
+       None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold",
+    FontColor->RGBColor[1, 0, 0]],
+  "  ",
+  StyleBox[ButtonBox["Faddeev-Leverrier Method",
+    ButtonData:>{
+      URL[ 
+      "http://math.fullerton.edu/mathews/n2003/FaddeevLeverrierBib.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+    FontWeight->"Bold"],
+  "  Internet hyperlinks to web sites and a bibliography of articles.  "
+}], "Text"],
+
+Cell[TextData[StyleBox[ButtonBox["Return to the Numerical Analysis Project",
+  ButtonData:>{
+    URL[ "http://math.fullerton.edu/mathews/numerical.html"], None},
+  ButtonStyle->"Hyperlink"],
+  FontWeight->"Bold",
+  FontColor->RGBColor[1, 0, 1],
+  FontVariations->{"Underline"->True}]], "Text"]
+},
+FrontEndVersion->"5.2 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+CellGrouping->Manual,
+WindowSize->{998, 598},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+SpellingDictionaries->{"CorrectWords"->{
+  "unimodal", "Faddeev", "Leverrier", "Mathews", "Kurtis"}}
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1776, 53, 199, 5, 35, "Text"],
+Cell[1978, 60, 1464, 49, 99, "Text"]
+}, Closed]],
+Cell[3457, 112, 2928, 104, 182, "Text"],
+Cell[6388, 218, 1923, 60, 136, "Text"],
+Cell[8314, 280, 5552, 155, 249, "Text"],
+Cell[13869, 437, 922, 25, 152, "Text"],
+Cell[14794, 464, 483, 12, 52, "Text"],
+Cell[15280, 478, 646, 22, 33, "Text"],
+Cell[15929, 502, 632, 21, 33, "Text"],
+Cell[16564, 525, 635, 21, 33, "Text"],
+Cell[17202, 548, 1825, 32, 503, "Input"],
+Cell[19030, 582, 510, 17, 57, "Text"],
+
+Cell[CellGroupData[{
+Cell[19565, 603, 101, 2, 33, "Text"],
+Cell[19669, 607, 349, 9, 100, "Input"],
+Cell[20021, 618, 188, 6, 33, "Text"],
+Cell[20212, 626, 845, 18, 240, "Input"],
+Cell[21060, 646, 312, 10, 71, "Text"],
+Cell[21375, 658, 1056, 17, 230, "Input"],
+Cell[22434, 677, 190, 8, 33, "Text"],
+Cell[22627, 687, 108, 2, 31, "Input"]
+}, Closed]],
+Cell[22750, 692, 606, 19, 70, "Text"],
+
+Cell[CellGroupData[{
+Cell[23381, 715, 101, 2, 33, "Text"],
+Cell[23485, 719, 439, 11, 118, "Input"],
+Cell[23927, 732, 189, 6, 33, "Text"],
+Cell[24119, 740, 935, 20, 258, "Input"],
+Cell[25057, 762, 246, 8, 71, "Text"],
+Cell[25306, 772, 1056, 17, 230, "Input"],
+Cell[26365, 791, 190, 8, 33, "Text"],
+Cell[26558, 801, 108, 2, 31, "Input"]
+}, Closed]],
+Cell[26681, 806, 613, 19, 86, "Text"],
+
+Cell[CellGroupData[{
+Cell[27319, 829, 101, 2, 33, "Text"],
+Cell[27423, 833, 452, 11, 136, "Input"],
+Cell[27878, 846, 188, 6, 33, "Text"],
+Cell[28069, 854, 948, 20, 276, "Input"],
+Cell[29020, 876, 312, 10, 71, "Text"],
+Cell[29335, 888, 1056, 17, 230, "Input"],
+Cell[30394, 907, 190, 8, 33, "Text"],
+Cell[30587, 917, 108, 2, 31, "Input"]
+}, Closed]],
+Cell[30710, 922, 158, 3, 32, "Text"],
+Cell[30871, 927, 582, 17, 33, "Text"],
+Cell[31456, 946, 293, 6, 33, "Text"]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+

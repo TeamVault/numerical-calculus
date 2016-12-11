@@ -1,0 +1,847 @@
+(************** Content-type: application/mathematica **************
+                     CreatedBy='Mathematica 5.0'
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used with any Mathematica-compatible
+application, such as Mathematica, MathReader or Publicon. The data
+for the notebook starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do
+one of the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the
+  application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing
+the word CacheID, otherwise Mathematica-compatible applications may
+try to use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+*******************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     31594,        738]*)
+(*NotebookOutlinePosition[     32277,        761]*)
+(*  CellTagsIndexPosition[     32233,        757]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+Cell[BoxData[
+    \(\(\( (*bisection\ method\ for\ function\ f\ interval\ [a, 
+          b]\ and\ precision\ e*) \)\(\[IndentingNewLine]\)\(Bis[a_, b_, f_, 
+        e_] := Module[{n,  (*number\ of\ steps*) , 
+          x0 (*approximation\ of\ solution*) , c, d, 
+          c1}, \[IndentingNewLine]CheckAbort[\[IndentingNewLine]\
+\[IndentingNewLine]\tIf[f[a]*f[b] > 0, Abort[]]; n = 0; c = a; 
+          d = b; \[IndentingNewLine]\t
+          While[Abs[d - c] > e, \(n++\); c1 = \((c + d)\)/2; 
+            If[f[a]*f[c1] < 0, d = c1, c = c1]]; 
+          x0 = \((c + d)\)/2; \[IndentingNewLine]\t
+          Print["\<an approximation of the solution is \>", 
+            N[x0, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\< with error less then \>", 
+            N[e/2, Floor[\(-Log[10, e]\) + 1]], \ "\<; number of steps=\>", 
+            n]\[IndentingNewLine]\[IndentingNewLine], 
+          Print["\<the bisection method does not work\>"]]]\)\)\)], "Input",
+  CellLabel->"In[90]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(f[x_] := x^3 - 5  x + 1\), "\[IndentingNewLine]", 
+    \(Bis[0, 1, f, 10^\(-10\)]\), "\[IndentingNewLine]", 
+    \(Bis[2, 3, f, 10^\(-10\)]\), "\[IndentingNewLine]", 
+    \(Bis[\(-2\), \(-3\), f, 10^\(-10\)]\), "\[IndentingNewLine]", 
+    \(Bis[3, 4, f, 10^\(-2\)]\)}], "Input",
+  CellLabel->"In[91]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757389884442090988159`11. \[InvisibleSpace]" with \
+error less then "\[InvisibleSpace]5.`11.*^-11\[InvisibleSpace]"; number of \
+steps="\[InvisibleSpace]34\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20163967574`11., 
+        " with error less then ", 5.`11.*^-11, "; number of steps=", 34],
+      Editable->False]], "Print",
+  CellLabel->"From In[91]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190638398285955190658569`11. \[InvisibleSpace]" with \
+error less then "\[InvisibleSpace]5.`11.*^-11\[InvisibleSpace]"; number of \
+steps="\[InvisibleSpace]34\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284190638`11., 
+        " with error less then ", 5.`11.*^-11, "; number of steps=", 34],
+      Editable->False]], "Print",
+  CellLabel->"From In[91]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395497132092714309692`11. \)\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]5.`11.*^-11\[InvisibleSpace]"; number \
+of steps="\[InvisibleSpace]34\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.3300587395`11., 
+        " with error less then ", 5.`11.*^-11, "; number of steps=", 34],
+      Editable->False]], "Print",
+  CellLabel->"From In[91]:="],
+
+Cell[BoxData[
+    \("the bisection method does not work"\)], "Print",
+  CellLabel->"From In[91]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*fixed\ point\ method\ for\ contraction\ g\ , \ 
+      start\ point\ x\ , \ 
+      precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(Fp[g_, e_, x_, n_] := 
+      Module[{k, x0, x1}, x0 = x; k = 1; 
+        x1 = g[x0]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x1 - x0] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x0 = x1; x1 = N[g[x0], Floor[\(-Log[10, e]\) + 2]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x1, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[96]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(g[x_] := \((x^3 + 1)\)/5\), "\[IndentingNewLine]", 
+    \(Fp[g, 10^\(-10\), 1, 100]\), "\[IndentingNewLine]", 
+    \(Fp[g, 10^\(-10\), \(-2\), 20]\), "\[IndentingNewLine]", 
+    \(Fp[g, 10^\(-10\), 3. , 100]\), "\[IndentingNewLine]", 
+    \(Fp[g, 10^\(-10\), 21/10, 20]\), "\[IndentingNewLine]", 
+    \(\)}], "Input",
+  CellLabel->"In[97]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757258932130741253922`11. \[InvisibleSpace]" with \
+error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of \
+iterations="\[InvisibleSpace]8\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20163967573`11., 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 8],
+      Editable->False]], "Print",
+  CellLabel->"From In[97]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757213780129473216846`11. \[InvisibleSpace]" with \
+error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of \
+iterations="\[InvisibleSpace]9\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20163967572`11., 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 9],
+      Editable->False]], "Print",
+  CellLabel->"From In[97]:="],
+
+Cell[BoxData[
+    RowBox[{\(General::"ovfl"\), \(\(:\)\(\ \)\), "\<\"Overflow occurred in \
+computation. \\!\\(\\*ButtonBox[\\\"More\[Ellipsis]\\\", \
+ButtonStyle->\\\"RefGuideLinkText\\\", ButtonFrame->None, \
+ButtonData:>\\\"General::ovfl\\\"]\\)\"\>"}]], "Message",
+  CellLabel->"From In[97]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("number of iterations is greater than "\
+\[InvisibleSpace]100\[InvisibleSpace]" solution=?"\[InvisibleSpace]Overflow[]\
+\),
+      SequenceForm[ 
+      "number of iterations is greater than ", 100, " solution=?", 
+        Overflow[ ]],
+      Editable->False]], "Print",
+  CellLabel->"From In[97]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757271284231544593855`11. \[InvisibleSpace]" with \
+error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of \
+iterations="\[InvisibleSpace]12\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20163967573`11., 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 12],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[97]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*Newton\ method\ for\ the\ function\ f, \ 
+      with\ start\ value\ x, \ 
+      precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(New[f_, x_, e_, n_] := 
+      Module[{k, x0, x1}, x0 = x; k = 1; 
+        x1 = N[x0 - f[x0]/\(f'\)[x0], 
+            Floor[\(-Log[10, e]\) + 3]]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x1 - x0] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x0 = x1; 
+            x1 = N[x0 - f[x0]/\(f'\)[x0], Floor[\(-Log[10, e]\) + 3]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x1, Floor[\(-Log[10, e]\) + 
+                  3]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[102]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(New[f, 0, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New[f, 1, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New[f, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New[f, \(-2\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New[f, \(-3\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New[f, 20, 10^\(-10\), 20]\)}], "Input",
+  CellLabel->"In[103]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757233910369999825563`12.068368331435082\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]4\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 
+        0.201639675723`12.068368331435082, " with error less then ", 
+        1.`11.*^-10, "; number of iterations=", 4],
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757233968774886655184`10.87468719273496\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]6\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20163967572`10.87468719273496,
+         " with error less then ", 1.`11.*^-10, "; number of iterations=", 6],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.128419063844577589089419184`10.99657723273094\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284190638`10.99657723273094, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395679820293340077488`11.13946027215291\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.3300587396`11.13946027215291,
+         " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395679821332969069991`10.666194615390815\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]6\),
+      SequenceForm[ 
+      "an approximation of the solution is ", \
+-2.3300587396`10.666194615390815, " with error less then ", 1.`11.*^-10, 
+        "; number of iterations=", 6],
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190637525171041`7.509535589961685\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]11\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284191`7.509535589961685, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 11],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[103]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*Secant\ method\ for\ the\ function\ f, \ with\ start\ values\ a, 
+      b, \ precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(Secant[f_, a_, b_, e_, n_] := 
+      Module[{k, x0, x1, x2}, x0 = a; x1 = b; k = 1; 
+        x2 = N[\((x0*f[x1] - x1*f[x0])\)/\((f[x1] - f[x0])\), 
+            Floor[\(-Log[10, e]\) + 3]]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x2 - x1] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x0 = x1; x1 = x2; 
+            x2 = N[\((x0*f[x1] - x1*f[x0])\)/\((f[x1] - f[x0])\), 
+                Floor[\(-Log[10, e]\) + 5]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x2, Floor[\(-Log[10, e]\) + 
+                  3]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[109]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(Secant[f, 0, 1, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant[f, 1, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant[f, 2, 3, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant[f, \(-2\), \(-3\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant[f, \(-3\), \(-4\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant[f, 20, 21, 10^\(-10\), 100]\)}], "Input",
+  CellLabel->"In[110]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757212823836`6.237053062278531\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 0.20164`6.237053062278531, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284181863748102157`4.5948117084597015\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284`4.5948117084597015, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190472341886635`3.121582638669541\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.13`3.121582638669541, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.33005861535554312`4.108510401843804\)\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.33`4.108510401843804, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300588157803131934`2.5533656293110667\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]6\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.33`2.5533656293110667, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 6],
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.176935123660365844`3.011959182405624\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]10\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.18`3.011959182405624, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 10],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[110]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*False\ position\ method\ for\ the\ function\ f, \ 
+      with\ start\ values\ a, \ fixed\ point\ b, \ 
+      precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(Secant1[f_, a_, b_, e_, n_] := 
+      Module[{k, x0, x1}, x0 = b; x1 = a; k = 1; 
+        x2 = N[\((b*f[x1] - x1*f[b])\)/\((f[x1] - 
+                  f[b])\)]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x2 - x1] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x1 = x2; 
+            x2 = N[\((b*f[x1] - x1*f[b])\)/\((f[x1] - f[b])\), 
+                Floor[\(-Log[10, e]\) + 5]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x2, Floor[\(-Log[10, e]\) + 
+                  3]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[116]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(Secant1[f, 0, 1, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant1[f, 1, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant1[f, 3, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant1[f, \(-2\), \(-3\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant1[f, \(-3\), \(-4\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(Secant1[f, 20, 21, 10^\(-10\), 10000]\), "\[IndentingNewLine]", 
+    \(Secant1[f, \(-3\), \(-2\), 10^\(-10\), 20]\)}], "Input",
+  CellLabel->"In[117]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757408398`\[InvisibleSpace]" with error less then "\
+\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of iterations="\
+\[InvisibleSpace]19\),
+      SequenceForm[ 
+      "an approximation of the solution is ", .2016396757408398, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 19],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.128419063840278`\[InvisibleSpace]" with error less then "\
+\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of iterations="\
+\[InvisibleSpace]12\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.128419063840278, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 12],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190638365126`\[InvisibleSpace]" with error less then "\
+\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of iterations="\
+\[InvisibleSpace]11\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284190638365126, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 11],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("number of iterations is greater than "\
+\[InvisibleSpace]20\[InvisibleSpace]" \
+solution=?"\[InvisibleSpace]\(-2.330058739250031`\)\),
+      SequenceForm[ 
+      "number of iterations is greater than ", 20, 
+        " solution=?", -2.3300587392500312],
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("number of iterations is greater than "\
+\[InvisibleSpace]20\[InvisibleSpace]" \
+solution=?"\[InvisibleSpace]\(-2.3300741369794022`\)\),
+      SequenceForm[ 
+      "number of iterations is greater than ", 20, 
+        " solution=?", -2.3300741369794022],
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190693591656`\[InvisibleSpace]" with error less then "\
+\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of iterations="\
+\[InvisibleSpace]1070\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284190693591656, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 
+        1070],
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395512173`\)\[InvisibleSpace]" with error less \
+then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number of iterations="\
+\[InvisibleSpace]17\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.3300587395512173, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 17],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[117]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*Modifed\ Newton\ method\ for\ the\ function\ f, \ 
+      with\ start\ value\ x, \ 
+      precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(New1[f_, x_, e_, n_] := 
+      Module[{k, x0, x1}, x0 = x; k = 1; 
+        x1 = N[x0 - f[x0]/\(f'\)[x], 
+            Floor[\(-Log[10, e]\) + 3]]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x1 - x0] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x0 = x1; 
+            x1 = N[x0 - f[x0]/\(f'\)[x], Floor[\(-Log[10, e]\) + 3]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x1, Floor[\(-Log[10, e]\) + 
+                  3]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[124]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(New1[f, 0, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New1[f, 1, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New1[f, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New1[f, \(-2\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New1[f, \(-3\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(New1[f, 20, 10^\(-10\), 20]\)}], "Input",
+  CellLabel->"In[125]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757230619304324764513`11.165861172285089\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]7\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 
+        0.20163967572`11.165861172285089, " with error less then ", 
+        1.`11.*^-10, "; number of iterations=", 7],
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-0.4653750352872859586`1.0689827131260599\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]19\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -0.5`1.0689827131260599, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 19],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.128419171128929696`8.490704326174018\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]9\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.12841917`8.490704326174018, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 9],
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3298793254277129537`5.086786312976896\)\[InvisibleSpace]\
+" with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; \
+number of iterations="\[InvisibleSpace]14\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.3299`5.086786312976896, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 14],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300601109890666173`8.222859804851462\)\[InvisibleSpace]\
+" with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; \
+number of iterations="\[InvisibleSpace]17\),
+      SequenceForm[ 
+      "an approximation of the solution is ", -2.3300601`8.222859804851462, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 17],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("number of iterations is greater than "\
+\[InvisibleSpace]20\[InvisibleSpace]" \
+solution=?"\[InvisibleSpace]5.343246745694843`\),
+      SequenceForm[ 
+      "number of iterations is greater than ", 20, " solution=?", 
+        5.3432467456948434],
+      Editable->False]], "Print",
+  CellLabel->"From In[125]:="]
+}, Open  ]],
+
+Cell[BoxData[
+    \(\(\( (*Chebyshev\ method\ of\ order\ 2\ for\ the\ function\ f, \ 
+      with\ start\ value\ x, \ 
+      precision\ e\ and\ maximum\ number\ of\ iterations\ n*) \)\(\
+\[IndentingNewLine]\)\(ceb2[f_, x_, e_, n_] := 
+      Module[{k, x0, x1}, x0 = x; k = 1; 
+        x1 = N[x0 - 
+              f[x0]/\(f'\)[
+                  x0] - \((f[x0])\)^2*\(\(f''\)[x0]/2\)/\((\(f'\)[x0])\)^3, 
+            Floor[\(-Log[10, e]\) + 3]]; \[IndentingNewLine]CheckAbort[
+          While[Abs[x1 - x0] > e, \(k++\); If[k \[GreaterEqual] n, Abort[]]; 
+            x0 = x1; 
+            x1 = N[x0 - 
+                  f[x0]/\(f'\)[
+                      x0] - \((f[x0])\)^2*\(\(f''\)[x0]/
+                        2\)/\((\(f'\)[x0])\)^3, Floor[\(-Log[10, e]\) + 3]]]; 
+          Print["\<an approximation of the solution is \>", 
+            N[x1, Floor[\(-Log[10, e]\) + 
+                  3]], \ "\< with error less then \>", 
+            N[e, Floor[\(-Log[10, e]\) + 
+                  1]], \ "\<; number of iterations=\>", k], 
+          Print["\<number of iterations is greater than \>", 
+            n, "\< solution=?\>", N[x1]]]]\)\)\)], "Input",
+  CellLabel->"In[131]:=",
+  FontFamily->"Arial"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+    \(ceb2[f, 0, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(ceb2[f, 1, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(ceb2[f, 2, 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(ceb2[f, \(-2\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(ceb2[f, \(-3\), 10^\(-10\), 20]\), "\[IndentingNewLine]", 
+    \(ceb2[f, 20, 10^\(-10\), 20]\)}], "Input",
+  CellLabel->"In[132]:=",
+  FontFamily->"Arial"],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]0.2016396757234046614097426608`12.068278301681579\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]4\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 
+        0.201639675723`12.068278301681579, " with error less then ", 
+        1.`11.*^-10, "; number of iterations=", 4],
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190638445773678511798866`10.731819071966244\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]5\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.1284190638`10.731819071966244,
+         " with error less then ", 1.`11.*^-10, "; number of iterations=", 5],
+      
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190638445773678037557797`11.497172218088679\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]4\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 
+        2.12841906384`11.497172218088679, " with error less then ", 
+        1.`11.*^-10, "; number of iterations=", 4],
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395652816559768472082`11.585212590012999\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]4\),
+      SequenceForm[ 
+      "an approximation of the solution is ", \
+-2.33005873957`11.585212590012999, " with error less then ", 1.`11.*^-10, 
+        "; number of iterations=", 4],
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]\(-2.3300587395679820293055904222`11.583859815236142\)\
+\[InvisibleSpace]" with error less then "\[InvisibleSpace]10.`11.*^-11\
+\[InvisibleSpace]"; number of iterations="\[InvisibleSpace]4\),
+      SequenceForm[ 
+      "an approximation of the solution is ", \
+-2.33005873957`11.583859815236142, " with error less then ", 1.`11.*^-10, 
+        "; number of iterations=", 4],
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="],
+
+Cell[BoxData[
+    InterpretationBox[\("an approximation of the solution is "\
+\[InvisibleSpace]2.1284190637525171041`8.33586223891821\[InvisibleSpace]" \
+with error less then "\[InvisibleSpace]10.`11.*^-11\[InvisibleSpace]"; number \
+of iterations="\[InvisibleSpace]8\),
+      SequenceForm[ 
+      "an approximation of the solution is ", 2.12841906`8.33586223891821, 
+        " with error less then ", 1.`11.*^-10, "; number of iterations=", 8],
+      Editable->False]], "Print",
+  CellLabel->"From In[132]:="]
+}, Open  ]]
+},
+FrontEndVersion->"5.0 for Microsoft Windows",
+ScreenRectangle->{{0, 1024}, {0, 685}},
+WindowSize->{933, 653},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+StyleDefinitions -> "ArticleModern.nb"
+]
+
+(*******************************************************************
+Cached data follows.  If you edit this Notebook file directly, not
+using Mathematica, you must remove the line containing CacheID at
+the top of  the file.  The cache data will then be recreated when
+you save this file from within Mathematica.
+*******************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+
+(*NotebookFileOutline
+Notebook[{
+Cell[1754, 51, 1012, 18, 215, "Input"],
+
+Cell[CellGroupData[{
+Cell[2791, 73, 347, 7, 120, "Input"],
+Cell[3141, 82, 487, 9, 40, "Print"],
+Cell[3631, 93, 486, 9, 40, "Print"],
+Cell[4120, 104, 492, 9, 40, "Print"],
+Cell[4615, 115, 99, 2, 40, "Print"]
+}, Open  ]],
+Cell[4729, 120, 886, 17, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[5640, 141, 386, 8, 139, "Input"],
+Cell[6029, 151, 496, 9, 40, "Print"],
+Cell[6528, 162, 496, 9, 40, "Print"],
+Cell[7027, 173, 298, 5, 14, "Message"],
+Cell[7328, 180, 336, 8, 40, "Print"],
+Cell[7667, 190, 505, 10, 40, "Print"]
+}, Open  ]],
+Cell[8187, 203, 975, 19, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[9187, 226, 415, 8, 139, "Input"],
+Cell[9605, 236, 536, 10, 40, "Print"],
+Cell[10144, 248, 531, 10, 40, "Print"],
+Cell[10678, 260, 522, 9, 40, "Print"],
+Cell[11203, 271, 536, 10, 40, "Print"],
+Cell[11742, 283, 533, 10, 40, "Print"],
+Cell[12278, 295, 520, 10, 40, "Print"]
+}, Open  ]],
+Cell[12813, 308, 1065, 19, 139, "Input"],
+
+Cell[CellGroupData[{
+Cell[13903, 331, 463, 8, 139, "Input"],
+Cell[14369, 341, 509, 9, 40, "Print"],
+Cell[14881, 352, 510, 9, 40, "Print"],
+Cell[15394, 363, 506, 9, 40, "Print"],
+Cell[15903, 374, 510, 9, 40, "Print"],
+Cell[16416, 385, 514, 9, 40, "Print"],
+Cell[16933, 396, 514, 10, 40, "Print"]
+}, Open  ]],
+Cell[17462, 409, 1057, 20, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[18544, 433, 547, 9, 158, "Input"],
+Cell[19094, 444, 490, 10, 40, "Print"],
+Cell[19587, 456, 489, 10, 40, "Print"],
+Cell[20079, 468, 491, 10, 40, "Print"],
+Cell[20573, 480, 356, 8, 40, "Print"],
+Cell[20932, 490, 357, 8, 40, "Print"],
+Cell[21292, 500, 497, 10, 40, "Print"],
+Cell[21792, 512, 497, 10, 40, "Print"]
+}, Open  ]],
+Cell[22304, 525, 983, 19, 120, "Input"],
+
+Cell[CellGroupData[{
+Cell[23312, 548, 421, 8, 139, "Input"],
+Cell[23736, 558, 535, 10, 40, "Print"],
+Cell[24274, 570, 522, 10, 40, "Print"],
+Cell[24799, 582, 511, 9, 40, "Print"],
+Cell[25313, 593, 523, 10, 40, "Print"],
+Cell[25839, 605, 526, 10, 40, "Print"],
+Cell[26368, 617, 350, 8, 40, "Print"]
+}, Open  ]],
+Cell[26733, 628, 1200, 24, 139, "Input"],
+
+Cell[CellGroupData[{
+Cell[27958, 656, 421, 8, 139, "Input"],
+Cell[28382, 666, 536, 10, 40, "Print"],
+Cell[28921, 678, 532, 10, 40, "Print"],
+Cell[29456, 690, 535, 10, 40, "Print"],
+Cell[29994, 702, 534, 10, 40, "Print"],
+Cell[30531, 714, 534, 10, 40, "Print"],
+Cell[31068, 726, 510, 9, 40, "Print"]
+}, Open  ]]
+}
+]
+*)
+
+
+
+(*******************************************************************
+End of Mathematica Notebook file.
+*******************************************************************)
+
