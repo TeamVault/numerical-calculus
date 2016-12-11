@@ -56,9 +56,11 @@ https://www.youtube.com/watch?v=CPAvRsQXK8c
 # Other Resources
 
 A Brief Introduction to Mathematica (Purdue Univ.):
+
 https://www.cs.purdue.edu/homes/ayg/CS590C/www/mathematica/math.html
 
 Introduction to Mathematica (Duke Univ.):
+
 https://people.duke.edu/~dgraham/handouts/IntroMathematica.pdf
 
 # Author
