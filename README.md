@@ -3,25 +3,45 @@ This repo. contents an array of mathematical problems solved with numerical calc
 
 # Contents: Solved Problems
 1.Newton Method
+
 2.Secant Method
+
 3.Halley Method
+
 4.GaussianJordan
+
 5.Cholesky
+
 6.Kirchoff
+
 7.Lagrange Polinomial
+
 8.Pade Approximation
+
 9.Fourier Series
+
 10.Riemann Sums
+
 11.Midpoint Rule
+
 12.Trapezoidal Rule
+
 13.Monte Carlo Integration
+
 14.Runge Kutta
+
 15.Bernstein
+
 16.Bezier
+
 17.Hermite
+
 18.Simpson Method
+
 19.Splines
+
 20.Gauss Method
+
 etc.
 
 # Install/How to use
