@@ -45,11 +45,21 @@ This repo. contents an array of mathematical problems solved with numerical calc
 etc.
 
 # Install/How to use
-Each of the files contains one solved problem and can be imported with Mathematica.
+Each of the files contains one solved problem and can be imported inside Mathematica by using
+the standard method to import files into the Mathematica workspace.
+
 Please see on how to use Mathematica here:
 http://www.wolfram.com/mathematica/online/?src=google&420
-and an introduction to Mathematics here:
+and an introduction to Mathematica here:
 https://www.youtube.com/watch?v=CPAvRsQXK8c
+
+# Other Resources
+
+A Brief Introduction to Mathematica (Purdue Univ.):
+https://www.cs.purdue.edu/homes/ayg/CS590C/www/mathematica/math.html
+
+Introduction to Mathematica (Duke Univ.):
+https://people.duke.edu/~dgraham/handouts/IntroMathematica.pdf
 
 # Author
 
